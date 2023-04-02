@@ -7,9 +7,6 @@
 
 #define NR_OF_KEYBINDS 3
 
-SDL_Texture * initBackground(SDL_Window *pWindow, SDL_Renderer *pRenderer);
-void scrollBackground(SDL_Renderer *pRenderer, SDL_Texture *pTexture);
-
 int main(int argv, char** args){
     FILE *fp;
     int keybinds[NR_OF_KEYBINDS];
