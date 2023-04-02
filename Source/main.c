@@ -5,16 +5,13 @@
 #include <SDL2/SDL_ttf.h>
 #include "../include/keybinds.h"
 
-#define nrOfKeybinds 3
-
-
-
+#define NR_OF_KEYBINDS 3
 
 int main(int argv, char** args){
     SDL_Init(SDL_INIT_EVERYTHING);
     TTF_Init();
     FILE *fp;
-    int keybinds[nrOfKeybinds];
+    int keybinds[NR_OF_KEYBINDS];
     SDL_DisplayMode dm;
     readFromFile(fp, keybinds);
     saveToFile(fp, keybinds);
