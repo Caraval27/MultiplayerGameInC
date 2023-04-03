@@ -5,6 +5,8 @@
 #include <SDL2/SDL_ttf.h>
 #include "../include/keybinds.h"
 
+// test 2
+
 #define nrOfKeybinds 3
 
 
@@ -35,11 +37,11 @@ int main(int argv, char** args){
     SDL_Color colour = {255, 255, 255 };
     SDL_Surface *surface = TTF_RenderText_Solid(font, "Hello World!", colour);
     SDL_Texture *texture = SDL_CreateTextureFromSurface(renderer, surface);
-    
-    
+
+
     bool isRunning = true;
     SDL_Event event;
-    
+
     while (isRunning){
         while (SDL_PollEvent(&event)){
             switch (event.type){
@@ -49,7 +51,7 @@ int main(int argv, char** args){
         }
 
         const Uint8* kb = SDL_GetKeyboardState(NULL);
-        
+
         if (kb[keybinds[0]]){
             SDL_RenderClear(renderer);
             SDL_SetRenderDrawColor(renderer, 255, 0, 0, 255);
@@ -67,9 +69,9 @@ int main(int argv, char** args){
             SDL_RenderPresent(renderer);
         }
 
-        
 
-        
+
+
     }
     SDL_DestroyTexture(texture);
     SDL_FreeSurface(surface);
