@@ -9,7 +9,7 @@
 
 #define nrOfKeybinds 3
 
-
+// Kommentar i main.c
 
 
 int main(int argv, char** args){
