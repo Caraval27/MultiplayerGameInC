@@ -1,5 +1,5 @@
 # Makefile for Linux
-SRCDIR=./source
+SRCDIR=./src
 CC=gcc
 #INCLUDE = C:\msys64\mingw64\include\SDL2
 

@@ -1,5 +1,5 @@
 # Makefile for Windows
-SRCDIR=./source
+SRCDIR=./src
 CC=gcc
 INCLUDE = C:\msys64\mingw64\include
 
