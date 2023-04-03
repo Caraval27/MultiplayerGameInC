@@ -8,8 +8,9 @@
 #define NR_OF_KEYBINDS 3
 
 int main(int argv, char** args){
+    SDL_DisplayMode displayMode;
+    int w, h, keybinds[NR_OF_KEYBINDS];
     FILE *fp;
-    int keybinds[NR_OF_KEYBINDS];
     bool isRunning = true;
     SDL_Event event;
 
@@ -17,6 +18,14 @@ int main(int argv, char** args){
         printf("Error: %s\n", SDL_GetError());
         return 1;
     }
+
+    if (SDL_GetDesktopDisplayMode(0, &displayMode) != 0)
+    {
+        printf("Error: %s\n", SDL_GetError());
+        return 1;
+    }
+    w = displayMode.w;
+    h = displayMode.h;
 
     SDL_Window* pWindow = SDL_CreateWindow("Our game", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, WINDOW_WIDTH, WINDOW_HEIGHT, 0);
     if(!pWindow){
