@@ -1,0 +1,17 @@
+# Makefile for Linux
+SRCDIR=./source
+CC=gcc
+#INCLUDE = C:\msys64\mingw64\include\SDL2
+
+CFLAGS = -g -c -Wall
+LDFLAGS = -lSDL2main -lSDL2_image -lSDL2 -lm
+
+playProgram: main.o
+	$(CC) main.o -o playProgram $(LDFLAGS)
+
+main.o: $(SRCDIR)/main.c
+	$(CC) $(CFLAGS) $(SRCDIR)/main.c
+
+clean:
+	rm playProgram
+	rm *.o

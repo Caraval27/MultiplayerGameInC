@@ -1,21 +1,16 @@
-# Makefile for Windows
-SRCDIR=./source
-CC=gcc
-INCLUDE = C:\msys64\mingw64\include
+MAKEFILE_OS = makefile.win
 
-CFLAGS = -g -I$(INCLUDE) -c 
-LDFLAGS = -lmingw32 -lSDL2main -lSDL2_image -lSDL2_ttf -lSDL2 -mwindows -lm
+ifeq ($(OS),Windows_NT)
+	MAKEFILE_OS := makefile.win
+else
+	UNAME := $(shell uname)
+	ifeq ($(UNAME),Linux)
+		MAKEFILE_OS := makefile.lux
+	endif
+	ifeq ($(UNAME),Darwin)
+		MAKEFILE_OS := makefile.mac
+	endif
+endif
 
-ourgame: main.o keybinds.o
-	$(CC) main.o keybinds.o -o ourgame $(LDFLAGS)
-
-main.o: $(SRCDIR)/main.c
-	$(CC) $(CFLAGS) $(SRCDIR)/main.c
-
-keybinds.o: $(SRCDIR)/keybinds.c ./include/keybinds.h
-	    $(CC) $(CFLAGS) $(SRCDIR)/keybinds.c
-
-
-clean:
-	rm *.exe
-	rm *.o
+all:
+	@$(MAKE) -f $(MAKEFILE_OS)

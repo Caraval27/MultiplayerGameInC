@@ -1,0 +1,16 @@
+# Makefile for MacOS
+SRCDIR=./src
+CC=gcc
+INCLUDE = /opt/homebrew/include
+CFLAGS = -g -I$(INCLUDE) -c
+LIBS = /opt/homebrew/lib
+LDFLAGS = -lSDL2main -lSDL2 -lSDL2_image
+
+main:
+	@echo "Building Hello"
+	$(CC) $(CFLAGS) $(SRCDIR)/main.c -o $@.o
+	$(CC) main.o -o main $(LDFLAGS) -L $(LIBS)
+
+clean:
+	rm -f main.o
+	rm -f main
