@@ -17,3 +17,4 @@ all:
 clean:
 	rm -f *.exe
 	rm -f *.o
+	rm -f game
