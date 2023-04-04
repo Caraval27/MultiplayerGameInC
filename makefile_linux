@@ -4,7 +4,7 @@ CC=gcc
 #INCLUDE = C:\msys64\mingw64\include\SDL2
 
 CFLAGS = -g -c -Wall
-LDFLAGS = -lSDL2main -lSDL2_image -lSDL2 -lm
+LDFLAGS = -lSDL2main -lSDL2_image -lSDL2 -lm -lSDL2_ttf
 
 game: main.o
 	$(CC) main.o -o playProgram $(LDFLAGS)
