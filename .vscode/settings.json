@@ -2,5 +2,18 @@
 	"C_Cpp.default.includePath":
     [
         "C:\\msys64\\mingw64\\include"
-    ]
+    ],
+    "terminal.integrated.profiles.windows": {
+        "MSYS2": {
+            "path": "C:\\msys64\\usr\\bin\\bash.exe",
+            "args": [
+                "--login",
+                "-i"
+            ],
+            "env": {
+                "MSYSTEM": "MINGW64",
+                "CHERE_INVOKING": "1"
+            }
+        }
+    }
 }
