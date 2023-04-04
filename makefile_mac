@@ -4,13 +4,17 @@ CC=gcc
 INCLUDE = /opt/homebrew/include
 CFLAGS = -g -I$(INCLUDE) -c
 LIBS = /opt/homebrew/lib
-LDFLAGS = -lSDL2main -lSDL2 -lSDL2_image
+LDFLAGS = -lSDL2main -lSDL2_image -lSDL2 -lm -lSDL2_ttf
 
-main:
-	@echo "Building Hello"
-	$(CC) $(CFLAGS) $(SRCDIR)/main.c -o $@.o
-	$(CC) main.o -o main $(LDFLAGS) -L $(LIBS)
+game: main.o keybinds.o
+	$(CC) -o game main.o keybinds.o $(LDFLAGS) -L $(LIBS) 
+
+main.o: $(SRCDIR)/main.c
+	$(CC) $(CFLAGS) $(SRCDIR)/main.c
+
+keybinds.o: $(SRCDIR)/keybinds.c ./include/keybinds.h
+	$(CC) $(CFLAGS) $(SRCDIR)/keybinds.c
 
 clean:
-	rm -f main.o
-	rm -f main
+	rm -f *.o
+	rm -f game
