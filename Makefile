@@ -9,5 +9,11 @@ ifneq ($(OS),Windows_NT)
 	endif
 endif
 
+.PHONY: all clean
+
 all:
 	$(MAKE) -f $(MAKEFILE_OS)
+
+clean:
+	$(RM) *.exe
+	$(RM) *.o
