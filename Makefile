@@ -1,5 +1,4 @@
 MAKEFILE_OS := makefile_windows
-
 ifneq ($(OS),Windows_NT)
 	UNAME := $(shell uname)
 	ifeq ($(UNAME),Linux)

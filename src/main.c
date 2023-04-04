@@ -5,12 +5,7 @@
 #include <SDL2/SDL_ttf.h>
 #include "../include/keybinds.h"
 
-// test 2
-
 #define nrOfKeybinds 3
-
-// Kommentar i main.c
-
 
 int main(int argv, char** args){
     SDL_Init(SDL_INIT_EVERYTHING);
