@@ -3,18 +3,17 @@ SRCDIR=./src
 CC=gcc
 INCLUDE = C:\msys64\mingw64\include
 
-CFLAGS = -g -I$(INCLUDE) -c
+CFLAGS = -g -I$(INCLUDE)
 LDFLAGS = -lmingw32 -lSDL2main -lSDL2_image -lSDL2_ttf -lSDL2 -mwindows -lm
 
-game: main.o keybinds.o
-	$(CC) main.o keybinds.o -o game $(LDFLAGS)
+game: main.o keybinds.o platforms.o
+	$(CC) -o game main.o keybinds.o platforms.o $(LDFLAGS)
 
 main.o: $(SRCDIR)/main.c
-	$(CC) $(CFLAGS) $(SRCDIR)/main.c
+	$(CC) -c $(SRCDIR)/main.c $(CFLAGS)
 
-keybinds.o: $(SRCDIR)/keybinds.c ./include/keybinds.h
-	    $(CC) $(CFLAGS) $(SRCDIR)/keybinds.c
+keybinds.o: $(SRCDIR)/keybinds.c
+	$(CC) -c $(SRCDIR)/keybinds.c $(CFLAGS)
 
-clean:
-	rm *.exe
-	rm *.o
+platforms.o: $(SRCDIR)/platforms.c
+	$(CC) -c $(SRCDIR)/platforms.c $(CFLAGS)

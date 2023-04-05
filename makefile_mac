@@ -21,3 +21,4 @@ platforms.o: $(SRCDIR)/platforms.c ./include/platforms.h
 clean:
 	rm -f *.o
 	rm -f game
+	
