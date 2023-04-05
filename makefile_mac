@@ -6,14 +6,17 @@ CFLAGS = -g -I$(INCLUDE) -c
 LIBS = /opt/homebrew/lib
 LDFLAGS = -lSDL2main -lSDL2_image -lSDL2 -lm -lSDL2_ttf
 
-game: main.o keybinds.o
-	$(CC) -o game main.o keybinds.o $(LDFLAGS) -L $(LIBS) 
+game: main.o keybinds.o platforms.o
+	$(CC) -o game main.o keybinds.o platforms.o $(LDFLAGS) -L $(LIBS) 
 
 main.o: $(SRCDIR)/main.c
 	$(CC) $(CFLAGS) $(SRCDIR)/main.c
 
 keybinds.o: $(SRCDIR)/keybinds.c ./include/keybinds.h
 	$(CC) $(CFLAGS) $(SRCDIR)/keybinds.c
+
+platforms.o: $(SRCDIR)/platforms.c ./include/platforms.h
+	$(CC) $(CFLAGS) $(SRCDIR)/platforms.c
 
 clean:
 	rm -f *.o

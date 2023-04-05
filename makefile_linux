@@ -1,19 +1,22 @@
 # Makefile for Linux
 SRCDIR=./src
 CC=gcc
-#INCLUDE = C:\msys64\mingw64\include\SDL2
+# INCLUDE = C:\msys64\mingw64\include\SDL2
 
 CFLAGS = -g -c -Wall
 LDFLAGS = -lSDL2main -lSDL2_image -lSDL2 -lm -lSDL2_ttf
 
-game: main.o keybinds.o
-	$(CC) -o game main.o keybinds.o $(LDFLAGS)
+game: main.o keybinds.o platforms.o
+	$(CC) -o game main.o keybinds.o platforms.o $(LDFLAGS)
 
 main.o: $(SRCDIR)/main.c
 	$(CC) $(CFLAGS) $(SRCDIR)/main.c
 
 keybinds.o: $(SRCDIR)/keybinds.c ./include/keybinds.h
 	$(CC) $(CFLAGS) $(SRCDIR)/keybinds.c
+
+platforms.o: $(SRCDIR)/platforms.c ./include/platforms.h
+	$(CC) $(CFLAGS) $(SRCDIR)/platforms.c
 
 clean:
 	rm -f game
