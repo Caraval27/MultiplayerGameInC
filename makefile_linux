@@ -14,7 +14,3 @@ main.o: $(SRCDIR)/main.c
 
 keybinds.o: $(SRCDIR)/keybinds.c ./include/keybinds.h
 	$(CC) $(CFLAGS) $(SRCDIR)/keybinds.c
-
-clean:
-	rm -f game
-	rm -f *.o
