@@ -6,7 +6,6 @@ typedef struct{
     float accelerationY, accelerationX;
 } Player;
 
-
 Player* createPLayer(int x, int y){
     Player *pPlayer = malloc(sizeof(Player));
     pPlayer->posX = x;
