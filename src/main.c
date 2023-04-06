@@ -4,6 +4,7 @@
 #include <SDL2/SDL_image.h>
 #include "platforms.h"
 #include "keybinds.h"
+#include "players.h"
 
 #define NR_OF_KEYBINDS 3
 
