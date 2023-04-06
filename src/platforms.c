@@ -3,7 +3,7 @@
 #include "platforms.h"
 
 SDL_Texture * initBackground(SDL_Window *pWindow, SDL_Renderer *pRenderer){
-    SDL_Surface *pSurface = IMG_Load("resources/background.png");
+    SDL_Surface *pSurface = IMG_Load("assets/background.png");
     if(!pSurface){
         printf("Error: %s\n", SDL_GetError());
         SDL_DestroyRenderer(pRenderer);
