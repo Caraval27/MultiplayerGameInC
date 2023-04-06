@@ -1,8 +1,12 @@
-typedef struct{
+#include <SDL2/SDL.h>
+#include <SDL2/SDL_image.h>
+#include "players.h"
+
+struct player{
     float posX, posY;
     float velocityY, velocityX;
     float accelerationY, accelerationX;
-}Player;
+};
 
 
 Player* createPLayer(int x, int y){
