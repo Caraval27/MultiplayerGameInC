@@ -10,6 +10,7 @@
 int main(int argv, char** args){
     SDL_DisplayMode displayMode;
     int w, h, keybinds[NR_OF_KEYBINDS];
+    SDL_Rect windowUpper, windowLower, imageUpper, imageLower;
     FILE *fp;
     bool isRunning = true;
     SDL_Event event;
@@ -27,7 +28,7 @@ int main(int argv, char** args){
     w = displayMode.w;
     h = displayMode.h;
 
-    SDL_Window* pWindow = SDL_CreateWindow("Our game", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, WINDOW_WIDTH, WINDOW_HEIGHT, 0);
+    SDL_Window* pWindow = SDL_CreateWindow("Our game", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, w, h, 0);
     if(!pWindow){
         printf("Error: %s\n", SDL_GetError());
         SDL_Quit();
@@ -40,7 +41,8 @@ int main(int argv, char** args){
         SDL_Quit();
         return 1;
     }
-    SDL_Texture *pBackgroundTexture = initBackground(pWindow, pRenderer);
+
+    SDL_Texture *pBackgroundTexture = initBackground(pWindow, pRenderer, &windowUpper, &windowLower, &imageUpper, &imageLower, w, h);
 
     readFromFile(fp, keybinds);
     saveToFile(fp, keybinds);
@@ -55,7 +57,7 @@ int main(int argv, char** args){
 
         SDL_RenderClear(pRenderer);
 
-        scrollBackground(pRenderer, pBackgroundTexture);
+        scrollBackground(&windowUpper, &windowLower, &imageUpper, &imageLower, h, pRenderer, pBackgroundTexture);
 
         SDL_RenderPresent(pRenderer);
 

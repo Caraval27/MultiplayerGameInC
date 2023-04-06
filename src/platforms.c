@@ -2,7 +2,7 @@
 #include <SDL2/SDL_image.h>
 #include "platforms.h"
 
-SDL_Texture * initBackground(SDL_Window *pWindow, SDL_Renderer *pRenderer){
+SDL_Texture * initBackground(SDL_Window *pWindow, SDL_Renderer *pRenderer, SDL_Rect *pWindowUpper, SDL_Rect *pWindowLower, SDL_Rect *pImageUpper, SDL_Rect *pImageLower, int w, int h){
     SDL_Surface *pSurface = IMG_Load("assets/background.png");
     if(!pSurface){
         printf("Error: %s\n", SDL_GetError());
@@ -20,39 +20,51 @@ SDL_Texture * initBackground(SDL_Window *pWindow, SDL_Renderer *pRenderer){
         SDL_Quit();
         exit(1);
     }
+    pWindowUpper->x = 0;
+    pWindowUpper->y = 0;
+    pWindowUpper->w = w;
+    pWindowUpper->h = 0;
+    pWindowLower->x = 0;
+    pWindowLower->y = 0;
+    pWindowLower->w = w;
+    pWindowLower->h = h;
+    pImageUpper->x = 0;
+    pImageUpper->y = IMAGE_HEIGHT;
+    pImageUpper->w = w;
+    pImageUpper->h = 0;
+    pImageLower->x = 0;
+    pImageLower->y = IMAGE_HEIGHT - h;
+    pImageLower->w = w;
+    pImageLower->h = h;
 
     return pTexture;
 }
 
-void scrollBackground(SDL_Renderer *pRenderer, SDL_Texture *pTexture){
-    static SDL_Rect windowUpper = {0, 0, WINDOW_WIDTH, 0};
-    static SDL_Rect windowLower = {0, 0, WINDOW_WIDTH, WINDOW_HEIGHT};
-    static SDL_Rect imageUpper = {0, IMAGE_HEIGHT, WINDOW_WIDTH, 0};
-    static SDL_Rect imageLower = {0, IMAGE_HEIGHT - WINDOW_HEIGHT, WINDOW_WIDTH, WINDOW_HEIGHT};
+void scrollBackground(SDL_Rect *pWindowUpper, SDL_Rect *pWindowLower, SDL_Rect *pImageUpper, SDL_Rect *pImageLower, int h, SDL_Renderer *pRenderer, SDL_Texture *pTexture){
 
-    if(imageLower.y < 0){
-        windowUpper.h += 1;
-        windowLower.y += 1;
-        windowLower.h -= 1;
-        imageUpper.y -= 1;
-        imageUpper.h += 1;
-        imageLower.h -= 1;
+    if(pImageLower->y < 0){
+        pWindowUpper->h += 1;
+        pWindowLower->y += 1;
+        pWindowLower->h -= 1;
+        pImageUpper->y -= 1;
+        pImageUpper->h += 1;
+        pImageLower->h -= 1;
     }
     else{
-        imageLower.y -= 1;
+        pImageLower->y -= 1;
     }
 
-    if(imageLower.h < 0){
-        windowUpper.y = 0;
-        windowUpper.h = 0;
-        windowLower.y = 0;
-        windowLower.h = WINDOW_HEIGHT;
-        imageUpper.y = IMAGE_HEIGHT;
-        imageUpper.h = 0;
-        imageLower.y = IMAGE_HEIGHT - WINDOW_HEIGHT;
-        imageLower.h = WINDOW_HEIGHT;
+    if(pImageLower->h < 0){
+        pWindowUpper->y = 0;
+        pWindowUpper->h = 0;
+        pWindowLower->y = 0;
+        pWindowLower->h = h;
+        pImageUpper->y = IMAGE_HEIGHT;
+        pImageUpper->h = 0;
+        pImageLower->y = IMAGE_HEIGHT - h;
+        pImageLower->h = h;
     }
 
-    SDL_RenderCopy(pRenderer, pTexture, &imageUpper, &windowUpper);
-    SDL_RenderCopy(pRenderer, pTexture, &imageLower, &windowLower);
+    SDL_RenderCopy(pRenderer, pTexture, pImageUpper, pWindowUpper);
+    SDL_RenderCopy(pRenderer, pTexture, pImageLower, pWindowLower);
 }
