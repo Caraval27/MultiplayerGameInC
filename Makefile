@@ -1,11 +1,11 @@
-MAKEFILE_OS := windows
+DETECTED_OS := windows
 ifneq ($(OS),Windows_NT)
 	UNAME := $(shell uname)
 	ifeq ($(UNAME),Linux)
-		MAKEFILE_OS := linux
+		DETECTED_OS := linux
 	endif
 	ifeq ($(UNAME),Darwin)
-		MAKEFILE_OS := mac
+		DETECTED_OS := mac
 	endif
 endif
 
@@ -13,14 +13,14 @@ CC := gcc
 EXECUTABLE := game
 SRCDIR := src
 BUILDDIR := build
-CFLAGS := -g
+CFLAGS := -g -Werror
 LDFLAGS := -lSDL2main -lSDL2 -lSDL2_image -lSDL2_ttf -lm
 
-ifeq ($(MAKEFILE_OS),windows)
+ifeq ($(DETECTED_OS),windows)
 	LDFLAGS := -lmingw32 -mwindows $(LDFLAGS)
 endif
 
-ifeq ($(MAKEFILE_OS),mac)
+ifeq ($(DETECTED_OS),mac)
 	LDFLAGS := $(LDFLAGS) -L /opt/homebrew/lib
 endif
 
