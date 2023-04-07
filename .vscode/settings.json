@@ -15,5 +15,12 @@
                 "CHERE_INVOKING": "1"
             }
         }
-    }
+	},
+	"files.associations": {
+		"keybinds.h": "c",
+		"players.h": "c",
+		"platforms.h": "c",
+		"sdl_image.h": "c",
+		"stdlib.h": "c"
+	}
 }
