@@ -13,6 +13,7 @@ CC := gcc
 EXECUTABLE := game
 SRCDIR := src
 BUILDDIR := build
+CFLAGS := -g
 LDFLAGS := -lSDL2main -lSDL2 -lSDL2_image -lSDL2_ttf -lm
 
 ifeq ($(MAKEFILE_OS),windows)
@@ -34,7 +35,7 @@ $(BUILDDIR)/$(EXECUTABLE): $(OBJS) | $(BUILDDIR)
 	$(CC) -o $@ $(OBJS) $(LDFLAGS)
 
 $(BUILDDIR)/%.o: $(SRCDIR)/%.c | $(BUILDDIR)
-	$(CC) -c $< -o $@
+	$(CC) -c $< -o $@ $(CFLAGS)
 
 $(BUILDDIR):
 	mkdir -p $(BUILDDIR)
