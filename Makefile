@@ -9,10 +9,10 @@ ifneq ($(OS),Windows_NT)
 	endif
 endif
 
+CC := gcc
 EXECUTABLE := game
 SRCDIR := src
 BUILDDIR := build
-
 LDFLAGS := -lSDL2main -lSDL2 -lSDL2_image -lSDL2_ttf -lm
 
 ifeq ($(MAKEFILE_OS),windows)
@@ -31,16 +31,16 @@ OBJS := $(SRCS:$(SRCDIR)/%.c=$(BUILDDIR)/%.o)
 all: $(BUILDDIR)/$(EXECUTABLE)
 
 $(BUILDDIR)/$(EXECUTABLE): $(OBJS) | $(BUILDDIR)
-	gcc -o $@ $(OBJS) $(LDFLAGS)
+	$(CC) -o $@ $(OBJS) $(LDFLAGS)
 
 $(BUILDDIR)/%.o: $(SRCDIR)/%.c | $(BUILDDIR)
-	gcc -c $< -o $@
+	$(CC) -c $< -o $@
 
 $(BUILDDIR):
 	mkdir -p $(BUILDDIR)
 
 clean:
-	$(RM) -r $(BUILDDIR)/*
+	rm -f -r $(BUILDDIR)/*
 
 run:
 	cd build && ./$(EXECUTABLE)
