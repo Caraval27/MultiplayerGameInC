@@ -2,9 +2,9 @@
 #include <stdbool.h>
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_image.h>
-#include "platforms.h"
-#include "keybinds.h"
-#include "players.h"
+#include "../include/platforms.h"
+#include "../include/keybinds.h"
+#include "../include/players.h"
 
 #define NR_OF_KEYBINDS 3
 

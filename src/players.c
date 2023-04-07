@@ -1,7 +1,7 @@
+#include <stdlib.h>
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_image.h>
-#include "players.h"
-#include <stdlib.h>
+#include "../include/players.h"
 
 struct player{
     float posX, posY;

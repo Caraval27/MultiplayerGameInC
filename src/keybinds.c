@@ -1,6 +1,6 @@
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_image.h>
-#include "keybinds.h"
+#include "../include/keybinds.h"
 
 #define nrOfKeybinds 3
 
