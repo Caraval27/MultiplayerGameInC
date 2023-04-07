@@ -29,7 +29,7 @@ int main(int argv, char** args){
     w = displayMode.w;
     h = displayMode.h;
 
-    SDL_Window* pWindow = SDL_CreateWindow("Our game", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, w, h, 0);
+    SDL_Window* pWindow = SDL_CreateWindow("totally not a doodle jump clone", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, w, h, 0);
     if(!pWindow){
         printf("Error: %s\n", SDL_GetError());
         SDL_Quit();
