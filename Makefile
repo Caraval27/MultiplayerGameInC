@@ -13,15 +13,18 @@ CC := gcc
 EXECUTABLE := game
 SRCDIR := src
 BUILDDIR := build
+
 CFLAGS := -g -Werror
-LDFLAGS := -lSDL2main -lSDL2 -lSDL2_image -lSDL2_ttf -lm
+LDFLAGS := -lm -lSDL2main -lSDL2 -lSDL2_image -lSDL2_ttf
+LDFLAGS_WINDOWS := -lmingw32 -mwindows
+LDFLAGS_MAC := -l/opt/homebrew/lib
 
 ifeq ($(RUNTIME_OS),windows)
-	LDFLAGS := -lmingw32 -mwindows $(LDFLAGS)
+	LDFLAGS := $(LDFLAGS_WINDOWS) $(LDFLAGS)
 endif
 
 ifeq ($(RUNTIME_OS),mac)
-	LDFLAGS := $(LDFLAGS) -L /opt/homebrew/lib
+	LDFLAGS := $(LDFLAGS_MAC) $(LDFLAGS)
 endif
 
 SRCS := $(wildcard $(SRCDIR)/*.c)
@@ -44,4 +47,4 @@ clean:
 	rm -f -r $(BUILDDIR)/*
 
 run:
-	cd build && ./$(EXECUTABLE)
+	cd $(BUILDDIR) && ./$(EXECUTABLE)
