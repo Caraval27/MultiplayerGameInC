@@ -1,11 +1,11 @@
-DETECTED_OS := windows
+RUNTIME_OS := windows
 ifneq ($(OS),Windows_NT)
 	UNAME := $(shell uname)
 	ifeq ($(UNAME),Linux)
-		DETECTED_OS := linux
+		RUNTIME_OS := linux
 	endif
 	ifeq ($(UNAME),Darwin)
-		DETECTED_OS := mac
+		RUNTIME_OS := mac
 	endif
 endif
 
@@ -16,11 +16,11 @@ BUILDDIR := build
 CFLAGS := -g -Werror
 LDFLAGS := -lSDL2main -lSDL2 -lSDL2_image -lSDL2_ttf -lm
 
-ifeq ($(DETECTED_OS),windows)
+ifeq ($(RUNTIME_OS),windows)
 	LDFLAGS := -lmingw32 -mwindows $(LDFLAGS)
 endif
 
-ifeq ($(DETECTED_OS),mac)
+ifeq ($(RUNTIME_OS),mac)
 	LDFLAGS := $(LDFLAGS) -L /opt/homebrew/lib
 endif
 
@@ -35,7 +35,7 @@ $(BUILDDIR)/$(EXECUTABLE): $(OBJS) | $(BUILDDIR)
 	$(CC) -o $@ $(OBJS) $(LDFLAGS)
 
 $(BUILDDIR)/%.o: $(SRCDIR)/%.c | $(BUILDDIR)
-	$(CC) -c $< -o $@ $(CFLAGS)
+	$(CC) -o $@ -c $< $(CFLAGS)
 
 $(BUILDDIR):
 	mkdir -p $(BUILDDIR)
