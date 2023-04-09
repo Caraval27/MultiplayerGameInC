@@ -1,0 +1,32 @@
+{
+	"version": "2.0.0",
+	"tasks": [
+		{
+			"label": "msys2 make run",
+			"type": "shell",
+			"command": "make run",
+			"presentation": {
+				"focus": true
+			},
+			"options": {
+				"env": {
+					"MSYSTEM": "MINGW64",
+					"CHERE_INVOKING": "1",
+					"MSYS2_PATH_TYPE": "inherit"
+				},
+				"shell": {
+					"executable": "C:\\msys64\\usr\\bin\\bash.exe",
+					"args": [
+						"--login",
+						"-i",
+						"-c"
+					]
+				}
+			},
+			"group": {
+				"kind": "build",
+				"isDefault": true
+			}
+		}
+	]
+}
