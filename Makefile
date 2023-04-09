@@ -1,11 +1,11 @@
-RUNTIME_OS := windows
+DETECTED_OS := windows
 ifneq ($(OS),Windows_NT)
 	UNAME := $(shell uname)
 	ifeq ($(UNAME),Linux)
-		RUNTIME_OS := linux
+		DETECTED_OS := linux
 	endif
 	ifeq ($(UNAME),Darwin)
-		RUNTIME_OS := mac
+		DETECTED_OS := mac
 	endif
 endif
 
@@ -19,11 +19,11 @@ LDFLAGS := -lm -lSDL2main -lSDL2 -lSDL2_image -lSDL2_ttf
 LDFLAGS_WINDOWS := -lmingw32 -mwindows
 LDFLAGS_MAC := -l/opt/homebrew/lib
 
-ifeq ($(RUNTIME_OS),windows)
+ifeq ($(DETECTED_OS),windows)
 	LDFLAGS := $(LDFLAGS_WINDOWS) $(LDFLAGS)
 endif
 
-ifeq ($(RUNTIME_OS),mac)
+ifeq ($(DETECTED_OS),mac)
 	LDFLAGS := $(LDFLAGS_MAC) $(LDFLAGS)
 endif
 
@@ -47,4 +47,5 @@ clean:
 	rm -f -r $(BUILDDIR)/*
 
 run:
+	$(MAKE) all
 	cd $(BUILDDIR) && ./$(EXECUTABLE)
