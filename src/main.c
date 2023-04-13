@@ -44,6 +44,9 @@ int main(int argv, char** args){
     }
 
     SDL_Texture *pBackgroundTexture = initBackground(pWindow, pRenderer, &windowUpper, &windowLower, &imageUpper, &imageLower, w, h);
+    
+
+    SDL_Rect playerRect = {50,50,50,50};
 
     readFromFile(fp, keybinds);
     saveToFile(fp, keybinds);
@@ -53,12 +56,20 @@ int main(int argv, char** args){
             switch (event.type){
                 case SDL_QUIT:
                     isRunning = false;
+                break;
+                case SDL_KEYDOWN:
+                    if (event.key.keysym.sym == SDLK_UP){
+                        isRunning = false;
+                    }
             }
         }
 
         SDL_RenderClear(pRenderer);
-
+   
         scrollBackground(&windowUpper, &windowLower, &imageUpper, &imageLower, h, pRenderer, pBackgroundTexture);
+        
+        SDL_SetRenderDrawColor(pRenderer, 0,255,0,255);
+        SDL_RenderFillRect(pRenderer, &playerRect);
 
         SDL_RenderPresent(pRenderer);
 
