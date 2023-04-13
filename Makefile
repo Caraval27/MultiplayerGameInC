@@ -17,7 +17,7 @@ BUILDDIR := build
 CFLAGS := -g -Werror
 LDFLAGS := -lm -lSDL2main -lSDL2 -lSDL2_image -lSDL2_ttf
 LDFLAGS_WINDOWS := -lmingw32 -mwindows
-LDFLAGS_MAC := -l/opt/homebrew/lib
+LDFLAGS_MAC := -L /opt/homebrew/lib
 
 ifeq ($(DETECTED_OS),windows)
 	LDFLAGS := $(LDFLAGS_WINDOWS) $(LDFLAGS)
