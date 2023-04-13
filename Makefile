@@ -45,6 +45,7 @@ $(BUILDDIR):
 
 clean:
 	rm -f -r $(BUILDDIR)/*
+	rm -f *.o
 
 run:
 	$(MAKE) all
