@@ -9,8 +9,7 @@ struct player{
     float accelerationY, accelerationX;
 };
 
-
-Player* createPLayer(int x, int y){
+Player* createPlayer(int x, int y){
     Player *pPlayer = malloc(sizeof(Player));
     pPlayer->posX = x;
     pPlayer->posX = y;
@@ -20,6 +19,24 @@ Player* createPLayer(int x, int y){
     pPlayer->accelerationX = 0;
 
     return pPlayer;
+}
+
+void jumpPlayer(Player* pOnePlayer, SDL_Rect onePlayerRect, int h, float platform_height, float max_jump_height){
+
+    pOnePlayer->posY += pOnePlayer->velocityY;
+    
+    if (pOnePlayer->posY + onePlayerRect.h >= h - platform_height) {
+        pOnePlayer->posY = h - onePlayerRect.h - platform_height;
+        pOnePlayer->velocityY = -(pOnePlayer->velocityY);
+    }
+    if (onePlayerRect.y <= 0){
+        pOnePlayer->posY = 0;
+        pOnePlayer->velocityY = -(pOnePlayer->velocityY);
+    }
+    if (pOnePlayer->posY + onePlayerRect.h < max_jump_height) {
+        pOnePlayer->posY = max_jump_height - onePlayerRect.h;
+        pOnePlayer->velocityY = -(pOnePlayer->velocityY);
+    }
 }
 
 void destroyPlayer(Player* pPlayer){

@@ -47,9 +47,13 @@ int main(int argv, char** args){
     
 
     SDL_Rect playerRect = {50,50,50,50};
+    Player* pPlayer = createPlayer(0,0);
 
     readFromFile(fp, keybinds);
     saveToFile(fp, keybinds);
+
+    float platformHeight = 0;
+    float maxJumpHeight = 200;
 
     while (isRunning){
         while (SDL_PollEvent(&event)){
@@ -63,6 +67,8 @@ int main(int argv, char** args){
                     }
             }
         }
+
+        jumpPlayer(pPlayer, playerRect, h, platformHeight, maxJumpHeight);
 
         SDL_RenderClear(pRenderer);
    
