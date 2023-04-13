@@ -21,21 +21,21 @@ Player* createPlayer(int x, int y){
     return pPlayer;
 }
 
-void jumpPlayer(Player* pOnePlayer, SDL_Rect onePlayerRect, int h, float platformHeight, float maxJumpHeight){
+void jumpPlayer(Player* pPlayer, SDL_Rect playerRect, int h, float platformHeight, float maxJumpHeight){
 
-    pOnePlayer->posY += pOnePlayer->velocityY;
+    pPlayer->posY += pPlayer->velocityY;
     
-    if (pOnePlayer->posY + onePlayerRect.h >= h - platformHeight) {
-        pOnePlayer->posY = h - onePlayerRect.h - platformHeight;
-        pOnePlayer->velocityY = -(pOnePlayer->velocityY);
+    if (pPlayer->posY + playerRect.h >= h - platformHeight){
+        pPlayer->posY = h - playerRect.h - platformHeight;
+        pPlayer->velocityY = -(pPlayer->velocityY);
     }
-    if (onePlayerRect.y <= 0){
-        pOnePlayer->posY = 0;
-        pOnePlayer->velocityY = -(pOnePlayer->velocityY);
+    if (playerRect.y <= 0){
+        pPlayer->posY = 0;
+        pPlayer->velocityY = -(pPlayer->velocityY);
     }
-    if (pOnePlayer->posY + onePlayerRect.h < maxJumpHeight) {
-        pOnePlayer->posY = maxJumpHeight - onePlayerRect.h;
-        pOnePlayer->velocityY = -(pOnePlayer->velocityY);
+    if (pPlayer->posY + playerRect.h < maxJumpHeight){
+        pPlayer->posY = maxJumpHeight - playerRect.h;
+        pPlayer->velocityY = -(pPlayer->velocityY);
     }
 }
 
