@@ -10,8 +10,8 @@ struct player{
 };
 
 
-Player* createPLayer(int x, int y){
-    Player *pPlayer = malloc(sizeof(Player));
+Player* createPlayer(int x, int y){
+    Player* pPlayer = malloc(sizeof(Player));
     pPlayer->posX = x;
     pPlayer->posX = y;
     pPlayer->velocityX = 0;
@@ -24,4 +24,9 @@ Player* createPLayer(int x, int y){
 
 void destroyPlayer(Player* pPlayer){
     free(pPlayer);
+}
+
+void updatePlayer(Player* pPlayer, SDL_Rect playerRect){
+    pPlayer->posX = playerRect.x;
+    pPlayer->posY = playerRect.y;
 }

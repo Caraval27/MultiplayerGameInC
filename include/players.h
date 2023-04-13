@@ -3,7 +3,8 @@
 
 typedef struct player Player;
 
-Player* createPLayer(int x, int y);
+Player* createPlayer(int x, int y);
 void destroyPlayer(Player* pPlayer);
+void updatePlayer(Player* pPlayer, SDL_Rect playerRect);
 
 #endif
