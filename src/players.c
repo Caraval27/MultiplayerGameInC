@@ -40,11 +40,11 @@ void jumpPlayer(Player* pOnePlayer, SDL_Rect onePlayerRect, int h, float platfor
     }
 }
 
-void destroyPlayer(Player* pPlayer){
-    free(pPlayer);
-}
-
 void updatePlayer(Player* pPlayer, SDL_Rect* pPlayerRect){
     pPlayerRect->x = pPlayer->posX;
     pPlayerRect->y = pPlayer->posY;
+}
+
+void destroyPlayer(Player* pPlayer){
+    free(pPlayer);
 }
