@@ -1,5 +1,5 @@
-#ifndef PLATFORMS_H
-#define PLATFORMS_H
+#ifndef WORLD_H
+#define WORLD_H
 
 #define WINDOW_WIDTH 1024
 #define WINDOW_HEIGHT 768
