@@ -15,27 +15,27 @@ Player* createPlayer(int x, int y){
     pPlayer->posX = x;
     pPlayer->posX = y;
     pPlayer->velocityX = 0;
-    pPlayer->velocityY = 0;
+    pPlayer->velocityY = 5;
     pPlayer->accelerationY = 0;
-    pPlayer->accelerationX = 0;
+    pPlayer->accelerationX = 5;
 
     return pPlayer;
 }
 
-void jumpPlayer(Player* pOnePlayer, SDL_Rect onePlayerRect, int h, float platform_height, float max_jump_height){
+void jumpPlayer(Player* pOnePlayer, SDL_Rect onePlayerRect, int h, float platformHeight, float maxJumpHeight){
 
     pOnePlayer->posY += pOnePlayer->velocityY;
     
-    if (pOnePlayer->posY + onePlayerRect.h >= h - platform_height) {
-        pOnePlayer->posY = h - onePlayerRect.h - platform_height;
+    if (pOnePlayer->posY + onePlayerRect.h >= h - platformHeight) {
+        pOnePlayer->posY = h - onePlayerRect.h - platformHeight;
         pOnePlayer->velocityY = -(pOnePlayer->velocityY);
     }
     if (onePlayerRect.y <= 0){
         pOnePlayer->posY = 0;
         pOnePlayer->velocityY = -(pOnePlayer->velocityY);
     }
-    if (pOnePlayer->posY + onePlayerRect.h < max_jump_height) {
-        pOnePlayer->posY = max_jump_height - onePlayerRect.h;
+    if (pOnePlayer->posY + onePlayerRect.h < maxJumpHeight) {
+        pOnePlayer->posY = maxJumpHeight - onePlayerRect.h;
         pOnePlayer->velocityY = -(pOnePlayer->velocityY);
     }
 }
@@ -44,7 +44,7 @@ void destroyPlayer(Player* pPlayer){
     free(pPlayer);
 }
 
-void updatePlayer(Player* pPlayer, SDL_Rect playerRect){
-    playerRect.x = pPlayer->posX;
-    playerRect.y = pPlayer->posY;
+void updatePlayer(Player* pPlayer, SDL_Rect* pPlayerRect){
+    pPlayerRect->x = pPlayer->posX;
+    pPlayerRect->y = pPlayer->posY;
 }

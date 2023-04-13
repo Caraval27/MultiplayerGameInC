@@ -44,9 +44,8 @@ int main(int argv, char** args){
     }
 
     SDL_Texture *pBackgroundTexture = initBackground(pWindow, pRenderer, &windowUpper, &windowLower, &imageUpper, &imageLower, w, h);
-    
 
-    SDL_Rect playerRect = {50,50,50,50};
+    SDL_Rect playerRect = {(w - playerRect.w),(h - playerRect.h)+200,50,50};
     Player* pPlayer = createPlayer(0,0);
 
     readFromFile(fp, keybinds);
@@ -70,11 +69,13 @@ int main(int argv, char** args){
 
         jumpPlayer(pPlayer, playerRect, h, platformHeight, maxJumpHeight);
 
+        updatePlayer(pPlayer, &playerRect);
+
         SDL_RenderClear(pRenderer);
    
         scrollBackground(&windowUpper, &windowLower, &imageUpper, &imageLower, h, pRenderer, pBackgroundTexture);
         
-        SDL_SetRenderDrawColor(pRenderer, 0,255,0,255);
+        SDL_SetRenderDrawColor(pRenderer, 0, 255, 0, 255);
         SDL_RenderFillRect(pRenderer, &playerRect);
 
         SDL_RenderPresent(pRenderer);
