@@ -39,6 +39,23 @@ void jumpPlayer(Player* pPlayer, SDL_Rect playerRect, int h, float platformHeigh
     }
 }
 
+void playerCollisionPlatform(Player player, SDL_Rect playerRect, SDL_Rect platforms[], int nrOfPlatforms, float *pPlatformHeight, float *pMaxJumpHeight){
+    for (int i = 0; i < nrOfPlatforms; i++){
+        if (player.posY + playerRect.h >= platforms[i].y &&
+            player.posY < platforms[i].y + platforms[i].h &&
+            player.posX + platforms[i].w >= platforms[i].x &&
+            player.posX < platforms[i].x + platforms[i].w &&
+            player.velocityY >= 0){
+            *pPlatformHeight = platforms[i].h + 50;
+            *pMaxJumpHeight += platforms[i].h + 50; 
+        }
+        else {
+            *pPlatformHeight = 0;
+            *pMaxJumpHeight = 200;
+        }
+    }
+}
+
 void updatePlayer(Player* pPlayer, SDL_Rect* pPlayerRect){
     pPlayerRect->x = pPlayer->posX;
     pPlayerRect->y = pPlayer->posY;
