@@ -45,6 +45,6 @@ void destroyPlayer(Player* pPlayer){
 }
 
 void updatePlayer(Player* pPlayer, SDL_Rect playerRect){
-    pPlayer->posX = playerRect.x;
-    pPlayer->posY = playerRect.y;
+    playerRect.x = pPlayer->posX;
+    playerRect.y = pPlayer->posY;
 }
