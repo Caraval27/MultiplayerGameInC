@@ -1,6 +1,6 @@
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_image.h>
-#include "../include/platforms.h"
+#include "../include/world.h"
 
 SDL_Texture * initBackground(SDL_Window *pWindow, SDL_Renderer *pRenderer, SDL_Rect *pWindowUpper, SDL_Rect *pWindowLower, SDL_Rect *pImageUpper, SDL_Rect *pImageLower, int w, int h){
     SDL_Surface *pSurface = IMG_Load("../assets/background.png");

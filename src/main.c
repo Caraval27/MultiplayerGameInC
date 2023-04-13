@@ -2,7 +2,7 @@
 #include <stdbool.h>
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_image.h>
-#include "../include/platforms.h"
+#include "../include/world.h"
 #include "../include/keybinds.h"
 #include "../include/players.h"
 
