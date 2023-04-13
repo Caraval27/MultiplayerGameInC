@@ -9,7 +9,6 @@ struct player{
     float accelerationY, accelerationX;
 };
 
-
 Player* createPlayer(int x, int y){
     Player* pPlayer = malloc(sizeof(Player));
     pPlayer->posX = x;
@@ -17,7 +16,7 @@ Player* createPlayer(int x, int y){
     pPlayer->velocityX = 0;
     pPlayer->velocityY = 5;
     pPlayer->accelerationY = 0;
-    pPlayer->accelerationX = 5;
+    pPlayer->accelerationX = 0;
 
     return pPlayer;
 }
