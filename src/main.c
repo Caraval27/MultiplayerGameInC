@@ -45,14 +45,14 @@ int main(int argv, char** args){
 
     SDL_Texture *pBackgroundTexture = initBackground(pWindow, pRenderer, &windowUpper, &windowLower, &imageUpper, &imageLower, w, h);
 
-    SDL_Rect playerRect = {(w - playerRect.w),(h - playerRect.h)+200,50,50};
-    Player* pPlayer = createPlayer(0,0);
+    SDL_Rect playerRect = {(w - playerRect.w), (h - playerRect.h), 50, 50};
+    Player* pPlayer = createPlayer(0, (w - playerRect.w)/2);
 
     readFromFile(fp, keybinds);
     saveToFile(fp, keybinds);
 
     float platformHeight = 0;
-    float maxJumpHeight = 200;
+    float maxJumpHeight = 400;
 
     while (isRunning){
         while (SDL_PollEvent(&event)){
