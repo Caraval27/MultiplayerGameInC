@@ -8,14 +8,12 @@ struct platform{
     float velocityY;
 };
 
-
 Platform* createPlatform(int windowHeight, int y){
-
     Platform* pPlatform = malloc(sizeof(Platform));
     pPlatform->posX = rand()%windowHeight;
     pPlatform->posX = y;
     pPlatform->velocityY = 5;
-    
+
     return pPlatform;
 }
 
@@ -24,6 +22,6 @@ void updatePlatform(Platform* pPlatform, SDL_Rect* pPlatformRect){
     pPlatformRect->y = pPlatform->posY;
 }
 
-void destroyPlayer(Platform* pPlatform){
+void destroyPlatform(Platform* pPlatform){
     free(pPlatform);
 }
