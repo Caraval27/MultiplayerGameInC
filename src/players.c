@@ -9,8 +9,9 @@ struct player{
     float accelerationY, accelerationX;
 };
 
+
 Player* createPlayer(int x, int y){
-    Player *pPlayer = malloc(sizeof(Player));
+    Player* pPlayer = malloc(sizeof(Player));
     pPlayer->posX = x;
     pPlayer->posX = y;
     pPlayer->velocityX = 0;
@@ -41,4 +42,9 @@ void jumpPlayer(Player* pOnePlayer, SDL_Rect onePlayerRect, int h, float platfor
 
 void destroyPlayer(Player* pPlayer){
     free(pPlayer);
+}
+
+void updatePlayer(Player* pPlayer, SDL_Rect playerRect){
+    pPlayer->posX = playerRect.x;
+    pPlayer->posY = playerRect.y;
 }
