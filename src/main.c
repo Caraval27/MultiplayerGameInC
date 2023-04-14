@@ -106,6 +106,7 @@ int main(int argv, char** args){
         SDL_RenderFillRect(pRenderer, &platformRect);
 
         SDL_RenderPresent(pRenderer);
+        SDL_Delay(1000/60);
     }
 
     SDL_DestroyTexture(pBackgroundTexture);
