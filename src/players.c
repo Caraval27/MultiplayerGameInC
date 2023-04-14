@@ -16,7 +16,7 @@ Player* createPlayer(int x, int y){
     pPlayer->posX = x;
     pPlayer->posY = y;
     pPlayer->velocityX = 0;
-    pPlayer->velocityY = 5;
+    pPlayer->velocityY = 1;
 
     return pPlayer;
 }
@@ -56,19 +56,36 @@ void movePlayer (Player* pPlayer, SDL_Rect playerRect, bool left, bool right, in
     if (pPlayer->posX > width-playerRect.w) pPlayer->posX = width-playerRect.w;
 }
 
-void playerCollisionPlatform(Player player, SDL_Rect playerRect, SDL_Rect platforms[], int nrOfPlatforms, float *pPlatformHeight, float *pMaxJumpHeight){
+/* void platformCollidePlayer(Player player, SDL_Rect playerRect, SDL_Rect platforms[], int nrOfPlatforms, float *pPlatformHeight, float *pMaxJumpHeight){
     for (int i = 0; i < nrOfPlatforms; i++){
-        if (player.posY + playerRect.h >= platforms[i].y &&
-            player.posY < platforms[i].y + platforms[i].h &&
-            player.posX + platforms[i].w >= platforms[i].x &&
-            player.posX < platforms[i].x + platforms[i].w &&
+        if (player.posY + playerRect.h >= platform.y &&
+            player.posY < platform.y + platform.h &&
+            player.posX + platform.w >= platform.x &&
+            player.posX < platform.x + platform.w &&
             player.velocityY >= 0){
-            *pPlatformHeight = platforms[i].h + 50;
-            *pMaxJumpHeight += platforms[i].h + 50; 
+            *pPlatformHeight = platform.h + 50;
+            *pMaxJumpHeight += platform.h + 50; 
         }
         else {
             *pPlatformHeight = 0;
             *pMaxJumpHeight = 200;
+        }
+    }
+} */
+
+void platformCollidePlayer(Player* pPlayer, SDL_Rect playerRect, SDL_Rect platform, int nrOfPlatforms, float *pPlatformHeight, float *pMaxJumpHeight){
+    for (int i = 0; i < nrOfPlatforms; i++){
+        if (pPlayer->posY + playerRect.h >= platform.y &&
+            pPlayer->posY < platform.y + platform.h &&
+            pPlayer->posX + platform.w >= platform.x &&
+            pPlayer->posX < platform.x + platform.w &&
+            pPlayer->velocityY >= 0){
+            *pPlatformHeight = platform.h + 50;
+            *pMaxJumpHeight += platform.h + 50; 
+        }
+        else {
+            *pPlatformHeight = 0;
+            *pMaxJumpHeight = 400;
         }
     }
 }

@@ -53,7 +53,7 @@ int main(int argv, char** args){
     Player* pPlayer = createPlayer((w - playerRect.w)/2, h - playerRect.h);
     Platform* pPlatform = createPlatform(w, h-200);
     SDL_Rect platformRect = {w, 50, PLATFORM_WIDTH, PLATFORM_HEIGHT};
- 
+    Player* plarrr[10];
 
     readFromFile(fp, keybinds);
     saveToFile(fp, keybinds);
@@ -103,14 +103,17 @@ int main(int argv, char** args){
 
         movePlayer(pPlayer, playerRect, left, right, w);
 
+        platformCollidePlayer(pPlayer, playerRect, platformRect, 1, &platformHeight, &maxJumpHeight);
+
         updatePlayer(pPlayer, &playerRect);
         updatePlatform(pPlatform, &platformRect);
         SDL_RenderClear(pRenderer);
    
         scrollBackground(&windowUpper, &windowLower, &imageUpper, &imageLower, h, pRenderer, pBackgroundTexture);
         
-        SDL_SetRenderDrawColor(pRenderer, 0, 255, 0, 255);
+        SDL_SetRenderDrawColor(pRenderer, 0, 0, 255, 255);
         SDL_RenderFillRect(pRenderer, &playerRect);
+        SDL_SetRenderDrawColor(pRenderer, 0, 255, 0, 255);
         SDL_RenderFillRect(pRenderer, &platformRect);
 
         SDL_RenderPresent(pRenderer);
