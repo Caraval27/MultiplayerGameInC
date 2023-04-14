@@ -4,10 +4,11 @@
 #include <SDL2/SDL_image.h>
 #include "../include/players.h"
 
+#define SPEED 100
+
 struct player{
     float posX, posY;
     float velocityY, velocityX;
-    float accelerationY, accelerationX;
 };
 
 Player* createPlayer(int x, int y){
@@ -16,8 +17,6 @@ Player* createPlayer(int x, int y){
     pPlayer->posY = y;
     pPlayer->velocityX = 0;
     pPlayer->velocityY = 5;
-    pPlayer->accelerationY = 0;
-    pPlayer->accelerationX = 0;
 
     return pPlayer;
 }
@@ -42,13 +41,14 @@ void jumpPlayer(Player* pPlayer, SDL_Rect playerRect, int h, float platformHeigh
 
 void movePlayer (Player* pPlayer, SDL_Rect playerRect, bool left, bool right, int width)
 {
+    if (pPlayer->velocityX > SPEED) pPlayer->velocityX = 0;
     if (left && !right){
-        pPlayer->velocityX += 5;
+        pPlayer->velocityX += SPEED;
         pPlayer->posX -= (pPlayer->velocityX)/60; //uppdaterar nya xpositionen
         
     }
     else if(right && !left){
-            pPlayer->velocityX += 5;
+            pPlayer->velocityX += SPEED;
             pPlayer->posX += (pPlayer->velocityX)/60;
     }
 
