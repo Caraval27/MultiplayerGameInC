@@ -10,7 +10,7 @@ struct platform{
 
 Platform* createPlatform(int windowWidth, int y){
     Platform* pPlatform = malloc(sizeof(Platform));
-    pPlatform->posX = rand()%windowWidth;
+    pPlatform->posX = rand()%(windowWidth- PLATFORM_WIDTH);
     pPlatform->posY = y;
     pPlatform->velocityY = 5;
 
