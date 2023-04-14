@@ -3,6 +3,7 @@
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_image.h>
 #include "../include/players.h"
+#include "../include/platforms.h"
 
 #define SPEED 100
 
@@ -13,20 +14,20 @@ struct player{
 
 Player* createPlayer(int x, int y){
     Player* pPlayer = malloc(sizeof(Player));
+    
     pPlayer->posX = x;
     pPlayer->posY = y;
     pPlayer->velocityX = 0;
-    pPlayer->velocityY = 1;
+    pPlayer->velocityY = 2;
 
     return pPlayer;
 }
 
-void jumpPlayer(Player* pPlayer, SDL_Rect playerRect, int windowHeight, float platformHeight, float maxJumpHeight){
-
+void jumpPlayer(Player* pPlayer, SDL_Rect playerRect, int windowHeight, float platformY, float maxJumpHeight){
     pPlayer->posY += pPlayer->velocityY;
     
-    if (pPlayer->posY + playerRect.h >= windowHeight - platformHeight){
-        pPlayer->posY = windowHeight - playerRect.h - platformHeight;
+    if (pPlayer->posY + playerRect.h >= windowHeight - platformY){
+        pPlayer->posY = windowHeight - playerRect.h - platformY;
         pPlayer->velocityY = -(pPlayer->velocityY);
     }
     if (playerRect.y <= 0){
@@ -39,8 +40,7 @@ void jumpPlayer(Player* pPlayer, SDL_Rect playerRect, int windowHeight, float pl
     }
 }
 
-void movePlayer(Player* pPlayer, SDL_Rect playerRect, bool left, bool right, int windowWidth)
-{
+void movePlayer(Player* pPlayer, SDL_Rect playerRect, bool left, bool right, int windowWidth){
     if (pPlayer->velocityX > SPEED) pPlayer->velocityX = 0;
     if (left && !right){
         pPlayer->velocityX += SPEED;
@@ -73,18 +73,18 @@ void movePlayer(Player* pPlayer, SDL_Rect playerRect, bool left, bool right, int
     }
 } */
 
-void platformCollidePlayer(Player* pPlayer, SDL_Rect playerRect, SDL_Rect platform, int nrOfPlatforms, float* pPlatformHeight, float* pMaxJumpHeight){
+void platformCollidePlayer(Player* pPlayer, SDL_Rect playerRect, SDL_Rect platform, int nrOfPlatforms, float* pPlatformY, float* pMaxJumpHeight){
     for (int i = 0; i < nrOfPlatforms; i++){
         if (pPlayer->posY + playerRect.h >= platform.y &&
             pPlayer->posY < platform.y + platform.h &&
-            pPlayer->posX + platform.w >= platform.x &&
+            pPlayer->posX + playerRect.w >= platform.x &&
             pPlayer->posX < platform.x + platform.w &&
             pPlayer->velocityY >= 0){
-            *pPlatformHeight = platform.h + 50;
+            *pPlatformY = platform.y + platform.h;
             *pMaxJumpHeight += platform.h + 50; 
         }
         else {
-            *pPlatformHeight = 0;
+            *pPlatformY = 0;
             *pMaxJumpHeight = 400;
         }
     }

@@ -15,7 +15,7 @@ int main(int argv, char** args){
     FILE *fp;
     bool isRunning = true, left = false, right = false;
     SDL_Event event;
-    float platformHeight = 0, maxJumpHeight = 400;
+    float currentPlatformY = 0, maxJumpHeight = 400;
     srand(time(0));
 
     if(SDL_Init(SDL_INIT_EVERYTHING) != 0){
@@ -93,8 +93,8 @@ int main(int argv, char** args){
         }
 
         movePlayer(pPlayer, playerRect, left, right, windowWidth);
-        jumpPlayer(pPlayer, playerRect, windowHeight, platformHeight, maxJumpHeight);
-        platformCollidePlayer(pPlayer, playerRect, platformRect, 1, &platformHeight, &maxJumpHeight);
+        jumpPlayer(pPlayer, playerRect, windowHeight, currentPlatformY, maxJumpHeight);
+        platformCollidePlayer(pPlayer, playerRect, platformRect, 1, &currentPlatformY, &maxJumpHeight);
 
         updateBackground(&windowUpperRect, &windowLowerRect, &imageUpperRect, &imageLowerRect, windowHeight, pRenderer, pBackgroundTexture);
         updatePlayer(pPlayer, &playerRect);
