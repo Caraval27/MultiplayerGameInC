@@ -1,4 +1,5 @@
 #ifndef PLATFORMS_H
+
 #define PLATFORMS_H
 
 #define PLATFORM_WIDTH 200

@@ -8,16 +8,14 @@
 #include "../include/players.h"
 #include "../include/platforms.h"
 
-
-#define NR_OF_KEYBINDS 3
-
 int main(int argv, char** args){
     SDL_DisplayMode displayMode;
-    int w, h, keybinds[NR_OF_KEYBINDS];
-    SDL_Rect windowUpper, windowLower, imageUpper, imageLower;
+    int windowWidth, windowHeight, keybinds[NR_OF_KEYBINDS];
+    SDL_Rect windowUpperRect, windowLowerRect, imageUpperRect, imageLowerRect;
     FILE *fp;
-    bool isRunning = true;
+    bool isRunning = true, left = false, right = false;
     SDL_Event event;
+    float platformHeight = 0, maxJumpHeight = 400;
     srand(time(0));
 
     if(SDL_Init(SDL_INIT_EVERYTHING) != 0){
@@ -30,10 +28,15 @@ int main(int argv, char** args){
         printf("Error: %s\n", SDL_GetError());
         return 1;
     }
-    w = displayMode.w;
-    h = displayMode.h;
 
-    SDL_Window* pWindow = SDL_CreateWindow("totally not a doodle jump clone", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, w, h, 0);
+    windowWidth = displayMode.w;
+    windowHeight = displayMode.h;
+    SDL_Rect playerRect = {(windowWidth - playerRect.w), (windowHeight - playerRect.h), 50, 50};
+    Player* pPlayer = createPlayer((windowWidth - playerRect.w) / 2, windowHeight - playerRect.h);
+    Platform* pPlatform = createPlatform(windowWidth, windowHeight - 200);
+    SDL_Rect platformRect = {windowWidth, 50, PLATFORM_WIDTH, PLATFORM_HEIGHT};
+
+    SDL_Window* pWindow = SDL_CreateWindow("Totally not a doodle jump clone", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, windowWidth, windowHeight, 0);
     if(!pWindow){
         printf("Error: %s\n", SDL_GetError());
         SDL_Quit();
@@ -47,21 +50,10 @@ int main(int argv, char** args){
         return 1;
     }
 
-    SDL_Texture *pBackgroundTexture = initBackground(pWindow, pRenderer, &windowUpper, &windowLower, &imageUpper, &imageLower, w, h);
-
-    SDL_Rect playerRect = {(w - playerRect.w), (h - playerRect.h), 50, 50};
-    Player* pPlayer = createPlayer((w - playerRect.w)/2, h - playerRect.h);
-    Platform* pPlatform = createPlatform(w, h-200);
-    SDL_Rect platformRect = {w, 50, PLATFORM_WIDTH, PLATFORM_HEIGHT};
- 
+    SDL_Texture* pBackgroundTexture = initBackground(pWindow, pRenderer, &windowUpperRect, &windowLowerRect, &imageUpperRect, &imageLowerRect, windowWidth, windowHeight);
 
     readFromFile(fp, keybinds);
     saveToFile(fp, keybinds);
-
-    float platformHeight = 0;
-    float maxJumpHeight = 400;
-    bool left, right;
-    left = right = false;
 
     while (isRunning){
         while (SDL_PollEvent(&event)){
@@ -72,7 +64,7 @@ int main(int argv, char** args){
                 case SDL_KEYDOWN:
                     switch (event.key.keysym.sym){
                         case SDLK_ESCAPE:
-                            isRunning=false;
+                            isRunning = false;
                            break;
                         case SDLK_RIGHT:
                         //case SDLK_D:
@@ -99,16 +91,13 @@ int main(int argv, char** args){
             }
         }
 
-        jumpPlayer(pPlayer, playerRect, h, platformHeight, maxJumpHeight);
+        jumpPlayer(pPlayer, playerRect, windowHeight, platformHeight, maxJumpHeight);
+        movePlayer(pPlayer, playerRect, left, right, windowWidth);
 
-        movePlayer(pPlayer, playerRect, left, right, w);
-
+        updateBackground(&windowUpperRect, &windowLowerRect, &imageUpperRect, &imageLowerRect, windowHeight, pRenderer, pBackgroundTexture);
         updatePlayer(pPlayer, &playerRect);
         updatePlatform(pPlatform, &platformRect);
-        SDL_RenderClear(pRenderer);
    
-        scrollBackground(&windowUpper, &windowLower, &imageUpper, &imageLower, h, pRenderer, pBackgroundTexture);
-        
         SDL_SetRenderDrawColor(pRenderer, 0, 255, 0, 255);
         SDL_RenderFillRect(pRenderer, &playerRect);
         SDL_RenderFillRect(pRenderer, &platformRect);
