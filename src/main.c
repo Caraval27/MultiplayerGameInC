@@ -46,13 +46,15 @@ int main(int argv, char** args){
     SDL_Texture *pBackgroundTexture = initBackground(pWindow, pRenderer, &windowUpper, &windowLower, &imageUpper, &imageLower, w, h);
 
     SDL_Rect playerRect = {(w - playerRect.w), (h - playerRect.h), 50, 50};
-    Player* pPlayer = createPlayer(0, (w - playerRect.w)/2);
+    Player* pPlayer = createPlayer((w - playerRect.w)/2, h - playerRect.h);
 
     readFromFile(fp, keybinds);
     saveToFile(fp, keybinds);
 
     float platformHeight = 0;
     float maxJumpHeight = 400;
+    bool left, right;
+    left = right = false;
 
     while (isRunning){
         while (SDL_PollEvent(&event)){
@@ -61,13 +63,38 @@ int main(int argv, char** args){
                     isRunning = false;
                 break;
                 case SDL_KEYDOWN:
-                    if (event.key.keysym.sym == SDLK_ESCAPE){
-                        isRunning = false;
+                    switch (event.key.keysym.sym){
+                        case SDLK_ESCAPE:
+                            isRunning=false;
+                           break;
+                        case SDLK_RIGHT:
+                        //case SDLK_D:
+                            right = true;
+                            break;
+                        case SDLK_LEFT:
+                        //case SDLK_A:
+                            left = true;
+                            break;
+                    }   
+                break;
+                case SDL_KEYUP:
+                    switch(event.key.keysym.sym){
+                        case SDLK_LEFT:
+                            left = false;
+                            //pPlayer->velocityX = 0;
+                            break;
+                        case SDLK_RIGHT:
+                            right = false;
+                            //pPlayer->velocityX = 0;
+                            break;
                     }
+                break;
             }
         }
 
         jumpPlayer(pPlayer, playerRect, h, platformHeight, maxJumpHeight);
+
+        movePlayer(pPlayer, playerRect, left, right, w);
 
         updatePlayer(pPlayer, &playerRect);
 

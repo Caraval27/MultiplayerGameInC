@@ -1,4 +1,5 @@
 #include <stdlib.h>
+#include <stdbool.h>
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_image.h>
 #include "../include/players.h"
@@ -12,7 +13,7 @@ struct player{
 Player* createPlayer(int x, int y){
     Player* pPlayer = malloc(sizeof(Player));
     pPlayer->posX = x;
-    pPlayer->posX = y;
+    pPlayer->posY = y;
     pPlayer->velocityX = 0;
     pPlayer->velocityY = 5;
     pPlayer->accelerationY = 0;
@@ -37,6 +38,22 @@ void jumpPlayer(Player* pPlayer, SDL_Rect playerRect, int h, float platformHeigh
         pPlayer->posY = maxJumpHeight - playerRect.h;
         pPlayer->velocityY = -(pPlayer->velocityY);
     }
+}
+
+void movePlayer (Player* pPlayer, SDL_Rect playerRect, bool left, bool right, int width)
+{
+    if (left && !right){
+        pPlayer->velocityX -= 5;
+        pPlayer->posX -= (pPlayer->velocityX)/60; //uppdaterar nya xpositionen
+        
+    }
+    else if(right && !left){
+            pPlayer->velocityX += 5;
+            pPlayer->posX += (pPlayer->velocityX)/60;
+    }
+
+    if(pPlayer->posX<0) pPlayer->posX = 0;
+    if (pPlayer->posX > width-playerRect.w) pPlayer->posX = width-playerRect.w;
 }
 
 void playerCollisionPlatform(Player player, SDL_Rect playerRect, SDL_Rect platforms[], int nrOfPlatforms, float *pPlatformHeight, float *pMaxJumpHeight){
