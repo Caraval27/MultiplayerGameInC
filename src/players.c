@@ -43,7 +43,7 @@ void jumpPlayer(Player* pPlayer, SDL_Rect playerRect, int h, float platformHeigh
 void movePlayer (Player* pPlayer, SDL_Rect playerRect, bool left, bool right, int width)
 {
     if (left && !right){
-        pPlayer->velocityX -= 5;
+        pPlayer->velocityX += 5;
         pPlayer->posX -= (pPlayer->velocityX)/60; //uppdaterar nya xpositionen
         
     }
