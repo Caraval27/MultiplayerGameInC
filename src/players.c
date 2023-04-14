@@ -21,12 +21,12 @@ Player* createPlayer(int x, int y){
     return pPlayer;
 }
 
-void jumpPlayer(Player* pPlayer, SDL_Rect playerRect, int h, float platformHeight, float maxJumpHeight){
+void jumpPlayer(Player* pPlayer, SDL_Rect playerRect, int windowHeight, float platformHeight, float maxJumpHeight){
 
     pPlayer->posY += pPlayer->velocityY;
     
-    if (pPlayer->posY + playerRect.h >= h - platformHeight){
-        pPlayer->posY = h - playerRect.h - platformHeight;
+    if (pPlayer->posY + playerRect.h >= windowHeight - platformHeight){
+        pPlayer->posY = windowHeight - playerRect.h - platformHeight;
         pPlayer->velocityY = -(pPlayer->velocityY);
     }
     if (playerRect.y <= 0){
@@ -39,21 +39,21 @@ void jumpPlayer(Player* pPlayer, SDL_Rect playerRect, int h, float platformHeigh
     }
 }
 
-void movePlayer (Player* pPlayer, SDL_Rect playerRect, bool left, bool right, int width)
+void movePlayer(Player* pPlayer, SDL_Rect playerRect, bool left, bool right, int windowWidth)
 {
     if (pPlayer->velocityX > SPEED) pPlayer->velocityX = 0;
     if (left && !right){
         pPlayer->velocityX += SPEED;
-        pPlayer->posX -= (pPlayer->velocityX)/60; //uppdaterar nya xpositionen
+        pPlayer->posX -= (pPlayer->velocityX) / 60; //uppdaterar nya xpositionen
         
     }
     else if(right && !left){
             pPlayer->velocityX += SPEED;
-            pPlayer->posX += (pPlayer->velocityX)/60;
+            pPlayer->posX += (pPlayer->velocityX) / 60;
     }
 
     if(pPlayer->posX<0) pPlayer->posX = 0;
-    if (pPlayer->posX > width-playerRect.w) pPlayer->posX = width-playerRect.w;
+    if (pPlayer->posX > windowWidth-playerRect.w) pPlayer->posX = windowWidth - playerRect.w;
 }
 
 /* void platformCollidePlayer(Player player, SDL_Rect playerRect, SDL_Rect platforms[], int nrOfPlatforms, float *pPlatformHeight, float *pMaxJumpHeight){
@@ -73,7 +73,7 @@ void movePlayer (Player* pPlayer, SDL_Rect playerRect, bool left, bool right, in
     }
 } */
 
-void platformCollidePlayer(Player* pPlayer, SDL_Rect playerRect, SDL_Rect platform, int nrOfPlatforms, float *pPlatformHeight, float *pMaxJumpHeight){
+void platformCollidePlayer(Player* pPlayer, SDL_Rect playerRect, SDL_Rect platform, int nrOfPlatforms, float* pPlatformHeight, float* pMaxJumpHeight){
     for (int i = 0; i < nrOfPlatforms; i++){
         if (pPlayer->posY + playerRect.h >= platform.y &&
             pPlayer->posY < platform.y + platform.h &&
