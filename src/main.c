@@ -5,6 +5,7 @@
 #include "../include/world.h"
 #include "../include/keybinds.h"
 #include "../include/players.h"
+#include "../include/platforms.h"
 
 #define NR_OF_KEYBINDS 3
 
