@@ -2,7 +2,7 @@
 #include <SDL2/SDL_image.h>
 #include "../include/world.h"
 
-SDL_Texture * initBackground(SDL_Window *pWindow, SDL_Renderer *pRenderer, SDL_Rect *pWindowUpperRect, SDL_Rect *pWindowLowerRect, SDL_Rect *pImageUpperRect, SDL_Rect *pImageLowerRect, int w, int h){
+SDL_Texture * initBackground(SDL_Window *pWindow, SDL_Renderer *pRenderer, SDL_Rect *pWindowUpperRect, SDL_Rect *pWindowLowerRect, SDL_Rect *pImageUpperRect, SDL_Rect *pImageLowerRect, int windowWidth, int windowHeight){
     SDL_Surface *pSurface = IMG_Load("../assets/background.png");
     if(!pSurface){
         printf("Error: %s\n", SDL_GetError());
@@ -22,25 +22,25 @@ SDL_Texture * initBackground(SDL_Window *pWindow, SDL_Renderer *pRenderer, SDL_R
     }
     pWindowUpperRect->x = 0;
     pWindowUpperRect->y = 0;
-    pWindowUpperRect->w = w;
+    pWindowUpperRect->w = windowWidth;
     pWindowUpperRect->h = 0;
     pWindowLowerRect->x = 0;
     pWindowLowerRect->y = 0;
-    pWindowLowerRect->w = w;
-    pWindowLowerRect->h = h;
+    pWindowLowerRect->w = windowWidth;
+    pWindowLowerRect->h = windowHeight;
     pImageUpperRect->x = 0;
     pImageUpperRect->y = IMAGE_HEIGHT;
-    pImageUpperRect->w = w;
+    pImageUpperRect->w = windowWidth;
     pImageUpperRect->h = 0;
     pImageLowerRect->x = 0;
-    pImageLowerRect->y = IMAGE_HEIGHT - h;
-    pImageLowerRect->w = w;
-    pImageLowerRect->h = h;
+    pImageLowerRect->y = IMAGE_HEIGHT - windowHeight;
+    pImageLowerRect->w = windowWidth;
+    pImageLowerRect->h = windowHeight;
 
     return pTexture;
 }
 
-void updateBackground(SDL_Rect* pWindowUpperRect, SDL_Rect* pWindowLowerRect, SDL_Rect* pImageUpperRect, SDL_Rect* pImageLowerRect, int h, SDL_Renderer* pRenderer, SDL_Texture* pBackgroundTexture){
+void updateBackground(SDL_Rect* pWindowUpperRect, SDL_Rect* pWindowLowerRect, SDL_Rect* pImageUpperRect, SDL_Rect* pImageLowerRect, int windowHeight, SDL_Renderer* pRenderer, SDL_Texture* pBackgroundTexture){
 
     if(pImageLowerRect->y < 0){
         pWindowUpperRect->h += 1;
@@ -58,11 +58,11 @@ void updateBackground(SDL_Rect* pWindowUpperRect, SDL_Rect* pWindowLowerRect, SD
         pWindowUpperRect->y = 0;
         pWindowUpperRect->h = 0;
         pWindowLowerRect->y = 0;
-        pWindowLowerRect->h = h;
+        pWindowLowerRect->h = windowHeight;
         pImageUpperRect->y = IMAGE_HEIGHT;
         pImageUpperRect->h = 0;
-        pImageLowerRect->y = IMAGE_HEIGHT - h;
-        pImageLowerRect->h = h;
+        pImageLowerRect->y = IMAGE_HEIGHT - windowHeight;
+        pImageLowerRect->h = windowHeight;
     }
 
     SDL_RenderCopy(pRenderer, pBackgroundTexture, pImageUpperRect, pWindowUpperRect);
