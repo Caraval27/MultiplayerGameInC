@@ -5,6 +5,10 @@
 #define PLATFORM_HEIGHT 10
 #define MAX_NR_PLATFORMS 4
 
+Platform* createPlatform(int windowHeight, int y);
+void updatePlatform(Platform* pPlatform, SDL_Rect* pPlatformRect);
+void destroyPlatform(Platform* pPlatform);
+
 typedef struct platform Platform;
 
 #endif
