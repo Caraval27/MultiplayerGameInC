@@ -2,10 +2,12 @@
 #include <stdbool.h>
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_image.h>
+#include <time.h>
 #include "../include/world.h"
 #include "../include/keybinds.h"
 #include "../include/players.h"
 #include "../include/platforms.h"
+
 
 #define NR_OF_KEYBINDS 3
 
@@ -16,6 +18,7 @@ int main(int argv, char** args){
     FILE *fp;
     bool isRunning = true;
     SDL_Event event;
+    srand(time(0));
 
     if(SDL_Init(SDL_INIT_EVERYTHING) != 0){
         printf("Error: %s\n", SDL_GetError());
@@ -48,6 +51,9 @@ int main(int argv, char** args){
 
     SDL_Rect playerRect = {(w - playerRect.w), (h - playerRect.h), 50, 50};
     Player* pPlayer = createPlayer((w - playerRect.w)/2, h - playerRect.h);
+    Platform* pPlatform = createPlatform(w, h-200);
+    SDL_Rect platformRect = {w, 50, PLATFORM_WIDTH, PLATFORM_HEIGHT};
+ 
 
     readFromFile(fp, keybinds);
     saveToFile(fp, keybinds);
@@ -98,13 +104,14 @@ int main(int argv, char** args){
         movePlayer(pPlayer, playerRect, left, right, w);
 
         updatePlayer(pPlayer, &playerRect);
-
+        updatePlatform(pPlatform, &platformRect);
         SDL_RenderClear(pRenderer);
    
         scrollBackground(&windowUpper, &windowLower, &imageUpper, &imageLower, h, pRenderer, pBackgroundTexture);
         
         SDL_SetRenderDrawColor(pRenderer, 0, 255, 0, 255);
         SDL_RenderFillRect(pRenderer, &playerRect);
+        SDL_RenderFillRect(pRenderer, &platformRect);
 
         SDL_RenderPresent(pRenderer);
 

@@ -8,9 +8,9 @@ struct platform{
     float velocityY;
 };
 
-Platform* createPlatform(int windowHeight, int y){
+Platform* createPlatform(int windowWidth, int y){
     Platform* pPlatform = malloc(sizeof(Platform));
-    pPlatform->posX = rand()%windowHeight;
+    pPlatform->posX = rand()%windowWidth;
     pPlatform->posY = y;
     pPlatform->velocityY = 5;
 
