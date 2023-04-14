@@ -35,6 +35,7 @@ int main(int argv, char** args){
     Player* pPlayer = createPlayer((windowWidth - playerRect.w) / 2, windowHeight - playerRect.h);
     Platform* pPlatform = createPlatform(windowWidth, windowHeight - 200);
     SDL_Rect platformRect = {windowWidth, 50, PLATFORM_WIDTH, PLATFORM_HEIGHT};
+    Player* plarrr[10];
 
     SDL_Window* pWindow = SDL_CreateWindow("Totally not a doodle jump clone", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, windowWidth, windowHeight, 0);
     if(!pWindow){
@@ -91,20 +92,20 @@ int main(int argv, char** args){
             }
         }
 
-        jumpPlayer(pPlayer, playerRect, windowHeight, platformHeight, maxJumpHeight);
         movePlayer(pPlayer, playerRect, left, right, windowWidth);
+        jumpPlayer(pPlayer, playerRect, windowHeight, platformHeight, maxJumpHeight);
+        platformCollidePlayer(pPlayer, playerRect, platformRect, 1, &platformHeight, &maxJumpHeight);
 
         updateBackground(&windowUpperRect, &windowLowerRect, &imageUpperRect, &imageLowerRect, windowHeight, pRenderer, pBackgroundTexture);
         updatePlayer(pPlayer, &playerRect);
         updatePlatform(pPlatform, &platformRect);
-   
-        SDL_SetRenderDrawColor(pRenderer, 0, 255, 0, 255);
+        
+        SDL_SetRenderDrawColor(pRenderer, 0, 0, 255, 255);
         SDL_RenderFillRect(pRenderer, &playerRect);
+        SDL_SetRenderDrawColor(pRenderer, 0, 255, 0, 255);
         SDL_RenderFillRect(pRenderer, &platformRect);
 
         SDL_RenderPresent(pRenderer);
-
-        SDL_Delay(10);
     }
 
     SDL_DestroyTexture(pBackgroundTexture);
