@@ -9,8 +9,6 @@
 #include "../include/platforms.h"
 #include "../include/menu.h"
 
-#define NR_OF_KEYBINDS 3
-
 typedef enum {
     MAIN_MENU, SETTINGS_MENU, ONGOING, GAME_MENU, GAME_OVER
 }GameState;
@@ -110,9 +108,7 @@ void runGame(Game *pGame){
         switch (pGame->state) {
             case MAIN_MENU:
                 while (SDL_PollEvent(&event)){
-                    SDL_RenderCopy(pGame->pRenderer, pGame->pMenuBackgroundTexture, &pGame->imageUpperRect, &pGame->windowUpperRect);
-                    SDL_RenderCopy(pGame->pRenderer, pGame->pMenuBackgroundTexture, &pGame->imageLowerRect, &pGame->windowLowerRect);
-                    SDL_RenderPresent(pGame->pRenderer);
+                    renderMenuBackground(pGame->pRenderer, pGame->pMenuBackgroundTexture, pGame->imageUpperRect, pGame->imageLowerRect, pGame->windowUpperRect, pGame->windowLowerRect);
                     if (event.type == SDL_QUIT) isRunning = false;
                     else if (event.type == SDL_KEYDOWN && event.key.keysym.scancode == SDL_SCANCODE_SPACE){
                         /* resetAsteroids(pGame);

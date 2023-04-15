@@ -23,7 +23,7 @@ SDL_Texture* initMenuBackground(SDL_Window* pWindow, SDL_Renderer* pRenderer, SD
     pWindowUpperRect->x = 0;
     pWindowUpperRect->y = 0;
     pWindowUpperRect->w = windowWidth;
-    pWindowUpperRect->h = windowHeight;
+    pWindowUpperRect->h = 0;
     pWindowLowerRect->x = 0;
     pWindowLowerRect->y = 0;
     pWindowLowerRect->w = windowWidth;
@@ -34,8 +34,14 @@ SDL_Texture* initMenuBackground(SDL_Window* pWindow, SDL_Renderer* pRenderer, SD
     pImageUpperRect->h = 0;
     pImageLowerRect->x = 0;
     pImageLowerRect->y = MENU_IMAGE_HEIGHT - windowHeight;
-    pImageLowerRect->w = windowWidth;
+    pImageLowerRect->w = windowWidth; //windowWidth;
     pImageLowerRect->h = windowHeight;
 
     return pTexture;
+}
+
+void renderMenuBackground(SDL_Renderer* pRenderer, SDL_Texture* pTexture, SDL_Rect imageUpperRect, SDL_Rect imageLowerRect, SDL_Rect windowUpperRect, SDL_Rect windowLowerRect){
+    SDL_RenderCopy(pRenderer, pTexture, &imageUpperRect, &windowUpperRect);
+    SDL_RenderCopy(pRenderer, pTexture, &imageLowerRect, &windowLowerRect);
+    SDL_RenderPresent(pRenderer);
 }
