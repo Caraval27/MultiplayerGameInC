@@ -147,6 +147,12 @@ void runGame(Graphics *pGraphics){
 }
 
 void quitGame(Graphics *pGraphics){
+    if(pGraphics->pPlayer){
+        destroyPlayer(pGraphics->pPlayer);
+    }
+    if(pGraphics->pPlatform){
+        destroyPlatform(pGraphics->pPlatform);
+    }
     if(pGraphics->pBackgroundTexture){
         SDL_DestroyTexture(pGraphics->pBackgroundTexture);
     }
