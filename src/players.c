@@ -92,12 +92,12 @@ void platformCollidePlayer(Player* pPlayer, SDL_Rect playerRect, SDL_Rect platfo
     } 
     /* if (SDL_HasIntersection(&playerRect, &platform)){
         *pPlatformY = platform.y + platform.h;
-        //*pMaxJumpHeight += platform.h + 50; 
+        *pMaxJumpHeight += platform.h + 50; 
         playerRect.y -= 50;
     } 
     else {
         *pPlatformY = 0;
-        //*pMaxJumpHeight = 400;
+        *pMaxJumpHeight = 400;
     } */
 }
 

@@ -20,22 +20,22 @@ SDL_Texture* initMenuBackground(SDL_Window* pWindow, SDL_Renderer* pRenderer, SD
         SDL_Quit();
         exit(1);
     }
-    /* pWindowUpperRect->x = 0;
+    pWindowUpperRect->x = 0;
     pWindowUpperRect->y = 0;
     pWindowUpperRect->w = windowWidth;
-    pWindowUpperRect->h = 0;
+    pWindowUpperRect->h = windowHeight;
     pWindowLowerRect->x = 0;
     pWindowLowerRect->y = 0;
     pWindowLowerRect->w = windowWidth;
-    pWindowLowerRect->h = windowHeight; */
-    /* pImageUpperRect->x = 0;
+    pWindowLowerRect->h = windowHeight; 
+    pImageUpperRect->x = 0;
     pImageUpperRect->y = MENU_IMAGE_HEIGHT;
     pImageUpperRect->w = windowWidth;
     pImageUpperRect->h = 0;
     pImageLowerRect->x = 0;
     pImageLowerRect->y = MENU_IMAGE_HEIGHT - windowHeight;
     pImageLowerRect->w = windowWidth;
-    pImageLowerRect->h = windowHeight; */
+    pImageLowerRect->h = windowHeight;
 
     return pTexture;
 }
