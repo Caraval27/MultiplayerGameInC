@@ -10,8 +10,12 @@
 #include "../include/menu.h"
 
 typedef enum {
-    MAIN_MENU, SETTINGS_MENU, ONGOING, GAME_MENU, GAME_OVER
-}GameState;
+    MAIN_MENU,
+	SETTINGS_MENU,
+	ONGOING,
+	GAME_MENU,
+	GAME_OVER
+} GameState;
 
 typedef struct {
     int windowWidth, windowHeight, keybinds[NR_OF_KEYBINDS];
@@ -123,7 +127,7 @@ void runGame(Game *pGame){
                 }
             break;
             case SETTINGS_MENU:
-                
+
             break;
             case ONGOING:
                 while (SDL_PollEvent(&event)){
@@ -177,10 +181,10 @@ void runGame(Game *pGame){
                 SDL_Delay(1000/60);
             break;
             case GAME_MENU:
-                
+
             break;
             case GAME_OVER:
-                
+
             break;
         }
     }
