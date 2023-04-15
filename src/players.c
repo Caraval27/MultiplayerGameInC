@@ -18,7 +18,7 @@ Player* createPlayer(int x, int y){
     pPlayer->posX = x;
     pPlayer->posY = y;
     pPlayer->velocityX = 0;
-    pPlayer->velocityY = 2;
+    pPlayer->velocityY = 5;
 
     return pPlayer;
 }
@@ -80,14 +80,25 @@ void platformCollidePlayer(Player* pPlayer, SDL_Rect playerRect, SDL_Rect platfo
             pPlayer->posX + playerRect.w >= platform.x &&
             pPlayer->posX < platform.x + platform.w &&
             pPlayer->velocityY >= 0){
-            *pPlatformY = platform.y + platform.h;
-            *pMaxJumpHeight += platform.h + 50; 
+            pPlayer->posY = platform.y - playerRect.h; // vet ej om behövs
+            *pPlatformY = platform.y + platform.h; 
+            *pMaxJumpHeight += 100;
+            pPlayer->velocityY = -(pPlayer->velocityY);
         }
         else {
             *pPlatformY = 0;
             *pMaxJumpHeight = 400;
         }
-    }
+    } 
+    /* if (SDL_HasIntersection(&playerRect, &platform)){
+        *pPlatformY = platform.y + platform.h;
+        //*pMaxJumpHeight += platform.h + 50; 
+        playerRect.y -= 50;
+    } 
+    else {
+        *pPlatformY = 0;
+        //*pMaxJumpHeight = 400;
+    } */
 }
 
 void updatePlayer(Player* pPlayer, SDL_Rect* pPlayerRect){

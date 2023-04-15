@@ -129,8 +129,8 @@ void runGame(Graphics *pGraphics){
         }
 
         movePlayer(pGraphics->pPlayer, pGraphics->playerRect, left, right, pGraphics->windowWidth);
-        jumpPlayer(pGraphics->pPlayer, pGraphics->playerRect, pGraphics->windowHeight, currentPlatformY, maxJumpHeight);
         platformCollidePlayer(pGraphics->pPlayer, pGraphics->playerRect, pGraphics->platformRect, 1, &currentPlatformY, &maxJumpHeight);
+        jumpPlayer(pGraphics->pPlayer, pGraphics->playerRect, pGraphics->windowHeight, currentPlatformY, maxJumpHeight);
 
         updateBackground(&pGraphics->windowUpperRect, &pGraphics->windowLowerRect, &pGraphics->imageUpperRect, &pGraphics->imageLowerRect, pGraphics->windowHeight, pGraphics->pRenderer, pGraphics->pBackgroundTexture);
         updatePlayer(pGraphics->pPlayer, &pGraphics->playerRect);
