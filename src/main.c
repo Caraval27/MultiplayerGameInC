@@ -24,6 +24,9 @@ typedef struct {
 	Platform **platforms;
     SDL_Rect playerRect, platformRect;
     GameState state;
+
+    SDL_Rect menuBackgroundRect;
+
 } Game;
 
 int initiateGraphics(Game *pGame);
@@ -73,7 +76,7 @@ int initiateGraphics(Game *pGame){
         quitGame(pGame);
         return 0;
     }
-    pGame->pMenuBackgroundTexture = initMenuBackground(pGame->pWindow, pGame->pRenderer, &pGame->windowUpperRect, &pGame->windowLowerRect, &pGame->imageUpperRect, &pGame->imageLowerRect, pGame->windowWidth, pGame->windowHeight);
+    pGame->pMenuBackgroundTexture = initMenuBackground(pGame->pWindow, pGame->pRenderer, &pGame->menuBackgroundRect, pGame->windowWidth, pGame->windowHeight);
     if(!pGame->pMenuBackgroundTexture){
         printf("Error: %s\n", SDL_GetError());
         quitGame(pGame);
@@ -108,7 +111,7 @@ void runGame(Game *pGame){
         switch (pGame->state) {
             case MAIN_MENU:
                 while (SDL_PollEvent(&event)){
-                    renderMenuBackground(pGame->pRenderer, pGame->pMenuBackgroundTexture, pGame->imageUpperRect, pGame->imageLowerRect, pGame->windowUpperRect, pGame->windowLowerRect);
+                    renderMenuBackground(pGame->pRenderer, pGame->pMenuBackgroundTexture, pGame->menuBackgroundRect);
                     if (event.type == SDL_QUIT || event.type == SDL_KEYDOWN && event.key.keysym.scancode == SDL_SCANCODE_ESCAPE) isRunning = false;
                     else if (event.type == SDL_KEYDOWN && event.key.keysym.scancode == SDL_SCANCODE_SPACE){
                         /* resetAsteroids(pGame);
