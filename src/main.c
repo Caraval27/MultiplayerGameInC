@@ -18,6 +18,7 @@ typedef struct {
     SDL_Rect windowUpperRect, windowLowerRect, imageUpperRect, imageLowerRect;
     Player* pPlayer;
     Platform* pPlatform;
+	Platform **platforms;
     SDL_Rect playerRect, platformRect;
 } Game;
 
