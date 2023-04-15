@@ -7,19 +7,25 @@
 #include "../include/keybinds.h"
 #include "../include/players.h"
 #include "../include/platforms.h"
+#include "../include/menu.h"
 
 #define NR_OF_KEYBINDS 3
+
+typedef enum {
+    MAIN_MENU, SETTINGS_MENU, ONGOING, GAME_MENU, GAME_OVER
+}GameState;
 
 typedef struct {
     int windowWidth, windowHeight, keybinds[NR_OF_KEYBINDS];
     SDL_Window *pWindow;
     SDL_Renderer *pRenderer;
-    SDL_Texture *pBackgroundTexture;
+    SDL_Texture *pBackgroundTexture, *pMenuBackgroundTexture;
     SDL_Rect windowUpperRect, windowLowerRect, imageUpperRect, imageLowerRect;
     Player* pPlayer;
     Platform* pPlatform;
 	Platform **platforms;
     SDL_Rect playerRect, platformRect;
+    GameState state;
 } Game;
 
 int initiateGraphics(Game *pGame);
@@ -69,6 +75,12 @@ int initiateGraphics(Game *pGame){
         quitGame(pGame);
         return 0;
     }
+    pGame->pMenuBackgroundTexture = initMenuBackground(pGame->pWindow, pGame->pRenderer, &pGame->windowUpperRect, &pGame->windowLowerRect, &pGame->imageUpperRect, &pGame->imageLowerRect, pGame->windowWidth, pGame->windowHeight);
+    if(!pGame->pMenuBackgroundTexture){
+        printf("Error: %s\n", SDL_GetError());
+        quitGame(pGame);
+        return 0;
+    }
 
     pGame->playerRect.x = pGame->windowWidth - pGame->playerRect.w;
     pGame->playerRect.y = pGame->windowHeight - pGame->playerRect.h;
@@ -84,6 +96,8 @@ int initiateGraphics(Game *pGame){
 
     readFromFile(fp, pGame->keybinds);
     saveToFile(fp, pGame->keybinds);
+    pGame->state = MAIN_MENU;
+
     return 1;
 }
 
@@ -93,56 +107,83 @@ void runGame(Game *pGame){
     SDL_Event event;
 
     while (isRunning){
-        while (SDL_PollEvent(&event)){
-            switch (event.type){
-                case SDL_QUIT:
-                    isRunning = false;
-                break;
-                case SDL_KEYDOWN:
-                    switch (event.key.keysym.sym){
-                        case SDLK_ESCAPE:
-                            isRunning = false;
-                           break;
-                        case SDLK_RIGHT:
-                        //case SDLK_D:
-                            right = true;
-                            break;
-                        case SDLK_LEFT:
-                        //case SDLK_A:
-                            left = true;
-                            break;
+        switch (pGame->state) {
+            case MAIN_MENU:
+                while (SDL_PollEvent(&event)){
+                    SDL_RenderCopy(pGame->pRenderer, pGame->pMenuBackgroundTexture, &pGame->imageUpperRect, &pGame->windowUpperRect);
+                    SDL_RenderCopy(pGame->pRenderer, pGame->pMenuBackgroundTexture, &pGame->imageLowerRect, &pGame->windowLowerRect);
+                    SDL_RenderPresent(pGame->pRenderer);
+                    if (event.type == SDL_QUIT) isRunning = false;
+                    else if (event.type == SDL_KEYDOWN && event.key.keysym.scancode == SDL_SCANCODE_SPACE){
+                        /* resetAsteroids(pGame);
+                        resetRocket(pGame->pRocket);
+                        pGame->startTime = SDL_GetTicks64();
+                        pGame->gameTime = -1; */
+                        pGame->state = ONGOING;
                     }
-                break;
-                case SDL_KEYUP:
-                    switch(event.key.keysym.sym){
-                        case SDLK_LEFT:
-                            left = false;
-                            //pPlayer->velocityX = 0;
-                            break;
-                        case SDLK_RIGHT:
-                            right = false;
-                            //pPlayer->velocityX = 0;
-                            break;
-                    }
-                break;
-            }
+                }
+            break;
+            case SETTINGS_MENU:
+                
+            break;
+            case ONGOING:
+                while (SDL_PollEvent(&event)){
+                switch (event.type){
+                    case SDL_QUIT:
+                        isRunning = false;
+                    break;
+                    case SDL_KEYDOWN:
+                        switch (event.key.keysym.sym){
+                            case SDLK_ESCAPE:
+                                isRunning = false;
+                                break;
+                            case SDLK_RIGHT:
+                            //case SDLK_D:
+                                right = true;
+                                break;
+                            case SDLK_LEFT:
+                            //case SDLK_A:
+                                left = true;
+                                break;
+                        }
+                    break;
+                    case SDL_KEYUP:
+                        switch(event.key.keysym.sym){
+                            case SDLK_LEFT:
+                                left = false;
+                                //pPlayer->velocityX = 0;
+                                break;
+                            case SDLK_RIGHT:
+                                right = false;
+                                //pPlayer->velocityX = 0;
+                                break;
+                        }
+                    break;
+                }
+                }
+                movePlayer(pGame->pPlayer, pGame->playerRect, left, right, pGame->windowWidth);
+                platformCollidePlayer(pGame->pPlayer, pGame->playerRect, pGame->platformRect, 1, &currentPlatformY, &maxJumpHeight);
+                jumpPlayer(pGame->pPlayer, pGame->playerRect, pGame->windowHeight, currentPlatformY, maxJumpHeight);
+
+                updateBackground(&pGame->windowUpperRect, &pGame->windowLowerRect, &pGame->imageUpperRect, &pGame->imageLowerRect, pGame->windowHeight, pGame->pRenderer, pGame->pBackgroundTexture);
+                updatePlayer(pGame->pPlayer, &pGame->playerRect);
+                updatePlatform(pGame->pPlatform, &pGame->platformRect);
+
+                SDL_SetRenderDrawColor(pGame->pRenderer, 0, 0, 255, 255);
+                SDL_RenderFillRect(pGame->pRenderer, &pGame->playerRect);
+                SDL_SetRenderDrawColor(pGame->pRenderer, 0, 255, 0, 255);
+                SDL_RenderFillRect(pGame->pRenderer, &pGame->platformRect);
+
+                SDL_RenderPresent(pGame->pRenderer);
+                SDL_Delay(1000/60);
+            break;
+            case GAME_MENU:
+                
+            break;
+            case GAME_OVER:
+                
+            break;
         }
-
-        movePlayer(pGame->pPlayer, pGame->playerRect, left, right, pGame->windowWidth);
-        platformCollidePlayer(pGame->pPlayer, pGame->playerRect, pGame->platformRect, 1, &currentPlatformY, &maxJumpHeight);
-        jumpPlayer(pGame->pPlayer, pGame->playerRect, pGame->windowHeight, currentPlatformY, maxJumpHeight);
-
-        updateBackground(&pGame->windowUpperRect, &pGame->windowLowerRect, &pGame->imageUpperRect, &pGame->imageLowerRect, pGame->windowHeight, pGame->pRenderer, pGame->pBackgroundTexture);
-        updatePlayer(pGame->pPlayer, &pGame->playerRect);
-        updatePlatform(pGame->pPlatform, &pGame->platformRect);
-
-        SDL_SetRenderDrawColor(pGame->pRenderer, 0, 0, 255, 255);
-        SDL_RenderFillRect(pGame->pRenderer, &pGame->playerRect);
-        SDL_SetRenderDrawColor(pGame->pRenderer, 0, 255, 0, 255);
-        SDL_RenderFillRect(pGame->pRenderer, &pGame->platformRect);
-
-        SDL_RenderPresent(pGame->pRenderer);
-        SDL_Delay(1000/60);
     }
 }
 
