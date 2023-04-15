@@ -1,5 +1,31 @@
 #include "../include/main.h"
 
+#define PLANK_SCROLL_SPEED 1
+
+Plank *createPlank(float x, float y, float w, float h) {
+	Plank *pPlank = malloc(sizeof(Plank));
+	pPlank->xPos = x;
+	pPlank->yPos = y;
+	pPlank->width = w;
+	pPlank->height = h;
+	return pPlank;
+}
+
+void scrollPlank(Plank *pPlank) {
+	pPlank->yPos += PLANK_SCROLL_SPEED;
+	// remember to destroy plank if out of bounds
+}
+
+void renderPlank(SDL_Renderer *pRenderer, Plank *pPlank) {
+	SDL_Rect rect;
+	rect.x = pPlank->xPos;
+	rect.y = pPlank->yPos;
+	rect.w = pPlank->width;
+	rect.h = pPlank->height;
+	SDL_SetRenderDrawColor(pRenderer, 255, 0, 0, 255);
+	SDL_RenderFillRect(pRenderer, &rect);
+}
+
 struct platform{
     float posX, posY;
     float velocityY;

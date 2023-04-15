@@ -21,7 +21,8 @@
 		"platforms.h": "c",
 		"sdl_image.h": "c",
 		"stdlib.h": "c",
-		"main.h": "c"
+		"main.h": "c",
+		"world.h": "c"
 	},
 	"C_Cpp.default.configurationProvider": "ms-vscode.makefile-tools"
 }

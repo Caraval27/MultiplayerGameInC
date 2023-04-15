@@ -11,7 +11,7 @@ int main(int argv, char** args){
 }
 
 int initiateGraphics(Game *pGame){
-    srand(time(0));
+    srand(time(NULL));
     FILE *fp;
     if(SDL_Init(SDL_INIT_EVERYTHING) != 0){
         printf("Error: %s\n", SDL_GetError());
@@ -139,6 +139,25 @@ void runGame(Game *pGame){
                 SDL_RenderFillRect(pGame->pRenderer, &pGame->playerRect);
                 SDL_SetRenderDrawColor(pGame->pRenderer, 0, 255, 0, 255);
                 SDL_RenderFillRect(pGame->pRenderer, &pGame->platformRect);
+
+				if (SDL_GetTicks64() % 2000 < 17) {
+					int i = 0;
+					while (pGame->planks[i]) i++;
+					int width = 400;
+					int height = 20;
+					int x = (rand() % (pGame->windowWidth - width - (width/4)*2)) + width/4;
+					int y = 0 - height;
+					pGame->planks[i] = createPlank(x, y, width, height);
+				}
+
+				{
+					int i = 0;
+					while (pGame->planks[i]) {
+						renderPlank(pGame->pRenderer, pGame->planks[i]);
+						scrollPlank(pGame->planks[i]);
+						i++;
+					}
+				}
 
                 SDL_RenderPresent(pGame->pRenderer);
                 SDL_Delay(1000/60);

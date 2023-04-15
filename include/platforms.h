@@ -7,6 +7,14 @@
 
 typedef struct platform Platform;
 
+typedef struct {
+	float xPos, yPos, width, height;
+} Plank;
+
+Plank *createPlank(float x, float y, float w, float h);
+void scrollPlank(Plank *pPlank);
+void renderPlank(SDL_Renderer *pRenderer, Plank *pPlank);
+
 Platform* createPlatform(int windowHeight, int y);
 void updatePlatform(Platform* pPlatform, SDL_Rect* pPlatformRect);
 void destroyPlatform(Platform* pPlatform);
