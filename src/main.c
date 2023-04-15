@@ -10,7 +10,7 @@
 
 #define NR_OF_KEYBINDS 3
 
-struct graphics{
+typedef struct {
     int windowWidth, windowHeight, keybinds[NR_OF_KEYBINDS];
     SDL_Window *pWindow;
     SDL_Renderer *pRenderer;
@@ -18,25 +18,25 @@ struct graphics{
     SDL_Rect windowUpperRect, windowLowerRect, imageUpperRect, imageLowerRect;
     Player* pPlayer;
     Platform* pPlatform;
+	Platform **platforms;
     SDL_Rect playerRect, platformRect;
-};
-typedef struct graphics Graphics;
+} Game;
 
-int initiateGraphics(Graphics *pGraphics);
-void runGame(Graphics *pGraphics);
-void quitGame(Graphics *pGraphics);
+int initiateGraphics(Game *pGame);
+void runGame(Game *pGame);
+void quitGame(Game *pGame);
 
 int main(int argv, char** args){
-    Graphics g = {0}; 
-    if (!initiateGraphics(&g)){
+    Game game = {0};
+    if (!initiateGraphics(&game)){
         return 1;
     }
-    runGame(&g);
-    quitGame(&g);
+    runGame(&game);
+    quitGame(&game);
     return 0;
 }
 
-int initiateGraphics(Graphics *pGraphics){
+int initiateGraphics(Game *pGame){
     srand(time(0));
     FILE *fp;
     if(SDL_Init(SDL_INIT_EVERYTHING) != 0){
@@ -46,48 +46,48 @@ int initiateGraphics(Graphics *pGraphics){
     SDL_DisplayMode displayMode;
     if (SDL_GetDesktopDisplayMode(0, &displayMode) != 0){
         printf("Error: %s\n", SDL_GetError());
-        quitGame(pGraphics);
+        quitGame(pGame);
         return 0;
     }
-    pGraphics->windowWidth = displayMode.w;
-    pGraphics->windowHeight = displayMode.h;
-    pGraphics->pWindow = SDL_CreateWindow("totally not a doodle jump clone", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, pGraphics->windowWidth, pGraphics->windowHeight, 0);
-    if(!pGraphics->pWindow){
+    pGame->windowWidth = displayMode.w;
+    pGame->windowHeight = displayMode.h;
+    pGame->pWindow = SDL_CreateWindow("totally not a doodle jump clone", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, pGame->windowWidth, pGame->windowHeight, 0);
+    if(!pGame->pWindow){
         printf("Error: %s\n", SDL_GetError());
-        quitGame(pGraphics);
+        quitGame(pGame);
         return 0;
     }
-    pGraphics->pRenderer = SDL_CreateRenderer(pGraphics->pWindow, -1, SDL_RENDERER_ACCELERATED|SDL_RENDERER_PRESENTVSYNC);
-    if(!pGraphics->pRenderer){
+    pGame->pRenderer = SDL_CreateRenderer(pGame->pWindow, -1, SDL_RENDERER_ACCELERATED|SDL_RENDERER_PRESENTVSYNC);
+    if(!pGame->pRenderer){
         printf("Error: %s\n", SDL_GetError());
-        quitGame(pGraphics);
+        quitGame(pGame);
         return 0;
     }
-    pGraphics->pBackgroundTexture = initBackground(pGraphics->pWindow, pGraphics->pRenderer, &pGraphics->windowUpperRect, &pGraphics->windowLowerRect, &pGraphics->imageUpperRect, &pGraphics->imageLowerRect, pGraphics->windowWidth, pGraphics->windowHeight);
-    if(!pGraphics->pBackgroundTexture){
+    pGame->pBackgroundTexture = initBackground(pGame->pWindow, pGame->pRenderer, &pGame->windowUpperRect, &pGame->windowLowerRect, &pGame->imageUpperRect, &pGame->imageLowerRect, pGame->windowWidth, pGame->windowHeight);
+    if(!pGame->pBackgroundTexture){
         printf("Error: %s\n", SDL_GetError());
-        quitGame(pGraphics);
+        quitGame(pGame);
         return 0;
     }
-    
-    pGraphics->playerRect.x = pGraphics->windowWidth - pGraphics->playerRect.w;
-    pGraphics->playerRect.y = pGraphics->windowHeight - pGraphics->playerRect.h;
-    pGraphics->playerRect.w = 50;
-    pGraphics->playerRect.h = 50;
-    pGraphics->pPlayer = createPlayer((pGraphics->windowWidth - pGraphics->playerRect.w) / 2, pGraphics->windowHeight - pGraphics->playerRect.h);
-    
-    pGraphics->platformRect.x = pGraphics->windowWidth;
-    pGraphics->platformRect.y = 50;
-    pGraphics->platformRect.w = PLATFORM_WIDTH;
-    pGraphics->platformRect.h = PLATFORM_HEIGHT;
-    pGraphics->pPlatform = createPlatform(pGraphics->windowWidth, pGraphics->windowHeight - 200);
 
-    readFromFile(fp, pGraphics->keybinds);
-    saveToFile(fp, pGraphics->keybinds);
+    pGame->playerRect.x = pGame->windowWidth - pGame->playerRect.w;
+    pGame->playerRect.y = pGame->windowHeight - pGame->playerRect.h;
+    pGame->playerRect.w = 50;
+    pGame->playerRect.h = 50;
+    pGame->pPlayer = createPlayer((pGame->windowWidth - pGame->playerRect.w) / 2, pGame->windowHeight - pGame->playerRect.h);
+
+    pGame->platformRect.x = pGame->windowWidth;
+    pGame->platformRect.y = 50;
+    pGame->platformRect.w = PLATFORM_WIDTH;
+    pGame->platformRect.h = PLATFORM_HEIGHT;
+    pGame->pPlatform = createPlatform(pGame->windowWidth, pGame->windowHeight - 200);
+
+    readFromFile(fp, pGame->keybinds);
+    saveToFile(fp, pGame->keybinds);
     return 1;
 }
 
-void runGame(Graphics *pGraphics){
+void runGame(Game *pGame){
     bool isRunning = true, left = false, right = false;
     float currentPlatformY = 0, maxJumpHeight = 400;
     SDL_Event event;
@@ -111,7 +111,7 @@ void runGame(Graphics *pGraphics){
                         //case SDLK_A:
                             left = true;
                             break;
-                    }   
+                    }
                 break;
                 case SDL_KEYUP:
                     switch(event.key.keysym.sym){
@@ -128,39 +128,39 @@ void runGame(Graphics *pGraphics){
             }
         }
 
-        movePlayer(pGraphics->pPlayer, pGraphics->playerRect, left, right, pGraphics->windowWidth);
-        platformCollidePlayer(pGraphics->pPlayer, pGraphics->playerRect, pGraphics->platformRect, 1, &currentPlatformY, &maxJumpHeight);
-        jumpPlayer(pGraphics->pPlayer, pGraphics->playerRect, pGraphics->windowHeight, currentPlatformY, maxJumpHeight);
+        movePlayer(pGame->pPlayer, pGame->playerRect, left, right, pGame->windowWidth);
+        platformCollidePlayer(pGame->pPlayer, pGame->playerRect, pGame->platformRect, 1, &currentPlatformY, &maxJumpHeight);
+        jumpPlayer(pGame->pPlayer, pGame->playerRect, pGame->windowHeight, currentPlatformY, maxJumpHeight);
 
-        updateBackground(&pGraphics->windowUpperRect, &pGraphics->windowLowerRect, &pGraphics->imageUpperRect, &pGraphics->imageLowerRect, pGraphics->windowHeight, pGraphics->pRenderer, pGraphics->pBackgroundTexture);
-        updatePlayer(pGraphics->pPlayer, &pGraphics->playerRect);
-        updatePlatform(pGraphics->pPlatform, &pGraphics->platformRect);
-        
-        SDL_SetRenderDrawColor(pGraphics->pRenderer, 0, 0, 255, 255);
-        SDL_RenderFillRect(pGraphics->pRenderer, &pGraphics->playerRect);
-        SDL_SetRenderDrawColor(pGraphics->pRenderer, 0, 255, 0, 255);
-        SDL_RenderFillRect(pGraphics->pRenderer, &pGraphics->platformRect);
+        updateBackground(&pGame->windowUpperRect, &pGame->windowLowerRect, &pGame->imageUpperRect, &pGame->imageLowerRect, pGame->windowHeight, pGame->pRenderer, pGame->pBackgroundTexture);
+        updatePlayer(pGame->pPlayer, &pGame->playerRect);
+        updatePlatform(pGame->pPlatform, &pGame->platformRect);
 
-        SDL_RenderPresent(pGraphics->pRenderer);
+        SDL_SetRenderDrawColor(pGame->pRenderer, 0, 0, 255, 255);
+        SDL_RenderFillRect(pGame->pRenderer, &pGame->playerRect);
+        SDL_SetRenderDrawColor(pGame->pRenderer, 0, 255, 0, 255);
+        SDL_RenderFillRect(pGame->pRenderer, &pGame->platformRect);
+
+        SDL_RenderPresent(pGame->pRenderer);
         SDL_Delay(1000/60);
     }
 }
 
-void quitGame(Graphics *pGraphics){
-    if(pGraphics->pPlayer){
-        destroyPlayer(pGraphics->pPlayer);
+void quitGame(Game *pGame){
+    if(pGame->pPlayer){
+        destroyPlayer(pGame->pPlayer);
     }
-    if(pGraphics->pPlatform){
-        destroyPlatform(pGraphics->pPlatform);
+    if(pGame->pPlatform){
+        destroyPlatform(pGame->pPlatform);
     }
-    if(pGraphics->pBackgroundTexture){
-        SDL_DestroyTexture(pGraphics->pBackgroundTexture);
+    if(pGame->pBackgroundTexture){
+        SDL_DestroyTexture(pGame->pBackgroundTexture);
     }
-    if(pGraphics->pRenderer){
-        SDL_DestroyRenderer(pGraphics->pRenderer);
+    if(pGame->pRenderer){
+        SDL_DestroyRenderer(pGame->pRenderer);
     }
-    if(pGraphics->pWindow){
-        SDL_DestroyWindow(pGraphics->pWindow);
-    } 
+    if(pGame->pWindow){
+        SDL_DestroyWindow(pGame->pWindow);
+    }
     SDL_Quit();
 }
