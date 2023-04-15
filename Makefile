@@ -1,11 +1,11 @@
-DETECTED_OS := windows
+CURRENT_OS := windows
 ifneq ($(OS),Windows_NT)
 	UNAME := $(shell uname)
 	ifeq ($(UNAME),Linux)
-		DETECTED_OS := linux
+		CURRENT_OS := linux
 	endif
 	ifeq ($(UNAME),Darwin)
-		DETECTED_OS := mac
+		CURRENT_OS := mac
 	endif
 endif
 
@@ -19,11 +19,11 @@ LDFLAGS := -lm -lSDL2main -lSDL2 -lSDL2_image -lSDL2_ttf
 LDFLAGS_WINDOWS := -lmingw32 -mwindows
 LDFLAGS_MAC := -L /opt/homebrew/lib
 
-ifeq ($(DETECTED_OS),windows)
+ifeq ($(CURRENT_OS),windows)
 	LDFLAGS := $(LDFLAGS_WINDOWS) $(LDFLAGS)
 endif
 
-ifeq ($(DETECTED_OS),mac)
+ifeq ($(CURRENT_OS),mac)
 	LDFLAGS := $(LDFLAGS_MAC) $(LDFLAGS)
 endif
 
