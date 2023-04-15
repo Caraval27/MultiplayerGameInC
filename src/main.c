@@ -8,53 +8,89 @@
 #include "../include/players.h"
 #include "../include/platforms.h"
 
-int main(int argv, char** args){
-    SDL_DisplayMode displayMode;
-    int windowWidth, windowHeight, keybinds[NR_OF_KEYBINDS];
-    SDL_Rect windowUpperRect, windowLowerRect, imageUpperRect, imageLowerRect;
-    FILE *fp;
-    bool isRunning = true, left = false, right = false;
-    SDL_Event event;
-    float currentPlatformY = 0, maxJumpHeight = 400;
-    srand(time(0));
+#define NR_OF_KEYBINDS 3
 
+struct graphics{
+    int windowWidth, windowHeight, keybinds[NR_OF_KEYBINDS];
+    SDL_Window *pWindow;
+    SDL_Renderer *pRenderer;
+    SDL_Texture *pBackgroundTexture;
+    SDL_Rect windowUpperRect, windowLowerRect, imageUpperRect, imageLowerRect;
+    Player* pPlayer;
+    Platform* pPlatform;
+    SDL_Rect playerRect, platformRect;
+};
+typedef struct graphics Graphics;
+
+int initiateGraphics(Graphics *pGraphics);
+void runGame(Graphics *pGraphics);
+void quitGame(Graphics *pGraphics);
+
+int main(int argv, char** args){
+    Graphics g = {0}; 
+    if (!initiateGraphics(&g)){
+        return 1;
+    }
+    runGame(&g);
+    quitGame(&g);
+    return 0;
+}
+
+int initiateGraphics(Graphics *pGraphics){
+    srand(time(0));
+    FILE *fp;
     if(SDL_Init(SDL_INIT_EVERYTHING) != 0){
         printf("Error: %s\n", SDL_GetError());
-        return 1;
+        return 0;
     }
-
-    if (SDL_GetDesktopDisplayMode(0, &displayMode) != 0)
-    {
+    SDL_DisplayMode displayMode;
+    if (SDL_GetDesktopDisplayMode(0, &displayMode) != 0){
         printf("Error: %s\n", SDL_GetError());
-        return 1;
+        quitGame(pGraphics);
+        return 0;
     }
-
-    windowWidth = displayMode.w;
-    windowHeight = displayMode.h;
-    SDL_Rect playerRect = {(windowWidth - playerRect.w), (windowHeight - playerRect.h), 50, 50};
-    Player* pPlayer = createPlayer((windowWidth - playerRect.w) / 2, windowHeight - playerRect.h);
-    Platform* pPlatform = createPlatform(windowWidth, windowHeight - 200);
-    SDL_Rect platformRect = {windowWidth, 50, PLATFORM_WIDTH, PLATFORM_HEIGHT};
-    Player* plarrr[10];
-
-    SDL_Window* pWindow = SDL_CreateWindow("Totally not a doodle jump clone", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, windowWidth, windowHeight, 0);
-    if(!pWindow){
+    pGraphics->windowWidth = displayMode.w;
+    pGraphics->windowHeight = displayMode.h;
+    pGraphics->pWindow = SDL_CreateWindow("totally not a doodle jump clone", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, pGraphics->windowWidth, pGraphics->windowHeight, 0);
+    if(!pGraphics->pWindow){
         printf("Error: %s\n", SDL_GetError());
-        SDL_Quit();
-        return 1;
+        quitGame(pGraphics);
+        return 0;
     }
-    SDL_Renderer *pRenderer = SDL_CreateRenderer(pWindow, -1, 0);
-    if(!pRenderer){
+    pGraphics->pRenderer = SDL_CreateRenderer(pGraphics->pWindow, -1, SDL_RENDERER_ACCELERATED|SDL_RENDERER_PRESENTVSYNC);
+    if(!pGraphics->pRenderer){
         printf("Error: %s\n", SDL_GetError());
-        SDL_DestroyWindow(pWindow);
-        SDL_Quit();
-        return 1;
+        quitGame(pGraphics);
+        return 0;
     }
+    pGraphics->pBackgroundTexture = initBackground(pGraphics->pWindow, pGraphics->pRenderer, &pGraphics->windowUpperRect, &pGraphics->windowLowerRect, &pGraphics->imageUpperRect, &pGraphics->imageLowerRect, pGraphics->windowWidth, pGraphics->windowHeight);
+    if(!pGraphics->pBackgroundTexture){
+        printf("Error: %s\n", SDL_GetError());
+        quitGame(pGraphics);
+        return 0;
+    }
+    
+    pGraphics->playerRect.x = pGraphics->windowWidth - pGraphics->playerRect.w;
+    pGraphics->playerRect.y = pGraphics->windowHeight - pGraphics->playerRect.h;
+    pGraphics->playerRect.w = 50;
+    pGraphics->playerRect.h = 50;
+    pGraphics->pPlayer = createPlayer((pGraphics->windowWidth - pGraphics->playerRect.w) / 2, pGraphics->windowHeight - pGraphics->playerRect.h);
+    
+    pGraphics->platformRect.x = pGraphics->windowWidth;
+    pGraphics->platformRect.y = 50;
+    pGraphics->platformRect.w = PLATFORM_WIDTH;
+    pGraphics->platformRect.h = PLATFORM_HEIGHT;
+    pGraphics->pPlatform = createPlatform(pGraphics->windowWidth, pGraphics->windowHeight - 200);
 
-    SDL_Texture* pBackgroundTexture = initBackground(pWindow, pRenderer, &windowUpperRect, &windowLowerRect, &imageUpperRect, &imageLowerRect, windowWidth, windowHeight);
+    readFromFile(fp, pGraphics->keybinds);
+    saveToFile(fp, pGraphics->keybinds);
+    return 1;
+}
 
-    readFromFile(fp, keybinds);
-    saveToFile(fp, keybinds);
+void runGame(Graphics *pGraphics){
+    bool isRunning = true, left = false, right = false;
+    float currentPlatformY = 0, maxJumpHeight = 400;
+    SDL_Event event;
 
     while (isRunning){
         while (SDL_PollEvent(&event)){
@@ -92,26 +128,33 @@ int main(int argv, char** args){
             }
         }
 
-        movePlayer(pPlayer, playerRect, left, right, windowWidth);
-        jumpPlayer(pPlayer, playerRect, windowHeight, currentPlatformY, maxJumpHeight);
-        platformCollidePlayer(pPlayer, playerRect, platformRect, 1, &currentPlatformY, &maxJumpHeight);
+        movePlayer(pGraphics->pPlayer, pGraphics->playerRect, left, right, pGraphics->windowWidth);
+        jumpPlayer(pGraphics->pPlayer, pGraphics->playerRect, pGraphics->windowHeight, currentPlatformY, maxJumpHeight);
+        platformCollidePlayer(pGraphics->pPlayer, pGraphics->playerRect, pGraphics->platformRect, 1, &currentPlatformY, &maxJumpHeight);
 
-        updateBackground(&windowUpperRect, &windowLowerRect, &imageUpperRect, &imageLowerRect, windowHeight, pRenderer, pBackgroundTexture);
-        updatePlayer(pPlayer, &playerRect);
-        updatePlatform(pPlatform, &platformRect);
+        updateBackground(&pGraphics->windowUpperRect, &pGraphics->windowLowerRect, &pGraphics->imageUpperRect, &pGraphics->imageLowerRect, pGraphics->windowHeight, pGraphics->pRenderer, pGraphics->pBackgroundTexture);
+        updatePlayer(pGraphics->pPlayer, &pGraphics->playerRect);
+        updatePlatform(pGraphics->pPlatform, &pGraphics->platformRect);
         
-        SDL_SetRenderDrawColor(pRenderer, 0, 0, 255, 255);
-        SDL_RenderFillRect(pRenderer, &playerRect);
-        SDL_SetRenderDrawColor(pRenderer, 0, 255, 0, 255);
-        SDL_RenderFillRect(pRenderer, &platformRect);
+        SDL_SetRenderDrawColor(pGraphics->pRenderer, 0, 0, 255, 255);
+        SDL_RenderFillRect(pGraphics->pRenderer, &pGraphics->playerRect);
+        SDL_SetRenderDrawColor(pGraphics->pRenderer, 0, 255, 0, 255);
+        SDL_RenderFillRect(pGraphics->pRenderer, &pGraphics->platformRect);
 
-        SDL_RenderPresent(pRenderer);
+        SDL_RenderPresent(pGraphics->pRenderer);
         SDL_Delay(1000/60);
     }
+}
 
-    SDL_DestroyTexture(pBackgroundTexture);
-    SDL_DestroyRenderer(pRenderer);
-    SDL_DestroyWindow(pWindow);
+void quitGame(Graphics *pGraphics){
+    if(pGraphics->pBackgroundTexture){
+        SDL_DestroyTexture(pGraphics->pBackgroundTexture);
+    }
+    if(pGraphics->pRenderer){
+        SDL_DestroyRenderer(pGraphics->pRenderer);
+    }
+    if(pGraphics->pWindow){
+        SDL_DestroyWindow(pGraphics->pWindow);
+    } 
     SDL_Quit();
-    return 0;
 }
