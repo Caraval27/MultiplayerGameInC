@@ -109,7 +109,7 @@ void runGame(Game *pGame){
             case MAIN_MENU:
                 while (SDL_PollEvent(&event)){
                     renderMenuBackground(pGame->pRenderer, pGame->pMenuBackgroundTexture, pGame->imageUpperRect, pGame->imageLowerRect, pGame->windowUpperRect, pGame->windowLowerRect);
-                    if (event.type == SDL_QUIT) isRunning = false;
+                    if (event.type == SDL_QUIT || event.type == SDL_KEYDOWN && event.key.keysym.scancode == SDL_SCANCODE_ESCAPE) isRunning = false;
                     else if (event.type == SDL_KEYDOWN && event.key.keysym.scancode == SDL_SCANCODE_SPACE){
                         /* resetAsteroids(pGame);
                         resetRocket(pGame->pRocket);
@@ -189,6 +189,9 @@ void quitGame(Game *pGame){
     }
     if(pGame->pPlatform){
         destroyPlatform(pGame->pPlatform);
+    }
+    if(pGame->pMenuBackgroundTexture){
+        SDL_DestroyTexture(pGame->pMenuBackgroundTexture);
     }
     if(pGame->pBackgroundTexture){
         SDL_DestroyTexture(pGame->pBackgroundTexture);
