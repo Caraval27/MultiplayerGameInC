@@ -1,5 +1,5 @@
-#ifndef menu_h
-#define menu_h
+#ifndef MENU_H
+#define MENU_H
 
 #define MENU_IMAGE_WIDTH 2200
 #define MENU_IMAGE_HEIGHT 1524

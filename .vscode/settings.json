@@ -20,7 +20,8 @@
 		"players.h": "c",
 		"platforms.h": "c",
 		"sdl_image.h": "c",
-		"stdlib.h": "c"
+		"stdlib.h": "c",
+		"main.h": "c"
 	},
 	"C_Cpp.default.configurationProvider": "ms-vscode.makefile-tools"
 }

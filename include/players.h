@@ -1,5 +1,5 @@
-#ifndef players_h
-#define players_h
+#ifndef PLAYERS_H
+#define PLAYERS_H
 
 typedef struct player Player;
 

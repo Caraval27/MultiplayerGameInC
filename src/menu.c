@@ -1,6 +1,4 @@
-#include <SDL2/SDL.h>
-#include <SDL2/SDL_image.h>
-#include "../include/menu.h"
+#include "../include/main.h"
 
 SDL_Texture* initMenuBackground(SDL_Window* pWindow, SDL_Renderer* pRenderer, SDL_Rect* pMenuBackgroundRect, int windowWidth, int windowHeight){
     SDL_Surface* pSurface = IMG_Load("../assets/menuBackground.jpeg");
