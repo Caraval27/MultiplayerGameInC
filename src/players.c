@@ -87,7 +87,7 @@ void platformCollidePlayer(Player* pPlayer, SDL_Rect playerRect, Plank **platfor
             pPlayer->posY = platforms[i]->yPos - playerRect.h; // vet ej om behövs
             *pPlatformY = platforms[i]->yPos + platforms[i]->height;
             *pMaxJumpHeight = *pPlatformY - MAX_JUMP_HEIGHT/2;
-            if (*pMaxJumpHeight < 1) *pMaxJumpHeight = 5;
+            if (*pMaxJumpHeight < 1) *pMaxJumpHeight = 10 + playerRect.h;
             pPlayer->velocityY = -(pPlayer->velocityY);
         }
         else {
