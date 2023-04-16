@@ -71,7 +71,7 @@ int initiateGraphics(Game *pGame){
 
 void runGame(Game *pGame){
     bool isRunning = true, left = false, right = false;
-    float currentPlatformY = 0, maxJumpHeight = 400;
+    float currentPlatformY = 0, maxJumpHeight = MAX_JUMP_HEIGHT;
     SDL_Event event;
 
     while (isRunning){
@@ -128,7 +128,7 @@ void runGame(Game *pGame){
                 }
                 }
                 movePlayer(pGame->pPlayer, pGame->playerRect, left, right, pGame->windowWidth);
-                platformCollidePlayer(pGame->pPlayer, pGame->playerRect, pGame->platformRect, 1, &currentPlatformY, &maxJumpHeight);
+                platformCollidePlayer(pGame->pPlayer, pGame->playerRect, pGame->planks, &currentPlatformY, &maxJumpHeight);
                 jumpPlayer(pGame->pPlayer, pGame->playerRect, pGame->windowHeight, currentPlatformY, maxJumpHeight);
 
                 updateBackground(&pGame->windowUpperRect, &pGame->windowLowerRect, &pGame->imageUpperRect, &pGame->imageLowerRect, pGame->windowHeight, pGame->pRenderer, pGame->pBackgroundTexture);
@@ -143,8 +143,8 @@ void runGame(Game *pGame){
 				if (SDL_GetTicks64() % 2000 < 17) {
 					int i = 0;
 					while (pGame->planks[i]) i++;
-					int width = 400;
-					int height = 20;
+					int width = PLATFORM_WIDTH;
+					int height = PLATFORM_HEIGHT;
 					int x = (rand() % (pGame->windowWidth - width - (width/4)*2)) + width/4;
 					int y = 0 - height;
 					pGame->planks[i] = createPlank(x, y, width, height);

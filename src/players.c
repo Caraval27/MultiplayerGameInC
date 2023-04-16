@@ -66,26 +66,7 @@ void movePlayer(Player* pPlayer, SDL_Rect playerRect, bool left, bool right, int
             *pMaxJumpHeight = 200;
         }
     }
-} */
-
-void platformCollidePlayer(Player* pPlayer, SDL_Rect playerRect, SDL_Rect platform, int nrOfPlatforms, float* pPlatformY, float* pMaxJumpHeight){
-    for (int i = 0; i < nrOfPlatforms; i++){
-        if (pPlayer->posY + playerRect.h >= platform.y &&
-            pPlayer->posY < platform.y + platform.h &&
-            pPlayer->posX + playerRect.w >= platform.x &&
-            pPlayer->posX < platform.x + platform.w &&
-            pPlayer->velocityY >= 0){
-            pPlayer->posY = platform.y - playerRect.h; // vet ej om behövs
-            *pPlatformY = platform.y + platform.h;
-            *pMaxJumpHeight += 100;
-            pPlayer->velocityY = -(pPlayer->velocityY);
-        }
-        else {
-            *pPlatformY = 0;
-            *pMaxJumpHeight = 400;
-        }
-    }
-    /* if (SDL_HasIntersection(&playerRect, &platform)){
+    if (SDL_HasIntersection(&playerRect, &platform)){
         *pPlatformY = platform.y + platform.h;
         *pMaxJumpHeight += platform.h + 50;
         playerRect.y -= 50;
@@ -93,8 +74,27 @@ void platformCollidePlayer(Player* pPlayer, SDL_Rect playerRect, SDL_Rect platfo
     else {
         *pPlatformY = 0;
         *pMaxJumpHeight = 400;
-    } */
-}
+    }
+} */
+
+void platformCollidePlayer(Player* pPlayer, SDL_Rect playerRect, Plank **platforms, float* pPlatformY, float* pMaxJumpHeight){
+    for (int i = 0; platforms[i] != 0; i++){
+        if (pPlayer->posY + playerRect.h >= platforms[i]->yPos &&
+            pPlayer->posY < platforms[i]->yPos + platforms[i]->height &&
+            pPlayer->posX + playerRect.w >= platforms[i]->xPos &&
+            pPlayer->posX < platforms[i]->xPos + platforms[i]->width &&
+            pPlayer->velocityY >= 0){
+            pPlayer->posY = platforms[i]->yPos - playerRect.h; // vet ej om behövs
+            *pPlatformY = platforms[i]->yPos + platforms[i]->height;
+            *pMaxJumpHeight += MAX_JUMP_HEIGHT/4;
+            pPlayer->velocityY = -(pPlayer->velocityY);
+        }
+        else {
+            *pPlatformY = 0;
+            *pMaxJumpHeight = MAX_JUMP_HEIGHT;
+        }
+    }
+} 
 
 void updatePlayer(Player* pPlayer, SDL_Rect* pPlayerRect){
     pPlayerRect->x = pPlayer->posX;
