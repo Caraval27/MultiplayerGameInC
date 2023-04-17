@@ -1,12 +1,10 @@
 #include "../include/main.h"
 
-#define nrOfKeybinds 3
-
 // These functions will use a .txt file to either read or write the keybinds from the user
 
 void saveToFile(FILE *fp, int keybinds[]){
     fp = fopen("keybinds.txt", "w");
-    for (int i = 0; i < nrOfKeybinds; i++)
+    for (int i = 0; i < NR_OF_KEYBINDS; i++)
     {
         fprintf(fp, "%d\n", keybinds[i]);
     }
@@ -17,7 +15,7 @@ void readFromFile(FILE *fp, int keybinds[]){
     fp = fopen("keybinds.txt", "r");
     if (fp != NULL)
     {
-        for (int i = 0; i < nrOfKeybinds; i++)
+        for (int i = 0; i < NR_OF_KEYBINDS; i++)
         {
             fscanf(fp, "%d", &keybinds[i]);
         }

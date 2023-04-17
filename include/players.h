@@ -1,6 +1,8 @@
 #ifndef PLAYERS_H
 #define PLAYERS_H
 
+#define SPEED 100
+
 typedef struct player Player;
 
 Player* createPlayer(int x, int y);

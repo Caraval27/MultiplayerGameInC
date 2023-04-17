@@ -1,7 +1,5 @@
 #include "../include/main.h"
 
-#define SPEED 100
-
 struct player{
     float posX, posY;
     float velocityY, velocityX;
@@ -36,19 +34,20 @@ void jumpPlayer(Player* pPlayer, SDL_Rect playerRect, int windowHeight, float pl
 }
 
 void movePlayer(Player* pPlayer, SDL_Rect playerRect, bool left, bool right, int windowWidth){
-    if (pPlayer->velocityX > SPEED) pPlayer->velocityX = 0;
+    //if (pPlayer->velocityX > SPEED) pPlayer->velocityX = 0;
+    pPlayer->velocityX = SPEED;
     if (left && !right){
-        pPlayer->velocityX += SPEED;
+        //pPlayer->velocityX += SPEED;
         pPlayer->posX -= (pPlayer->velocityX) / 60;
 
     }
-    else if(right && !left){
-        pPlayer->velocityX += SPEED;
+    else if (right && !left){
+        //pPlayer->velocityX += SPEED;
         pPlayer->posX += (pPlayer->velocityX) / 60;
     }
 
-    if(pPlayer->posX<0) pPlayer->posX = 0;
-    if (pPlayer->posX > windowWidth-playerRect.w) pPlayer->posX = windowWidth - playerRect.w;
+    if (pPlayer->posX < 0) pPlayer->posX = 0;
+    if (pPlayer->posX > windowWidth - playerRect.w) pPlayer->posX = windowWidth - playerRect.w;
 }
 
 /* void platformCollidePlayer(Player player, SDL_Rect playerRect, SDL_Rect platforms[], int nrOfPlatforms, float *pPlatformHeight, float *pMaxJumpHeight){
