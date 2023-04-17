@@ -105,38 +105,7 @@ void runGame(Game *pGame){
             break;
             case ONGOING:
                 while (SDL_PollEvent(&event)){
-                switch (event.type){
-                    case SDL_QUIT:
-                        isRunning = false;
-                    break;
-                    case SDL_KEYDOWN:
-                        switch (event.key.keysym.sym){
-                            case SDLK_ESCAPE:
-                                isRunning = false;
-                                break;
-                            case SDLK_RIGHT:
-                            //case SDLK_D:
-                                right = true;
-                                break;
-                            case SDLK_LEFT:
-                            //case SDLK_A:
-                                left = true;
-                                break;
-                        }
-                    break;
-                    case SDL_KEYUP:
-                        switch(event.key.keysym.sym){
-                            case SDLK_LEFT:
-                                left = false;
-                                //pPlayer->velocityX = 0;
-                                break;
-                            case SDLK_RIGHT:
-                                right = false;
-                                //pPlayer->velocityX = 0;
-                                break;
-                        }
-                    break;
-                }
+                    handleInputOngoing(&event, &right, &left, &isRunning);
                 }
                 movePlayer(pGame->pPlayer, pGame->playerRect, left, right, pGame->windowWidth);
                 platformCollidePlayer(pGame->pPlayer, pGame->playerRect, pGame->planks, &currentPlatformY, &maxJumpHeight);
@@ -203,4 +172,40 @@ void quitGame(Game *pGame){
         SDL_DestroyWindow(pGame->pWindow);
     }
     SDL_Quit();
+}
+
+void handleInputOngoing(SDL_Event* event, bool* right, bool* left, bool* isRunning){
+
+    switch (event->type){
+        case SDL_QUIT:
+            *isRunning = false;
+        break;
+        case SDL_KEYDOWN:
+            switch (event->key.keysym.sym){
+                case SDLK_ESCAPE:
+                    *isRunning = false;
+                    break;
+                case SDLK_RIGHT:
+                //case SDLK_D:
+                    *right = true;
+                    break;
+                case SDLK_LEFT:
+                //case SDLK_A:
+                    *left = true;
+                    break;
+            }
+        break;
+        case SDL_KEYUP:
+            switch(event->key.keysym.sym){
+                case SDLK_LEFT:
+                    *left = false;
+                    //pPlayer->velocityX = 0;
+                    break;
+                case SDLK_RIGHT:
+                    *right = false;
+                    //pPlayer->velocityX = 0;
+                    break;
+            }
+        break;
+    }
 }

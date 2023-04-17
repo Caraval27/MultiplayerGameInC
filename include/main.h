@@ -37,5 +37,6 @@ typedef struct {
 int initiateGraphics(Game *pGame);
 void runGame(Game *pGame);
 void quitGame(Game *pGame);
+void handleInputOngoing(SDL_Event* event, bool* right, bool* left, bool* isRunning);
 
 #endif
