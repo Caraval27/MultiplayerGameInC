@@ -71,7 +71,9 @@ int initiateGraphics(Game *pGame){
 
 void runGame(Game *pGame){
     bool isRunning = true, left = false, right = false;
-    float currentPlatformY = 0, maxJumpHeight = 400;
+    float currentPlatformY = 0, maxJumpHeight = MAX_JUMP_HEIGHT;
+    int mouseX, mouseY, mousePos;
+
     SDL_Event event;
 
     while (isRunning){
@@ -79,6 +81,14 @@ void runGame(Game *pGame){
             case MAIN_MENU:
                 while (SDL_PollEvent(&event)){
                     renderMenuBackground(pGame->pRenderer, pGame->pMenuBackgroundTexture, pGame->menuBackgroundRect);
+                    mousePos = SDL_GetMouseState(&mouseX, &mouseY);
+                    SDL_Rect quitButtonRect = {(pGame->windowWidth - BUTTON_WIDTH)/2, (pGame->windowHeight - BUTTON_HEIGHT)/2, BUTTON_WIDTH, BUTTON_HEIGHT};
+                    Button* quitButton = createButton(quitButtonRect, mouseX, mouseY);
+                    if (quitButton->buttonDistance < BUTTON_HEIGHT & mousePos & SDL_BUTTON(SDL_BUTTON_LEFT)) {
+                        //pGame->state = ONGOING;
+                        isRunning = false;
+                    }
+                    renderButton(pGame->pRenderer, quitButtonRect, 138, 43, 226);
                     if (event.type == SDL_QUIT || event.type == SDL_KEYDOWN && event.key.keysym.scancode == SDL_SCANCODE_ESCAPE) isRunning = false;
                     else if (event.type == SDL_KEYDOWN && event.key.keysym.scancode == SDL_SCANCODE_SPACE){
                         /* resetAsteroids(pGame);
@@ -88,6 +98,7 @@ void runGame(Game *pGame){
                         pGame->state = ONGOING;
                     }
                 }
+                SDL_RenderPresent(pGame->pRenderer);
             break;
             case SETTINGS_MENU:
 
@@ -128,7 +139,7 @@ void runGame(Game *pGame){
                 }
                 }
                 movePlayer(pGame->pPlayer, pGame->playerRect, left, right, pGame->windowWidth);
-                platformCollidePlayer(pGame->pPlayer, pGame->playerRect, pGame->platformRect, 1, &currentPlatformY, &maxJumpHeight);
+                platformCollidePlayer(pGame->pPlayer, pGame->playerRect, pGame->planks, &currentPlatformY, &maxJumpHeight);
                 jumpPlayer(pGame->pPlayer, pGame->playerRect, pGame->windowHeight, currentPlatformY, maxJumpHeight);
 
                 updateBackground(&pGame->windowUpperRect, &pGame->windowLowerRect, &pGame->imageUpperRect, &pGame->imageLowerRect, pGame->windowHeight, pGame->pRenderer, pGame->pBackgroundTexture);
@@ -143,8 +154,8 @@ void runGame(Game *pGame){
 				if (SDL_GetTicks64() % 2000 < 17) {
 					int i = 0;
 					while (pGame->planks[i]) i++;
-					int width = 400;
-					int height = 20;
+					int width = PLATFORM_WIDTH;
+					int height = PLATFORM_HEIGHT;
 					int x = (rand() % (pGame->windowWidth - width - (width/4)*2)) + width/4;
 					int y = 0 - height;
 					pGame->planks[i] = createPlank(x, y, width, height);

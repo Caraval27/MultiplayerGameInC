@@ -1,6 +1,6 @@
 #include "../include/main.h"
 
-#define PLANK_SCROLL_SPEED 1
+#define PLANK_SCROLL_SPEED 2
 
 Plank *createPlank(float x, float y, float w, float h) {
 	Plank *pPlank = malloc(sizeof(Plank));
