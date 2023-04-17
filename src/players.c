@@ -51,32 +51,6 @@ void movePlayer(Player* pPlayer, SDL_Rect playerRect, bool left, bool right, int
     if (pPlayer->posX > windowWidth-playerRect.w) pPlayer->posX = windowWidth - playerRect.w;
 }
 
-/* void platformCollidePlayer(Player player, SDL_Rect playerRect, SDL_Rect platforms[], int nrOfPlatforms, float *pPlatformHeight, float *pMaxJumpHeight){
-    for (int i = 0; i < nrOfPlatforms; i++){
-        if (player.posY + playerRect.h >= platform.y &&
-            player.posY < platform.y + platform.h &&
-            player.posX + platform.w >= platform.x &&
-            player.posX < platform.x + platform.w &&
-            player.velocityY >= 0){
-            *pPlatformHeight = platform.h + 50;
-            *pMaxJumpHeight += platform.h + 50;
-        }
-        else {
-            *pPlatformHeight = 0;
-            *pMaxJumpHeight = 200;
-        }
-    }
-    if (SDL_HasIntersection(&playerRect, &platform)){
-        *pPlatformY = platform.y + platform.h;
-        *pMaxJumpHeight += platform.h + 50;
-        playerRect.y -= 50;
-    }
-    else {
-        *pPlatformY = 0;
-        *pMaxJumpHeight = 400;
-    }
-} */
-
 void platformCollidePlayer(Player* pPlayer, SDL_Rect playerRect, Plank **platforms, float* pPlatformY, float* pMaxJumpHeight){
     for (int i = 0; platforms[i] != 0; i++){
         if (pPlayer->posY + playerRect.h >= platforms[i]->yPos &&
@@ -86,7 +60,7 @@ void platformCollidePlayer(Player* pPlayer, SDL_Rect playerRect, Plank **platfor
             pPlayer->velocityY >= 0){
             pPlayer->posY = platforms[i]->yPos - playerRect.h; // vet ej om behövs
             *pPlatformY = platforms[i]->yPos + platforms[i]->height;
-            *pMaxJumpHeight = *pPlatformY - MAX_JUMP_HEIGHT/2;
+            *pMaxJumpHeight = *pPlatformY - (MAX_JUMP_HEIGHT - 100);
             if (*pMaxJumpHeight < 1) *pMaxJumpHeight = 10 + playerRect.h;
             pPlayer->velocityY = -(pPlayer->velocityY);
         }
