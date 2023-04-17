@@ -50,17 +50,8 @@ int initiateGraphics(Game *pGame){
         return 0;
     }
 
-    pGame->playerRect.x = pGame->windowWidth - pGame->playerRect.w;
-    pGame->playerRect.y = pGame->windowHeight - pGame->playerRect.h;
-    pGame->playerRect.w = 50;
-    pGame->playerRect.h = 50;
+    createPlayerRect(&pGame->playerRect, pGame->windowWidth, pGame->windowHeight);
     pGame->pPlayer = createPlayer((pGame->windowWidth - pGame->playerRect.w) / 2, pGame->windowHeight - pGame->playerRect.h);
-
-    pGame->platformRect.x = pGame->windowWidth;
-    pGame->platformRect.y = 50;
-    pGame->platformRect.w = PLATFORM_WIDTH;
-    pGame->platformRect.h = PLATFORM_HEIGHT;
-    pGame->pPlatform = createPlatform(pGame->windowWidth, pGame->windowHeight - 200);
 
     readFromFile(fp, pGame->keybinds);
     saveToFile(fp, pGame->keybinds);
@@ -144,7 +135,7 @@ void runGame(Game *pGame){
 
                 updateBackground(&pGame->windowUpperRect, &pGame->windowLowerRect, &pGame->imageUpperRect, &pGame->imageLowerRect, pGame->windowHeight, pGame->pRenderer, pGame->pBackgroundTexture);
                 updatePlayer(pGame->pPlayer, &pGame->playerRect);
-                updatePlatform(pGame->pPlatform, &pGame->platformRect);
+                //updatePlatform(pGame->pPlatform, &pGame->platformRect);
 
                 SDL_SetRenderDrawColor(pGame->pRenderer, 0, 0, 255, 255);
                 SDL_RenderFillRect(pGame->pRenderer, &pGame->playerRect);

@@ -6,6 +6,7 @@
 typedef struct player Player;
 
 Player* createPlayer(int x, int y);
+void createPlayerRect(SDL_Rect* pPlayerRect, int windowWidth, int windowHeight);
 void jumpPlayer(Player* pPlayer, SDL_Rect playerRect, int windowHeight, float platformY, float maxJumpHeight);
 void movePlayer (Player* pPlayer, SDL_Rect playerRect, bool left, bool right, int width); //Funktion som hanterar att spelaren kan rörar sig i sidled med tangenttryck
 void platformCollidePlayer(Player* pPlayer, SDL_Rect playerRect, Plank **platforms, float* pPlatformY, float* pMaxJumpHeight);
