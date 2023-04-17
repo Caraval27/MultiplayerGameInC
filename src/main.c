@@ -17,6 +17,10 @@ int initiateGraphics(Game *pGame){
         printf("Error: %s\n", SDL_GetError());
         return 0;
     }
+    if(TTF_Init() != 0){
+        printf("Error: %s\n", TTF_GetError());
+        return 0;
+    }
     SDL_DisplayMode displayMode;
     if (SDL_GetDesktopDisplayMode(0, &displayMode) != 0){
         printf("Error: %s\n", SDL_GetError());
@@ -34,6 +38,12 @@ int initiateGraphics(Game *pGame){
     pGame->pRenderer = SDL_CreateRenderer(pGame->pWindow, -1, SDL_RENDERER_ACCELERATED|SDL_RENDERER_PRESENTVSYNC);
     if(!pGame->pRenderer){
         printf("Error: %s\n", SDL_GetError());
+        quitGame(pGame);
+        return 0;
+    }
+    pGame->pMainMenuFont = TTF_OpenFont("../assets/Ticketing.ttf", 25);
+    if(!pGame->pMainMenuFont){
+        printf("Error: %s\n",TTF_GetError());
         quitGame(pGame);
         return 0;
     }
@@ -133,6 +143,7 @@ void quitGame(Game *pGame){
     if(pGame->pWindow){
         SDL_DestroyWindow(pGame->pWindow);
     }
+    TTF_Quit();
     SDL_Quit();
 }
 

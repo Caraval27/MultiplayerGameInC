@@ -6,11 +6,13 @@
 #include <time.h>
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_image.h>
+#include <SDL2/SDL_ttf.h>
 #include "../include/world.h"
 #include "../include/keybinds.h"
 #include "../include/players.h"
 #include "../include/platforms.h"
 #include "../include/menu.h"
+#include "../include/text.h"
 
 typedef enum {
     MAIN_MENU,
@@ -24,6 +26,7 @@ typedef struct {
     int windowWidth, windowHeight, keybinds[NR_OF_KEYBINDS];
     SDL_Window *pWindow;
     SDL_Renderer *pRenderer;
+    TTF_Font *pMainMenuFont;
     SDL_Texture *pBackgroundTexture, *pMenuBackgroundTexture;
     SDL_Rect windowUpperRect, windowLowerRect, imageUpperRect, imageLowerRect, menuBackgroundRect;
     Player* pPlayer;
