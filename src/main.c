@@ -63,8 +63,6 @@ int initiateGraphics(Game *pGame){
 void runGame(Game *pGame){
     bool isRunning = true, left = false, right = false;
     float currentPlatformY = 0, maxJumpHeight = MAX_JUMP_HEIGHT;
-    //int mouseX, mouseY, mousePos;
-
     SDL_Event event;
 
     while (isRunning){
@@ -100,25 +98,8 @@ void runGame(Game *pGame){
                 SDL_RenderFillRect(pGame->pRenderer, &pGame->playerRect);
                 SDL_SetRenderDrawColor(pGame->pRenderer, 0, 255, 0, 255);
                 SDL_RenderFillRect(pGame->pRenderer, &pGame->platformRect);
-
-				if (SDL_GetTicks64() % 2000 < 17) {
-					int i = 0;
-					while (pGame->planks[i]) i++;
-					int width = PLATFORM_WIDTH;
-					int height = PLATFORM_HEIGHT;
-					int x = (rand() % (pGame->windowWidth - width - (width/4)*2)) + width/4;
-					int y = 0 - height;
-					pGame->planks[i] = createPlank(x, y, width, height);
-				}
-
-				{
-					int i = 0;
-					while (pGame->planks[i]) {
-						renderPlank(pGame->pRenderer, pGame->planks[i]);
-						scrollPlank(pGame->planks[i]);
-						i++;
-					}
-				}
+                
+                handlePlank(pGame->planks, pGame->pRenderer, pGame->windowWidth);
 
                 SDL_RenderPresent(pGame->pRenderer);
                 SDL_Delay(1000/60);
