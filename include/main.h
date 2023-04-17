@@ -25,13 +25,14 @@ typedef struct {
     SDL_Window *pWindow;
     SDL_Renderer *pRenderer;
     SDL_Texture *pBackgroundTexture, *pMenuBackgroundTexture;
-    SDL_Rect windowUpperRect, windowLowerRect, imageUpperRect, imageLowerRect;
+    SDL_Rect windowUpperRect, windowLowerRect, imageUpperRect, imageLowerRect, menuBackgroundRect;
     Player* pPlayer;
     Platform* pPlatform;
 	Plank *planks[1000];
     SDL_Rect playerRect, platformRect;
     GameState state;
-    SDL_Rect menuBackgroundRect;
+    SDL_Rect quitButtonRect;
+    Button* pQuitButton;
 } Game;
 
 int initiateGraphics(Game *pGame);
