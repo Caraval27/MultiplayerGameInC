@@ -72,6 +72,8 @@ int initiateGraphics(Game *pGame){
 void runGame(Game *pGame){
     bool isRunning = true, left = false, right = false;
     float currentPlatformY = 0, maxJumpHeight = MAX_JUMP_HEIGHT;
+    int mouseX, mouseY, mousePos;
+
     SDL_Event event;
 
     while (isRunning){
@@ -79,6 +81,14 @@ void runGame(Game *pGame){
             case MAIN_MENU:
                 while (SDL_PollEvent(&event)){
                     renderMenuBackground(pGame->pRenderer, pGame->pMenuBackgroundTexture, pGame->menuBackgroundRect);
+                    mousePos = SDL_GetMouseState(&mouseX, &mouseY);
+                    SDL_Rect quitButtonRect = {(pGame->windowWidth - BUTTON_WIDTH)/2, (pGame->windowHeight - BUTTON_HEIGHT)/2, BUTTON_WIDTH, BUTTON_HEIGHT};
+                    Button* quitButton = createButton(quitButtonRect, mouseX, mouseY);
+                    if (quitButton->buttonDistance < BUTTON_HEIGHT & mousePos & SDL_BUTTON(SDL_BUTTON_LEFT)) {
+                        //pGame->state = ONGOING;
+                        isRunning = false;
+                    }
+                    renderButton(pGame->pRenderer, quitButtonRect, 138, 43, 226);
                     if (event.type == SDL_QUIT || event.type == SDL_KEYDOWN && event.key.keysym.scancode == SDL_SCANCODE_ESCAPE) isRunning = false;
                     else if (event.type == SDL_KEYDOWN && event.key.keysym.scancode == SDL_SCANCODE_SPACE){
                         /* resetAsteroids(pGame);
@@ -88,6 +98,7 @@ void runGame(Game *pGame){
                         pGame->state = ONGOING;
                     }
                 }
+                SDL_RenderPresent(pGame->pRenderer);
             break;
             case SETTINGS_MENU:
 
