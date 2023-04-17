@@ -84,7 +84,7 @@ void runGame(Game *pGame){
                     mousePos = SDL_GetMouseState(&mouseX, &mouseY);
                     SDL_Rect quitButtonRect = {(pGame->windowWidth - BUTTON_WIDTH)/2, (pGame->windowHeight - BUTTON_HEIGHT)/2, BUTTON_WIDTH, BUTTON_HEIGHT};
                     Button* quitButton = createButton(quitButtonRect, mouseX, mouseY);
-                    if (quitButton->buttonDistance < BUTTON_HEIGHT & mousePos & SDL_BUTTON(SDL_BUTTON_LEFT)) {
+                    if (quitButton->buttonDistance < BUTTON_HEIGHT && mousePos && SDL_BUTTON(SDL_BUTTON_LEFT)) {
                         //pGame->state = ONGOING;
                         isRunning = false;
                     }
