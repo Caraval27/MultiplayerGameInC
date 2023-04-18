@@ -20,20 +20,11 @@ typedef struct {
     int deltaX, deltaY;
 } Button;
 
-<<<<<<< HEAD
-void getMousePos(SDL_Rect* pButtonRect, int* pMousePos, int windowWidth, int windowHeight, int addY, Button* pButton);
-void handleButtonInput(Button* pQuitButton, bool* pIsRunning, int mousePos, SDL_Event event, State* pState, State desiredState);
+int getMousePos(SDL_Rect* pButtonRect, int mousePos, int windowWidth, int windowHeight, int addY, Button* pButton);
+void handleButtonInput(Button* pQuitButton, int mousePos, SDL_Event event, State* pState, State desiredState);
 void renderButton(SDL_Renderer* pRenderer, SDL_Rect buttonRect, int r, int g, int b);
 SDL_Texture* createMainMenuImage(SDL_Window* pWindow, SDL_Renderer* pRenderer, SDL_Rect* pMenuBackgroundRect, int windowWidth, int windowHeight);
 void renderMainMenu(SDL_Renderer* pRenderer, SDL_Texture* pTexture, SDL_Rect menuBackgroundRect);
-=======
-int getMousePos(SDL_Rect* pButtonRect, int mousePos, int windowWidth, int windowHeight, int addY, Button* pButton);
-void handleButtonInput(Button* pQuitButton, int mousePos, SDL_Event event, GameState* pState, GameState desiredState);
-void renderButton(SDL_Renderer* pRenderer, SDL_Rect buttonRect, int r, int g, int b);
-SDL_Texture* initMenuBackground(SDL_Window* pWindow, SDL_Renderer* pRenderer, SDL_Rect* pMenuBackgroundRect, int windowWidth, int windowHeight);
-void renderMenuBackground(SDL_Renderer* pRenderer, SDL_Texture* pTexture, SDL_Rect menuBackgroundRect);
-//Button* createButton();
->>>>>>> c10e7d090646183a20c96b74e2fef5518a6ce865
 Button* createButton(SDL_Rect* pButtonRect, int windowHeight, int windowWidth, int yOffset);
 
 #endif
