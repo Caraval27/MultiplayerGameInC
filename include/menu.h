@@ -27,5 +27,6 @@ void renderButton(SDL_Renderer* pRenderer, SDL_Rect buttonRect, int r, int g, in
 SDL_Texture* initMenuBackground(SDL_Window* pWindow, SDL_Renderer* pRenderer, SDL_Rect* pMenuBackgroundRect, int windowWidth, int windowHeight);
 void renderMenuBackground(SDL_Renderer* pRenderer, SDL_Texture* pTexture, SDL_Rect menuBackgroundRect);
 Button* createButton();
+Button* createButton(SDL_Rect* pButtonRect, int windowHeight, int windowWidth, int yOffset);
 
 #endif

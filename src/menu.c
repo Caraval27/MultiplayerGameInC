@@ -1,17 +1,20 @@
 #include "../include/main.h"
 
-Button* createButton(SDL_Rect* pButtonRect){
+Button* createButton(SDL_Rect* pButtonRect, int windowHeight, int windowWidth, int yOffset){
     Button* pButton = malloc(sizeof(Button));
- 
+    
+    pButtonRect->x = (windowWidth - BUTTON_WIDTH)/2;
+    pButtonRect->y = (windowHeight - BUTTON_HEIGHT)/2 + yOffset;
+    pButtonRect->w = BUTTON_WIDTH;
+    pButtonRect->h = BUTTON_HEIGHT;
+
+    return pButton;
+    
 }
 
 void getMousePos(SDL_Rect* pButtonRect, int* pMousePos, int windowWidth, int windowHeight, int addY, Button* pButton){
     int mouseX, mouseY;    
     *pMousePos = SDL_GetMouseState(&mouseX, &mouseY);
-    pButtonRect->x = (windowWidth - BUTTON_WIDTH)/2;
-    pButtonRect->y = (windowHeight - BUTTON_HEIGHT)/2 + addY;
-    pButtonRect->w = BUTTON_WIDTH;
-    pButtonRect->h = BUTTON_HEIGHT;
 
     pButton->deltaX = mouseX - (pButtonRect->x + pButtonRect->w/2);
     pButton->deltaY = mouseY - (pButtonRect->y + pButtonRect->h/2);
