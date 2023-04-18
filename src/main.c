@@ -74,6 +74,7 @@ int initiateGraphics(Game *pGame){
 void runGame(Game *pGame){
     bool isRunning = true, left = false, right = false;
     float currentPlatformY = 0, maxJumpHeight = MAX_JUMP_HEIGHT;
+    int mousePos;
     SDL_Event event;
 
     while (isRunning){
@@ -81,11 +82,10 @@ void runGame(Game *pGame){
             case MAIN_MENU:
                 while (SDL_PollEvent(&event)){
                     renderMenuBackground(pGame->pRenderer, pGame->pMenuBackgroundTexture, pGame->menuBackgroundRect);
-                    handleButtonInput(pGame->pQuitButton, &pGame->quitButtonRect, &isRunning, pGame->windowWidth, pGame->windowHeight, 100);
+                    pGame->pQuitButton = createButton(&pGame->quitButtonRect, &mousePos, pGame->windowWidth, pGame->windowHeight, 100);
+                    handleButtonInput(pGame->pQuitButton, &isRunning, mousePos);
                     if (event.type == SDL_QUIT || event.type == SDL_KEYDOWN && event.key.keysym.scancode == SDL_SCANCODE_ESCAPE) isRunning = false;
-                    else if (event.type == SDL_KEYDOWN && event.key.keysym.scancode == SDL_SCANCODE_SPACE){
-                        pGame->state = ONGOING;
-                    }
+                    else if (event.type == SDL_KEYDOWN && event.key.keysym.scancode == SDL_SCANCODE_SPACE) pGame->state = ONGOING;
                     renderButton(pGame->pRenderer, pGame->quitButtonRect, 138, 43, 226);
                     renderText(pGame->pQuitButtonText);
                 }

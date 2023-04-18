@@ -1,25 +1,24 @@
 #include "../include/main.h"
 
-Button* createButton(SDL_Rect buttonRect, int mouseX, int mouseY){
+Button* createButton(SDL_Rect* pButtonRect, int* pMousePos, int windowWidth, int windowHeight, int addY){
+    int mouseX, mouseY;
     Button* pButton = malloc(sizeof(Button));
+    
+    *pMousePos = SDL_GetMouseState(&mouseX, &mouseY);
+    pButtonRect->x = (windowWidth - BUTTON_WIDTH)/2;
+    pButtonRect->y = (windowHeight - BUTTON_HEIGHT)/2 + addY;
+    pButtonRect->w = BUTTON_WIDTH;
+    pButtonRect->h = BUTTON_HEIGHT;
 
-    pButton->deltaX = mouseX - (buttonRect.x + buttonRect.w/2);
-    pButton->deltaY = mouseY - (buttonRect.y + buttonRect.h/2);
+    pButton->deltaX = mouseX - (pButtonRect->x + pButtonRect->w/2);
+    pButton->deltaY = mouseY - (pButtonRect->y + pButtonRect->h/2);
     pButton->buttonDistance = sqrt(pButton->deltaX*pButton->deltaX+pButton->deltaY*pButton->deltaY);
     
     return pButton;
 }
 
-void handleButtonInput(Button* pButton, SDL_Rect* pButtonRect, bool* pIsRunning, int windowWidth, int windowHeight, int addY){
-    int mouseX, mouseY, mousePos;
-
-    mousePos = SDL_GetMouseState(&mouseX, &mouseY);
-    pButtonRect->x = (windowWidth - BUTTON_WIDTH)/2;
-    pButtonRect->y = (windowHeight - BUTTON_HEIGHT)/2 + addY;
-    pButtonRect->w = BUTTON_WIDTH;
-    pButtonRect->h = BUTTON_HEIGHT;
-    pButton = createButton(*pButtonRect, mouseX, mouseY);
-    if (pButton->buttonDistance < BUTTON_HEIGHT && mousePos && SDL_BUTTON(SDL_BUTTON_LEFT)){
+void handleButtonInput(Button* pQuitButton, bool* pIsRunning, int mousePos){
+    if (pQuitButton->buttonDistance < BUTTON_HEIGHT && mousePos && SDL_BUTTON(SDL_BUTTON_LEFT)){
         *pIsRunning = false;
     }
 }
