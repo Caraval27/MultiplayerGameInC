@@ -47,7 +47,6 @@ int initiateGraphics(Game* pGame){
         quitGame(pGame);
         return 0;
     }
-    pGame->pQuitButtonText = createText(pGame->pRenderer, pGame->pMainMenuFont, 255, 255, 255, "Quit", pGame->windowWidth, pGame->windowHeight, 100);
     pGame->pBackgroundTexture = initBackground(pGame->pWindow, pGame->pRenderer, &pGame->windowUpperRect, &pGame->windowLowerRect, &pGame->imageUpperRect, &pGame->imageLowerRect, pGame->windowWidth, pGame->windowHeight);
     if (!pGame->pBackgroundTexture){
         printf("Error: %s\n", SDL_GetError());
@@ -68,10 +67,10 @@ int initiateGraphics(Game* pGame){
     saveToFile(fp, pGame->keybinds);
     pGame->state = MAIN_MENU;
 
-    pGame->pQuitButton = createButton(&pGame->quitButtonRect, pGame->windowHeight, pGame->windowWidth, 100);
     pGame->pStartButton = createButton(&pGame->startButtonRect, pGame->windowHeight, pGame->windowWidth, 50);
+    pGame->pQuitButton = createButton(&pGame->quitButtonRect, pGame->windowHeight, pGame->windowWidth, 100);
     pGame->pStartButtonText = createText(pGame->pRenderer, pGame->pMainMenuFont, 255, 255, 255, "Start Game", pGame->windowWidth, pGame->windowHeight, 50);
-
+    pGame->pQuitButtonText = createText(pGame->pRenderer, pGame->pMainMenuFont, 255, 255, 255, "Quit", pGame->windowWidth, pGame->windowHeight, 100);
 
     return 1;
 }
@@ -81,14 +80,13 @@ void runGame(Game* pGame){
     float currentPlatformY = 0, maxJumpHeight = MAX_JUMP_HEIGHT;
     int mousePos;
     SDL_Event event;
-    pGame->state = MAIN_MENU;
 
     while (isRunning){
         switch (pGame->state) {
             case MAIN_MENU:
                 while (SDL_PollEvent(&event)){
                     renderMenuBackground(pGame->pRenderer, pGame->pMenuBackgroundTexture, pGame->menuBackgroundRect);
-                    mousePos = getMousePos(&pGame->quitButtonRect, mousePos, pGame->windowWidth, pGame->windowHeight, 100, pGame->pQuitButton);
+                    mousePos = getMousePos(&pGame->quitButtonRect, mousePos, pGame->pQuitButton);
                     handleButtonInput(pGame->pStartButton, mousePos, event, &pGame->state, ONGOING);
                     handleButtonInput(pGame->pQuitButton, mousePos, event, &pGame->state, QUIT);
                     renderButton(pGame->pRenderer, pGame->quitButtonRect, 138, 43, 226);
@@ -111,11 +109,6 @@ void runGame(Game* pGame){
 
                 updateBackground(&pGame->windowUpperRect, &pGame->windowLowerRect, &pGame->imageUpperRect, &pGame->imageLowerRect, pGame->windowHeight, pGame->pRenderer, pGame->pBackgroundTexture);
                 updatePlayer(pGame->pPlayer, &pGame->playerRect);
-                //updatePlatform(pGame->pPlatform, &pGame->platformRect);
-
-                SDL_SetRenderDrawColor(pGame->pRenderer, 0, 255, 0, 255);
-                SDL_RenderFillRect(pGame->pRenderer, &pGame->platformRect);
-                
                 handlePlatform(pGame->platforms, pGame->pRenderer, pGame->windowWidth);
 
                 SDL_RenderCopy(pGame->pRenderer, pGame->pPlayerTexture, NULL, &pGame->playerRect);

@@ -12,7 +12,7 @@ Button* createButton(SDL_Rect* pButtonRect, int windowHeight, int windowWidth, i
     
 }
 
-int getMousePos(SDL_Rect* pButtonRect, int mousePos, int windowWidth, int windowHeight, int addY, Button* pButton){
+int getMousePos(SDL_Rect* pButtonRect, int mousePos, Button* pButton){
     int mouseX, mouseY;    
     mousePos = SDL_GetMouseState(&mouseX, &mouseY);
 

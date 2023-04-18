@@ -21,7 +21,7 @@ typedef struct {
     int deltaX, deltaY;
 } Button;
 
-int getMousePos(SDL_Rect* pButtonRect, int mousePos, int windowWidth, int windowHeight, int addY, Button* pButton);
+int getMousePos(SDL_Rect* pButtonRect, int mousePos, Button* pButton);
 void handleButtonInput(Button* pQuitButton, int mousePos, SDL_Event event, GameState* pState, GameState desiredState);
 void renderButton(SDL_Renderer* pRenderer, SDL_Rect buttonRect, int r, int g, int b);
 SDL_Texture* initMenuBackground(SDL_Window* pWindow, SDL_Renderer* pRenderer, SDL_Rect* pMenuBackgroundRect, int windowWidth, int windowHeight);
