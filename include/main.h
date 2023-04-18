@@ -23,7 +23,7 @@ typedef struct {
     TTF_Font *pMainMenuFont;
     SDL_Rect mainMenuRect;
     Background* pBackground;
-    Button* pQuitButton, pStartButton, pResumeButton, pMainMenuButton;
+    Button *pQuitButton, *pStartButton, *pResumeButton, *pMainMenuButton;
     Text* pQuitButtonText;
     Player* pPlayer;
 	Platform *platforms[1000];

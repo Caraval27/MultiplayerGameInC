@@ -71,8 +71,8 @@ int initiateGame(Game* pGame){
     }
 
     pGame->pBackground = createBackground(pGame->windowHeight);
-    pGame->pStartButton = createButton(&pGame->startButtonRect);
-    pGame->pQuitButton = createButton(&pGame->quitButtonRect);
+    pGame->pQuitButton = createButton(&pGame->quitButtonRect, pGame->windowHeight, pGame->windowWidth, 100);
+    pGame->pStartButton = createButton(&pGame->startButtonRect, pGame->windowHeight, pGame->windowWidth, 50);
     pGame->pQuitButtonText = createText(pGame->pRenderer, pGame->pMainMenuFont, 255, 255, 255, "Quit", pGame->windowWidth, pGame->windowHeight, 100);
     pGame->pPlayer = createPlayer((pGame->windowWidth - pGame->playerRect.w) / 2, pGame->windowHeight - pGame->playerRect.h);
 
@@ -81,6 +81,8 @@ int initiateGame(Game* pGame){
     saveToFile(fp, pGame->keybinds);
 
     pGame->state = MAIN_MENU;
+
+    
 
     return 1;
 }
@@ -95,10 +97,10 @@ void runGame(Game* pGame){
         switch (pGame->state) {
             case MAIN_MENU:
                 while (SDL_PollEvent(&event)){
-                    renderMenuBackground(pGame->pRenderer, pGame->pMainMenuTexture, pGame->mainMenuRect);
+                    renderMainMenu(pGame->pRenderer, pGame->pMainMenuTexture, pGame->mainMenuRect);
                     getMousePos(&pGame->quitButtonRect, &mousePos, pGame->windowWidth, pGame->windowHeight, 100, pGame->pQuitButton);
-                    handleButtonInput(pGame->pQuitButton, &isRunning, mousePos, event, &pGame->state, QUIT);
                     handleButtonInput(pGame->pStartButton, &isRunning, mousePos, event, &pGame->state, ONGOING);
+                    handleButtonInput(pGame->pQuitButton, &isRunning, mousePos, event, &pGame->state, QUIT);
                     renderButton(pGame->pRenderer, pGame->quitButtonRect, 138, 43, 226);
                     renderButton(pGame->pRenderer, pGame->startButtonRect, 250, 43, 226);
                     renderText(pGame->pQuitButtonText);
@@ -109,7 +111,7 @@ void runGame(Game* pGame){
             break;
             case ONGOING:
                 while (SDL_PollEvent(&event)){
-                    handleInputOngoing(&pGame->state, &event, &right, &left, &isRunning);
+                    handleInputOngoing(&pGame->state, &event, &isRunning, &right, &left);
                 }
 
                 movePlayer(pGame->pPlayer, pGame->playerRect, left, right, pGame->windowWidth);

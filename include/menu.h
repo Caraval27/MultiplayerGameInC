@@ -24,7 +24,7 @@ void getMousePos(SDL_Rect* pButtonRect, int* pMousePos, int windowWidth, int win
 void handleButtonInput(Button* pQuitButton, bool* pIsRunning, int mousePos, SDL_Event event, State* pState, State desiredState);
 void renderButton(SDL_Renderer* pRenderer, SDL_Rect buttonRect, int r, int g, int b);
 SDL_Texture* createMainMenuImage(SDL_Window* pWindow, SDL_Renderer* pRenderer, SDL_Rect* pMenuBackgroundRect, int windowWidth, int windowHeight);
-void renderMenuBackground(SDL_Renderer* pRenderer, SDL_Texture* pTexture, SDL_Rect menuBackgroundRect);
-Button* createButton();
+void renderMainMenu(SDL_Renderer* pRenderer, SDL_Texture* pTexture, SDL_Rect menuBackgroundRect);
+Button* createButton(SDL_Rect* pButtonRect, int windowHeight, int windowWidth, int yOffset);
 
 #endif
