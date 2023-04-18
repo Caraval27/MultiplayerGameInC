@@ -30,7 +30,7 @@ endif
 SRCS := $(wildcard $(SRCDIR)/*.c)
 OBJS := $(SRCS:$(SRCDIR)/%.c=$(BUILDDIR)/%.o)
 
-.PHONY: all clean run
+.PHONY: all clean run launch
 
 all: $(BUILDDIR)/$(EXECUTABLE)
 
@@ -48,4 +48,7 @@ clean:
 
 run:
 	$(MAKE) all
+	cd $(BUILDDIR) && ./$(EXECUTABLE)
+
+launch:
 	cd $(BUILDDIR) && ./$(EXECUTABLE)
