@@ -1,12 +1,15 @@
 #ifndef WORLD_H
 #define WORLD_H
 
-#define WINDOW_WIDTH 1024
-#define WINDOW_HEIGHT 768
 #define IMAGE_WIDTH 1024
 #define IMAGE_HEIGHT 1536
 
-SDL_Texture * initBackground(SDL_Window *pWindow, SDL_Renderer *pRenderer, SDL_Rect *pWindowUpper, SDL_Rect *pWindowLower, SDL_Rect *pImageUpper, SDL_Rect *pImageLower, int w, int h);
-void updateBackground(SDL_Rect *pWindowUpper, SDL_Rect *pWindowLower, SDL_Rect *pImageUpper, SDL_Rect *pImageLower, int h, SDL_Renderer *pRenderer, SDL_Texture *pTexture);
+typedef struct background Background;
+
+Background* createBackground(int windowHeight);
+SDL_Texture* createBackgroundImage(SDL_Window* pWindow, SDL_Renderer* pRenderer);
+void handleBackground(Background* pBackground, SDL_Renderer* pRenderer, SDL_Texture* pTexture, int windowWidth, int windowHeight);
+void renderBackground(Background* pBackground, SDL_Renderer* pRenderer, SDL_Texture* pTexture, int windowWidth);
+void destroyBackground(Background* pBackground);
 
 #endif

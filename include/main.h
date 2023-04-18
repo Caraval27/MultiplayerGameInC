@@ -15,13 +15,14 @@
 #include "../include/text.h"
 
 typedef struct {
-    GameState state;
+    State state;
     SDL_Window *pWindow;
     int windowWidth, windowHeight;
     SDL_Renderer *pRenderer;
     SDL_Texture *pBackgroundTexture, *pMainMenuTexture, *pPlayerTexture;
     TTF_Font *pMainMenuFont;
-    SDL_Rect windowUpperRect, windowLowerRect, backgroundUpperRect, backgroundLowerRect, mainMenuRect;
+    SDL_Rect mainMenuRect;
+    Background* pBackground;
     Button* pQuitButton, pStartButton, pResumeButton, pMainMenuButton;
     Text* pQuitButtonText;
     Player* pPlayer;
@@ -30,9 +31,9 @@ typedef struct {
     int keybinds[NR_OF_KEYBINDS];
 } Game;
 
-int initiateGraphics(Game *pGame);
+int initiateGame(Game *pGame);
 void runGame(Game *pGame);
 void quitGame(Game *pGame);
-void handleInputOngoing(Game *pGame, SDL_Event* event, bool* right, bool* left, bool* isRunning);
+void handleInputOngoing(State* pState, SDL_Event* event, bool* pIsRunning, bool* pRight, bool* pLeft);
 
 #endif

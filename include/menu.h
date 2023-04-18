@@ -12,7 +12,7 @@ typedef enum {
 	ONGOING,
 	GAME_MENU,
 	GAME_OVER
-} GameState;
+} State;
 
 typedef struct {
     float buttonDistance;

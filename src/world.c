@@ -1,6 +1,28 @@
 #include "../include/main.h"
 
-SDL_Texture * initBackground(SDL_Window *pWindow, SDL_Renderer *pRenderer, SDL_Rect *pWindowUpperRect, SDL_Rect *pWindowLowerRect, SDL_Rect *pBackgroundUpperRect, SDL_Rect *pBackgroundLowerRect, int windowWidth, int windowHeight){
+struct background{
+    float upperSrcYPos, upperSrcHeight;
+    float lowerSrcYPos, lowerSrcHeight;
+    float upperDstYPos, upperDstHeight;
+    float lowerDstYPos, lowerDstHeight;
+};
+
+Background* createBackground(int windowHeight){
+    Background* pBackground = malloc(sizeof(Background));
+
+    pBackground->upperSrcYPos = IMAGE_HEIGHT;
+    pBackground->upperSrcHeight = 0;
+    pBackground->lowerSrcYPos = IMAGE_HEIGHT - windowHeight;
+    pBackground->lowerSrcHeight = windowHeight;
+    pBackground->upperDstYPos = 0;
+    pBackground->upperDstHeight = 0;
+    pBackground->lowerDstYPos = 0;
+    pBackground->lowerDstHeight = windowHeight;
+
+    return pBackground;
+}
+
+SDL_Texture* createBackgroundImage(SDL_Window* pWindow, SDL_Renderer* pRenderer){
     SDL_Surface *pSurface = IMG_Load("../assets/background.png");
     if (!pSurface) {
         printf("Error: %s\n", SDL_GetError());
@@ -18,52 +40,49 @@ SDL_Texture * initBackground(SDL_Window *pWindow, SDL_Renderer *pRenderer, SDL_R
         exit(1);
     }
     SDL_FreeSurface(pSurface);
-    
-    pWindowUpperRect->x = 0;
-    pWindowUpperRect->y = 0;
-    pWindowUpperRect->w = windowWidth;
-    pWindowUpperRect->h = 0;
-    pWindowLowerRect->x = 0;
-    pWindowLowerRect->y = 0;
-    pWindowLowerRect->w = windowWidth;
-    pWindowLowerRect->h = windowHeight;
-    pBackgroundUpperRect->x = 0;
-    pBackgroundUpperRect->y = IMAGE_HEIGHT;
-    pBackgroundUpperRect->w = windowWidth;
-    pBackgroundUpperRect->h = 0;
-    pBackgroundLowerRect->x = 0;
-    pBackgroundLowerRect->y = IMAGE_HEIGHT - windowHeight;
-    pBackgroundLowerRect->w = windowWidth;
-    pBackgroundLowerRect->h = windowHeight;
 
     return pTexture;
 }
 
-void updateBackground(SDL_Rect* pWindowUpperRect, SDL_Rect* pWindowLowerRect, SDL_Rect* pBackgroundUpperRect, SDL_Rect* pBackgroundLowerRect, int windowHeight, SDL_Renderer* pRenderer, SDL_Texture* pTexture){
+void handleBackground(Background* pBackground, SDL_Renderer* pRenderer, SDL_Texture* pTexture, int windowWidth, int windowHeight){
 
-    if (pBackgroundLowerRect->y < 0) {
-        pWindowUpperRect->h += 1;
-        pWindowLowerRect->y += 1;
-        pWindowLowerRect->h -= 1;
-        pBackgroundUpperRect->y -= 1;
-        pBackgroundUpperRect->h += 1;
-        pBackgroundLowerRect->h -= 1;
+    if (pBackground->lowerSrcYPos < 0) {
+        pBackground->upperSrcYPos -= 1;
+        pBackground->upperSrcHeight += 1;
+        pBackground->lowerSrcHeight -= 1;
+        pBackground->upperDstHeight += 1;
+        pBackground->lowerDstYPos += 1;
+        pBackground->lowerDstHeight -= 1;
     }
     else{
-        pBackgroundLowerRect->y -= 1;
+        pBackground->lowerSrcYPos -= 1;
     }
 
-    if (pBackgroundLowerRect->h < 0) {
-        pWindowUpperRect->y = 0;
-        pWindowUpperRect->h = 0;
-        pWindowLowerRect->y = 0;
-        pWindowLowerRect->h = windowHeight;
-        pBackgroundUpperRect->y = IMAGE_HEIGHT;
-        pBackgroundUpperRect->h = 0;
-        pBackgroundLowerRect->y = IMAGE_HEIGHT - windowHeight;
-        pBackgroundLowerRect->h = windowHeight;
+    if (pBackground->lowerSrcHeight < 0) {
+        pBackground->upperSrcYPos = IMAGE_HEIGHT;
+        pBackground->upperSrcHeight = 0;
+        pBackground->lowerSrcYPos = IMAGE_HEIGHT - windowHeight;
+        pBackground->lowerSrcHeight = windowHeight;
+        pBackground->upperDstYPos = 0;
+        pBackground->upperDstHeight = 0;
+        pBackground->lowerDstYPos = 0;
+        pBackground->lowerDstHeight = windowHeight;
     }
 
-    SDL_RenderCopy(pRenderer, pTexture, pBackgroundUpperRect, pWindowUpperRect);
-    SDL_RenderCopy(pRenderer, pTexture, pBackgroundLowerRect, pWindowLowerRect);
+    renderBackground(pBackground, pRenderer, pTexture, windowWidth);
+}
+
+void renderBackground(Background* pBackground, SDL_Renderer* pRenderer, SDL_Texture* pTexture, int windowWidth){
+    SDL_Rect upperSrcRect = {0, pBackground->upperSrcYPos, windowWidth, pBackground->upperSrcHeight};
+    SDL_Rect lowerSrcRect = {0, pBackground->lowerSrcYPos, windowWidth, pBackground->lowerSrcHeight};
+    SDL_Rect upperDstRect = {0, pBackground->upperDstYPos, windowWidth, pBackground->upperDstHeight};
+    SDL_Rect lowerDstRect = {0, pBackground->lowerDstYPos, windowWidth, pBackground->lowerDstHeight};
+
+    
+    SDL_RenderCopy(pRenderer, pTexture, &upperSrcRect, &upperDstRect);
+    SDL_RenderCopy(pRenderer, pTexture, &lowerSrcRect, &lowerDstRect);
+}
+
+void destroyBackground(Background* pBackground){
+    free(pBackground);
 }
