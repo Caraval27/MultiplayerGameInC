@@ -125,25 +125,13 @@ void runGame(Game* pGame){
 }
 
 void quitGame(Game* pGame){
-    if (pGame->pPlayer){
-        destroyPlayer(pGame->pPlayer);
-    }
+    if (pGame->pPlayer) destroyPlayer(pGame->pPlayer);
     destroyPlatform(pGame->platforms);
-    if (pGame->pMenuBackgroundTexture){
-        SDL_DestroyTexture(pGame->pMenuBackgroundTexture);
-    }
-    if (pGame->pBackgroundTexture){
-        SDL_DestroyTexture(pGame->pBackgroundTexture);
-    }
-    if (pGame->pBackgroundTexture){
-        destroyText(pGame->pQuitButtonText);
-    }
-    if (pGame->pRenderer){
-        SDL_DestroyRenderer(pGame->pRenderer);
-    }
-    if (pGame->pWindow){
-        SDL_DestroyWindow(pGame->pWindow);
-    }
+    if (pGame->pMenuBackgroundTexture) SDL_DestroyTexture(pGame->pMenuBackgroundTexture);
+    if (pGame->pBackgroundTexture) SDL_DestroyTexture(pGame->pBackgroundTexture);
+    if (pGame->pBackgroundTexture) destroyText(pGame->pQuitButtonText);
+    if (pGame->pRenderer) SDL_DestroyRenderer(pGame->pRenderer);
+    if (pGame->pWindow) SDL_DestroyWindow(pGame->pWindow);
     TTF_Quit();
     SDL_Quit();
 }
@@ -151,29 +139,23 @@ void quitGame(Game* pGame){
 void handleInputOngoing(SDL_Event* event, bool* right, bool* left, bool* isRunning){
 
     switch (event->type){
-        case SDL_QUIT:
-            *isRunning = false;
+        case SDL_QUIT: *isRunning = false;
         break;
         case SDL_KEYDOWN:
             switch (event->key.keysym.sym){
-                case SDLK_ESCAPE:
-                    *isRunning = false;
+                case SDLK_ESCAPE: *isRunning = false;
                     break;
-                case SDLK_RIGHT:
-                    *right = true;
+                case SDLK_RIGHT: *right = true;
                     break;
-                case SDLK_LEFT:
-                    *left = true;
+                case SDLK_LEFT: *left = true;
                     break;
             }
         break;
         case SDL_KEYUP:
             switch(event->key.keysym.sym){
-                case SDLK_LEFT:
-                    *left = false;
+                case SDLK_LEFT: *left = false;
                     break;
-                case SDLK_RIGHT:
-                    *right = false;
+                case SDLK_RIGHT: *right = false;
                     break;
             }
         break;
