@@ -5,20 +5,14 @@
 #define PLATFORM_HEIGHT 20
 #define MAX_NR_PLATFORMS 4
 
-typedef struct platform Platform;
-
 typedef struct {
 	float xPos, yPos, width, height;
-} Plank;
+} Platform;
 
-Plank *createPlank(float x, float y, float w, float h);
-void scrollPlank(Plank *pPlank);
-void renderPlank(SDL_Renderer *pRenderer, Plank *pPlank);
-void handlePlank(Plank** planks, SDL_Renderer* pRenderer, int windowWidth);
-void destroyPlank(Plank** planks);
-
-Platform* createPlatform(int windowHeight, int y);
-void updatePlatform(Platform* pPlatform, SDL_Rect* pPlatformRect);
-void destroyPlatform(Platform* pPlatform);
+Platform *createPlatform(float x, float y, float w, float h);
+void scrollPlatform(Platform* pPlatform);
+void renderPlatform(SDL_Renderer* pRenderer, Platform* pPlatform);
+void handlePlatform(Platform** Platforms, SDL_Renderer* pRenderer, int windowWidth);
+void destroyPlatform(Platform** Platforms);
 
 #endif

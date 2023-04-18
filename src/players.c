@@ -80,7 +80,7 @@ void movePlayer(Player* pPlayer, SDL_Rect playerRect, bool left, bool right, int
     if (pPlayer->posX > windowWidth-playerRect.w) pPlayer->posX = windowWidth - playerRect.w;
 }
 
-void platformCollidePlayer(Player* pPlayer, SDL_Rect playerRect, Plank** platforms, float* pPlatformY, float* pMaxJumpHeight){
+void platformCollidePlayer(Player* pPlayer, SDL_Rect playerRect, Platform** platforms, float* pPlatformY, float* pMaxJumpHeight){
     for (int i = 0; platforms[i] != 0; i++){
         if (pPlayer->posY + playerRect.h >= platforms[i]->yPos &&
             pPlayer->posY < platforms[i]->yPos + platforms[i]->height &&

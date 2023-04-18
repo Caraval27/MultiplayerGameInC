@@ -10,7 +10,7 @@ int main(int argv, char** args){
     return 0;
 }
 
-int initiateGraphics(Game *pGame){
+int initiateGraphics(Game* pGame){
     srand(time(NULL));
     FILE *fp;
     if (SDL_Init(SDL_INIT_EVERYTHING) != 0){
@@ -71,7 +71,7 @@ int initiateGraphics(Game *pGame){
     return 1;
 }
 
-void runGame(Game *pGame){
+void runGame(Game* pGame){
     bool isRunning = true, left = false, right = false;
     float currentPlatformY = 0, maxJumpHeight = MAX_JUMP_HEIGHT;
     int mousePos;
@@ -98,7 +98,7 @@ void runGame(Game *pGame){
                     handleInputOngoing(&event, &right, &left, &isRunning);
                 }
                 movePlayer(pGame->pPlayer, pGame->playerRect, left, right, pGame->windowWidth);
-                platformCollidePlayer(pGame->pPlayer, pGame->playerRect, pGame->planks, &currentPlatformY, &maxJumpHeight);
+                platformCollidePlayer(pGame->pPlayer, pGame->playerRect, pGame->platforms, &currentPlatformY, &maxJumpHeight);
                 jumpPlayer(pGame->pPlayer, pGame->playerRect, pGame->windowHeight, currentPlatformY, maxJumpHeight);
 
                 updateBackground(&pGame->windowUpperRect, &pGame->windowLowerRect, &pGame->imageUpperRect, &pGame->imageLowerRect, pGame->windowHeight, pGame->pRenderer, pGame->pBackgroundTexture);
@@ -108,7 +108,7 @@ void runGame(Game *pGame){
                 SDL_SetRenderDrawColor(pGame->pRenderer, 0, 255, 0, 255);
                 SDL_RenderFillRect(pGame->pRenderer, &pGame->platformRect);
                 
-                handlePlank(pGame->planks, pGame->pRenderer, pGame->windowWidth);
+                handlePlatform(pGame->platforms, pGame->pRenderer, pGame->windowWidth);
 
                 SDL_RenderCopy(pGame->pRenderer, pGame->pPlayerTexture, NULL, &pGame->playerRect);
                 SDL_RenderPresent(pGame->pRenderer);
@@ -124,14 +124,11 @@ void runGame(Game *pGame){
     }
 }
 
-void quitGame(Game *pGame){
+void quitGame(Game* pGame){
     if (pGame->pPlayer){
         destroyPlayer(pGame->pPlayer);
     }
-    if (pGame->pPlatform){
-        destroyPlatform(pGame->pPlatform);
-    }
-    destroyPlank(pGame->planks);
+    destroyPlatform(pGame->platforms);
     if (pGame->pMenuBackgroundTexture){
         SDL_DestroyTexture(pGame->pMenuBackgroundTexture);
     }

@@ -12,7 +12,7 @@ Button* createButton(SDL_Rect* pButtonRect, int* pMousePos, int windowWidth, int
 
     pButton->deltaX = mouseX - (pButtonRect->x + pButtonRect->w/2);
     pButton->deltaY = mouseY - (pButtonRect->y + pButtonRect->h/2);
-    pButton->buttonDistance = sqrt(pButton->deltaX*pButton->deltaX+pButton->deltaY*pButton->deltaY);
+    pButton->buttonDistance = sqrt(pButton->deltaX * pButton->deltaX + pButton->deltaY * pButton->deltaY);
     
     return pButton;
 }

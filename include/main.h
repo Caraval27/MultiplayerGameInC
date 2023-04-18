@@ -22,8 +22,7 @@ typedef struct {
     SDL_Texture *pBackgroundTexture, *pMenuBackgroundTexture, *pPlayerTexture;
     SDL_Rect windowUpperRect, windowLowerRect, imageUpperRect, imageLowerRect, menuBackgroundRect;
     Player* pPlayer;
-    Platform* pPlatform;
-	Plank *planks[1000];
+	Platform* platforms[1000];
     SDL_Rect playerRect, platformRect;
     GameState state;
     SDL_Rect quitButtonRect;
@@ -31,9 +30,9 @@ typedef struct {
     Text* pQuitButtonText;
 } Game;
 
-int initiateGraphics(Game *pGame);
-void runGame(Game *pGame);
-void quitGame(Game *pGame);
+int initiateGraphics(Game* pGame);
+void runGame(Game* pGame);
+void quitGame(Game* pGame);
 void handleInputOngoing(SDL_Event* event, bool* right, bool* left, bool* isRunning);
 
 #endif
