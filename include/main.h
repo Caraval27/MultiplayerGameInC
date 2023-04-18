@@ -23,25 +23,25 @@ typedef enum {
 } GameState;
 
 typedef struct {
-    int windowWidth, windowHeight, keybinds[NR_OF_KEYBINDS];
-    SDL_Window *pWindow;
-    SDL_Renderer *pRenderer;
-    TTF_Font *pMainMenuFont;
-    SDL_Texture *pBackgroundTexture, *pMenuBackgroundTexture;
-    SDL_Rect windowUpperRect, windowLowerRect, imageUpperRect, imageLowerRect, menuBackgroundRect;
-    Player* pPlayer;
-    Platform* pPlatform;
-	Plank *planks[1000];
-    SDL_Rect playerRect, platformRect;
     GameState state;
-    SDL_Rect quitButtonRect;
-    Button* pQuitButton;
+    SDL_Window *pWindow;
+    int windowWidth, windowHeight;
+    SDL_Renderer *pRenderer;
+    SDL_Texture *pBackgroundTexture, *pMainMenuTexture;
+    TTF_Font *pMainMenuFont;
+    SDL_Rect windowUpperRect, windowLowerRect, backgroundUpperRect, backgroundLowerRect, mainMenuRect;
+    Button* pQuitButton, pStartButton, pResumeButton, pMainMenuButton;
     Text* pQuitButtonText;
+    Player* pPlayer;
+	Plank *planks[1000];
+    Platform* pPlatform;
+    SDL_Rect playerRect, platformRect, quitButtonRect;
+    int keybinds[NR_OF_KEYBINDS];
 } Game;
 
 int initiateGraphics(Game *pGame);
 void runGame(Game *pGame);
 void quitGame(Game *pGame);
-void handleInputOngoing(SDL_Event* event, bool* right, bool* left, bool* isRunning);
+void handleInputOngoing(Game *pGame, SDL_Event* event, bool* right, bool* left, bool* isRunning);
 
 #endif

@@ -29,7 +29,7 @@ void renderButton(SDL_Renderer* pRenderer, SDL_Rect buttonRect, int r, int g, in
     SDL_RenderFillRect(pRenderer, &buttonRect);
 }
 
-SDL_Texture* initMenuBackground(SDL_Window* pWindow, SDL_Renderer* pRenderer, SDL_Rect* pMenuBackgroundRect, int windowWidth, int windowHeight){
+SDL_Texture* initMenuBackground(SDL_Window* pWindow, SDL_Renderer* pRenderer, SDL_Rect* pMainMenuRect, int windowWidth, int windowHeight){
     SDL_Surface* pSurface = IMG_Load("../assets/menuBackground.jpeg");
     if(!pSurface){
         printf("Error: %s\n", SDL_GetError());
@@ -39,7 +39,6 @@ SDL_Texture* initMenuBackground(SDL_Window* pWindow, SDL_Renderer* pRenderer, SD
         exit(1);
     }
     SDL_Texture* pTexture = SDL_CreateTextureFromSurface(pRenderer, pSurface);
-    SDL_FreeSurface(pSurface);
     if(!pTexture){
         printf("Error: %s\n", SDL_GetError());
         SDL_DestroyRenderer(pRenderer);
@@ -47,16 +46,17 @@ SDL_Texture* initMenuBackground(SDL_Window* pWindow, SDL_Renderer* pRenderer, SD
         SDL_Quit();
         exit(1);
     }
+    SDL_FreeSurface(pSurface);
 
-    SDL_QueryTexture(pTexture, NULL, NULL, &pMenuBackgroundRect->w, &pMenuBackgroundRect->h);
-    pMenuBackgroundRect->w = windowWidth; // size
-    pMenuBackgroundRect->h = windowHeight;
-    pMenuBackgroundRect->x = 0; //left
-    pMenuBackgroundRect->y = 0; //right
+    pMainMenuRect->w = windowWidth; // size
+    pMainMenuRect->h = windowHeight;
+    pMainMenuRect->x = 0; //left
+    pMainMenuRect->y = 0; //right
+    SDL_QueryTexture(pTexture, NULL, NULL, &pMainMenuRect->w, &pMainMenuRect->h);
 
     return pTexture;
 }
 
-void renderMenuBackground(SDL_Renderer* pRenderer, SDL_Texture* pTexture, SDL_Rect menuBackgroundRect){
-    SDL_RenderCopy(pRenderer, pTexture, NULL, &menuBackgroundRect);
+void renderMenuBackground(SDL_Renderer* pRenderer, SDL_Texture* pTexture, SDL_Rect mainMenuRect){
+    SDL_RenderCopy(pRenderer, pTexture, NULL, &mainMenuRect);
 }

@@ -32,7 +32,7 @@ void handlePlank(Plank** planks, SDL_Renderer* pRenderer, int windowWidth){
         while (planks[i]) i++;
         int width = PLATFORM_WIDTH;
         int height = PLATFORM_HEIGHT;
-        int x = (rand() % (windowWidth - width - (width/4)*2)) + width/4;
+        int x = (rand() % (windowWidth - width - (width / 4) * 2)) + width / 4;
         int y = 0 - height;
         planks[i] = createPlank(x, y, width, height);
     }
