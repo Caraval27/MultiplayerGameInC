@@ -13,11 +13,11 @@ int main(int argv, char** args){
 int initiateGraphics(Game *pGame){
     srand(time(NULL));
     FILE *fp;
-    if(SDL_Init(SDL_INIT_EVERYTHING) != 0){
+    if (SDL_Init(SDL_INIT_EVERYTHING) != 0){
         printf("Error: %s\n", SDL_GetError());
         return 0;
     }
-    if(TTF_Init() != 0){
+    if (TTF_Init() != 0){
         printf("Error: %s\n", TTF_GetError());
         return 0;
     }
@@ -30,32 +30,32 @@ int initiateGraphics(Game *pGame){
     pGame->windowWidth = displayMode.w;
     pGame->windowHeight = displayMode.h;
     pGame->pWindow = SDL_CreateWindow("totally not a doodle jump clone", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, pGame->windowWidth, pGame->windowHeight, 0);
-    if(!pGame->pWindow){
+    if (!pGame->pWindow){
         printf("Error: %s\n", SDL_GetError());
         quitGame(pGame);
         return 0;
     }
     pGame->pRenderer = SDL_CreateRenderer(pGame->pWindow, -1, SDL_RENDERER_ACCELERATED|SDL_RENDERER_PRESENTVSYNC);
-    if(!pGame->pRenderer){
+    if (!pGame->pRenderer){
         printf("Error: %s\n", SDL_GetError());
         quitGame(pGame);
         return 0;
     }
     pGame->pMainMenuFont = TTF_OpenFont("../assets/Ticketing.ttf", 25);
-    if(!pGame->pMainMenuFont){
+    if (!pGame->pMainMenuFont){
         printf("Error: %s\n",TTF_GetError());
         quitGame(pGame);
         return 0;
     }
-    pGame->pQuitButtonText = createText(pGame->pRenderer, pGame->pMainMenuFont, 255, 255, 255, "Quit", pGame->windowWidth/2, pGame->windowHeight/2);
+    pGame->pQuitButtonText = createText(pGame->pRenderer, pGame->pMainMenuFont, 255, 255, 255, "Quit", pGame->windowWidth, pGame->windowHeight, 100);
     pGame->pBackgroundTexture = initBackground(pGame->pWindow, pGame->pRenderer, &pGame->windowUpperRect, &pGame->windowLowerRect, &pGame->imageUpperRect, &pGame->imageLowerRect, pGame->windowWidth, pGame->windowHeight);
-    if(!pGame->pBackgroundTexture){
+    if (!pGame->pBackgroundTexture){
         printf("Error: %s\n", SDL_GetError());
         quitGame(pGame);
         return 0;
     }
     pGame->pMenuBackgroundTexture = initMenuBackground(pGame->pWindow, pGame->pRenderer, &pGame->menuBackgroundRect, pGame->windowWidth, pGame->windowHeight);
-    if(!pGame->pMenuBackgroundTexture){
+    if (!pGame->pMenuBackgroundTexture){
         printf("Error: %s\n", SDL_GetError());
         quitGame(pGame);
         return 0;
@@ -74,18 +74,17 @@ int initiateGraphics(Game *pGame){
 void runGame(Game *pGame){
     bool isRunning = true, left = false, right = false;
     float currentPlatformY = 0, maxJumpHeight = MAX_JUMP_HEIGHT;
+    int mousePos;
     SDL_Event event;
+    pGame->state = MAIN_MENU;
 
     while (isRunning){
         switch (pGame->state) {
             case MAIN_MENU:
                 while (SDL_PollEvent(&event)){
                     renderMenuBackground(pGame->pRenderer, pGame->pMenuBackgroundTexture, pGame->menuBackgroundRect);
-                    handleButtonInput(pGame->pQuitButton, &pGame->quitButtonRect, &isRunning, pGame->windowWidth, pGame->windowHeight);
-                    if (event.type == SDL_QUIT || event.type == SDL_KEYDOWN && event.key.keysym.scancode == SDL_SCANCODE_ESCAPE) isRunning = false;
-                    else if (event.type == SDL_KEYDOWN && event.key.keysym.scancode == SDL_SCANCODE_SPACE){
-                        pGame->state = ONGOING;
-                    }
+                    pGame->pQuitButton = createButton(&pGame->quitButtonRect, &mousePos, pGame->windowWidth, pGame->windowHeight, 100);
+                    handleButtonInput(pGame->pQuitButton, &isRunning, mousePos, event, &pGame->state);
                     renderButton(pGame->pRenderer, pGame->quitButtonRect, 138, 43, 226);
                     renderText(pGame->pQuitButtonText);
                 }
@@ -135,6 +134,7 @@ void quitGame(Game *pGame){
     if (pGame->pPlatform){
         destroyPlatform(pGame->pPlatform);
     }
+    destroyPlank(pGame->planks);
     if (pGame->pMenuBackgroundTexture){
         SDL_DestroyTexture(pGame->pMenuBackgroundTexture);
     }

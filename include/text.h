@@ -7,7 +7,7 @@ typedef struct {
     SDL_Renderer* pRenderer;
 } Text;
 
-Text* createText(SDL_Renderer* pRenderer, TTF_Font* pFont, int r, int g, int b, char* pString, int posX, int posY);
+Text* createText(SDL_Renderer* pRenderer, TTF_Font* pFont, int r, int g, int b, char* pString, int windowWidth, int windowHeight, int addY);
 void renderText(Text *pText);
 void destroyText(Text *pText);
 
