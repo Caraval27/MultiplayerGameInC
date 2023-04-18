@@ -18,9 +18,8 @@ Player* createPlayer(int x, int y){
     return pPlayer;
 }
 
-SDL_Texture* createPlayerRect(SDL_Rect* pPlayerRect, SDL_Renderer* pPlayerRenderer, SDL_Window* pWindow, int windowWidth, int windowHeight){
+SDL_Texture* createPlayerCharacter(SDL_Rect* pPlayerRect, SDL_Renderer* pPlayerRenderer, SDL_Window* pWindow, int windowWidth, int windowHeight){
     
-
     SDL_Surface* pPlayerSurface = IMG_Load("../assets/penguin.png"); //Ändra så att man kan skicka in en textsträng sen
     if (!pPlayerSurface){
         printf("Error: %s\n", SDL_GetError());

@@ -61,7 +61,7 @@ int initiateGraphics(Game *pGame){
         return 0;
     }
 
-    pGame->pPlayerTexture = createPlayerRect(&pGame->playerRect, pGame->pRenderer, pGame->pWindow, pGame->windowWidth, pGame->windowHeight);
+    pGame->pPlayerTexture = createPlayerCharacter(&pGame->playerRect, pGame->pRenderer, pGame->pWindow, pGame->windowWidth, pGame->windowHeight);
     pGame->pPlayer = createPlayer((pGame->windowWidth - pGame->playerRect.w) / 2, pGame->windowHeight - pGame->playerRect.h);
 
     readFromFile(fp, pGame->keybinds);
