@@ -36,6 +36,7 @@ typedef struct {
     GameState state;
     SDL_Rect quitButtonRect;
     Button* pQuitButton;
+    Text* pQuitButtonText;
 } Game;
 
 int initiateGraphics(Game *pGame);

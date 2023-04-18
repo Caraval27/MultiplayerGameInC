@@ -47,6 +47,7 @@ int initiateGraphics(Game *pGame){
         quitGame(pGame);
         return 0;
     }
+    pGame->pQuitButtonText = createText(pGame->pRenderer, pGame->pMainMenuFont, 255, 255, 255, "Quit", pGame->windowWidth/2, pGame->windowHeight/2);
     pGame->pBackgroundTexture = initBackground(pGame->pWindow, pGame->pRenderer, &pGame->windowUpperRect, &pGame->windowLowerRect, &pGame->imageUpperRect, &pGame->imageLowerRect, pGame->windowWidth, pGame->windowHeight);
     if(!pGame->pBackgroundTexture){
         printf("Error: %s\n", SDL_GetError());
@@ -86,6 +87,7 @@ void runGame(Game *pGame){
                         pGame->state = ONGOING;
                     }
                     renderButton(pGame->pRenderer, pGame->quitButtonRect, 138, 43, 226);
+                    renderText(pGame->pQuitButtonText);
                 }
                 SDL_RenderPresent(pGame->pRenderer);
             break;
@@ -125,22 +127,25 @@ void runGame(Game *pGame){
 }
 
 void quitGame(Game *pGame){
-    if(pGame->pPlayer){
+    if (pGame->pPlayer){
         destroyPlayer(pGame->pPlayer);
     }
-    if(pGame->pPlatform){
+    if (pGame->pPlatform){
         destroyPlatform(pGame->pPlatform);
     }
-    if(pGame->pMenuBackgroundTexture){
+    if (pGame->pMenuBackgroundTexture){
         SDL_DestroyTexture(pGame->pMenuBackgroundTexture);
     }
-    if(pGame->pBackgroundTexture){
+    if (pGame->pBackgroundTexture){
         SDL_DestroyTexture(pGame->pBackgroundTexture);
     }
-    if(pGame->pRenderer){
+    if (pGame->pBackgroundTexture){
+        destroyText(pGame->pQuitButtonText);
+    }
+    if (pGame->pRenderer){
         SDL_DestroyRenderer(pGame->pRenderer);
     }
-    if(pGame->pWindow){
+    if (pGame->pWindow){
         SDL_DestroyWindow(pGame->pWindow);
     }
     TTF_Quit();
