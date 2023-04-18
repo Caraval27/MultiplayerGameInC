@@ -110,7 +110,6 @@ void runGame(Game *pGame){
                 
                 handlePlank(pGame->planks, pGame->pRenderer, pGame->windowWidth);
 
-                //SDL_RenderClear(pGame->pRenderer);
                 SDL_RenderCopy(pGame->pRenderer, pGame->pPlayerTexture, NULL, &pGame->playerRect);
                 SDL_RenderPresent(pGame->pRenderer);
                 SDL_Delay(1000/60);
