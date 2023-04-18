@@ -27,7 +27,7 @@ void handleButtonInput(Button* pButton, int mousePos, SDL_Event event, State* pS
     if (pButton->buttonDistance < BUTTON_HEIGHT && mousePos && SDL_BUTTON(SDL_BUTTON_LEFT)){
         *pState = desiredState;
     }
-    if (event.type == SDL_QUIT) *pState = QUIT;
+    if (SDL_PollEvent(&event) && event.type == SDL_QUIT || event.type == SDL_KEYDOWN && event.key.keysym.scancode == SDL_SCANCODE_ESCAPE) *pState = QUIT;
 }
 
 void renderButton(SDL_Renderer* pRenderer, SDL_Rect buttonRect, int r, int g, int b){

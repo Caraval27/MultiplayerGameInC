@@ -92,7 +92,7 @@ void runGame(Game* pGame){
     bool isRunning = true, left = false, right = false;
     SDL_Event event;
     int mousePos;
-    float currentPlatformY, maxJumpHeight;
+    float currentPlatformY = 0, maxJumpHeight = MAX_JUMP_HEIGHT;
 
     while (isRunning){
         switch (pGame->state) {
@@ -131,14 +131,6 @@ void runGame(Game* pGame){
                 handleButtonInput(pGame->pResumeButton, mousePos, event, &pGame->state, ONGOING);
                 renderButton(pGame->pRenderer, pGame->resumeButtonRect, 250, 43, 226);
                 renderText(pGame->pResumeButtonText);
-                switch (event.type){
-                    case SDL_KEYDOWN:
-                        switch (event.key.keysym.sym){
-                        case SDLK_ESCAPE: pGame->state = QUIT;
-                            break;
-                        }
-                    break;
-                }
             case QUIT:
                 isRunning = false;
             break;
