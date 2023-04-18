@@ -12,19 +12,19 @@ Button* createButton(SDL_Rect* pButtonRect, int windowHeight, int windowWidth, i
     
 }
 
-int getMousePos(SDL_Rect* pButtonRect, int mousePos, int windowWidth, int windowHeight, int addY, Button* pButton){
+int getMousePos(SDL_Rect* buttonRect, int mousePos, Button* pButton){
     int mouseX, mouseY;    
     mousePos = SDL_GetMouseState(&mouseX, &mouseY);
 
-    pButton->deltaX = mouseX - (pButtonRect->x + pButtonRect->w/2);
-    pButton->deltaY = mouseY - (pButtonRect->y + pButtonRect->h/2);
+    pButton->deltaX = mouseX - (buttonRect->x + buttonRect->w/2);
+    pButton->deltaY = mouseY - (buttonRect->y + buttonRect->h/2);
     pButton->buttonDistance = sqrt(pButton->deltaX * pButton->deltaX + pButton->deltaY * pButton->deltaY);
 
     return mousePos;
 }
 
-void handleButtonInput(Button* pQuitButton, int mousePos, SDL_Event event, State* pState, State desiredState){
-    if (pQuitButton->buttonDistance < BUTTON_HEIGHT && mousePos && SDL_BUTTON(SDL_BUTTON_LEFT)){
+void handleButtonInput(Button* pButton, int mousePos, SDL_Event event, State* pState, State desiredState){
+    if (pButton->buttonDistance < BUTTON_HEIGHT && mousePos && SDL_BUTTON(SDL_BUTTON_LEFT)){
         *pState = desiredState;
     }
     if (event.type == SDL_QUIT) *pState = QUIT;
