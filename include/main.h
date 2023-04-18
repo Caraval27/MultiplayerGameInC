@@ -14,14 +14,6 @@
 #include "../include/menu.h"
 #include "../include/text.h"
 
-typedef enum {
-    MAIN_MENU,
-	SETTINGS_MENU,
-	ONGOING,
-	GAME_MENU,
-	GAME_OVER
-} GameState;
-
 typedef struct {
     int windowWidth, windowHeight, keybinds[NR_OF_KEYBINDS];
     SDL_Window *pWindow;

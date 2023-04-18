@@ -76,6 +76,7 @@ void runGame(Game *pGame){
     float currentPlatformY = 0, maxJumpHeight = MAX_JUMP_HEIGHT;
     int mousePos;
     SDL_Event event;
+    pGame->state = MAIN_MENU;
 
     while (isRunning){
         switch (pGame->state) {
@@ -83,8 +84,7 @@ void runGame(Game *pGame){
                 while (SDL_PollEvent(&event)){
                     renderMenuBackground(pGame->pRenderer, pGame->pMenuBackgroundTexture, pGame->menuBackgroundRect);
                     pGame->pQuitButton = createButton(&pGame->quitButtonRect, &mousePos, pGame->windowWidth, pGame->windowHeight, 100);
-                    handleButtonInput(pGame->pQuitButton, &isRunning, mousePos, event);
-                    if (event.type == SDL_KEYDOWN && event.key.keysym.scancode == SDL_SCANCODE_SPACE) pGame->state = ONGOING;
+                    handleButtonInput(pGame->pQuitButton, &isRunning, mousePos, event, &pGame->state);
                     renderButton(pGame->pRenderer, pGame->quitButtonRect, 138, 43, 226);
                     renderText(pGame->pQuitButtonText);
                 }
