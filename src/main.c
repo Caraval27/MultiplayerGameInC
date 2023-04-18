@@ -98,10 +98,10 @@ void runGame(Game* pGame){
         switch (pGame->state) {
             case MAIN_MENU:
                 while (SDL_PollEvent(&event)){
-                    renderMainMenu(pGame->pRenderer, pGame->pMainMenuTexture, pGame->mainMenuRect);
                     mousePos = getMousePos(&pGame->quitButtonRect, mousePos, pGame->windowWidth, pGame->windowHeight, 100, pGame->pQuitButton);
                     handleButtonInput(pGame->pStartButton, mousePos, event, &pGame->state, ONGOING);
                     handleButtonInput(pGame->pQuitButton, mousePos, event, &pGame->state, QUIT);
+                    renderMainMenu(pGame->pRenderer, pGame->pMainMenuTexture, pGame->mainMenuRect);
                     renderButton(pGame->pRenderer, pGame->quitButtonRect, 138, 43, 226);
                     renderButton(pGame->pRenderer, pGame->startButtonRect, 250, 43, 226);
                     renderText(pGame->pQuitButtonText);
@@ -127,14 +127,13 @@ void runGame(Game* pGame){
                 SDL_Delay(1000/60);
             break;
             case GAME_MENU:
-            while (SDL_PollEvent(&event)){
-                if (event.type == SDL_QUIT || event.type == SDL_KEYDOWN && event.key.keysym.scancode == SDL_SCANCODE_ESCAPE) isRunning = false;
-            }
+                /*handleButtonInput();
+                renderButton();
+                renderText();*/
             break;
             case GAME_OVER:
-
+                
             break;
-
             case QUIT:
                 isRunning = false;
             break;

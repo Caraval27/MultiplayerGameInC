@@ -23,11 +23,11 @@ typedef struct {
     TTF_Font *pMainMenuFont;
     SDL_Rect mainMenuRect;
     Background* pBackground;
-    Button *pQuitButton, *pStartButton, *pResumeButton, *pMainMenuButton;
-    Text *pStartButtonText, *pQuitButtonText;
+    Button *pStartButton, *pQuitButton, *pResumeButton, *pMainMenuButton;
+    Text *pStartButtonText, *pQuitButtonText, *pResumeButtonText, *pMainMenuButtonText;
     Player* pPlayer;
 	Platform *platforms[1000];
-    SDL_Rect playerRect, platformRect, quitButtonRect, startButtonRect;
+    SDL_Rect playerRect, platformRect, quitButtonRect, startButtonRect, resumeButtonRect, mainMenuButtonRect;
     int keybinds[NR_OF_KEYBINDS];
 } Game;
 
