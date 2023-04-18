@@ -12,22 +12,22 @@ Button* createButton(SDL_Rect* pButtonRect, int windowHeight, int windowWidth, i
     
 }
 
-void getMousePos(SDL_Rect* pButtonRect, int* pMousePos, int windowWidth, int windowHeight, int addY, Button* pButton){
+int getMousePos(SDL_Rect* pButtonRect, int mousePos, int windowWidth, int windowHeight, int addY, Button* pButton){
     int mouseX, mouseY;    
-    *pMousePos = SDL_GetMouseState(&mouseX, &mouseY);
+    mousePos = SDL_GetMouseState(&mouseX, &mouseY);
 
     pButton->deltaX = mouseX - (pButtonRect->x + pButtonRect->w/2);
     pButton->deltaY = mouseY - (pButtonRect->y + pButtonRect->h/2);
     pButton->buttonDistance = sqrt(pButton->deltaX * pButton->deltaX + pButton->deltaY * pButton->deltaY);
-    
+
+    return mousePos;
 }
 
-void handleButtonInput(Button* pQuitButton, bool* pIsRunning, int mousePos, SDL_Event event, GameState* pState, GameState desiredState){
+void handleButtonInput(Button* pQuitButton, int mousePos, SDL_Event event, GameState* pState, GameState desiredState){
     if (pQuitButton->buttonDistance < BUTTON_HEIGHT && mousePos && SDL_BUTTON(SDL_BUTTON_LEFT)){
         *pState = desiredState;
     }
-    if (event.type == SDL_QUIT || event.type == SDL_KEYDOWN && event.key.keysym.scancode == SDL_SCANCODE_ESCAPE) *pIsRunning = false;
-    if (event.type == SDL_KEYDOWN && event.key.keysym.scancode == SDL_SCANCODE_SPACE) *pState = ONGOING;
+    if (event.type == SDL_QUIT) *pState = QUIT;
 }
 
 void renderButton(SDL_Renderer* pRenderer, SDL_Rect buttonRect, int r, int g, int b){
