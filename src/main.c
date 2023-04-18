@@ -164,11 +164,9 @@ void handleInputOngoing(SDL_Event* event, bool* right, bool* left, bool* isRunni
                     *isRunning = false;
                     break;
                 case SDLK_RIGHT:
-                //case SDLK_D:
                     *right = true;
                     break;
                 case SDLK_LEFT:
-                //case SDLK_A:
                     *left = true;
                     break;
             }
@@ -177,11 +175,9 @@ void handleInputOngoing(SDL_Event* event, bool* right, bool* left, bool* isRunni
             switch(event->key.keysym.sym){
                 case SDLK_LEFT:
                     *left = false;
-                    //pPlayer->velocityX = 0;
                     break;
                 case SDLK_RIGHT:
                     *right = false;
-                    //pPlayer->velocityX = 0;
                     break;
             }
         break;
