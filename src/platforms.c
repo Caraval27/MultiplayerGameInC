@@ -47,6 +47,14 @@ void handlePlank(Plank** planks, SDL_Renderer* pRenderer, int windowWidth){
     }
 }
 
+void destroyPlank(Plank** planks) {
+    for (int i = 0; planks[i] != 0; i++) {
+        if (planks[i]) {
+            free(planks[i]);
+        }
+    }
+}
+
 struct platform{
     float posX, posY;
     float velocityY;

@@ -133,6 +133,7 @@ void quitGame(Game *pGame){
     if (pGame->pPlatform){
         destroyPlatform(pGame->pPlatform);
     }
+    destroyPlank(pGame->planks);
     if (pGame->pMenuBackgroundTexture){
         SDL_DestroyTexture(pGame->pMenuBackgroundTexture);
     }
