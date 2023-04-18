@@ -88,7 +88,7 @@ void runGame(Game* pGame){
             case MAIN_MENU:
                 while (SDL_PollEvent(&event)){
                     renderMenuBackground(pGame->pRenderer, pGame->pMenuBackgroundTexture, pGame->menuBackgroundRect);
-                    mousePos = getMousePos(&pGame->quitButtonRect, &mousePos, pGame->windowWidth, pGame->windowHeight, 100, pGame->pQuitButton);
+                    mousePos = getMousePos(&pGame->quitButtonRect, mousePos, pGame->windowWidth, pGame->windowHeight, 100, pGame->pQuitButton);
                     handleButtonInput(pGame->pStartButton, mousePos, event, &pGame->state, ONGOING);
                     handleButtonInput(pGame->pQuitButton, mousePos, event, &pGame->state, QUIT);
                     renderButton(pGame->pRenderer, pGame->quitButtonRect, 138, 43, 226);
