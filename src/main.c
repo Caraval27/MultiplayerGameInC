@@ -12,7 +12,7 @@ int main(int argv, char** args){
     return 0;
 }
 
-int initiateGraphics(Game *pGame){
+int initiateGraphics(Game* pGame){
     srand(time(NULL));
 
     if (SDL_Init(SDL_INIT_EVERYTHING) != 0){
@@ -65,7 +65,7 @@ int initiateGraphics(Game *pGame){
         return 0;
     }
 
-    createPlayerRect(&pGame->playerRect, pGame->windowWidth, pGame->windowHeight);
+    pGame->pPlayerTexture = createPlayerCharacter(&pGame->playerRect, pGame->pRenderer, pGame->pWindow, pGame->windowWidth, pGame->windowHeight);
     pGame->pPlayer = createPlayer((pGame->windowWidth - pGame->playerRect.w) / 2, pGame->windowHeight - pGame->playerRect.h);
 
     FILE *fp;
@@ -77,21 +77,20 @@ int initiateGraphics(Game *pGame){
     return 1;
 }
 
-void runGame(Game *pGame){
+void runGame(Game* pGame){
     bool isRunning = true, left = false, right = false;
     float currentPlatformY = 0, maxJumpHeight = MAX_JUMP_HEIGHT;
+    int mousePos;
     SDL_Event event;
+    pGame->state = MAIN_MENU;
 
     while (isRunning){
         switch (pGame->state) {
             case MAIN_MENU:
                 while (SDL_PollEvent(&event)){
                     renderMenuBackground(pGame->pRenderer, pGame->pMainMenuTexture, pGame->mainMenuRect);
-                    handleButtonInput(pGame->pQuitButton, &pGame->quitButtonRect, &isRunning, pGame->windowWidth, pGame->windowHeight, 100);
-                    if (event.type == SDL_QUIT || event.type == SDL_KEYDOWN && event.key.keysym.scancode == SDL_SCANCODE_ESCAPE) isRunning = false;
-                    else if (event.type == SDL_KEYDOWN && event.key.keysym.scancode == SDL_SCANCODE_SPACE){
-                        pGame->state = ONGOING;
-                    }
+                    pGame->pQuitButton = createButton(&pGame->quitButtonRect, &mousePos, pGame->windowWidth, pGame->windowHeight, 100);
+                    handleButtonInput(pGame->pQuitButton, &isRunning, mousePos, event, &pGame->state);
                     renderButton(pGame->pRenderer, pGame->quitButtonRect, 138, 43, 226);
                     renderText(pGame->pQuitButtonText);
                 }
@@ -106,17 +105,17 @@ void runGame(Game *pGame){
 
                 movePlayer(pGame->pPlayer, pGame->playerRect, left, right, pGame->windowWidth);
                 jumpPlayer(pGame->pPlayer, pGame->playerRect, pGame->windowHeight, currentPlatformY, maxJumpHeight);
-                platformCollidePlayer(pGame->pPlayer, pGame->playerRect, pGame->planks, &currentPlatformY, &maxJumpHeight);
+                platformCollidePlayer(pGame->pPlayer, pGame->playerRect, pGame->platforms, &currentPlatformY, &maxJumpHeight);
                 
                 updateBackground(&pGame->windowUpperRect, &pGame->windowLowerRect, &pGame->backgroundUpperRect, &pGame->backgroundLowerRect, pGame->windowHeight, pGame->pRenderer, pGame->pBackgroundTexture);
                 updatePlayer(pGame->pPlayer, &pGame->playerRect);
 
-                SDL_SetRenderDrawColor(pGame->pRenderer, 0, 0, 255, 255);
-                SDL_RenderFillRect(pGame->pRenderer, &pGame->playerRect);
                 SDL_SetRenderDrawColor(pGame->pRenderer, 0, 255, 0, 255);
                 SDL_RenderFillRect(pGame->pRenderer, &pGame->platformRect);
                 
-                handlePlank(pGame->planks, pGame->pRenderer, pGame->windowWidth);
+                handlePlatform(pGame->platforms, pGame->pRenderer, pGame->windowWidth);
+
+                SDL_RenderCopy(pGame->pRenderer, pGame->pPlayerTexture, NULL, &pGame->playerRect);
 
                 SDL_Delay(1000/60);
             break;
@@ -135,11 +134,8 @@ void runGame(Game *pGame){
 
 void quitGame(Game *pGame){
     
-    if (pGame->pPlatform){
-        destroyPlatform(pGame->pPlatform);
-    }
-    if (pGame->planks){
-        destroyPlank(pGame->planks);
+    if (pGame->platforms){
+        destroyPlatform(pGame->platforms);
     }
     if (pGame->pPlayer){
         destroyPlayer(pGame->pPlayer);
@@ -166,29 +162,24 @@ void quitGame(Game *pGame){
 void handleInputOngoing(Game *pGame, SDL_Event* event, bool* right, bool* left, bool* isRunning){
 
     switch (event->type){
-        case SDL_QUIT:
-            *isRunning = false;
+        case SDL_QUIT: *isRunning = false;
         break;
         case SDL_KEYDOWN:
             switch (event->key.keysym.sym){
                 case SDLK_ESCAPE:
                     pGame->state = GAME_MENU;
                     break;
-                case SDLK_RIGHT:
-                    *right = true;
+                case SDLK_RIGHT: *right = true;
                     break;
-                case SDLK_LEFT:
-                    *left = true;
+                case SDLK_LEFT: *left = true;
                     break;
             }
         break;
         case SDL_KEYUP:
             switch(event->key.keysym.sym){
-                case SDLK_LEFT:
-                    *left = false;
+                case SDLK_LEFT: *left = false;
                     break;
-                case SDLK_RIGHT:
-                    *right = false;
+                case SDLK_RIGHT: *right = false;
                     break;
             }
         break;

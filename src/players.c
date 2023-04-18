@@ -16,11 +16,33 @@ Player* createPlayer(int x, int y){
     return pPlayer;
 }
 
-void createPlayerRect(SDL_Rect* pPlayerRect, int windowWidth, int windowHeight){
+SDL_Texture* createPlayerCharacter(SDL_Rect* pPlayerRect, SDL_Renderer* pPlayerRenderer, SDL_Window* pWindow, int windowWidth, int windowHeight){
+    
+    SDL_Surface* pPlayerSurface = IMG_Load("../assets/penguin.png"); //Ändra så att man kan skicka in en textsträng sen
+    if (!pPlayerSurface){
+        printf("Error: %s\n", SDL_GetError());
+        SDL_DestroyRenderer(pPlayerRenderer); 
+        SDL_DestroyWindow(pWindow); 
+        SDL_Quit(); 
+        exit (1);
+    }
+
+    SDL_Texture* pPlayerTexture = SDL_CreateTextureFromSurface(pPlayerRenderer, pPlayerSurface);
+    SDL_FreeSurface(pPlayerSurface);
+    if(!pPlayerTexture){
+        printf("Error: %s\n",SDL_GetError());
+        SDL_DestroyRenderer(pPlayerRenderer);
+        SDL_DestroyWindow(pWindow);
+        SDL_Quit();
+        exit (1);    
+    }
+
     pPlayerRect->w = 50;
     pPlayerRect->h = 50;
     pPlayerRect->x = windowWidth - pPlayerRect->w;
     pPlayerRect->y = windowHeight - pPlayerRect->h;
+
+    return pPlayerTexture;
 }
 
 void jumpPlayer(Player* pPlayer, SDL_Rect playerRect, int windowHeight, float platformY, float maxJumpHeight){
@@ -46,7 +68,7 @@ void movePlayer(Player* pPlayer, SDL_Rect playerRect, bool left, bool right, int
     if (left && !right){
         //pPlayer->velocityX += SPEED;
         pPlayer->posX -= (pPlayer->velocityX) / 60;
-
+        
     }
     else if (right && !left){
         //pPlayer->velocityX += SPEED;
@@ -57,7 +79,7 @@ void movePlayer(Player* pPlayer, SDL_Rect playerRect, bool left, bool right, int
     if (pPlayer->posX > windowWidth - playerRect.w) pPlayer->posX = windowWidth - playerRect.w;
 }
 
-void platformCollidePlayer(Player* pPlayer, SDL_Rect playerRect, Plank** platforms, float* pPlatformY, float* pMaxJumpHeight){
+void platformCollidePlayer(Player* pPlayer, SDL_Rect playerRect, Platform** platforms, float* pPlatformY, float* pMaxJumpHeight){
     for (int i = 0; platforms[i] != 0; i++){
         if (pPlayer->posY + playerRect.h >= platforms[i]->yPos &&
             pPlayer->posY < platforms[i]->yPos + platforms[i]->height &&

@@ -14,27 +14,18 @@
 #include "../include/menu.h"
 #include "../include/text.h"
 
-typedef enum {
-    MAIN_MENU,
-	SETTINGS_MENU,
-	ONGOING,
-	GAME_MENU,
-	GAME_OVER
-} GameState;
-
 typedef struct {
     GameState state;
     SDL_Window *pWindow;
     int windowWidth, windowHeight;
     SDL_Renderer *pRenderer;
-    SDL_Texture *pBackgroundTexture, *pMainMenuTexture;
+    SDL_Texture *pBackgroundTexture, *pMainMenuTexture, *pPlayerTexture;
     TTF_Font *pMainMenuFont;
     SDL_Rect windowUpperRect, windowLowerRect, backgroundUpperRect, backgroundLowerRect, mainMenuRect;
     Button* pQuitButton, pStartButton, pResumeButton, pMainMenuButton;
     Text* pQuitButtonText;
     Player* pPlayer;
-	Plank *planks[1000];
-    Platform* pPlatform;
+	Platform *platforms[1000];
     SDL_Rect playerRect, platformRect, quitButtonRect;
     int keybinds[NR_OF_KEYBINDS];
 } Game;
