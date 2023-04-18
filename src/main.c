@@ -83,9 +83,8 @@ void runGame(Game *pGame){
                 while (SDL_PollEvent(&event)){
                     renderMenuBackground(pGame->pRenderer, pGame->pMenuBackgroundTexture, pGame->menuBackgroundRect);
                     pGame->pQuitButton = createButton(&pGame->quitButtonRect, &mousePos, pGame->windowWidth, pGame->windowHeight, 100);
-                    handleButtonInput(pGame->pQuitButton, &isRunning, mousePos);
-                    if (event.type == SDL_QUIT || event.type == SDL_KEYDOWN && event.key.keysym.scancode == SDL_SCANCODE_ESCAPE) isRunning = false;
-                    else if (event.type == SDL_KEYDOWN && event.key.keysym.scancode == SDL_SCANCODE_SPACE) pGame->state = ONGOING;
+                    handleButtonInput(pGame->pQuitButton, &isRunning, mousePos, event);
+                    if (event.type == SDL_KEYDOWN && event.key.keysym.scancode == SDL_SCANCODE_SPACE) pGame->state = ONGOING;
                     renderButton(pGame->pRenderer, pGame->quitButtonRect, 138, 43, 226);
                     renderText(pGame->pQuitButtonText);
                 }

@@ -17,10 +17,11 @@ Button* createButton(SDL_Rect* pButtonRect, int* pMousePos, int windowWidth, int
     return pButton;
 }
 
-void handleButtonInput(Button* pQuitButton, bool* pIsRunning, int mousePos){
+void handleButtonInput(Button* pQuitButton, bool* pIsRunning, int mousePos, SDL_Event event){
     if (pQuitButton->buttonDistance < BUTTON_HEIGHT && mousePos && SDL_BUTTON(SDL_BUTTON_LEFT)){
         *pIsRunning = false;
     }
+    if (event.type == SDL_QUIT || event.type == SDL_KEYDOWN && event.key.keysym.scancode == SDL_SCANCODE_ESCAPE) *pIsRunning = false;
 }
 
 void renderButton(SDL_Renderer* pRenderer, SDL_Rect buttonRect, int r, int g, int b){
