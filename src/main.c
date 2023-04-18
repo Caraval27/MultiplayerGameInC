@@ -57,7 +57,7 @@ int initiateGame(Game* pGame){
         quitGame(pGame);
         return 0;
     }
-    pGame->pPlayerTexture = createPlayerCharacter(&pGame->playerRect, pGame->pRenderer, pGame->pWindow, pGame->windowWidth, pGame->windowHeight);
+    pGame->pPlayerTexture = createPlayerCharacter(pGame->pRenderer, pGame->pWindow);
     if (!pGame->pPlayerTexture){
         printf("Error: %s\n", SDL_GetError());
         quitGame(pGame);
@@ -74,10 +74,12 @@ int initiateGame(Game* pGame){
     pGame->pStartButton = createButton(&pGame->startButtonRect, pGame->windowHeight, pGame->windowWidth, 50);
     pGame->pQuitButton = createButton(&pGame->quitButtonRect, pGame->windowHeight, pGame->windowWidth, 100);
     pGame->pResumeButton = createButton(&pGame->resumeButtonRect, pGame->windowHeight, pGame->windowWidth, 50);
+    pGame->pMainMenuButton = createButton(&pGame->mainMenuButtonRect, pGame->windowHeight, pGame->windowWidth, 100);
     pGame->pStartButtonText = createText(pGame->pRenderer, pGame->pMainMenuFont, 255, 255, 255, "Start game", pGame->windowWidth, pGame->windowHeight, 50);
     pGame->pQuitButtonText = createText(pGame->pRenderer, pGame->pMainMenuFont, 255, 255, 255, "Quit", pGame->windowWidth, pGame->windowHeight, 100);
     pGame->pResumeButtonText = createText(pGame->pRenderer, pGame->pMainMenuFont, 255, 255, 255, "Resume game", pGame->windowWidth, pGame->windowHeight, 50);
-    pGame->pPlayer = createPlayer((pGame->windowWidth - pGame->playerRect.w) / 2, pGame->windowHeight - pGame->playerRect.h);
+    pGame->pMainMenuButtonText = createText(pGame->pRenderer, pGame->pMainMenuFont, 255, 255, 255, "Main menu", pGame->windowWidth, pGame->windowHeight, 100);
+    pGame->pPlayer = createPlayer((pGame->windowWidth - pGame->playerRect.w) / 2, pGame->windowHeight - pGame->playerRect.h, &pGame->playerRect, pGame->windowWidth, pGame->windowHeight);
 
     FILE *fp;
     readFromFile(fp, pGame->keybinds);
@@ -98,8 +100,9 @@ void runGame(Game* pGame){
         switch (pGame->state) {
             case MAIN_MENU:
                 while (SDL_PollEvent(&event)){
-                    mousePos = getMousePos(&pGame->quitButtonRect, mousePos, pGame->pQuitButton);
+                    mousePos = getMousePos(pGame->startButtonRect, mousePos, pGame->pStartButton);
                     handleButtonInput(pGame->pStartButton, mousePos, event, &pGame->state, ONGOING);
+                    mousePos = getMousePos(pGame->quitButtonRect, mousePos, pGame->pQuitButton);
                     handleButtonInput(pGame->pQuitButton, mousePos, event, &pGame->state, QUIT);
                     renderMainMenu(pGame->pRenderer, pGame->pMainMenuTexture, pGame->mainMenuRect);
                     renderButton(pGame->pRenderer, pGame->startButtonRect, 250, 43, 226);
@@ -127,10 +130,15 @@ void runGame(Game* pGame){
                 SDL_Delay(1000/60);
             break;
             case GAME_MENU:
-                mousePos = getMousePos(&pGame->resumeButtonRect, mousePos, pGame->pResumeButton);
+                mousePos = getMousePos(pGame->resumeButtonRect, mousePos, pGame->pResumeButton);
                 handleButtonInput(pGame->pResumeButton, mousePos, event, &pGame->state, ONGOING);
+                mousePos = getMousePos(pGame->mainMenuButtonRect, mousePos, pGame->pMainMenuButton);
+                handleButtonInput(pGame->pMainMenuButton, mousePos, event, &pGame->state, MAIN_MENU);
+                renderButton(pGame->pRenderer, pGame->mainMenuButtonRect, 138, 43, 226);
                 renderButton(pGame->pRenderer, pGame->resumeButtonRect, 250, 43, 226);
+                renderText(pGame->pMainMenuButtonText);
                 renderText(pGame->pResumeButtonText);
+            break;
             case QUIT:
                 isRunning = false;
             break;

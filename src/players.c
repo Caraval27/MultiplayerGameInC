@@ -5,7 +5,7 @@ struct player{
     float velocityY, velocityX;
 };
 
-Player* createPlayer(int x, int y){
+Player* createPlayer(int x, int y, SDL_Rect* playerRect, int windowWidth, int windowHeight){
     Player* pPlayer = malloc(sizeof(Player));
 
     pPlayer->xPos = x;
@@ -13,10 +13,15 @@ Player* createPlayer(int x, int y){
     pPlayer->velocityX = 0;
     pPlayer->velocityY = 5;
 
+    playerRect->w = 50;
+    playerRect->h = 50;
+    playerRect->x = windowWidth - playerRect->w;
+    playerRect->y = windowHeight - playerRect->h;
+
     return pPlayer;
 }
 
-SDL_Texture* createPlayerCharacter(SDL_Rect* pPlayerRect, SDL_Renderer* pPlayerRenderer, SDL_Window* pWindow, int windowWidth, int windowHeight){
+SDL_Texture* createPlayerCharacter(SDL_Renderer* pPlayerRenderer, SDL_Window* pWindow){
     SDL_Surface* pPlayerSurface = IMG_Load("../assets/penguin.png"); //Ändra så att man kan skicka in en textsträng sen
     if (!pPlayerSurface){
         printf("Error: %s\n", SDL_GetError());
@@ -34,11 +39,6 @@ SDL_Texture* createPlayerCharacter(SDL_Rect* pPlayerRect, SDL_Renderer* pPlayerR
         exit (1);    
     }
     SDL_FreeSurface(pPlayerSurface);
-
-    pPlayerRect->w = 50;
-    pPlayerRect->h = 50;
-    pPlayerRect->x = windowWidth - pPlayerRect->w;
-    pPlayerRect->y = windowHeight - pPlayerRect->h;
 
     return pPlayerTexture;
 }

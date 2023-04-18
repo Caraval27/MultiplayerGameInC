@@ -9,15 +9,14 @@ Button* createButton(SDL_Rect* pButtonRect, int windowHeight, int windowWidth, i
     pButtonRect->h = BUTTON_HEIGHT;
 
     return pButton;
-    
 }
 
-int getMousePos(SDL_Rect* buttonRect, int mousePos, Button* pButton){
+int getMousePos(SDL_Rect buttonRect, int mousePos, Button* pButton){
     int mouseX, mouseY;    
-    mousePos = SDL_GetMouseState(&mouseX, &mouseY);
 
-    pButton->deltaX = mouseX - (buttonRect->x + buttonRect->w/2);
-    pButton->deltaY = mouseY - (buttonRect->y + buttonRect->h/2);
+    mousePos = SDL_GetMouseState(&mouseX, &mouseY);
+    pButton->deltaX = mouseX - (buttonRect.x + buttonRect.w/2);
+    pButton->deltaY = mouseY - (buttonRect.y + buttonRect.h/2);
     pButton->buttonDistance = sqrt(pButton->deltaX * pButton->deltaX + pButton->deltaY * pButton->deltaY);
 
     return mousePos;
@@ -27,7 +26,7 @@ void handleButtonInput(Button* pButton, int mousePos, SDL_Event event, State* pS
     if (pButton->buttonDistance < BUTTON_HEIGHT && mousePos && SDL_BUTTON(SDL_BUTTON_LEFT)){
         *pState = desiredState;
     }
-    if (SDL_PollEvent(&event) && event.type == SDL_QUIT || event.type == SDL_KEYDOWN && event.key.keysym.scancode == SDL_SCANCODE_ESCAPE) *pState = QUIT;
+    if (SDL_PollEvent(&event) && event.type == SDL_QUIT || (event.type == SDL_KEYDOWN && event.key.keysym.scancode == SDL_SCANCODE_ESCAPE)) *pState = QUIT;
 }
 
 void renderButton(SDL_Renderer* pRenderer, SDL_Rect buttonRect, int r, int g, int b){
