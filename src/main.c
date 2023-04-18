@@ -73,6 +73,7 @@ int initiateGame(Game* pGame){
     pGame->pBackground = createBackground(pGame->windowHeight);
     pGame->pQuitButton = createButton(&pGame->quitButtonRect, pGame->windowHeight, pGame->windowWidth, 100);
     pGame->pStartButton = createButton(&pGame->startButtonRect, pGame->windowHeight, pGame->windowWidth, 50);
+    pGame->pStartButtonText = createText(pGame->pRenderer, pGame->pMainMenuFont, 255, 255, 255, "Start Game", pGame->windowWidth, pGame->windowHeight, 50);
     pGame->pQuitButtonText = createText(pGame->pRenderer, pGame->pMainMenuFont, 255, 255, 255, "Quit", pGame->windowWidth, pGame->windowHeight, 100);
     pGame->pPlayer = createPlayer((pGame->windowWidth - pGame->playerRect.w) / 2, pGame->windowHeight - pGame->playerRect.h);
 
@@ -104,6 +105,7 @@ void runGame(Game* pGame){
                     renderButton(pGame->pRenderer, pGame->quitButtonRect, 138, 43, 226);
                     renderButton(pGame->pRenderer, pGame->startButtonRect, 250, 43, 226);
                     renderText(pGame->pQuitButtonText);
+                    renderText(pGame->pStartButtonText);
                 }
             break;
             case SETTINGS_MENU:

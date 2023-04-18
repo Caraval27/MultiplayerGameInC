@@ -24,7 +24,7 @@ typedef struct {
     SDL_Rect mainMenuRect;
     Background* pBackground;
     Button *pQuitButton, *pStartButton, *pResumeButton, *pMainMenuButton;
-    Text* pQuitButtonText;
+    Text *pStartButtonText, *pQuitButtonText;
     Player* pPlayer;
 	Platform *platforms[1000];
     SDL_Rect playerRect, platformRect, quitButtonRect, startButtonRect;
