@@ -1,9 +1,11 @@
 #include "../include/main.h"
 
-Button* createButton(SDL_Rect* pButtonRect, int* pMousePos, int windowWidth, int windowHeight, int addY){
-    int mouseX, mouseY;
+Button* createButton(){
     Button* pButton = malloc(sizeof(Button));
-    
+}
+
+void getMousePos(SDL_Rect* pButtonRect, int* pMousePos, int windowWidth, int windowHeight, int addY, Button* pButton){
+    int mouseX, mouseY;    
     *pMousePos = SDL_GetMouseState(&mouseX, &mouseY);
     pButtonRect->x = (windowWidth - BUTTON_WIDTH)/2;
     pButtonRect->y = (windowHeight - BUTTON_HEIGHT)/2 + addY;
@@ -14,7 +16,6 @@ Button* createButton(SDL_Rect* pButtonRect, int* pMousePos, int windowWidth, int
     pButton->deltaY = mouseY - (pButtonRect->y + pButtonRect->h/2);
     pButton->buttonDistance = sqrt(pButton->deltaX * pButton->deltaX + pButton->deltaY * pButton->deltaY);
     
-    return pButton;
 }
 
 void handleButtonInput(Button* pQuitButton, bool* pIsRunning, int mousePos, SDL_Event event, GameState* pState){
