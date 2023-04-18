@@ -10,12 +10,12 @@ Button* createButton(SDL_Rect buttonRect, int mouseX, int mouseY){
     return pButton;
 }
 
-void handleButtonInput(Button* pButton, SDL_Rect* pButtonRect, bool* pIsRunning, int windowWidth, int windowHeight){
+void handleButtonInput(Button* pButton, SDL_Rect* pButtonRect, bool* pIsRunning, int windowWidth, int windowHeight, int addY){
     int mouseX, mouseY, mousePos;
 
     mousePos = SDL_GetMouseState(&mouseX, &mouseY);
     pButtonRect->x = (windowWidth - BUTTON_WIDTH)/2;
-    pButtonRect->y = (windowHeight - BUTTON_HEIGHT)/2;
+    pButtonRect->y = (windowHeight - BUTTON_HEIGHT)/2 + addY;
     pButtonRect->w = BUTTON_WIDTH;
     pButtonRect->h = BUTTON_HEIGHT;
     pButton = createButton(*pButtonRect, mouseX, mouseY);

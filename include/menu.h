@@ -13,7 +13,7 @@ typedef struct {
 } Button;
 
 Button* createButton(SDL_Rect buttonRect, int mouseX, int mouseY);
-void handleButtonInput(Button* pButton, SDL_Rect* pButtonRect, bool* pIsRunning, int windowWidth, int windowHeight);
+void handleButtonInput(Button* pButton, SDL_Rect* pButtonRect, bool* pIsRunning, int windowWidth, int windowHeight, int addY);
 void renderButton(SDL_Renderer* pRenderer, SDL_Rect buttonRect, int r, int g, int b);
 SDL_Texture* initMenuBackground(SDL_Window* pWindow, SDL_Renderer* pRenderer, SDL_Rect* pMenuBackgroundRect, int windowWidth, int windowHeight);
 void renderMenuBackground(SDL_Renderer* pRenderer, SDL_Texture* pTexture, SDL_Rect menuBackgroundRect);
