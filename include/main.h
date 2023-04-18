@@ -27,7 +27,7 @@ typedef struct {
     Text* pQuitButtonText;
     Player* pPlayer;
 	Platform *platforms[1000];
-    SDL_Rect playerRect, platformRect, quitButtonRect;
+    SDL_Rect playerRect, platformRect, quitButtonRect, startButtonRect;
     int keybinds[NR_OF_KEYBINDS];
 } Game;
 

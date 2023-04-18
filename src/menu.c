@@ -1,9 +1,13 @@
 #include "../include/main.h"
 
-Button* createButton(SDL_Rect* pButtonRect, int* pMousePos, int windowWidth, int windowHeight, int addY){
-    int mouseX, mouseY;
+Button* createButton(SDL_Rect* pButtonRect){
     Button* pButton = malloc(sizeof(Button));
-    
+ 
+}
+
+void getMousePos(SDL_Rect* pButtonRect, int* pMousePos, int windowWidth, int windowHeight, int addY, Button* pButton){
+    int mouseX, mouseY; 
+
     *pMousePos = SDL_GetMouseState(&mouseX, &mouseY);
     pButtonRect->x = (windowWidth - BUTTON_WIDTH)/2;
     pButtonRect->y = (windowHeight - BUTTON_HEIGHT)/2 + addY;
@@ -13,13 +17,11 @@ Button* createButton(SDL_Rect* pButtonRect, int* pMousePos, int windowWidth, int
     pButton->deltaX = mouseX - (pButtonRect->x + pButtonRect->w/2);
     pButton->deltaY = mouseY - (pButtonRect->y + pButtonRect->h/2);
     pButton->buttonDistance = sqrt(pButton->deltaX * pButton->deltaX + pButton->deltaY * pButton->deltaY);
-    
-    return pButton;
 }
 
-void handleButtonInput(Button* pQuitButton, bool* pIsRunning, int mousePos, SDL_Event event, GameState* pState){
+void handleButtonInput(Button* pQuitButton, bool* pIsRunning, int mousePos, SDL_Event event, State* pState, State desiredState){
     if (pQuitButton->buttonDistance < BUTTON_HEIGHT && mousePos && SDL_BUTTON(SDL_BUTTON_LEFT)){
-        *pIsRunning = false;
+        *pState = desiredState;
     }
     if (event.type == SDL_QUIT || event.type == SDL_KEYDOWN && event.key.keysym.scancode == SDL_SCANCODE_ESCAPE) *pIsRunning = false;
     if (event.type == SDL_KEYDOWN && event.key.keysym.scancode == SDL_SCANCODE_SPACE) *pState = ONGOING;
@@ -30,7 +32,7 @@ void renderButton(SDL_Renderer* pRenderer, SDL_Rect buttonRect, int r, int g, in
     SDL_RenderFillRect(pRenderer, &buttonRect);
 }
 
-SDL_Texture* initMenuBackground(SDL_Window* pWindow, SDL_Renderer* pRenderer, SDL_Rect* pMainMenuRect, int windowWidth, int windowHeight){
+SDL_Texture* createMainMenuImage(SDL_Window* pWindow, SDL_Renderer* pRenderer, SDL_Rect* pMainMenuRect, int windowWidth, int windowHeight){
     SDL_Surface* pSurface = IMG_Load("../assets/menuBackground.jpeg");
     if(!pSurface){
         printf("Error: %s\n", SDL_GetError());
@@ -58,6 +60,6 @@ SDL_Texture* initMenuBackground(SDL_Window* pWindow, SDL_Renderer* pRenderer, SD
     return pTexture;
 }
 
-void renderMenuBackground(SDL_Renderer* pRenderer, SDL_Texture* pTexture, SDL_Rect mainMenuRect){
+void renderMainMenu(SDL_Renderer* pRenderer, SDL_Texture* pTexture, SDL_Rect mainMenuRect){
     SDL_RenderCopy(pRenderer, pTexture, NULL, &mainMenuRect);
 }

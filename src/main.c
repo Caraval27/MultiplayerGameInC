@@ -45,7 +45,7 @@ int initiateGame(Game* pGame){
         quitGame(pGame);
         return 0;
     }
-    pGame->pMainMenuTexture = initMenuBackground(pGame->pWindow, pGame->pRenderer, &pGame->mainMenuRect, pGame->windowWidth, pGame->windowHeight);
+    pGame->pMainMenuTexture = createMainMenuImage(pGame->pWindow, pGame->pRenderer, &pGame->mainMenuRect, pGame->windowWidth, pGame->windowHeight);
     if (!pGame->pMainMenuTexture){
         printf("Error: %s\n", SDL_GetError());
         quitGame(pGame);
@@ -71,6 +71,8 @@ int initiateGame(Game* pGame){
     }
 
     pGame->pBackground = createBackground(pGame->windowHeight);
+    pGame->pStartButton = createButton(&pGame->startButtonRect);
+    pGame->pQuitButton = createButton(&pGame->quitButtonRect);
     pGame->pQuitButtonText = createText(pGame->pRenderer, pGame->pMainMenuFont, 255, 255, 255, "Quit", pGame->windowWidth, pGame->windowHeight, 100);
     pGame->pPlayer = createPlayer((pGame->windowWidth - pGame->playerRect.w) / 2, pGame->windowHeight - pGame->playerRect.h);
 
@@ -94,9 +96,11 @@ void runGame(Game* pGame){
             case MAIN_MENU:
                 while (SDL_PollEvent(&event)){
                     renderMenuBackground(pGame->pRenderer, pGame->pMainMenuTexture, pGame->mainMenuRect);
-                    pGame->pQuitButton = createButton(&pGame->quitButtonRect, &mousePos, pGame->windowWidth, pGame->windowHeight, 100);
-                    handleButtonInput(pGame->pQuitButton, &isRunning, mousePos, event, &pGame->state);
+                    getMousePos(&pGame->quitButtonRect, &mousePos, pGame->windowWidth, pGame->windowHeight, 100, pGame->pQuitButton);
+                    handleButtonInput(pGame->pQuitButton, &isRunning, mousePos, event, &pGame->state, QUIT);
+                    handleButtonInput(pGame->pStartButton, &isRunning, mousePos, event, &pGame->state, ONGOING);
                     renderButton(pGame->pRenderer, pGame->quitButtonRect, 138, 43, 226);
+                    renderButton(pGame->pRenderer, pGame->startButtonRect, 250, 43, 226);
                     renderText(pGame->pQuitButtonText);
                 }
             break;
@@ -105,7 +109,7 @@ void runGame(Game* pGame){
             break;
             case ONGOING:
                 while (SDL_PollEvent(&event)){
-                    handleInputOngoing(pGame, &event, &right, &left, &isRunning);
+                    handleInputOngoing(&pGame->state, &event, &right, &left, &isRunning);
                 }
 
                 movePlayer(pGame->pPlayer, pGame->playerRect, left, right, pGame->windowWidth);
@@ -125,6 +129,10 @@ void runGame(Game* pGame){
             break;
             case GAME_OVER:
 
+            break;
+
+            case QUIT:
+                isRunning = false;
             break;
         }
         SDL_RenderPresent(pGame->pRenderer);
