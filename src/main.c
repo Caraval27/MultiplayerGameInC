@@ -61,7 +61,7 @@ int initiateGraphics(Game *pGame){
         return 0;
     }
 
-    createPlayerRect(&pGame->playerRect, pGame->windowWidth, pGame->windowHeight);
+    pGame->pPlayerTexture = createPlayerRect(&pGame->playerRect, pGame->pRenderer, pGame->pWindow, pGame->windowWidth, pGame->windowHeight);
     pGame->pPlayer = createPlayer((pGame->windowWidth - pGame->playerRect.w) / 2, pGame->windowHeight - pGame->playerRect.h);
 
     readFromFile(fp, pGame->keybinds);
@@ -106,13 +106,15 @@ void runGame(Game *pGame){
                 updatePlayer(pGame->pPlayer, &pGame->playerRect);
                 //updatePlatform(pGame->pPlatform, &pGame->platformRect);
 
-                SDL_SetRenderDrawColor(pGame->pRenderer, 0, 0, 255, 255);
-                SDL_RenderFillRect(pGame->pRenderer, &pGame->playerRect);
+                //SDL_SetRenderDrawColor(pGame->pRenderer, 0, 0, 255, 255);
+                //SDL_RenderFillRect(pGame->pRenderer, &pGame->playerRect);
                 SDL_SetRenderDrawColor(pGame->pRenderer, 0, 255, 0, 255);
                 SDL_RenderFillRect(pGame->pRenderer, &pGame->platformRect);
                 
                 handlePlank(pGame->planks, pGame->pRenderer, pGame->windowWidth);
 
+                //SDL_RenderClear(pGame->pRenderer);
+                SDL_RenderCopy(pGame->pRenderer, pGame->pPlayerTexture, NULL, &pGame->playerRect);
                 SDL_RenderPresent(pGame->pRenderer);
                 SDL_Delay(1000/60);
             break;

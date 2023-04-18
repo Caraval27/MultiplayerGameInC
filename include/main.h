@@ -27,7 +27,7 @@ typedef struct {
     SDL_Window *pWindow;
     SDL_Renderer *pRenderer;
     TTF_Font *pMainMenuFont;
-    SDL_Texture *pBackgroundTexture, *pMenuBackgroundTexture;
+    SDL_Texture *pBackgroundTexture, *pMenuBackgroundTexture, *pPlayerTexture;
     SDL_Rect windowUpperRect, windowLowerRect, imageUpperRect, imageLowerRect, menuBackgroundRect;
     Player* pPlayer;
     Platform* pPlatform;

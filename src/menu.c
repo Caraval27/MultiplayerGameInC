@@ -48,7 +48,7 @@ SDL_Texture* initMenuBackground(SDL_Window* pWindow, SDL_Renderer* pRenderer, SD
         exit(1);
     }
 
-    SDL_QueryTexture(pTexture, NULL, NULL, &pMenuBackgroundRect->w, &pMenuBackgroundRect->h);
+    //SDL_QueryTexture(pTexture, NULL, NULL, &pMenuBackgroundRect->w, &pMenuBackgroundRect->h);
     pMenuBackgroundRect->w = windowWidth; // size
     pMenuBackgroundRect->h = windowHeight;
     pMenuBackgroundRect->x = 0; //left

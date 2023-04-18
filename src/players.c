@@ -18,12 +18,44 @@ Player* createPlayer(int x, int y){
     return pPlayer;
 }
 
-void createPlayerRect(SDL_Rect* pPlayerRect, int windowWidth, int windowHeight){
+SDL_Texture* createPlayerRect(SDL_Rect* pPlayerRect, SDL_Renderer* pPlayerRenderer, SDL_Window* pWindow, int windowWidth, int windowHeight){
+    
+
+    SDL_Surface* pPlayerSurface = IMG_Load("../assets/penguin.png"); //Ändra så att man kan skicka in en textsträng sen
+    if (!pPlayerSurface){
+        printf("Error: %s\n", SDL_GetError());
+        SDL_DestroyRenderer(pPlayerRenderer); // destroys the render
+        SDL_DestroyWindow(pWindow); //destroys the window that has been made
+        SDL_Quit(); //quit SDL because it has been initialized
+        exit (1);
+    }
+
+    SDL_Texture* pPlayerTexture = SDL_CreateTextureFromSurface(pPlayerRenderer, pPlayerSurface);
+    SDL_FreeSurface(pPlayerSurface);
+    if(!pPlayerTexture){
+        printf("Error: %s\n",SDL_GetError());
+        SDL_DestroyRenderer(pPlayerRenderer);
+        SDL_DestroyWindow(pWindow);
+        SDL_Quit();
+        exit (1);    
+    }
+
     pPlayerRect->w = 50;
     pPlayerRect->h = 50;
     pPlayerRect->x = windowWidth - pPlayerRect->w;
     pPlayerRect->y = windowHeight - pPlayerRect->h;
+
+    //SDL_QueryTexture(pTexture, NULL, NULL, &pPlayerRect->w, &pPlayerRect->h); behövs inte?
+    return pPlayerTexture;
 }
+
+/*void renderPlayer(SDL_Renderer *pRenderer, Player* pPlayer) {
+	SDL_Rect playerRect;
+	playerRect.x = pPlayer->posX;
+	playerRect.y = pPlayer->posY;
+	SDL_SetRenderDrawColor(pRenderer, 255, 0, 0, 255);
+	SDL_RenderFillRect(pRenderer, &playerRect);
+}*/
 
 void jumpPlayer(Player* pPlayer, SDL_Rect playerRect, int windowHeight, float platformY, float maxJumpHeight){
     pPlayer->posY += pPlayer->velocityY;
@@ -47,7 +79,7 @@ void movePlayer(Player* pPlayer, SDL_Rect playerRect, bool left, bool right, int
     if (left && !right){
         pPlayer->velocityX += SPEED;
         pPlayer->posX -= (pPlayer->velocityX) / 60;
-
+        
     }
     else if(right && !left){
         pPlayer->velocityX += SPEED;
