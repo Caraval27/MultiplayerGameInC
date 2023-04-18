@@ -4,8 +4,8 @@
 #define MENU_IMAGE_WIDTH 2200
 #define MENU_IMAGE_HEIGHT 1524
 
-#define BUTTON_WIDTH 100
-#define BUTTON_HEIGHT 30
+#define BUTTON_WIDTH 150
+#define BUTTON_HEIGHT 40
 
 typedef enum {
     MAIN_MENU,
