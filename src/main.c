@@ -105,8 +105,6 @@ void runGame(Game *pGame){
                 updatePlayer(pGame->pPlayer, &pGame->playerRect);
                 //updatePlatform(pGame->pPlatform, &pGame->platformRect);
 
-                //SDL_SetRenderDrawColor(pGame->pRenderer, 0, 0, 255, 255);
-                //SDL_RenderFillRect(pGame->pRenderer, &pGame->playerRect);
                 SDL_SetRenderDrawColor(pGame->pRenderer, 0, 255, 0, 255);
                 SDL_RenderFillRect(pGame->pRenderer, &pGame->platformRect);
                 
