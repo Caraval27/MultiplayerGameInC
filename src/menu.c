@@ -1,7 +1,8 @@
 #include "../include/main.h"
 
-Button* createButton(){
+Button* createButton(SDL_Rect* pButtonRect){
     Button* pButton = malloc(sizeof(Button));
+ 
 }
 
 void getMousePos(SDL_Rect* pButtonRect, int* pMousePos, int windowWidth, int windowHeight, int addY, Button* pButton){
@@ -18,9 +19,9 @@ void getMousePos(SDL_Rect* pButtonRect, int* pMousePos, int windowWidth, int win
     
 }
 
-void handleButtonInput(Button* pQuitButton, bool* pIsRunning, int mousePos, SDL_Event event, GameState* pState){
+void handleButtonInput(Button* pQuitButton, bool* pIsRunning, int mousePos, SDL_Event event, GameState* pState, GameState desiredState){
     if (pQuitButton->buttonDistance < BUTTON_HEIGHT && mousePos && SDL_BUTTON(SDL_BUTTON_LEFT)){
-        *pIsRunning = false;
+        *pState = desiredState;
     }
     if (event.type == SDL_QUIT || event.type == SDL_KEYDOWN && event.key.keysym.scancode == SDL_SCANCODE_ESCAPE) *pIsRunning = false;
     if (event.type == SDL_KEYDOWN && event.key.keysym.scancode == SDL_SCANCODE_SPACE) *pState = ONGOING;

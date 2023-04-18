@@ -12,7 +12,8 @@ typedef enum {
 	SETTINGS_MENU,
 	ONGOING,
 	GAME_MENU,
-	GAME_OVER
+	GAME_OVER,
+	QUIT
 } GameState;
 
 typedef struct {
@@ -21,7 +22,7 @@ typedef struct {
 } Button;
 
 void getMousePos(SDL_Rect* pButtonRect, int* pMousePos, int windowWidth, int windowHeight, int addY, Button* pButton);
-void handleButtonInput(Button* pQuitButton, bool* pIsRunning, int mousePos, SDL_Event event, GameState* pState);
+void handleButtonInput(Button* pQuitButton, bool* pIsRunning, int mousePos, SDL_Event event, GameState* pState, GameState desiredState);
 void renderButton(SDL_Renderer* pRenderer, SDL_Rect buttonRect, int r, int g, int b);
 SDL_Texture* initMenuBackground(SDL_Window* pWindow, SDL_Renderer* pRenderer, SDL_Rect* pMenuBackgroundRect, int windowWidth, int windowHeight);
 void renderMenuBackground(SDL_Renderer* pRenderer, SDL_Texture* pTexture, SDL_Rect menuBackgroundRect);

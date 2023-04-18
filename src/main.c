@@ -68,7 +68,9 @@ int initiateGraphics(Game* pGame){
     saveToFile(fp, pGame->keybinds);
     pGame->state = MAIN_MENU;
 
-    pGame->pQuitButton = createButton();
+    pGame->pQuitButton = createButton(&pGame->quitButtonRect);
+
+    pGame->pStartButton = createButton();
 
     return 1;
 }
@@ -86,8 +88,10 @@ void runGame(Game* pGame){
                 while (SDL_PollEvent(&event)){
                     renderMenuBackground(pGame->pRenderer, pGame->pMenuBackgroundTexture, pGame->menuBackgroundRect);
                     getMousePos(&pGame->quitButtonRect, &mousePos, pGame->windowWidth, pGame->windowHeight, 100, pGame->pQuitButton);
-                    handleButtonInput(pGame->pQuitButton, &isRunning, mousePos, event, &pGame->state);
+                    handleButtonInput(pGame->pQuitButton, &isRunning, mousePos, event, &pGame->state, QUIT);
+                    handleButtonInput(pGame->pStartButton, &isRunning, mousePos, event, &pGame->state, ONGOING);
                     renderButton(pGame->pRenderer, pGame->quitButtonRect, 138, 43, 226);
+                    renderButton(pGame->pRenderer, pGame->startButtonRect, 250, 43, 226);
                     renderText(pGame->pQuitButtonText);
                 }
                 SDL_RenderPresent(pGame->pRenderer);
@@ -121,6 +125,10 @@ void runGame(Game* pGame){
             break;
             case GAME_OVER:
 
+            break;
+
+            case QUIT:
+                isRunning = false;
             break;
         }
     }

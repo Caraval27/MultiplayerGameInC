@@ -29,6 +29,7 @@ typedef struct {
     Button* pQuitButton;
     Text* pQuitButtonText;
     Button* pStartButton;
+    SDL_Rect startButtonRect;
 } Game;
 
 int initiateGraphics(Game* pGame);
