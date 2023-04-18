@@ -26,6 +26,35 @@ void renderPlank(SDL_Renderer *pRenderer, Plank *pPlank) {
 	SDL_RenderFillRect(pRenderer, &rect);
 }
 
+void handlePlank(Plank** planks, SDL_Renderer* pRenderer, int windowWidth){
+    if (SDL_GetTicks64() % 2000 < 17) {
+        int i = 0;
+        while (planks[i]) i++;
+        int width = PLATFORM_WIDTH;
+        int height = PLATFORM_HEIGHT;
+        int x = (rand() % (windowWidth - width - (width/4)*2)) + width/4;
+        int y = 0 - height;
+        planks[i] = createPlank(x, y, width, height);
+    }
+
+    {
+        int i = 0;
+        while (planks[i]) {
+            renderPlank(pRenderer, planks[i]);
+            scrollPlank(planks[i]);
+            i++;
+        }
+    }
+}
+
+void destroyPlank(Plank** planks) {
+    for (int i = 0; planks[i] != 0; i++) {
+        if (planks[i]) {
+            free(planks[i]);
+        }
+    }
+}
+
 struct platform{
     float posX, posY;
     float velocityY;

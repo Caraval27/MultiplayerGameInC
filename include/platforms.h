@@ -14,6 +14,8 @@ typedef struct {
 Plank *createPlank(float x, float y, float w, float h);
 void scrollPlank(Plank *pPlank);
 void renderPlank(SDL_Renderer *pRenderer, Plank *pPlank);
+void handlePlank(Plank** planks, SDL_Renderer* pRenderer, int windowWidth);
+void destroyPlank(Plank** planks);
 
 Platform* createPlatform(int windowHeight, int y);
 void updatePlatform(Platform* pPlatform, SDL_Rect* pPlatformRect);

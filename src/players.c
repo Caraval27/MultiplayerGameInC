@@ -16,6 +16,13 @@ Player* createPlayer(int x, int y){
     return pPlayer;
 }
 
+void createPlayerRect(SDL_Rect* pPlayerRect, int windowWidth, int windowHeight){
+    pPlayerRect->w = 50;
+    pPlayerRect->h = 50;
+    pPlayerRect->x = windowWidth - pPlayerRect->w;
+    pPlayerRect->y = windowHeight - pPlayerRect->h;
+}
+
 void jumpPlayer(Player* pPlayer, SDL_Rect playerRect, int windowHeight, float platformY, float maxJumpHeight){
     pPlayer->posY += pPlayer->velocityY;
 
@@ -50,7 +57,7 @@ void movePlayer(Player* pPlayer, SDL_Rect playerRect, bool left, bool right, int
     if (pPlayer->posX > windowWidth - playerRect.w) pPlayer->posX = windowWidth - playerRect.w;
 }
 
-void platformCollidePlayer(Player* pPlayer, SDL_Rect playerRect, Plank **platforms, float* pPlatformY, float* pMaxJumpHeight){
+void platformCollidePlayer(Player* pPlayer, SDL_Rect playerRect, Plank** platforms, float* pPlatformY, float* pMaxJumpHeight){
     for (int i = 0; platforms[i] != 0; i++){
         if (pPlayer->posY + playerRect.h >= platforms[i]->yPos &&
             pPlayer->posY < platforms[i]->yPos + platforms[i]->height &&
