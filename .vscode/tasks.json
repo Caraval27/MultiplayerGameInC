@@ -2,9 +2,12 @@
 	"version": "2.0.0",
 	"tasks": [
 		{
-			"label": "msys2 make run",
+			"label": "make run",
 			"type": "shell",
 			"command": "make run",
+			"problemMatcher": [
+				"$gcc"
+			],
 			"presentation": {
 				"focus": true
 			},
@@ -26,6 +29,33 @@
 			"group": {
 				"kind": "build",
 				"isDefault": true
+			}
+		},
+		{
+			"label": "make launch",
+			"type": "shell",
+			"command": "make launch",
+			"problemMatcher": [
+				"$gcc"
+			],
+			"presentation": {
+				"reveal": "never",
+				"revealProblems": "onProblem"
+			},
+			"options": {
+				"env": {
+					"MSYSTEM": "MINGW64",
+					"CHERE_INVOKING": "1",
+					"MSYS2_PATH_TYPE": "inherit"
+				},
+				"shell": {
+					"executable": "C:\\msys64\\usr\\bin\\bash.exe",
+					"args": [
+						"--login",
+						"-i",
+						"-c"
+					]
+				}
 			}
 		}
 	]
