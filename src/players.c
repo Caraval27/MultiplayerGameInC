@@ -23,9 +23,9 @@ SDL_Texture* createPlayerCharacter(SDL_Rect* pPlayerRect, SDL_Renderer* pPlayerR
     SDL_Surface* pPlayerSurface = IMG_Load("../assets/penguin.png"); //Ändra så att man kan skicka in en textsträng sen
     if (!pPlayerSurface){
         printf("Error: %s\n", SDL_GetError());
-        SDL_DestroyRenderer(pPlayerRenderer); // destroys the render
-        SDL_DestroyWindow(pWindow); //destroys the window that has been made
-        SDL_Quit(); //quit SDL because it has been initialized
+        SDL_DestroyRenderer(pPlayerRenderer); 
+        SDL_DestroyWindow(pWindow); 
+        SDL_Quit(); 
         exit (1);
     }
 
@@ -44,17 +44,8 @@ SDL_Texture* createPlayerCharacter(SDL_Rect* pPlayerRect, SDL_Renderer* pPlayerR
     pPlayerRect->x = windowWidth - pPlayerRect->w;
     pPlayerRect->y = windowHeight - pPlayerRect->h;
 
-    //SDL_QueryTexture(pTexture, NULL, NULL, &pPlayerRect->w, &pPlayerRect->h); behövs inte?
     return pPlayerTexture;
 }
-
-/*void renderPlayer(SDL_Renderer *pRenderer, Player* pPlayer) {
-	SDL_Rect playerRect;
-	playerRect.x = pPlayer->posX;
-	playerRect.y = pPlayer->posY;
-	SDL_SetRenderDrawColor(pRenderer, 255, 0, 0, 255);
-	SDL_RenderFillRect(pRenderer, &playerRect);
-}*/
 
 void jumpPlayer(Player* pPlayer, SDL_Rect playerRect, int windowHeight, float platformY, float maxJumpHeight){
     pPlayer->posY += pPlayer->velocityY;
