@@ -99,9 +99,9 @@ void runGame(Game* pGame){
             case MAIN_MENU:
                 while (SDL_PollEvent(&event)){
                     renderMainMenu(pGame->pRenderer, pGame->pMainMenuTexture, pGame->mainMenuRect);
-                    getMousePos(&pGame->quitButtonRect, &mousePos, pGame->windowWidth, pGame->windowHeight, 100, pGame->pQuitButton);
-                    handleButtonInput(pGame->pStartButton, &isRunning, mousePos, event, &pGame->state, ONGOING);
-                    handleButtonInput(pGame->pQuitButton, &isRunning, mousePos, event, &pGame->state, QUIT);
+                    mousePos = getMousePos(&pGame->quitButtonRect, &mousePos, pGame->windowWidth, pGame->windowHeight, 100, pGame->pQuitButton);
+                    handleButtonInput(pGame->pStartButton, &mousePos, event, &pGame->state, ONGOING);
+                    handleButtonInput(pGame->pQuitButton, &mousePos, event, &pGame->state, QUIT);
                     renderButton(pGame->pRenderer, pGame->quitButtonRect, 138, 43, 226);
                     renderButton(pGame->pRenderer, pGame->startButtonRect, 250, 43, 226);
                     renderText(pGame->pQuitButtonText);
