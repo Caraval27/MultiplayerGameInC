@@ -33,6 +33,7 @@ typedef struct {
     char language[NR_OF_WORDS][50];
 } Game;
 
+void initiateLanguage(FILE *fp, Game *pGame);
 int initiateGame(Game* pGame);
 void runGame(Game* pGame);
 void quitGame(Game* pGame);

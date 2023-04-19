@@ -26,15 +26,17 @@ void readFromFileKey(FILE *fp, int keybinds[]){
 
 void readFromFileLang(FILE *fp, char language[NR_OF_WORDS][50]){
     char readLang[LANG_LENGTH];
+    char target[30] = "../assets/textfiles/";
     fp = fopen("../assets/textfiles/settings.txt", "r");
     if (fp != NULL){
         fscanf(fp, "%[^\n]%*c", readLang);
+        strcat(target, readLang);
     } else{                 
         fp = fopen("../assets/textfiles/settings.txt", "w");
         fprintf(fp, "english.txt");
     }
     fclose(fp);
-    fp = fopen(readLang, "r");
+    fp = fopen(target, "r");
     if (fp != NULL){
         for (int i = 0; i < NR_OF_WORDS; i++){
             fscanf(fp, "%[^\n]%*c", language[i]);
