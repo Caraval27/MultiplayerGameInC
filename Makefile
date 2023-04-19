@@ -15,7 +15,7 @@ SRCDIR := src
 BUILDDIR := build
 
 CFLAGS := -g -Werror
-LDFLAGS := -lm -lSDL2main -lSDL2 -lSDL2_image -lSDL2_ttf
+LDFLAGS := -lm -lSDL2main -lSDL2 -lSDL2_image -lSDL2_ttf -lSDL2_net
 LDFLAGS_WINDOWS := -lmingw32 # -mwindows
 LDFLAGS_MAC := -L /opt/homebrew/lib
 

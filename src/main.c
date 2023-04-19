@@ -37,6 +37,11 @@ int initiateGame(Game* pGame){
         return 0;
     }
 
+	if (SDLNet_Init() == -1) {
+		printf("Error: %s\n", SDLNet_GetError());
+		return 0;
+	}
+
     SDL_DisplayMode displayMode;
     if (SDL_GetDesktopDisplayMode(0, &displayMode) != 0){
         printf("Error: %s\n", SDL_GetError());
@@ -97,7 +102,7 @@ int initiateGame(Game* pGame){
     pGame->pEnglishButton = createButton(&pGame->englishButtonRect, pGame->windowHeight, pGame->windowWidth, -50, 0);
     pGame->pSwedishButton = createButton(&pGame->swedishButtonRect, pGame->windowHeight, pGame->windowWidth, 0, 0);
     pGame->pReturnButton = createButton(&pGame->returnButtonRect, pGame->windowHeight, pGame->windowWidth, 200, 0);
-    
+
     initiateLanguage(fp, pGame);
 
     pGame->pPlayer = createPlayer((pGame->windowWidth - pGame->playerRect.w) / 2, pGame->windowHeight - pGame->playerRect.h, &pGame->playerRect, pGame->windowWidth, pGame->windowHeight);
@@ -124,8 +129,8 @@ void runGame(Game* pGame){
                     handleButtonInput(pGame->pSettingsButton, mousePos, event, &pGame->state, SETTINGS_MENU);
                     mousePos = getMousePos(pGame->quitButtonRect, mousePos, pGame->pQuitButton);
                     handleButtonInput(pGame->pQuitButton, mousePos, event, &pGame->state, QUIT);
-                    
-                    
+
+
                     renderMainMenu(pGame->pRenderer, pGame->pMainMenuTexture, pGame->mainMenuRect);
                     renderButton(pGame->pRenderer, pGame->startButtonRect, 250, 43, 226);
                     renderButton(pGame->pRenderer, pGame->settingsButtonRect, 170, 43, 226);
@@ -143,7 +148,7 @@ void runGame(Game* pGame){
                     }
                     mousePos = getMousePos(pGame->returnButtonRect, mousePos, pGame->pReturnButton);
                     handleButtonInput(pGame->pReturnButton, mousePos, event, &pGame->state, MAIN_MENU);
-                    
+
                     renderMainMenu(pGame->pRenderer, pGame->pMainMenuTexture, pGame->mainMenuRect);
                     if (showLang){
                         mousePos = getMousePos(pGame->englishButtonRect, mousePos, pGame->pEnglishButton);
@@ -173,7 +178,7 @@ void runGame(Game* pGame){
                     renderText(pGame->pLanguageButtonText);
                     renderButton(pGame->pRenderer, pGame->returnButtonRect, 250, 43, 226);
                     renderText(pGame->pReturnButtonText);
-                    
+
 
                 }
             break;
@@ -185,7 +190,7 @@ void runGame(Game* pGame){
                 movePlayer(pGame->pPlayer, pGame->playerRect, left, right, pGame->windowWidth);
                 jumpPlayer(pGame->pPlayer, pGame->playerRect, pGame->windowHeight, currentPlatformY, maxJumpHeight);
                 platformCollidePlayer(pGame->pPlayer, pGame->playerRect, pGame->platforms, &currentPlatformY, &maxJumpHeight);
-            
+
                 handleBackground(pGame->pBackground, pGame->pRenderer, pGame->pBackgroundTexture, pGame->windowWidth, pGame->windowHeight);
                 renderPlayer(pGame->pRenderer, pGame->pPlayerTexture, pGame->pPlayer, &pGame->playerRect);
                 handlePlatform(pGame->platforms, pGame->pRenderer, pGame->windowWidth);
@@ -217,7 +222,7 @@ void runGame(Game* pGame){
 }
 
 void quitGame(Game* pGame){
-    
+
     destroyPlatform(pGame->platforms);
     if (pGame->pPlayer){
         destroyPlayer(pGame->pPlayer);
