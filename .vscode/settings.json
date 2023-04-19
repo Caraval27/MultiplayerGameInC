@@ -24,5 +24,6 @@
 		"main.h": "c",
 		"world.h": "c"
 	},
-	"C_Cpp.default.configurationProvider": "ms-vscode.makefile-tools"
+	"C_Cpp.default.configurationProvider": "ms-vscode.makefile-tools",
+	"files.encoding": "iso885910"
 }
