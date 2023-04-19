@@ -28,7 +28,7 @@ void renderPlatform(SDL_Renderer* pRenderer, Platform* pPlatform) {
 void handlePlatform(Platform** platforms, SDL_Renderer* pRenderer, int windowWidth){
     int i;
 
-    if (SDL_GetTicks64() % 2000 < 17) {
+    if (SDL_GetTicks64() % 1000 < 17) {
         i = 0;
         while (platforms[i]) i++; // Variabel som direkt visar antalet plattformar?
         int width = PLATFORM_WIDTH;

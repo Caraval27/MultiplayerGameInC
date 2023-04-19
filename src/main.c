@@ -88,15 +88,15 @@ int initiateGame(Game* pGame){
     saveToFile(fp, pGame->keybinds);
 
     pGame->pBackground = createBackground(pGame->windowHeight);
-    pGame->pStartButton = createButton(&pGame->startButtonRect, pGame->windowHeight, pGame->windowWidth, 0);
-    pGame->pSettingsButton = createButton(&pGame->settingsButtonRect, pGame->windowHeight, pGame->windowWidth, 50);
-    pGame->pQuitButton = createButton(&pGame->quitButtonRect, pGame->windowHeight, pGame->windowWidth, 100);
-    pGame->pResumeButton = createButton(&pGame->resumeButtonRect, pGame->windowHeight, pGame->windowWidth, 50);
-    pGame->pMainMenuButton = createButton(&pGame->mainMenuButtonRect, pGame->windowHeight, pGame->windowWidth, 100);
-    pGame->pLanguageButton = createButton(&pGame->languageButtonRect, pGame->windowHeight, pGame->windowWidth, -100);
-    pGame->pEnglishButton = createButton(&pGame->englishButtonRect, pGame->windowHeight, pGame->windowWidth, -50);
-    pGame->pSwedishButton = createButton(&pGame->swedishButtonRect, pGame->windowHeight, pGame->windowWidth, 0);
-    pGame->pReturnButton = createButton(&pGame->returnButtonRect, pGame->windowHeight, pGame->windowWidth, 200);
+    pGame->pStartButton = createButton(&pGame->startButtonRect, pGame->windowHeight, pGame->windowWidth, 0, 0);
+    pGame->pSettingsButton = createButton(&pGame->settingsButtonRect, pGame->windowHeight, pGame->windowWidth, 50, 0);
+    pGame->pQuitButton = createButton(&pGame->quitButtonRect, pGame->windowHeight, pGame->windowWidth, 100, 0);
+    pGame->pResumeButton = createButton(&pGame->resumeButtonRect, pGame->windowHeight, pGame->windowWidth, 50, 0);
+    pGame->pMainMenuButton = createButton(&pGame->mainMenuButtonRect, pGame->windowHeight, pGame->windowWidth, 100, 0);
+    pGame->pLanguageButton = createButton(&pGame->languageButtonRect, pGame->windowHeight, pGame->windowWidth, -100, 0);
+    pGame->pEnglishButton = createButton(&pGame->englishButtonRect, pGame->windowHeight, pGame->windowWidth, -50, 0);
+    pGame->pSwedishButton = createButton(&pGame->swedishButtonRect, pGame->windowHeight, pGame->windowWidth, 0, 0);
+    pGame->pReturnButton = createButton(&pGame->returnButtonRect, pGame->windowHeight, pGame->windowWidth, 200, 0);
     
     initiateLanguage(fp, pGame);
 
