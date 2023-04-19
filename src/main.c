@@ -158,6 +158,15 @@ void quitGame(Game *pGame){
     if (pGame->pQuitButtonText){
         destroyText(pGame->pQuitButtonText);
     }
+    if (pGame->pStartButtonText){
+        destroyText(pGame->pStartButtonText);
+    }
+    if (pGame->pResumeButtonText){
+        destroyText(pGame->pResumeButtonText);
+    }
+    if (pGame->pMainMenuButtonText){
+        destroyText(pGame->pMainMenuButtonText);
+    }
     if (pGame->pBackground){
         destroyBackground(pGame->pBackground);
     }
