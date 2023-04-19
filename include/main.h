@@ -33,9 +33,9 @@ typedef struct {
     char language[NR_OF_WORDS][50];
 } Game;
 
-int initiateGame(Game *pGame);
-void runGame(Game *pGame);
-void quitGame(Game *pGame);
+int initiateGame(Game* pGame);
+void runGame(Game* pGame);
+void quitGame(Game* pGame);
 void handleInputOngoing(State* pState, SDL_Event* event, bool* pIsRunning, bool* pRight, bool* pLeft);
 
 #endif
