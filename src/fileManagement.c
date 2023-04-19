@@ -3,7 +3,7 @@
 // These functions will use a .txt file to either read or write the keybinds from the user
 
 void saveToFile(FILE *fp, int keybinds[]){
-    fp = fopen("keybinds.txt", "w");
+    fp = fopen("../assets/textfiles/keybinds.txt", "w");
     for (int i = 0; i < NR_OF_KEYBINDS; i++){
         fprintf(fp, "%d\n", keybinds[i]);
     }
@@ -11,7 +11,7 @@ void saveToFile(FILE *fp, int keybinds[]){
 }
 
 void readFromFileKey(FILE *fp, int keybinds[]){
-    fp = fopen("keybinds.txt", "r");
+    fp = fopen("../assets/textfiles/keybinds.txt", "r");
     if (fp != NULL){
         for (int i = 0; i < NR_OF_KEYBINDS; i++){
             fscanf(fp, "%d", &keybinds[i]);
@@ -26,11 +26,11 @@ void readFromFileKey(FILE *fp, int keybinds[]){
 
 void readFromFileLang(FILE *fp, char language[NR_OF_WORDS][50]){
     char readLang[LANG_LENGTH];
-    fp = fopen("settings.txt", "r");
+    fp = fopen("../assets/textfiles/settings.txt", "r");
     if (fp != NULL){
         fscanf(fp, "%[^\n]%*c", readLang);
     } else{                 
-        fp = fopen("settings.txt", "w");
+        fp = fopen("../assets/textfiles/settings.txt", "w");
         fprintf(fp, "english.txt");
     }
     fclose(fp);
@@ -46,7 +46,7 @@ void readFromFileLang(FILE *fp, char language[NR_OF_WORDS][50]){
 }
 
 void changeLanguageInFile(FILE *fp, char language[LANG_LENGTH]){
-    fp = fopen("settings.txt", "w");
+    fp = fopen("../assets/textfiles/settings.txt", "w");
     fprintf(fp, "%s", language);
     fclose(fp);
 }
