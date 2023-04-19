@@ -139,15 +139,21 @@ void runGame(Game* pGame){
                 renderText(pGame->pMainMenuButtonText);
                 renderText(pGame->pResumeButtonText);
             break;
+            case GAME_OVER:
+
+            break;
             case QUIT:
                 isRunning = false;
+            break;
+            default:
+
             break;
         }
         SDL_RenderPresent(pGame->pRenderer);
     }
 }
 
-void quitGame(Game *pGame){
+void quitGame(Game* pGame){
     
     if (pGame->platforms){
         destroyPlatform(pGame->platforms);

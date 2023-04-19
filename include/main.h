@@ -31,9 +31,9 @@ typedef struct {
     int keybinds[NR_OF_KEYBINDS];
 } Game;
 
-int initiateGame(Game *pGame);
-void runGame(Game *pGame);
-void quitGame(Game *pGame);
+int initiateGame(Game* pGame);
+void runGame(Game* pGame);
+void quitGame(Game* pGame);
 void handleInputOngoing(State* pState, SDL_Event* event, bool* pIsRunning, bool* pRight, bool* pLeft);
 
 #endif
