@@ -155,9 +155,7 @@ void runGame(Game* pGame){
 
 void quitGame(Game* pGame){
     
-    if (pGame->platforms){
-        destroyPlatform(pGame->platforms);
-    }
+    destroyPlatform(pGame->platforms);
     if (pGame->pPlayer){
         destroyPlayer(pGame->pPlayer);
     }
