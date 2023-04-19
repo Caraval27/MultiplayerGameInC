@@ -4,11 +4,12 @@
 #include <stdio.h>
 #include <stdbool.h>
 #include <time.h>
+#include <string.h>
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_image.h>
 #include <SDL2/SDL_ttf.h>
 #include "../include/world.h"
-#include "../include/keybinds.h"
+#include "../include/fileManagement.h"
 #include "../include/players.h"
 #include "../include/platforms.h"
 #include "../include/menu.h"
@@ -23,12 +24,13 @@ typedef struct {
     TTF_Font *pMainMenuFont;
     SDL_Rect mainMenuRect;
     Background* pBackground;
-    Button *pStartButton, *pQuitButton, *pResumeButton, *pMainMenuButton;
-    Text *pStartButtonText, *pQuitButtonText, *pResumeButtonText, *pMainMenuButtonText;
+    Button *pStartButton, *pQuitButton, *pResumeButton, *pMainMenuButton, *pSettingsButton, *pLanguageButton, *pEnglishButton, *pSwedishButton, *pReturnButton;
+    Text *pStartButtonText, *pQuitButtonText, *pResumeButtonText, *pMainMenuButtonText, *pSettingsButtonText, *pLanguageButtonText, *pEnglishButtonText, *pSwedishButtonText, *pReturnButtonText;
     Player* pPlayer;
 	Platform *platforms[1000];
-    SDL_Rect playerRect, platformRect, quitButtonRect, startButtonRect, resumeButtonRect, mainMenuButtonRect;
+    SDL_Rect playerRect, platformRect, quitButtonRect, startButtonRect, resumeButtonRect, mainMenuButtonRect, settingsButtonRect, languageButtonRect, englishButtonRect, swedishButtonRect, returnButtonRect;
     int keybinds[NR_OF_KEYBINDS];
+    char language[NR_OF_WORDS][50];
 } Game;
 
 int initiateGame(Game *pGame);
