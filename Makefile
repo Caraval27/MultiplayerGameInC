@@ -46,6 +46,10 @@ $(BUILDDIR):
 clean:
 	rm -f -r $(BUILDDIR)/*
 
+new:
+	$(MAKE) clean
+	$(MAKE) run
+
 run:
 	$(MAKE) all
 	cd $(BUILDDIR) && ./$(EXECUTABLE)
