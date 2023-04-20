@@ -62,17 +62,9 @@ int initiateGame(Game* pGame){
     pGame->pMainMenuTexture = createMainMenuImage(pGame->pWindow, pGame->pRenderer, &pGame->mainMenuRect, pGame->windowWidth, pGame->windowHeight);
     if (!handleError(pGame, pGame->pMainMenuTexture, SDL_GetError)) return 0;
     pGame->pBackgroundTexture = createBackgroundImage(pGame->pWindow, pGame->pRenderer);
-    if (!pGame->pBackgroundTexture){
-        printf("Error: %s\n", SDL_GetError());
-        quitGame(pGame);
-        return 0;
-    }
+    if (!handleError(pGame, pGame->pBackgroundTexture, SDL_GetError)) return 0;
     pGame->pPlayer1Texture = createPlayerCharacter(pGame->pRenderer, pGame->pWindow);
-    if (!pGame->pPlayer1Texture){
-        printf("Error: %s\n", SDL_GetError());
-        quitGame(pGame);
-        return 0;
-    }
+    if (!handleError(pGame, pGame->pPlayer1Texture, SDL_GetError)) return 0;
     pGame->pMainMenuFont = TTF_OpenFont("../assets/Ticketing.ttf", 25);
     if (!handleError(pGame, pGame->pWindow, TTF_GetError)) return 0;
     pGame->pMainSound = Mix_LoadMUS("../assets/tempMainSound.mp3");
@@ -84,19 +76,18 @@ int initiateGame(Game* pGame){
     saveToFile(fp, pGame->keybinds);
 
     pGame->pBackground = createBackground(pGame->windowHeight);
-    pGame->pStartButton = createButton(&pGame->startButtonRect, pGame->windowHeight, pGame->windowWidth, 50);
-    pGame->pQuitButton = createButton(&pGame->quitButtonRect, pGame->windowHeight, pGame->windowWidth, 100);
-    pGame->pResumeButton = createButton(&pGame->resumeButtonRect, pGame->windowHeight, pGame->windowWidth, 50);
-    pGame->pMainMenuButton = createButton(&pGame->mainMenuButtonRect, pGame->windowHeight, pGame->windowWidth, 100);
-    pGame->pStartButtonText = createText(pGame->pRenderer, pGame->pMainMenuFont, 255, 255, 255, "Start game", pGame->windowWidth, pGame->windowHeight, 50);
-    pGame->pQuitButtonText = createText(pGame->pRenderer, pGame->pMainMenuFont, 255, 255, 255, "Quit", pGame->windowWidth, pGame->windowHeight, 100);
-    pGame->pResumeButtonText = createText(pGame->pRenderer, pGame->pMainMenuFont, 255, 255, 255, "Resume game", pGame->windowWidth, pGame->windowHeight, 50);
-    pGame->pMainMenuButtonText = createText(pGame->pRenderer, pGame->pMainMenuFont, 255, 255, 255, "Main menu", pGame->windowWidth, pGame->windowHeight, 100);
+    pGame->pStartButton = createButton(&pGame->startButtonRect, pGame->windowHeight, pGame->windowWidth, 0, 0);
+    pGame->pSettingsButton = createButton(&pGame->settingsButtonRect, pGame->windowHeight, pGame->windowWidth, 50, 0);
+    pGame->pQuitButton = createButton(&pGame->quitButtonRect, pGame->windowHeight, pGame->windowWidth, 100, 0);
+    pGame->pResumeButton = createButton(&pGame->resumeButtonRect, pGame->windowHeight, pGame->windowWidth, 50, 0);
+    pGame->pMainMenuButton = createButton(&pGame->mainMenuButtonRect, pGame->windowHeight, pGame->windowWidth, 100, 0);
+    pGame->pLanguageButton = createButton(&pGame->languageButtonRect, pGame->windowHeight, pGame->windowWidth, -100, 0);
+    pGame->pEnglishButton = createButton(&pGame->englishButtonRect, pGame->windowHeight, pGame->windowWidth, -50, 0);
+    pGame->pSwedishButton = createButton(&pGame->swedishButtonRect, pGame->windowHeight, pGame->windowWidth, 0, 0);
+    pGame->pReturnButton = createButton(&pGame->returnButtonRect, pGame->windowHeight, pGame->windowWidth, 200, 0);
     pGame->pPlayer1 = createPlayer((pGame->windowWidth - pGame->player1Rect.w) / 2, pGame->windowHeight - pGame->player1Rect.h, &pGame->player1Rect, pGame->windowWidth, pGame->windowHeight);
 
-    FILE *fp;
-    readFromFile(fp, pGame->keybinds);
-    saveToFile(fp, pGame->keybinds);
+    initiateLanguage(fp, pGame);
 
     pGame->state = MAIN_MENU;
 
@@ -122,7 +113,6 @@ void runGame(Game* pGame){
                     handleButtonInput(pGame->pSettingsButton, mousePos, event, &pGame->state, SETTINGS_MENU);
                     mousePos = getMousePos(pGame->quitButtonRect, mousePos, pGame->pQuitButton);
                     handleButtonInput(pGame->pQuitButton, mousePos, event, &pGame->state, QUIT);
-
 
                     renderMainMenu(pGame->pRenderer, pGame->pMainMenuTexture, pGame->mainMenuRect);
                     renderButton(pGame->pRenderer, pGame->startButtonRect, 250, 43, 226);
@@ -166,13 +156,10 @@ void runGame(Game* pGame){
                         renderText(pGame->pSwedishButtonText);
                     }
 
-
                     renderButton(pGame->pRenderer, pGame->languageButtonRect, 250, 43, 226);
                     renderText(pGame->pLanguageButtonText);
                     renderButton(pGame->pRenderer, pGame->returnButtonRect, 250, 43, 226);
                     renderText(pGame->pReturnButtonText);
-
-
                 }
             break;
             case ONGOING:
@@ -188,8 +175,9 @@ void runGame(Game* pGame){
                 handleBackground(pGame->pBackground, pGame->pRenderer, pGame->pBackgroundTexture, pGame->windowWidth, pGame->windowHeight);
                 renderPlayer(pGame->pRenderer, pGame->pPlayer1Texture, pGame->pPlayer1, &pGame->player1Rect); //player 1
 
-                pGame->pPlayer2Texture = createPlayerCharacter(pGame->pRenderer, pGame->pWindow); //player 2
-                renderPlayer(pGame->pRenderer, pGame->pPlayer2Texture, pGame->pPlayer2, &pGame->player2Rect); //player 2
+//!!Dessa två rader ger segmentation fault
+                //pGame->pPlayer2Texture = createPlayerCharacter(pGame->pRenderer, pGame->pWindow); //player 2
+                //renderPlayer(pGame->pRenderer, pGame->pPlayer2Texture, pGame->pPlayer2, &pGame->player2Rect); //player 2
                 handlePlatform(pGame->platforms, pGame->pRenderer, pGame->windowWidth);
 
                 SDL_Delay(1000/60);
