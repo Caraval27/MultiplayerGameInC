@@ -57,8 +57,8 @@ int initiateGame(Game* pGame){
         quitGame(pGame);
         return 0;
     }
-    pGame->pPlayerTexture = createPlayerCharacter(pGame->pRenderer, pGame->pWindow);
-    if (!pGame->pPlayerTexture){
+    pGame->pPlayer1Texture = createPlayerCharacter(pGame->pRenderer, pGame->pWindow);
+    if (!pGame->pPlayer1Texture){
         printf("Error: %s\n", SDL_GetError());
         quitGame(pGame);
         return 0;
@@ -79,7 +79,9 @@ int initiateGame(Game* pGame){
     pGame->pQuitButtonText = createText(pGame->pRenderer, pGame->pMainMenuFont, 255, 255, 255, "Quit", pGame->windowWidth, pGame->windowHeight, 100);
     pGame->pResumeButtonText = createText(pGame->pRenderer, pGame->pMainMenuFont, 255, 255, 255, "Resume game", pGame->windowWidth, pGame->windowHeight, 50);
     pGame->pMainMenuButtonText = createText(pGame->pRenderer, pGame->pMainMenuFont, 255, 255, 255, "Main menu", pGame->windowWidth, pGame->windowHeight, 100);
-    pGame->pPlayer = createPlayer((pGame->windowWidth - pGame->playerRect.w) / 2, pGame->windowHeight - pGame->playerRect.h, &pGame->playerRect, pGame->windowWidth, pGame->windowHeight);
+    pGame->pPlayer1 = createPlayer((pGame->windowWidth - pGame->player1Rect.w) / 2, pGame->windowHeight - pGame->player1Rect.h, &pGame->player1Rect, pGame->windowWidth, pGame->windowHeight);
+    pGame->pPlayer2 = createPlayer((pGame->windowWidth - pGame->player2Rect.w) / 2, pGame->windowHeight - pGame->player2Rect.h, &pGame->player2Rect, pGame->windowWidth, pGame->windowHeight);
+
 
     FILE *fp;
     readFromFile(fp, pGame->keybinds);
@@ -119,12 +121,15 @@ void runGame(Game* pGame){
                     handleInputOngoing(&pGame->state, &event, &isRunning, &right, &left);
                 }
 
-                movePlayer(pGame->pPlayer, pGame->playerRect, left, right, pGame->windowWidth);
-                jumpPlayer(pGame->pPlayer, pGame->playerRect, pGame->windowHeight, currentPlatformY, maxJumpHeight);
-                platformCollidePlayer(pGame->pPlayer, pGame->playerRect, pGame->platforms, &currentPlatformY, &maxJumpHeight);
+                movePlayer(pGame->pPlayer1, pGame->player1Rect, left, right, pGame->windowWidth);
+                jumpPlayer(pGame->pPlayer1, pGame->player1Rect, pGame->windowHeight, currentPlatformY, maxJumpHeight);
+                platformCollidePlayer(pGame->pPlayer1, pGame->player1Rect, pGame->platforms, &currentPlatformY, &maxJumpHeight);
             
                 handleBackground(pGame->pBackground, pGame->pRenderer, pGame->pBackgroundTexture, pGame->windowWidth, pGame->windowHeight);
-                renderPlayer(pGame->pRenderer, pGame->pPlayerTexture, pGame->pPlayer, &pGame->playerRect);
+                renderPlayer(pGame->pRenderer, pGame->pPlayer1Texture, pGame->pPlayer1, &pGame->player1Rect); //player 1
+
+                pGame->pPlayer2Texture = createPlayerCharacter(pGame->pRenderer, pGame->pWindow); //player 2
+                renderPlayer(pGame->pRenderer, pGame->pPlayer2Texture, pGame->pPlayer2, &pGame->player2Rect); //player 2
                 handlePlatform(pGame->platforms, pGame->pRenderer, pGame->windowWidth);
 
                 SDL_Delay(1000/60);
@@ -156,8 +161,8 @@ void runGame(Game* pGame){
 void quitGame(Game* pGame){
     
     destroyPlatform(pGame->platforms);
-    if (pGame->pPlayer){
-        destroyPlayer(pGame->pPlayer);
+    if (pGame->pPlayer1){
+        destroyPlayer(pGame->pPlayer1);
     }
     if (pGame->pQuitButtonText){
         destroyText(pGame->pQuitButtonText);
@@ -174,8 +179,8 @@ void quitGame(Game* pGame){
     if (pGame->pBackground){
         destroyBackground(pGame->pBackground);
     }
-    if (pGame->pPlayerTexture){
-        SDL_DestroyTexture(pGame->pPlayerTexture);
+    if (pGame->pPlayer1Texture){
+        SDL_DestroyTexture(pGame->pPlayer1Texture);
     }
     if (pGame->pBackgroundTexture){
         SDL_DestroyTexture(pGame->pBackgroundTexture);

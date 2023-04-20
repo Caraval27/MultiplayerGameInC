@@ -19,15 +19,15 @@ typedef struct {
     SDL_Window *pWindow;
     int windowWidth, windowHeight;
     SDL_Renderer *pRenderer;
-    SDL_Texture *pBackgroundTexture, *pMainMenuTexture, *pPlayerTexture;
+    SDL_Texture *pBackgroundTexture, *pMainMenuTexture, *pPlayer1Texture, *pPlayer2Texture;
     TTF_Font *pMainMenuFont;
     SDL_Rect mainMenuRect;
     Background* pBackground;
     Button *pStartButton, *pQuitButton, *pResumeButton, *pMainMenuButton;
     Text *pStartButtonText, *pQuitButtonText, *pResumeButtonText, *pMainMenuButtonText;
-    Player* pPlayer;
+    Player* pPlayer1, *pPlayer2, *pPlayer3, *pPlayer4;
 	Platform *platforms[1000];
-    SDL_Rect playerRect, platformRect, quitButtonRect, startButtonRect, resumeButtonRect, mainMenuButtonRect;
+    SDL_Rect player1Rect, player2Rect, platformRect, quitButtonRect, startButtonRect, resumeButtonRect, mainMenuButtonRect;
     int keybinds[NR_OF_KEYBINDS];
 } Game;
 
