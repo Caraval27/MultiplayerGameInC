@@ -22,7 +22,10 @@
 		"sdl_image.h": "c",
 		"stdlib.h": "c",
 		"main.h": "c",
-		"world.h": "c"
+		"world.h": "c",
+		"xutility": "c",
+		"string.h": "c"
 	},
-	"C_Cpp.default.configurationProvider": "ms-vscode.makefile-tools"
+	"C_Cpp.default.configurationProvider": "ms-vscode.makefile-tools",
+	"files.encoding": "iso885910"
 }

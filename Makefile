@@ -15,7 +15,7 @@ SRCDIR := src
 BUILDDIR := build
 
 CFLAGS := -g -Werror
-LDFLAGS := -lm -lSDL2main -lSDL2 -lSDL2_image -lSDL2_ttf -lSDL2_mixer
+LDFLAGS := -lm -lSDL2main -lSDL2 -lSDL2_image -lSDL2_ttf -lSDL2_net -lSDL2_mixer
 LDFLAGS_WINDOWS := -lmingw32 # -mwindows
 LDFLAGS_MAC := -L /opt/homebrew/lib
 
@@ -45,6 +45,10 @@ $(BUILDDIR):
 
 clean:
 	rm -f -r $(BUILDDIR)/*
+
+new:
+	$(MAKE) clean
+	$(MAKE) run
 
 run:
 	$(MAKE) all

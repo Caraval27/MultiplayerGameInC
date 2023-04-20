@@ -9,7 +9,8 @@
 				"$gcc"
 			],
 			"presentation": {
-				"focus": true
+				"reveal": "never",
+				"revealProblems": "onProblem"
 			},
 			"options": {
 				"env": {
