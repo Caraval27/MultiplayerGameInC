@@ -1,5 +1,4 @@
-#ifndef MAIN_H
-#define MAIN_H
+#pragma once
 
 #include <stdio.h>
 #include <stdbool.h>
@@ -43,5 +42,3 @@ void runGame(Game* pGame);
 void quitGame(Game* pGame);
 void handleInputOngoing(State* pState, SDL_Event* event, bool* pIsRunning, bool* pRight, bool* pLeft);
 int handleError(Game* pGame, void* pMember, const char* (*GetError)());
-
-#endif

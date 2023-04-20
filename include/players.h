@@ -1,5 +1,5 @@
-#ifndef PLAYERS_H
-#define PLAYERS_H
+#pragma once
+
 #include "../include/platforms.h"
 
 #define SPEED 100
@@ -14,5 +14,3 @@ void movePlayer (Player* pPlayer, SDL_Rect playerRect, bool left, bool right, in
 void platformCollidePlayer(Player* pPlayer, SDL_Rect playerRect, Platform** platforms, float* pPlatformY, float* pMaxJumpHeight);
 void renderPlayer(SDL_Renderer* pRenderer, SDL_Texture* pTexture, Player* pPlayer, SDL_Rect* pPlayerRect);
 void destroyPlayer(Player* pPlayer);
-
-#endif

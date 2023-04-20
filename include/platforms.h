@@ -1,5 +1,4 @@
-#ifndef PLATFORMS_H
-#define PLATFORMS_H
+#pragma once
 
 #define PLATFORM_WIDTH 200
 #define PLATFORM_HEIGHT 20
@@ -14,5 +13,3 @@ void scrollPlatform(Platform* pPlatform);
 void renderPlatform(SDL_Renderer* pRenderer, Platform* pPlatform);
 void handlePlatform(Platform** Platforms, SDL_Renderer* pRenderer, int windowWidth);
 void destroyPlatform(Platform** Platforms);
-
-#endif
