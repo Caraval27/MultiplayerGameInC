@@ -1,5 +1,4 @@
-#ifndef MENU_H
-#define MENU_H
+#pragma once
 
 #define MENU_IMAGE_WIDTH 2200
 #define MENU_IMAGE_HEIGHT 1524
@@ -25,6 +24,4 @@ void handleButtonInput(Button* pQuitButton, int mousePos, SDL_Event event, State
 void renderButton(SDL_Renderer* pRenderer, SDL_Rect buttonRect, int r, int g, int b);
 SDL_Texture* createMainMenuImage(SDL_Window* pWindow, SDL_Renderer* pRenderer, SDL_Rect* pMenuBackgroundRect, int windowWidth, int windowHeight);
 void renderMainMenu(SDL_Renderer* pRenderer, SDL_Texture* pTexture, SDL_Rect menuBackgroundRect);
-Button* createButton(SDL_Rect* pButtonRect, int windowHeight, int windowWidth, int yOffset);
-
-#endif
+Button* createButton(SDL_Rect* pButtonRect, int windowHeight, int windowWidth, int yOffset, int xOffset);

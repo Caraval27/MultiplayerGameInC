@@ -1,0 +1,7 @@
+Start game
+Settings
+Quit
+Resume game
+Main menu
+Language
+Return

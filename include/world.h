@@ -1,5 +1,4 @@
-#ifndef WORLD_H
-#define WORLD_H
+#pragma once
 
 #define IMAGE_WIDTH 1024
 #define IMAGE_HEIGHT 1536
@@ -11,5 +10,4 @@ SDL_Texture* createBackgroundImage(SDL_Window* pWindow, SDL_Renderer* pRenderer)
 void handleBackground(Background* pBackground, SDL_Renderer* pRenderer, SDL_Texture* pTexture, int windowWidth, int windowHeight);
 void renderBackground(Background* pBackground, SDL_Renderer* pRenderer, SDL_Texture* pTexture, int windowWidth);
 void destroyBackground(Background* pBackground);
-
-#endif
+void destroyMusic(Mix_Music* pMainSound);

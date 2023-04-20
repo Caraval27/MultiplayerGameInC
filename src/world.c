@@ -86,3 +86,8 @@ void renderBackground(Background* pBackground, SDL_Renderer* pRenderer, SDL_Text
 void destroyBackground(Background* pBackground){
     free(pBackground);
 }
+
+void destroyMusic(Mix_Music* pMainSound){
+    Mix_FreeMusic(pMainSound);
+    Mix_CloseAudio();
+}

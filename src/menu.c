@@ -1,9 +1,9 @@
 #include "../include/main.h"
 
-Button* createButton(SDL_Rect* pButtonRect, int windowHeight, int windowWidth, int yOffset){
+Button* createButton(SDL_Rect* pButtonRect, int windowHeight, int windowWidth, int yOffset, int xOffset){
     Button* pButton = malloc(sizeof(Button));
     
-    pButtonRect->x = (windowWidth - BUTTON_WIDTH)/2;
+    pButtonRect->x = (windowWidth - BUTTON_WIDTH)/2 + xOffset;
     pButtonRect->y = (windowHeight - BUTTON_HEIGHT)/2 + yOffset;
     pButtonRect->w = BUTTON_WIDTH;
     pButtonRect->h = BUTTON_HEIGHT;
