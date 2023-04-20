@@ -10,7 +10,7 @@ Player* createPlayer(int x, int y, SDL_Rect* playerRect, int windowWidth, int wi
 
     pPlayer->xPos = x;
     pPlayer->yPos = y;
-    pPlayer->velocityX = 0;
+    pPlayer->velocityX = 100;
     pPlayer->velocityY = 5;
 
     playerRect->w = 50;

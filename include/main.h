@@ -7,6 +7,7 @@
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_image.h>
 #include <SDL2/SDL_ttf.h>
+#include <SDL2/SDL_mixer.h>
 #include "../include/world.h"
 #include "../include/keybinds.h"
 #include "../include/players.h"
@@ -29,6 +30,8 @@ typedef struct {
 	Platform *platforms[1000];
     SDL_Rect playerRect, platformRect, quitButtonRect, startButtonRect, resumeButtonRect, mainMenuButtonRect;
     int keybinds[NR_OF_KEYBINDS];
+    Mix_Chunk *pJumpSound;
+    Mix_Music *pMainSound;
 } Game;
 
 int initiateGame(Game* pGame);

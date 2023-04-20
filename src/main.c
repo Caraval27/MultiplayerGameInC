@@ -23,6 +23,10 @@ int initiateGame(Game* pGame){
         printf("Error: %s\n", TTF_GetError());
         return 0;
     }
+    if (Mix_OpenAudio(44100, MIX_DEFAULT_FORMAT, 2, 2048) < 0){
+        printf("Error: %s\n", Mix_GetError());
+        return 0;
+    } 
 
     SDL_DisplayMode displayMode;
     if (SDL_GetDesktopDisplayMode(0, &displayMode) != 0){
@@ -65,10 +69,17 @@ int initiateGame(Game* pGame){
     }
     pGame->pMainMenuFont = TTF_OpenFont("../assets/Ticketing.ttf", 25);
     if (!pGame->pMainMenuFont){
-        printf("Error: %s\n",TTF_GetError());
+        printf("Error: %s\n", TTF_GetError());
         quitGame(pGame);
         return 0;
     }
+    pGame->pMainSound = Mix_LoadMUS("../assets/tempMainSound.mp3");
+    if (!pGame->pMainSound){
+        printf("Error: %s\n", Mix_GetError());
+        quitGame(pGame);
+        return 0;
+    }
+    //pGame->pJumpSound = Mix_LoadWAV("../assets/[jumpmusic].wav"); //for short sounds
 
     pGame->pBackground = createBackground(pGame->windowHeight);
     pGame->pStartButton = createButton(&pGame->startButtonRect, pGame->windowHeight, pGame->windowWidth, 50);
@@ -95,10 +106,12 @@ void runGame(Game* pGame){
     SDL_Event event;
     int mousePos;
     float currentPlatformY = 0, maxJumpHeight = MAX_JUMP_HEIGHT;
-
+    
+    Mix_PlayMusic(pGame->pMainSound, -1);
     while (isRunning){
         switch (pGame->state) {
             case MAIN_MENU:
+                Mix_ResumeMusic();
                 while (SDL_PollEvent(&event)){
                     mousePos = getMousePos(pGame->startButtonRect, mousePos, pGame->pStartButton);
                     handleButtonInput(pGame->pStartButton, mousePos, event, &pGame->state, ONGOING);
@@ -115,6 +128,7 @@ void runGame(Game* pGame){
 
             break;
             case ONGOING:
+                Mix_ResumeMusic();
                 while (SDL_PollEvent(&event)){
                     handleInputOngoing(&pGame->state, &event, &isRunning, &right, &left);
                 }
@@ -130,6 +144,7 @@ void runGame(Game* pGame){
                 SDL_Delay(1000/60);
             break;
             case GAME_MENU:
+                Mix_PauseMusic();
                 mousePos = getMousePos(pGame->resumeButtonRect, mousePos, pGame->pResumeButton);
                 handleButtonInput(pGame->pResumeButton, mousePos, event, &pGame->state, ONGOING);
                 mousePos = getMousePos(pGame->mainMenuButtonRect, mousePos, pGame->pMainMenuButton);
@@ -154,7 +169,13 @@ void runGame(Game* pGame){
 }
 
 void quitGame(Game* pGame){
-    
+    /* if (pGame->pJumpSound){
+        Mix_FreeChunk(pGame->pJumpSound);
+        Mix_CloseAudio();
+    } */
+    if (pGame->pMainSound){
+        destroyMusic(pGame->pMainSound);
+    }
     destroyPlatform(pGame->platforms);
     if (pGame->pPlayer){
         destroyPlayer(pGame->pPlayer);
@@ -189,6 +210,7 @@ void quitGame(Game* pGame){
     if (pGame->pWindow){
         SDL_DestroyWindow(pGame->pWindow);
     }
+    Mix_Quit();
     TTF_Quit();
     SDL_Quit();
 }
