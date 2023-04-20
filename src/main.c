@@ -56,47 +56,19 @@ int initiateGame(Game* pGame){
     pGame->windowHeight = displayMode.h;
 
     pGame->pWindow = SDL_CreateWindow("Totally not a doodle jump clone", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, pGame->windowWidth, pGame->windowHeight, 0);
-    if (!pGame->pWindow){
-        printf("Error: %s\n", SDL_GetError());
-        quitGame(pGame);
-        return 0;
-    }
+    if (!handleError(pGame, pGame->pWindow, SDL_GetError)) return 0;
     pGame->pRenderer = SDL_CreateRenderer(pGame->pWindow, -1, SDL_RENDERER_ACCELERATED|SDL_RENDERER_PRESENTVSYNC);
-    if (!pGame->pRenderer){
-        printf("Error: %s\n", SDL_GetError());
-        quitGame(pGame);
-        return 0;
-    }
+    if (!handleError(pGame, pGame->pRenderer, SDL_GetError)) return 0;
     pGame->pMainMenuTexture = createMainMenuImage(pGame->pWindow, pGame->pRenderer, &pGame->mainMenuRect, pGame->windowWidth, pGame->windowHeight);
-    if (!pGame->pMainMenuTexture){
-        printf("Error: %s\n", SDL_GetError());
-        quitGame(pGame);
-        return 0;
-    }
+    if (!handleError(pGame, pGame->pMainMenuTexture, SDL_GetError)) return 0;
     pGame->pBackgroundTexture = createBackgroundImage(pGame->pWindow, pGame->pRenderer);
-    if (!pGame->pBackgroundTexture){
-        printf("Error: %s\n", SDL_GetError());
-        quitGame(pGame);
-        return 0;
-    }
+    if (!handleError(pGame, pGame->pBackgroundTexture, SDL_GetError)) return 0;
     pGame->pPlayerTexture = createPlayerCharacter(pGame->pRenderer, pGame->pWindow);
-    if (!pGame->pPlayerTexture){
-        printf("Error: %s\n", SDL_GetError());
-        quitGame(pGame);
-        return 0;
-    }
+    if (!handleError(pGame, pGame->pPlayerTexture, SDL_GetError)) return 0;
     pGame->pMainMenuFont = TTF_OpenFont("../assets/Ticketing.ttf", 25);
-    if (!pGame->pMainMenuFont){
-        printf("Error: %s\n", TTF_GetError());
-        quitGame(pGame);
-        return 0;
-    }
+    if (!handleError(pGame, pGame->pWindow, TTF_GetError)) return 0;
     pGame->pMainSound = Mix_LoadMUS("../assets/tempMainSound.mp3");
-    if (!pGame->pMainSound){
-        printf("Error: %s\n", Mix_GetError());
-        quitGame(pGame);
-        return 0;
-    }
+    if (!handleError(pGame, pGame->pWindow, Mix_GetError)) return 0;
     //pGame->pJumpSound = Mix_LoadWAV("../assets/[jumpmusic].wav"); //for short sounds
 
     FILE *fp;
@@ -306,4 +278,13 @@ void handleInputOngoing(State* pState, SDL_Event* event, bool* pIsRunning, bool*
             }
         break;
     }
+}
+
+int handleError(Game* pGame, void* pMember, const char* (*GetError)(void)){
+    if (!pMember){
+        printf("Error: %s\n", (*GetError)());
+        quitGame(pGame);
+        return 0;
+    }
+    else return 1;
 }
