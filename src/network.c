@@ -1,8 +1,9 @@
 #include "../include/network.h"
 
-int initializeNetcode(NetworkData *pNetworkData, GameplayData *pGameplayData) {
+int initializeNetcode(NetworkData *pNetworkData, GameplayData *pGameplayData, bool isHost) {
 	pNetworkData = malloc(sizeof(NetworkData));
 	pGameplayData = malloc(sizeof(GameplayData));
+	pNetworkData->isHost = isHost;
 	pNetworkData->pSocket = SDLNet_UDP_Open(PORT);
 	pNetworkData->pPacket = SDLNet_AllocPacket(PACKET_SIZE);
 	if (!pNetworkData->pSocket || !pNetworkData->pPacket) return 0;

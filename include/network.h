@@ -8,6 +8,7 @@
 #define CLIENT_LIMIT 6
 
 typedef struct {
+	bool isHost;
 	UDPsocket pSocket;
 	UDPpacket *pPacket;
 	IPaddress clients[CLIENT_LIMIT];
@@ -19,8 +20,9 @@ typedef struct {
 } GameplayData;
 
 // Prepare the application to communicate over a network.
+// \param isHost True if the user is hosting a game, otherwise false.
 // \return Success = 1, Failure = 0
-int initializeNetcode(NetworkData *pNetworkData, GameplayData *pGameplayData);
+int initializeNetcode(NetworkData *pNetworkData, GameplayData *pGameplayData, bool isHost);
 
 // Gets the IP-address of any incoming packets and, if unique, adds it to the list of clients.
 // The function is non-interrupting and should be ran repeatedly.
