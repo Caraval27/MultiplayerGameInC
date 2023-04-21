@@ -1,6 +1,6 @@
 #include "../include/main.h"
 
-Text* createText(SDL_Renderer* pRenderer, TTF_Font* pFont, int r, int g, int b, char* pString, int windowWidth, int windowHeight, int addY) {
+Text* createText(SDL_Renderer* pRenderer, TTF_Font* pFont, int r, int g, int b, char* pString, int windowWidth, int windowHeight, int addY, int addX) {
     Text* pText = malloc(sizeof(Text));
 
     pText->pRenderer = pRenderer;
@@ -17,7 +17,7 @@ Text* createText(SDL_Renderer* pRenderer, TTF_Font* pFont, int r, int g, int b, 
         exit(1);
     }
     SDL_QueryTexture(pText->pTexture, NULL, NULL, &pText->textRect.w, &pText->textRect.h);
-    pText->textRect.x = (windowWidth - pText->textRect.w)/2;
+    pText->textRect.x = (windowWidth - pText->textRect.w)/2 + addX;
     pText->textRect.y = (windowHeight - pText->textRect.h)/2 + addY;
 
     return pText;

@@ -5,3 +5,5 @@ Resume game
 Main menu
 Language
 Return
+Move right:
+Move left:

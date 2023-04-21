@@ -5,3 +5,5 @@ Avsluta
 Huvudmeny
 Språk
 Återvänd
+Flytta höger:
+Flytta vänster:
