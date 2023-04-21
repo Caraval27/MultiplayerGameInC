@@ -27,9 +27,5 @@
 		"string.h": "c"
 	},
 	"C_Cpp.default.configurationProvider": "ms-vscode.makefile-tools",
-<<<<<<< HEAD
-	"files.encoding": "utf16le"
-=======
 	"files.encoding": "iso885910"
->>>>>>> 3faad9593e8cdcfe57f67046343a99e978c7d5d6
 }
