@@ -1,4 +1,5 @@
 #include "../include/main.h"
+#define LENGTH 100
 
 int main(int argv, char** args){
     Game game = {0};
@@ -56,6 +57,7 @@ int initiateGame(Game* pGame){
     }
     pGame->windowWidth = displayMode.w;
     pGame->windowHeight = displayMode.h;
+    char pictureFile[22] = "../assets/penguin.png";
 
     pGame->pWindow = SDL_CreateWindow("Totally not a doodle jump clone", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, pGame->windowWidth, pGame->windowHeight, 0);
     if (!handleError(pGame, pGame->pWindow, SDL_GetError)) return 0;
@@ -69,10 +71,10 @@ int initiateGame(Game* pGame){
     pGame->pBackgroundTexture = createBackgroundImage(pGame->pWindow, pGame->pRenderer);
     if (!handleError(pGame, pGame->pBackgroundTexture, SDL_GetError)) return 0;
 
-    pGame->pPlayer1Texture = createPlayerCharacter(pGame->pRenderer, pGame->pWindow);
+    pGame->pPlayer1Texture = createPlayerCharacter(pGame->pRenderer, pGame->pWindow, pictureFile);
     if (!handleError(pGame, pGame->pPlayer1Texture, SDL_GetError)) return 0;
 
-    pGame->pPlayer2Texture = createPlayerCharacter(pGame->pRenderer, pGame->pWindow);
+    pGame->pPlayer2Texture = createPlayerCharacter(pGame->pRenderer, pGame->pWindow, pictureFile);
     if (!handleError(pGame, pGame->pPlayer2Texture, SDL_GetError)) return 0;
 
     pGame->pMainMenuFont = TTF_OpenFont("../assets/Ticketing.ttf", 25);
@@ -100,11 +102,11 @@ int initiateGame(Game* pGame){
     pGame->pMoveLeft1Button = createButton(&pGame->moveLeft1ButtonRect, pGame->windowHeight, pGame->windowWidth, 100, -80);
     pGame->pMoveRight2Button = createButton(&pGame->moveRight2ButtonRect, pGame->windowHeight, pGame->windowWidth, 50, 80);
     pGame->pMoveLeft2Button = createButton(&pGame->moveLeft2ButtonRect, pGame->windowHeight, pGame->windowWidth, 100, 80);
-
     
     pGame->pPlayer1 = createPlayer((pGame->windowWidth - pGame->player1Rect.w) / 2, pGame->windowHeight - pGame->player1Rect.h, &pGame->player1Rect, pGame->windowWidth, pGame->windowHeight);
     pGame->pPlayer2 = createPlayer ((pGame->windowWidth - pGame->player2Rect.w) / 2, pGame->windowHeight - pGame->player2Rect.h, &pGame->player2Rect, pGame->windowWidth, pGame->windowHeight);
 
+    
     // KRASCHAR PÅ MAC initiateLanguage(fp, pGame);
 
     pGame->state = MAIN_MENU;
@@ -332,6 +334,7 @@ void handleInputOngoing(State* pState, SDL_Event* event, bool* pIsRunning, bool*
                 *pRight = true;
             } else if ((event->key.keysym.sym) == keybinds[1]){
                 *pLeft = true;
+        
             }
             // switch (event->key.keysym.sym){
             //     case SDLK_ESCAPE: *pState = GAME_MENU;

@@ -21,8 +21,8 @@ Player* createPlayer(int x, int y, SDL_Rect* playerRect, int windowWidth, int wi
     return pPlayer;
 }
 
-SDL_Texture* createPlayerCharacter(SDL_Renderer* pPlayerRenderer, SDL_Window* pWindow){
-    SDL_Surface* pPlayerSurface = IMG_Load("../assets/penguin.png"); //Ändra så att man kan skicka in en textsträng sen
+SDL_Texture* createPlayerCharacter(SDL_Renderer* pPlayerRenderer, SDL_Window* pWindow, char pictureFile[]){
+    SDL_Surface* pPlayerSurface = IMG_Load(pictureFile); //Ändra så att man kan skicka in en textsträng sen
     if (!pPlayerSurface){
         printf("Error: %s\n", SDL_GetError());
         SDL_DestroyRenderer(pPlayerRenderer); 
@@ -64,7 +64,6 @@ void movePlayer(Player* pPlayer, SDL_Rect playerRect, bool left, bool right, int
     pPlayer->velocityX = SPEED;
     if (left && !right){
         pPlayer->xPos -= (pPlayer->velocityX) / 60;
-        
     }
     else if (right && !left){
         pPlayer->xPos += (pPlayer->velocityX) / 60;
@@ -93,6 +92,11 @@ void platformCollidePlayer(Player* pPlayer, SDL_Rect playerRect, Platform** plat
         }
     }
 } 
+
+void playerCollision (Player* pPlayer1, Player* pPlayer2, SDL_Rect player1Rect, SDL_Rect player2Rect)
+{
+
+}
 
 void renderPlayer(SDL_Renderer* pRenderer, SDL_Texture* pTexture, Player* pPlayer, SDL_Rect* pPlayerRect){
     pPlayerRect->x = pPlayer->xPos;
