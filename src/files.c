@@ -43,7 +43,15 @@ void readFromFileLang(FILE *fp, char language[NR_OF_WORDS][50]){
         }
         fclose(fp);
     } else{                 
-        //Create new English lang file
+        fp = fopen(target, "w");
+        fprintf(fp, "Start game\nSettings\nQuit\nResume game\nMain menu\nLanguage\nReturn\nMove right:\nMove left:");
+        fclose(fp);
+        
+        fp = fopen(target, "r");
+        for (int i = 0; i < NR_OF_WORDS; i++){
+            fscanf(fp, "%[^\n]%*c", language[i]);
+        }
+        fclose(fp);
     }
 }
 
