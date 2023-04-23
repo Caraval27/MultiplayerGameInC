@@ -289,6 +289,9 @@ void quitGame(Game* pGame){
     if (pGame->pPlayer1){
         destroyPlayer(pGame->pPlayer1);
     }
+    if (pGame->pPlayer2){
+        destroyPlayer(pGame->pPlayer2);
+    }
     if (pGame->pQuitButtonText){
         destroyText(pGame->pQuitButtonText);
     }
@@ -306,6 +309,9 @@ void quitGame(Game* pGame){
     }
     if (pGame->pPlayer1Texture){
         SDL_DestroyTexture(pGame->pPlayer1Texture);
+    }    
+    if (pGame->pPlayer2Texture){
+        SDL_DestroyTexture(pGame->pPlayer2Texture);
     }
     if (pGame->pBackgroundTexture){
         SDL_DestroyTexture(pGame->pBackgroundTexture);
@@ -319,6 +325,7 @@ void quitGame(Game* pGame){
     if (pGame->pWindow){
         SDL_DestroyWindow(pGame->pWindow);
     }
+    //destro playerRenderer?
     Mix_Quit();
     TTF_Quit();
     SDL_Quit();
