@@ -29,8 +29,8 @@ void broadcastToClients(NetworkData *pNetworkData, GameplayData *pGameplayData) 
 	int nofClients = 0;
 	while (!pNetworkData->clients[nofClients].host) nofClients++;
 	for (int i; i < nofClients; i++) {
-		memcpy(pNetworkData->pPacket->data, pGameplayData, sizeof(*pGameplayData));
-		pNetworkData->pPacket->len = sizeof(pGameplayData);
+		memcpy(pNetworkData->pPacket->data, pGameplayData, sizeof(GameplayData));
+		pNetworkData->pPacket->len = sizeof(GameplayData);
 		pNetworkData->pPacket->address = pNetworkData->clients[i];
 		SDLNet_UDP_Send(pNetworkData->pSocket, -1, pNetworkData->pPacket);
 	}
