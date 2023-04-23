@@ -95,7 +95,7 @@ int initiateGame(Game* pGame){
     
     pGame->pPlayer1 = createPlayer((pGame->windowWidth - pGame->player1Rect.w) / 2, pGame->windowHeight - pGame->player1Rect.h, &pGame->player1Rect, pGame->windowWidth, pGame->windowHeight);
 
-    initiateLanguage(fp, pGame);
+    // KRASCHAR PÅ MAC initiateLanguage(fp, pGame);
 
     pGame->state = MAIN_MENU;
 
@@ -127,9 +127,9 @@ void runGame(Game* pGame){
                     renderButton(pGame->pRenderer, pGame->startButtonRect, 250, 43, 226);
                     renderButton(pGame->pRenderer, pGame->settingsButtonRect, 170, 43, 226);
                     renderButton(pGame->pRenderer, pGame->quitButtonRect, 138, 43, 226);
-                    renderText(pGame->pStartButtonText);
-                    renderText(pGame->pSettingsButtonText);
-                    renderText(pGame->pQuitButtonText);
+                    // KRASHCAR PÅ MAC renderText(pGame->pStartButtonText);
+                    // KRASCHAR PÅ MAC renderText(pGame->pSettingsButtonText);
+                    // KRASCHAR PÅ MAC renderText(pGame->pQuitButtonText);
                 }
             break;
             case SETTINGS_MENU:
@@ -231,8 +231,8 @@ void runGame(Game* pGame){
                 handleButtonInput(pGame->pMainMenuButton, mousePos, event, &pGame->state, MAIN_MENU);
                 renderButton(pGame->pRenderer, pGame->mainMenuButtonRect, 138, 43, 226);
                 renderButton(pGame->pRenderer, pGame->resumeButtonRect, 250, 43, 226);
-                renderText(pGame->pMainMenuButtonText);
-                renderText(pGame->pResumeButtonText);
+                // GÖR SÅ ATT MAN INTE KAN KOMMA TILL RESUMEMENU renderText(pGame->pMainMenuButtonText);
+                // GÖR SÅ ATT MAN INTE KAN KOMMA TILL RESUMEMENU renderText(pGame->pResumeButtonText);
             break;
             case GAME_OVER:
 
