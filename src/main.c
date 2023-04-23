@@ -59,16 +59,25 @@ int initiateGame(Game* pGame){
 
     pGame->pWindow = SDL_CreateWindow("Totally not a doodle jump clone", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, pGame->windowWidth, pGame->windowHeight, 0);
     if (!handleError(pGame, pGame->pWindow, SDL_GetError)) return 0;
+
     pGame->pRenderer = SDL_CreateRenderer(pGame->pWindow, -1, SDL_RENDERER_ACCELERATED|SDL_RENDERER_PRESENTVSYNC);
     if (!handleError(pGame, pGame->pRenderer, SDL_GetError)) return 0;
+
     pGame->pMainMenuTexture = createMainMenuImage(pGame->pWindow, pGame->pRenderer, &pGame->mainMenuRect, pGame->windowWidth, pGame->windowHeight);
     if (!handleError(pGame, pGame->pMainMenuTexture, SDL_GetError)) return 0;
+
     pGame->pBackgroundTexture = createBackgroundImage(pGame->pWindow, pGame->pRenderer);
     if (!handleError(pGame, pGame->pBackgroundTexture, SDL_GetError)) return 0;
+
     pGame->pPlayer1Texture = createPlayerCharacter(pGame->pRenderer, pGame->pWindow);
     if (!handleError(pGame, pGame->pPlayer1Texture, SDL_GetError)) return 0;
+
+    pGame->pPlayer2Texture = createPlayerCharacter(pGame->pRenderer, pGame->pWindow);
+    if (!handleError(pGame, pGame->pPlayer2Texture, SDL_GetError)) return 0;
+
     pGame->pMainMenuFont = TTF_OpenFont("../assets/Ticketing.ttf", 25);
     if (!handleError(pGame, pGame->pWindow, TTF_GetError)) return 0;
+
     pGame->pMainSound = Mix_LoadMUS("../assets/tempMainSound.mp3");
     if (!handleError(pGame, pGame->pWindow, Mix_GetError)) return 0;
     //pGame->pJumpSound = Mix_LoadWAV("../assets/[jumpmusic].wav"); //for short sounds
@@ -94,6 +103,7 @@ int initiateGame(Game* pGame){
 
     
     pGame->pPlayer1 = createPlayer((pGame->windowWidth - pGame->player1Rect.w) / 2, pGame->windowHeight - pGame->player1Rect.h, &pGame->player1Rect, pGame->windowWidth, pGame->windowHeight);
+    pGame->pPlayer2 = createPlayer ((pGame->windowWidth - pGame->player2Rect.w) / 2, pGame->windowHeight - pGame->player2Rect.h, &pGame->player2Rect, pGame->windowWidth, pGame->windowHeight);
 
     // KRASCHAR PÅ MAC initiateLanguage(fp, pGame);
 
@@ -212,13 +222,15 @@ void runGame(Game* pGame){
                 movePlayer(pGame->pPlayer1, pGame->player1Rect, left, right, pGame->windowWidth);
                 jumpPlayer(pGame->pPlayer1, pGame->player1Rect, pGame->windowHeight, currentPlatformY, maxJumpHeight);
                 platformCollidePlayer(pGame->pPlayer1, pGame->player1Rect, pGame->platforms, &currentPlatformY, &maxJumpHeight);
+
+                //movePlayer(pGame->pPlayer2, pGame->player2Rect, left, right, pGame->windowWidth);
+                jumpPlayer(pGame->pPlayer2, pGame->player2Rect, pGame->windowHeight, currentPlatformY, maxJumpHeight);
+                platformCollidePlayer(pGame->pPlayer2, pGame->player2Rect, pGame->platforms, &currentPlatformY, &maxJumpHeight);
             
                 handleBackground(pGame->pBackground, pGame->pRenderer, pGame->pBackgroundTexture, pGame->windowWidth, pGame->windowHeight);
                 renderPlayer(pGame->pRenderer, pGame->pPlayer1Texture, pGame->pPlayer1, &pGame->player1Rect); //player 1
+                renderPlayer(pGame->pRenderer, pGame->pPlayer2Texture, pGame->pPlayer2, &pGame->player2Rect); //player 2
 
-                //!!Dessa tvÃ¥ rader ger segmentation fault
-                //pGame->pPlayer2Texture = createPlayerCharacter(pGame->pRenderer, pGame->pWindow); //player 2
-                //renderPlayer(pGame->pRenderer, pGame->pPlayer2Texture, pGame->pPlayer2, &pGame->player2Rect); //player 2
                 handlePlatform(pGame->platforms, pGame->pRenderer, pGame->windowWidth);
 
                 SDL_Delay(1000/60);
