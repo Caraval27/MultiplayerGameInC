@@ -61,7 +61,6 @@ void jumpPlayer(Player* pPlayer, SDL_Rect playerRect, int windowHeight, float pl
 }
 
 void movePlayer(Player* pPlayer, SDL_Rect playerRect, bool left, bool right, int windowWidth){
-    //if (pPlayer->velocityX > SPEED) pPlayer->velocityX = 0;
     pPlayer->velocityX = SPEED;
     if (left && !right){
         //pPlayer->velocityX += SPEED;
