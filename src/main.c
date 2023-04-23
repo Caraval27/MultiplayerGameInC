@@ -57,8 +57,8 @@ int initiateGame(Game* pGame){
     }
     pGame->windowWidth = displayMode.w;
     pGame->windowHeight = displayMode.h;
-    char pictureFile[LENGTH] = "../assets/penguin.png";
-    char pictureFile1[LENGTH] = "../assets/musse.png";
+    char characterPicture1[LENGTH] = "../assets/penguin.png";
+    char characterPicture2[LENGTH] = "../assets/musse.png";
 
     pGame->pWindow = SDL_CreateWindow("Totally not a doodle jump clone", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, pGame->windowWidth, pGame->windowHeight, 0);
     if (!handleError(pGame, pGame->pWindow, SDL_GetError)) return 0;
@@ -72,10 +72,10 @@ int initiateGame(Game* pGame){
     pGame->pBackgroundTexture = createBackgroundImage(pGame->pWindow, pGame->pRenderer);
     if (!handleError(pGame, pGame->pBackgroundTexture, SDL_GetError)) return 0;
 
-    pGame->pPlayer1Texture = createPlayerCharacter(pGame->pRenderer, pGame->pWindow, pictureFile);
+    pGame->pPlayer1Texture = createPlayerCharacter(pGame->pRenderer, pGame->pWindow, characterPicture1);
     if (!handleError(pGame, pGame->pPlayer1Texture, SDL_GetError)) return 0;
 
-    pGame->pPlayer2Texture = createPlayerCharacter(pGame->pRenderer, pGame->pWindow, pictureFile1);
+    pGame->pPlayer2Texture = createPlayerCharacter(pGame->pRenderer, pGame->pWindow, characterPicture2);
     if (!handleError(pGame, pGame->pPlayer2Texture, SDL_GetError)) return 0;
 
     pGame->pMainMenuFont = TTF_OpenFont("../assets/Ticketing.ttf", 25);

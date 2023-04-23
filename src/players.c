@@ -21,8 +21,8 @@ Player* createPlayer(int x, int y, SDL_Rect* playerRect, int windowWidth, int wi
     return pPlayer;
 }
 
-SDL_Texture* createPlayerCharacter(SDL_Renderer* pPlayerRenderer, SDL_Window* pWindow, char pictureFile[]){
-    SDL_Surface* pPlayerSurface = IMG_Load(pictureFile); //Ändra så att man kan skicka in en textsträng sen
+SDL_Texture* createPlayerCharacter(SDL_Renderer* pPlayerRenderer, SDL_Window* pWindow, char characterPicture[]){
+    SDL_Surface* pPlayerSurface = IMG_Load(characterPicture); //Ändra så att man kan skicka in en textsträng sen
     if (!pPlayerSurface){
         printf("Error: %s\n", SDL_GetError());
         SDL_DestroyRenderer(pPlayerRenderer); 

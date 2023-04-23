@@ -8,7 +8,7 @@
 typedef struct player Player;
 
 Player* createPlayer(int x, int y, SDL_Rect* playerRect, int windowWidth, int windowHeight);
-SDL_Texture* createPlayerCharacter(SDL_Renderer* pRenderer, SDL_Window* pWindow, char pictureFile[]);
+SDL_Texture* createPlayerCharacter(SDL_Renderer* pRenderer, SDL_Window* pWindow, char characterPicture[]);
 void jumpPlayer(Player* pPlayer, SDL_Rect playerRect, int windowHeight, float platformY, float maxJumpHeight);
 void movePlayer (Player* pPlayer, SDL_Rect playerRect, bool left, bool right, int width); //Funktion som hanterar att spelaren kan rörar sig i sidled med tangenttryck
 void platformCollidePlayer(Player* pPlayer, SDL_Rect playerRect, Platform** platforms, float* pPlatformY, float* pMaxJumpHeight);
