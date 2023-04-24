@@ -40,10 +40,17 @@ typedef struct {
 	GameplayData *pGameplayData;
 } Game;
 
-void initiateLanguage(FILE *fp, Game *pGame);
 int initiateGame(Game* pGame);
 void runGame(Game* pGame);
-void renderSettingsMenu(Game *pGame);
 void quitGame(Game* pGame);
-void handleInputOngoing(State* pState, SDL_Event* event, bool* pIsRunning, bool* pRight, bool* pLeft, int keybinds[]);
+
 int handleError(Game* pGame, void* pMember, const char* (*GetError)());
+void initiateLanguage(FILE *fp, Game *pGame);
+
+void handleMainMenu(Game* pGame, SDL_Event event, int* pMousePos);
+void handleSettingsMenu(Game* pGame, SDL_Event event, int* pMousePos, int* pNum);
+void renderSettingsMenu(Game *pGame);
+void handleEnterInput(Game* pGame, SDL_Event event, int* pNum);
+void handleOngoing(Game* pGame, SDL_Event event, bool* pIsRunning, bool* pRight, bool* pLeft, float* pCurrentPlatformY, float* pMaxJumpHeight);
+void handleInputOngoing(State* pState, SDL_Event* event, bool* pIsRunning, bool* pRight, bool* pLeft, int keybinds[]);
+void handleGameMenu(Game* pGame, int* pMousePos, SDL_Event event);
