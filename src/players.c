@@ -54,10 +54,10 @@ void jumpPlayer(Player* pPlayer, int windowHeight, float platformYPos, float jum
 
 void movePlayer(Player* pPlayer, bool left, bool right, int windowWidth){
     if (left && !right){
-        pPlayer->xPos -= (pPlayer->xVelocity) / 60;
+        pPlayer->xPos -= (pPlayer->xVelocity) / 20;
     }
     else if (right && !left){
-        pPlayer->xPos += (pPlayer->xVelocity) / 60;
+        pPlayer->xPos += (pPlayer->xVelocity) / 20;
     }
 
     if (pPlayer->xPos < 0) pPlayer->xPos = 0;
