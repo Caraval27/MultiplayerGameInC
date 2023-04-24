@@ -89,8 +89,8 @@ int initiateGame(Game* pGame){
     pGame->pMoveRight2Button = createButton(&pGame->moveRight2ButtonRect, pGame->windowHeight, pGame->windowWidth, 50, 80);
     pGame->pMoveLeft2Button = createButton(&pGame->moveLeft2ButtonRect, pGame->windowHeight, pGame->windowWidth, 100, 80);
     
-    pGame->pPlayer1 = createPlayer(pGame->windowWidth / 4, pGame->windowHeight, 60, 60, SPEED, 300); 
-    pGame->pPlayer2 = createPlayer(pGame->windowWidth / 2, pGame->windowHeight, 60, 60, SPEED, 300);
+    pGame->pPlayer1 = createPlayer(pGame->windowWidth / 5, pGame->windowHeight, 60, 60, SPEED, 400); 
+    pGame->pPlayer2 = createPlayer(2 * pGame->windowWidth / 5, pGame->windowHeight, 60, 60, SPEED, 400);
 
     // KRASCHAR PÅ MAC initiateLanguage(fp, pGame);
 
@@ -103,7 +103,7 @@ void runGame(Game* pGame){
     bool isRunning = true, left = false, right = false;
     SDL_Event event;
     int mousePos, num;
-    float currentPlatformYPos = 0, JumpHeight = JUMP_HEIGHT;
+    float jumpHeight = pGame->windowHeight - JUMP_HEIGHT;
     
     Mix_PlayMusic(pGame->pMainSound, -1);
     while (isRunning){
@@ -114,7 +114,7 @@ void runGame(Game* pGame){
             break;
             case ENTER_INPUT: handleEnterInput(pGame, event, &num);
             break;
-            case ONGOING: handleOngoing(pGame, event, &isRunning, &right, &left, &currentPlatformYPos, &JumpHeight);
+            case ONGOING: handleOngoing(pGame, event, &isRunning, &right, &left, &jumpHeight);
             break;
             case GAME_MENU: handleGameMenu(pGame, &mousePos, event);
             break;
@@ -316,18 +316,18 @@ void handleEnterInput(Game* pGame, SDL_Event event, int* pNum){
     }
 }
 
-void handleOngoing(Game* pGame, SDL_Event event, bool* pIsRunning, bool* pRight, bool* pLeft, float* pCurrentPlatformYPos, float* pJumpHeight){
+void handleOngoing(Game* pGame, SDL_Event event, bool* pIsRunning, bool* pRight, bool* pLeft, float* pJumpHeight){
     Mix_ResumeMusic();
     while (SDL_PollEvent(&event)){
         handleInputOngoing(&pGame->state, &event, pIsRunning, pRight, pLeft, pGame->keybinds);
     }
 
     movePlayer(pGame->pPlayer1, *pLeft, *pRight, pGame->windowWidth);
-    jumpPlayer(pGame->pPlayer1, pGame->windowHeight, *pCurrentPlatformYPos, *pJumpHeight);
-    playerCollidePlatform(pGame->pPlayer1, pGame->platforms, pCurrentPlatformYPos, pJumpHeight);
+    jumpPlayer(pGame->pPlayer1, *pJumpHeight, pGame->windowHeight);
+    playerCollidePlatform(pGame->pPlayer1, pGame->platforms, pJumpHeight, pGame->windowHeight);
 
-    jumpPlayer(pGame->pPlayer2, pGame->windowHeight, *pCurrentPlatformYPos, *pJumpHeight);
-    playerCollidePlatform(pGame->pPlayer2, pGame->platforms, pCurrentPlatformYPos, pJumpHeight);
+    jumpPlayer(pGame->pPlayer2, *pJumpHeight, pGame->windowHeight);
+    playerCollidePlatform(pGame->pPlayer2, pGame->platforms, pJumpHeight, pGame->windowHeight);
 
     handleBackground(pGame->pBackground, pGame->pRenderer, pGame->pBackgroundTexture, pGame->windowWidth, pGame->windowHeight);
     renderPlayer(pGame->pPlayer1, pGame->pRenderer, pGame->pPlayer1Texture); //player 1

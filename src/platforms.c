@@ -17,14 +17,14 @@ void scrollPlatform(Platform* pPlatform) {
 }
 
 void renderPlatform(SDL_Renderer* pRenderer, Platform* pPlatform) {
-	SDL_Rect platform = {pPlatform->xPos, pPlatform->yPos, pPlatform->width, pPlatform->height};
+	SDL_Rect rect = {pPlatform->xPos, pPlatform->yPos, pPlatform->width, pPlatform->height};
 
 	SDL_SetRenderDrawColor(pRenderer, 255, 0, 0, 255);
-	SDL_RenderFillRect(pRenderer, &platform);
+	SDL_RenderFillRect(pRenderer, &rect);
 }
 
 void handlePlatform(Platform** platforms, SDL_Renderer* pRenderer, int windowWidth){
-    int i;
+    int i = 0;
 
     if (SDL_GetTicks64() % 1000 < 17) {
         i = 0;
