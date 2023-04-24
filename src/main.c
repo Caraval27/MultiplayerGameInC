@@ -92,7 +92,7 @@ int initiateGame(Game* pGame){
     pGame->pPlayer1 = createPlayer(pGame->windowWidth / 4, pGame->windowHeight, 60, 60, SPEED, 300); 
     pGame->pPlayer2 = createPlayer(pGame->windowWidth / 2, pGame->windowHeight, 60, 60, SPEED, 300);
 
-    // KRASCHAR Pï¿½ MAC initiateLanguage(fp, pGame);
+    // KRASCHAR PÅ MAC initiateLanguage(fp, pGame);
 
     pGame->state = MAIN_MENU;
 
@@ -221,9 +221,9 @@ void handleMainMenu(Game* pGame, SDL_Event event, int* pMousePos){
         renderButton(pGame->pRenderer, pGame->startButtonRect, 250, 43, 226);
         renderButton(pGame->pRenderer, pGame->settingsButtonRect, 170, 43, 226);
         renderButton(pGame->pRenderer, pGame->quitButtonRect, 138, 43, 226);
-        // KRASHCAR Pï¿½ MAC renderText(pGame->pStartButtonText);
-        // KRASCHAR Pï¿½ MAC renderText(pGame->pSettingsButtonText);
-        // KRASCHAR Pï¿½ MAC renderText(pGame->pQuitButtonText);
+        // KRASHCAR MAC renderText(pGame->pStartButtonText);
+        // KRASCHAR MAC renderText(pGame->pSettingsButtonText);
+        // KRASCHAR MAC renderText(pGame->pQuitButtonText);
     }
 }
 
@@ -326,7 +326,6 @@ void handleOngoing(Game* pGame, SDL_Event event, bool* pIsRunning, bool* pRight,
     jumpPlayer(pGame->pPlayer1, pGame->windowHeight, *pCurrentPlatformYPos, *pJumpHeight);
     playerCollidePlatform(pGame->pPlayer1, pGame->platforms, pCurrentPlatformYPos, pJumpHeight);
 
-    //movePlayer(pGame->pPlayer2, pGame->player2Rect, left, right, pGame->windowWidth);
     jumpPlayer(pGame->pPlayer2, pGame->windowHeight, *pCurrentPlatformYPos, *pJumpHeight);
     playerCollidePlatform(pGame->pPlayer2, pGame->platforms, pCurrentPlatformYPos, pJumpHeight);
 
