@@ -93,7 +93,7 @@ int initiateGame(Game* pGame){
     pGame->pPlayer2 = createPlayer ((pGame->windowWidth - pGame->player2Rect.w) / 2, pGame->windowHeight - pGame->player2Rect.h, &pGame->player2Rect, pGame->windowWidth, pGame->windowHeight);
 
     
-    // KRASCHAR Pï¿½ MAC initiateLanguage(fp, pGame);
+    // KRASCHAR PÅ MAC initiateLanguage(fp, pGame);
 
     pGame->state = MAIN_MENU;
 
@@ -223,9 +223,9 @@ void handleMainMenu(Game* pGame, SDL_Event event, int* pMousePos){
         renderButton(pGame->pRenderer, pGame->startButtonRect, 250, 43, 226);
         renderButton(pGame->pRenderer, pGame->settingsButtonRect, 170, 43, 226);
         renderButton(pGame->pRenderer, pGame->quitButtonRect, 138, 43, 226);
-        // KRASHCAR Pï¿½ MAC renderText(pGame->pStartButtonText);
-        // KRASCHAR Pï¿½ MAC renderText(pGame->pSettingsButtonText);
-        // KRASCHAR Pï¿½ MAC renderText(pGame->pQuitButtonText);
+        // KRASHCAR MAC renderText(pGame->pStartButtonText);
+        // KRASCHAR MAC renderText(pGame->pSettingsButtonText);
+        // KRASCHAR MAC renderText(pGame->pQuitButtonText);
     }
 }
 
@@ -328,13 +328,12 @@ void handleOngoing(Game* pGame, SDL_Event event, bool* pIsRunning, bool* pRight,
     jumpPlayer(pGame->pPlayer1, pGame->player1Rect, pGame->windowHeight, *pCurrentPlatformY, *pMaxJumpHeight);
     platformCollidePlayer(pGame->pPlayer1, pGame->player1Rect, pGame->platforms, pCurrentPlatformY, pMaxJumpHeight);
 
-    //movePlayer(pGame->pPlayer2, pGame->player2Rect, left, right, pGame->windowWidth);
     jumpPlayer(pGame->pPlayer2, pGame->player2Rect, pGame->windowHeight, *pCurrentPlatformY, *pMaxJumpHeight);
     platformCollidePlayer(pGame->pPlayer2, pGame->player2Rect, pGame->platforms, pCurrentPlatformY, pMaxJumpHeight);
 
     handleBackground(pGame->pBackground, pGame->pRenderer, pGame->pBackgroundTexture, pGame->windowWidth, pGame->windowHeight);
-    renderPlayer(pGame->pRenderer, pGame->pPlayer1Texture, pGame->pPlayer1, &pGame->player1Rect); //player 1
-    renderPlayer(pGame->pRenderer, pGame->pPlayer2Texture, pGame->pPlayer2, &pGame->player2Rect); //player 2
+    renderPlayer(pGame->pRenderer, pGame->pPlayer1Texture, pGame->pPlayer1, &pGame->player1Rect); 
+    renderPlayer(pGame->pRenderer, pGame->pPlayer2Texture, pGame->pPlayer2, &pGame->player2Rect); 
 
     handlePlatform(pGame->platforms, pGame->pRenderer, pGame->windowWidth);
 
