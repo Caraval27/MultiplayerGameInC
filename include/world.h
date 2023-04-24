@@ -1,7 +1,8 @@
 #pragma once
 
-#define IMAGE_WIDTH 1024
-#define IMAGE_HEIGHT 1536
+#define BACKGROUND_WIDTH 1024
+#define BACKGROUND_HEIGHT 1536
+#define BACKGROUND_SPEED 1
 
 typedef struct background Background;
 

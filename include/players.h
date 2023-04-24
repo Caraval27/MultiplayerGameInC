@@ -3,14 +3,18 @@
 #include "../include/platforms.h"
 
 #define SPEED 100
-#define MAX_JUMP_HEIGHT 400
+#define JUMP_HEIGHT 400
 
-typedef struct player Player;
+typedef struct {
+    float xPos, yPos;
+    float width, height;
+    float xVelocity, yVelocity;
+} Player;
 
-Player* createPlayer(int x, int y, SDL_Rect* playerRect, int windowWidth, int windowHeight);
-SDL_Texture* createPlayerCharacter(SDL_Renderer* pRenderer, SDL_Window* pWindow, char characterPicture[], Player* pPlayer, SDL_Rect* pPlayerRect);
-void jumpPlayer(Player* pPlayer, SDL_Rect playerRect, int windowHeight, float platformY, float maxJumpHeight);
-void movePlayer (Player* pPlayer, SDL_Rect playerRect, bool left, bool right, int width); //Funktion som hanterar att spelaren kan rörar sig i sidled med tangenttryck
-void platformCollidePlayer(Player* pPlayer, SDL_Rect playerRect, Platform** platforms, float* pPlatformY, float* pMaxJumpHeight);
-void renderPlayer(SDL_Renderer* pRenderer, SDL_Texture* pTexture, Player* pPlayer, SDL_Rect* pPlayerRect);
+Player* createPlayer(int xPos, int yPos, int width, int height, int xVelocity, int yVelocity);
+SDL_Texture* createPlayerCharacter(SDL_Renderer* pRenderer, SDL_Window* pWindow, char characterPicture[]);
+void jumpPlayer(Player* pPlayer, int windowHeight, float PlatformYPos, float jumpHeight);
+void movePlayer(Player* pPlayer, bool left, bool right, int windowWidth);
+void playerCollidePlatform(Player* pPlayer, Platform** platforms, float* pPlatformYPos, float* pJumpHeight);
+void renderPlayer(Player* pPlayer, SDL_Renderer* pRenderer, SDL_Texture* pTexture);
 void destroyPlayer(Player* pPlayer);

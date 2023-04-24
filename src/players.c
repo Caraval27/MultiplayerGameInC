@@ -1,28 +1,20 @@
 #include "../include/main.h"
 
-struct player{
-    float xPos, yPos;
-    float velocityY, velocityX;
-};
-
-Player* createPlayer(int x, int y, SDL_Rect* playerRect, int windowWidth, int windowHeight){
+Player* createPlayer(int xPos, int yPos, int width, int height, int xVelocity, int yVelocity){
     Player* pPlayer = malloc(sizeof(Player));
 
-    pPlayer->xPos = x;
-    pPlayer->yPos = y;
-    pPlayer->velocityX = 100;
-    pPlayer->velocityY = 5;
-
-    playerRect->w = 60;
-    playerRect->h = 60;
-    playerRect->x = windowWidth - playerRect->w;
-    playerRect->y = windowHeight - playerRect->h;
+    pPlayer->xPos = xPos;
+    pPlayer->yPos = yPos;
+    pPlayer->width = width;
+    pPlayer->height = height;
+    pPlayer->xVelocity = xVelocity;
+    pPlayer->yVelocity = yVelocity;
 
     return pPlayer;
 }
 
-SDL_Texture* createPlayerCharacter(SDL_Renderer* pPlayerRenderer, SDL_Window* pWindow, char characterPicture[], Player* pPlayer, SDL_Rect* pPlayerRect){
-    SDL_Surface* pPlayerSurface = IMG_Load(characterPicture); //Ändra så att man kan skicka in en textsträng sen
+SDL_Texture* createPlayerCharacter(SDL_Renderer* pPlayerRenderer, SDL_Window* pWindow, char characterPicture[]){
+    SDL_Surface* pPlayerSurface = IMG_Load(characterPicture);
     if (!pPlayerSurface){
         printf("Error: %s\n", SDL_GetError());
         SDL_DestroyRenderer(pPlayerRenderer); 
@@ -38,75 +30,70 @@ SDL_Texture* createPlayerCharacter(SDL_Renderer* pPlayerRenderer, SDL_Window* pW
         SDL_Quit();
         exit (1);    
     }
-
-    /*pPlayerRect->x = pPlayer->xPos;
-    pPlayerRect->y = pPlayer->yPos;
-    SDL_RenderCopy(pPlayerRenderer, pPlayerTexture, NULL, pPlayerRect);*/
-
     SDL_FreeSurface(pPlayerSurface);
 
     return pPlayerTexture;
 }
 
-void jumpPlayer(Player* pPlayer, SDL_Rect playerRect, int windowHeight, float platformY, float maxJumpHeight){
-    pPlayer->yPos += pPlayer->velocityY;
+void jumpPlayer(Player* pPlayer, int windowHeight, float platformYPos, float jumpHeight){
+    pPlayer->yPos += pPlayer->yVelocity / 60;
 
-    if (pPlayer->yPos + playerRect.h >= windowHeight - platformY){
-        pPlayer->yPos = windowHeight - playerRect.h - platformY;
-        pPlayer->velocityY = -(pPlayer->velocityY);
+    if (pPlayer->yPos + pPlayer->height >= windowHeight - platformYPos){ //<=platformY
+        pPlayer->yPos = windowHeight - pPlayer->height - platformYPos;
+        pPlayer->yVelocity = -(pPlayer->yVelocity);
     }
-    if (playerRect.y <= 0){
+    if (pPlayer->yPos <= 0){
         pPlayer->yPos = 0;
-        pPlayer->velocityY = -(pPlayer->velocityY);
+        pPlayer->yVelocity = -(pPlayer->yVelocity);
     }
-    if (pPlayer->yPos + playerRect.h < maxJumpHeight){
-        pPlayer->yPos = maxJumpHeight - playerRect.h;
-        pPlayer->velocityY = -(pPlayer->velocityY);
+    if (pPlayer->yPos + pPlayer->height < jumpHeight){
+        pPlayer->yPos = jumpHeight - pPlayer->height;
+        pPlayer->yVelocity = -(pPlayer->yVelocity);
     }
 }
 
-void movePlayer(Player* pPlayer, SDL_Rect playerRect, bool left, bool right, int windowWidth){
-    pPlayer->velocityX = SPEED;
+void movePlayer(Player* pPlayer, bool left, bool right, int windowWidth){
     if (left && !right){
-        pPlayer->xPos -= (pPlayer->velocityX) / 60;
+        pPlayer->xPos -= (pPlayer->xVelocity) / 60;
     }
     else if (right && !left){
-        pPlayer->xPos += (pPlayer->velocityX) / 60;
+        pPlayer->xPos += (pPlayer->xVelocity) / 60;
     }
 
     if (pPlayer->xPos < 0) pPlayer->xPos = 0;
-    if (pPlayer->xPos > windowWidth - playerRect.w) pPlayer->xPos = windowWidth - playerRect.w;
+    if (pPlayer->xPos > windowWidth - pPlayer->width) pPlayer->xPos = windowWidth - pPlayer->width;
 }
 
-void platformCollidePlayer(Player* pPlayer, SDL_Rect playerRect, Platform** platforms, float* pPlatformY, float* pMaxJumpHeight){
-    for (int i = 0; platforms[i] != 0; i++){
-        if (pPlayer->yPos + playerRect.h >= platforms[i]->yPos &&
+void playerCollidePlatform(Player* pPlayer, Platform** platforms, float* pPlatformYPos, float* pJumpHeight){
+    int i; 
+
+    for (i = 0; platforms[i] != 0; i++){
+        if (pPlayer->yPos + pPlayer->height >= platforms[i]->yPos &&
             pPlayer->yPos < platforms[i]->yPos + platforms[i]->height &&
-            pPlayer->xPos + playerRect.w >= platforms[i]->xPos &&
+            pPlayer->xPos + pPlayer->width >= platforms[i]->xPos &&
             pPlayer->xPos < platforms[i]->xPos + platforms[i]->width &&
-            pPlayer->velocityY >= 0){
-            pPlayer->yPos = platforms[i]->yPos - playerRect.h; // vet ej om behövs
-            *pPlatformY = platforms[i]->yPos + platforms[i]->height;
-            *pMaxJumpHeight = *pPlatformY - (MAX_JUMP_HEIGHT - 100);
-            if (*pMaxJumpHeight < 1) *pMaxJumpHeight = 10 + playerRect.h;
-            pPlayer->velocityY = -(pPlayer->velocityY);
+            pPlayer->yVelocity >= 0){
+            pPlayer->yPos = platforms[i]->yPos - pPlayer->height; // vet ej om behövs
+            *pPlatformYPos = platforms[i]->yPos + platforms[i]->height;
+            *pJumpHeight = *pPlatformYPos - (JUMP_HEIGHT - 100);
+            if (*pJumpHeight < 1) *pJumpHeight = 10 + pPlayer->height;
+            pPlayer->yVelocity = -(pPlayer->yVelocity);
         }
         else {
-            *pPlatformY = 0;
-            //*pMaxJumpHeight = MAX_JUMP_HEIGHT;
+            *pPlatformYPos = 0;
         }
     }
 } 
 
-void playerCollision (Player* pPlayer1, Player* pPlayer2, SDL_Rect player1Rect, SDL_Rect player2Rect)
+void playerCollidePlayer(Player* pPlayer1, Player* pPlayer2, SDL_Rect player1Rect, SDL_Rect player2Rect)
 {
 
 }
 
-void renderPlayer(SDL_Renderer* pRenderer, SDL_Texture* pTexture, Player* pPlayer, SDL_Rect* pPlayerRect){
-    pPlayerRect->x = pPlayer->xPos;
-    pPlayerRect->y = pPlayer->yPos;
-    SDL_RenderCopy(pRenderer, pTexture, NULL, pPlayerRect);
+void renderPlayer(Player* pPlayer, SDL_Renderer* pRenderer, SDL_Texture* pTexture){
+    SDL_Rect player = {pPlayer->xPos, pPlayer->yPos, pPlayer->width, pPlayer->height};
+
+    SDL_RenderCopy(pRenderer, pTexture, NULL, &player);
 }
 
 void destroyPlayer(Player* pPlayer){

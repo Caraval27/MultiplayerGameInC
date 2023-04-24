@@ -1,28 +1,26 @@
 #include "../include/main.h"
 
-#define PLATFORM_SCROLL_SPEED 2
-
-Platform *createPlatform(float x, float y, float w, float h) {
+Platform *createPlatform(float xPos, float yPos, float width, float height) {
 	Platform *pPlatform = malloc(sizeof(Platform));
 
-	pPlatform->xPos = x;
-	pPlatform->yPos = y;
-	pPlatform->width = w;
-	pPlatform->height = h;
+	pPlatform->xPos = xPos;
+	pPlatform->yPos = yPos;
+	pPlatform->width = width;
+	pPlatform->height = height;
 
 	return pPlatform;
 }
 
 void scrollPlatform(Platform* pPlatform) {
-	pPlatform->yPos += PLATFORM_SCROLL_SPEED;
+	pPlatform->yPos += PLATFORM_SPEED;
 	// remember to destroy plank if out of bounds
 }
 
 void renderPlatform(SDL_Renderer* pRenderer, Platform* pPlatform) {
-	SDL_Rect rect = {pPlatform->xPos, pPlatform->yPos, pPlatform->width, pPlatform->height};
+	SDL_Rect platform = {pPlatform->xPos, pPlatform->yPos, pPlatform->width, pPlatform->height};
 
 	SDL_SetRenderDrawColor(pRenderer, 255, 0, 0, 255);
-	SDL_RenderFillRect(pRenderer, &rect);
+	SDL_RenderFillRect(pRenderer, &platform);
 }
 
 void handlePlatform(Platform** platforms, SDL_Renderer* pRenderer, int windowWidth){

@@ -10,9 +10,9 @@ struct background{
 Background* createBackground(int windowHeight){
     Background* pBackground = malloc(sizeof(Background));
 
-    pBackground->upperSrcYPos = IMAGE_HEIGHT;
+    pBackground->upperSrcYPos = BACKGROUND_HEIGHT;
     pBackground->upperSrcHeight = 0;
-    pBackground->lowerSrcYPos = IMAGE_HEIGHT - windowHeight;
+    pBackground->lowerSrcYPos = BACKGROUND_HEIGHT - windowHeight;
     pBackground->lowerSrcHeight = windowHeight;
     pBackground->upperDstYPos = 0;
     pBackground->upperDstHeight = 0;
@@ -47,21 +47,21 @@ SDL_Texture* createBackgroundImage(SDL_Window* pWindow, SDL_Renderer* pRenderer)
 void handleBackground(Background* pBackground, SDL_Renderer* pRenderer, SDL_Texture* pTexture, int windowWidth, int windowHeight){
 
     if (pBackground->lowerSrcYPos < 0) {
-        pBackground->upperSrcYPos -= 1;
-        pBackground->upperSrcHeight += 1;
-        pBackground->lowerSrcHeight -= 1;
-        pBackground->upperDstHeight += 1;
-        pBackground->lowerDstYPos += 1;
-        pBackground->lowerDstHeight -= 1;
+        pBackground->upperSrcYPos -= BACKGROUND_SPEED;
+        pBackground->upperSrcHeight += BACKGROUND_SPEED;
+        pBackground->lowerSrcHeight -= BACKGROUND_SPEED;
+        pBackground->upperDstHeight += BACKGROUND_SPEED;
+        pBackground->lowerDstYPos += BACKGROUND_SPEED;
+        pBackground->lowerDstHeight -= BACKGROUND_SPEED;
     }
     else{
-        pBackground->lowerSrcYPos -= 1;
+        pBackground->lowerSrcYPos -= BACKGROUND_SPEED;
     }
 
     if (pBackground->lowerSrcHeight < 0) {
-        pBackground->upperSrcYPos = IMAGE_HEIGHT;
+        pBackground->upperSrcYPos = BACKGROUND_HEIGHT;
         pBackground->upperSrcHeight = 0;
-        pBackground->lowerSrcYPos = IMAGE_HEIGHT - windowHeight;
+        pBackground->lowerSrcYPos = BACKGROUND_HEIGHT - windowHeight;
         pBackground->lowerSrcHeight = windowHeight;
         pBackground->upperDstYPos = 0;
         pBackground->upperDstHeight = 0;
