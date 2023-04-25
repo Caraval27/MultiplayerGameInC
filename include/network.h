@@ -48,6 +48,9 @@ void listenForNewClients(NetworkData *pNetworkData);
 // \param *pGameplayData Struct containing the gameplay state to be sent.
 void broadcastToClients(NetworkData *pNetworkData, GameplayData *pGameplayData);
 
+// Gets any incoming packet and, if from a valid client, integrate its command into the game.
+void handleClientCommands(NetworkData *pNetworkData, ClientCommand *pClientCommand, GameplayData *pGameplayData);
+
 // Sends empty packet to the host to become acknowledged as a client.
 void joinHost(NetworkData *pNetworkData);
 

@@ -45,10 +45,25 @@ void broadcastToClients(NetworkData *pNetworkData, GameplayData *pGameplayData) 
 	}
 }
 
-void handleClientCommands(NetworkData *pNetworkData, GameplayData *pGameplayData) {
+void handleClientCommands(NetworkData *pNetworkData, ClientCommand *pClientCommand, GameplayData *pGameplayData) {
 	while (SDLNet_UDP_Recv(pNetworkData->pSocket, pNetworkData->pPacket)) {
-		// check if command is legal
-		// modify pGameplayData
+		int validClient = 0;
+		{
+			int i = 0;
+			while (!validClient && pNetworkData->clients[i].host) {
+				if (pNetworkData->clients[i].host != pNetworkData->pPacket->address.host
+					&& pNetworkData->clients[i].port != pNetworkData->pPacket->address.port) {
+					validClient = 1;
+				} else {
+					i++;
+				}
+			}
+		}
+		if (validClient) {
+			memcpy(pClientCommand, pNetworkData->pPacket->data, sizeof(ClientCommand));
+			// if legal command, modify pGameplayData
+			// perhaps call another function
+		}
 	}
 }
 
