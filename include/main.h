@@ -27,6 +27,7 @@ typedef struct {
 
     Player* pPlayers[6];
     SDL_Texture* pPlayerTexture[6];
+    int pNrOfPlayers;
 
     Platform *platforms[1000], *pStartingPlatform;
     SDL_Rect quitButtonRect, startButtonRect, resumeButtonRect, mainMenuButtonRect, settingsButtonRect, languageButtonRect,

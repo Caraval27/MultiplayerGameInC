@@ -1,6 +1,6 @@
 #include "../include/main.h"
 #define LENGTH 100
-#define MAXPLAYERS 2
+#define MAXPLAYERS 6;
 
 int main(int argv, char** args){
     Game game = {0};
@@ -48,7 +48,7 @@ int initiateGame(Game* pGame){
     char backgroundPicture[LENGTH] = "../assets/background.png";
     char startingPlatformPicture[LENGTH] = "../assets/iceBlock.png";
     //char plattformsPicture[LENGTH] = ;
-    int nrOfPlayers = MAXPLAYERS;
+    pGame->pNrOfPlayers = MAXPLAYERS;
 
     pGame->pWindow = SDL_CreateWindow("Totally not a doodle jump clone", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, pGame->windowWidth, pGame->windowHeight, 0);
     if (!handleError(pGame, pGame->pWindow, SDL_GetError)) return 0;
@@ -110,7 +110,7 @@ int initiateGame(Game* pGame){
     pGame->pStartingPlatform = createPlatform(0, pGame->windowHeight - 100, pGame->windowWidth, 100);
 
     
-    for(int i=0; i<nrOfPlayers; i++){ //segmentation fault om man loopar mindre än 6 gånger??
+    for(int i=0; i<pGame->pNrOfPlayers; i++){ //segmentation fault om man loopar mindre än 6 gånger??
         int startPosition = 5;
         pGame->pPlayers[i] = createPlayer(pGame->windowWidth / startPosition, pGame->windowHeight, 60, 60, SPEED, 400);
         pGame->pPlayerTexture[i] = createPlayerCharacter(pGame->pRenderer, pGame->pWindow, characterPicture); //gör en sträng av detta ist
@@ -353,9 +353,10 @@ void handleOngoing(Game* pGame, SDL_Event event, bool* pIsRunning, bool* pRight,
 
     handleBackground(pGame->pBackground, pGame->pRenderer, pGame->pBackgroundTexture, pGame->windowWidth, pGame->windowHeight); //denna måste ligga före allt med player
 
-    for (int i=0; i != 1; i++) //av någon anledning dyker inte player 2 upp, förmodligen pga samma bild och position, samt båda rör sig med tangenttrycken
+    //gör en handlePlayers funktion istället
+    for (int i=0; i<pGame->pNrOfPlayers; i++) //av någon anledning dyker inte player 2 upp, förmodligen pga samma bild och position, samt båda rör sig med tangenttrycken
     {
-        if (i==0)
+        if (i==0) //bara för att prova om spelare 2 dyker upp i loopen
         {
             movePlayer(pGame->pPlayers[i], *pLeft, *pRight, pGame->windowWidth);
             jumpPlayer(pGame->pPlayers[i], *pJumpHeight, pGame->pStartingPlatform->yPos, pGame->pJumpSound);
@@ -370,19 +371,6 @@ void handleOngoing(Game* pGame, SDL_Event event, bool* pIsRunning, bool* pRight,
         }
 
     }
-
-        jumpPlayer(pGame->pPlayers[1], *pJumpHeight, pGame->pStartingPlatform->yPos, pGame->pJumpSound);
-        playerCollidePlatform(pGame->pPlayers[1], pGame->platforms, pJumpHeight, pGame->windowHeight, pGame->pJumpSound);
-        renderPlayer(pGame->pPlayers[1], pGame->pRenderer, pGame->pPlayerTexture[1]);
-
-    /*movePlayer(pGame->pPlayers[0], *pLeft, *pRight, pGame->windowWidth);
-    jumpPlayer(pGame->pPlayers[0], *pJumpHeight, pGame->pStartingPlatform->yPos, pGame->pJumpSound);
-    playerCollidePlatform(pGame->pPlayers[0], pGame->platforms, pJumpHeight, pGame->windowHeight, pGame->pJumpSound);
-    renderPlayer(pGame->pPlayers[0], pGame->pRenderer, pGame->pPlayerTexture[0]); //player 1
-
-    jumpPlayer(pGame->pPlayers[1], *pJumpHeight, pGame->pStartingPlatform->yPos, pGame->pJumpSound);
-    playerCollidePlatform(pGame->pPlayers[1], pGame->platforms, pJumpHeight, pGame->windowHeight, pGame->pJumpSound);
-    renderPlayer(pGame->pPlayers[1], pGame->pRenderer, pGame->pPlayerTexture[1]); //player 2*/
 
     handlePlatform(pGame->platforms, pGame->pRenderer, pGame->windowWidth);
     handleStartingPlatform(pGame->pStartingPlatform, pGame->pRenderer, pGame->pStartPlatformTexture, pGame->windowHeight, pSec);
