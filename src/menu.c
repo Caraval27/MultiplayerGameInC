@@ -72,7 +72,7 @@ int playerIsDead(Player* pPlayer, int windowHeight){
     return 0;
 }
 
-void checkIf(Player* pPlayer, int windowHeight, State* gameState){
+void checkIfPlayerDead(Player* pPlayer, int windowHeight, State* gameState){
     if(playerIsDead(pPlayer, windowHeight)){
         *gameState = MAIN_MENU;
     }

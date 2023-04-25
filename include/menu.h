@@ -27,4 +27,4 @@ SDL_Texture* createMainMenuImage(SDL_Window* pWindow, SDL_Renderer* pRenderer, S
 void renderMainMenu(SDL_Renderer* pRenderer, SDL_Texture* pTexture, SDL_Rect menuBackgroundRect);
 Button* createButton(SDL_Rect* pButtonRect, int windowHeight, int windowWidth, int yOffset, int xOffset);
 int playerIsDead(Player* pPlayer, int windowHeight);
-void checkIf(Player* pPlayer, int windowHeight, State* gameState);
+void checkIfPlayerDead(Player* pPlayer, int windowHeight, State* gameState);
