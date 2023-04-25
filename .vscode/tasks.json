@@ -4,7 +4,7 @@
 		{
 			"label": "make run",
 			"type": "shell",
-			"command": "make new",
+			"command": "make run",
 			"problemMatcher": [
 				"$gcc"
 			],
