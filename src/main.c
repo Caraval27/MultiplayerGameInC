@@ -58,7 +58,7 @@ int initiateGame(Game* pGame){
 		flags = SDL_RENDERER_SOFTWARE|SDL_RENDERER_PRESENTVSYNC
 	#endif
 
-    pGame->pRenderer = SDL_CreateRenderer(pGame->pWindow, -1, SDL_RENDERER_ACCELERATED|SDL_RENDERER_PRESENTVSYNC);
+    pGame->pRenderer = SDL_CreateRenderer(pGame->pWindow, -1, flags);
     if (!handleError(pGame, pGame->pRenderer, SDL_GetError)) return 0;
 
     pGame->pMainMenuTexture = createMainMenuImage(pGame->pWindow, pGame->pRenderer, &pGame->mainMenuRect, pGame->windowWidth, pGame->windowHeight);
