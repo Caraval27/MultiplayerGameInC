@@ -1,6 +1,6 @@
 #include "../include/main.h"
 #define LENGTH 100
-#define MAXPLAYERS 6
+#define MAXPLAYERS 2
 
 int main(int argv, char** args){
     Game game = {0};
@@ -43,8 +43,8 @@ int initiateGame(Game* pGame){
     }
     pGame->windowWidth = displayMode.w;
     pGame->windowHeight = displayMode.h;
-    char characterPicture1[LENGTH] = "../assets/penguin.png";
-    char characterPicture2[LENGTH] = "../assets/musse.png";
+    //char characterPicture[6][LENGTH] = {"../assets/penguin.png","../assets/musse.png"};
+    char characterPicture[LENGTH] = "../assets/musse.png";
     char backgroundPicture[LENGTH] = "../assets/background.png";
     char startingPlatformPicture[LENGTH] = "../assets/iceBlock.png";
     //char plattformsPicture[LENGTH] = ;
@@ -113,7 +113,7 @@ int initiateGame(Game* pGame){
     for(int i=0; i<nrOfPlayers; i++){ //segmentation fault om man loopar mindre än 6 gånger??
         int startPosition = 5;
         pGame->pPlayers[i] = createPlayer(pGame->windowWidth / startPosition, pGame->windowHeight, 60, 60, SPEED, 400);
-        pGame->pPlayerTexture[i] = createPlayerCharacter(pGame->pRenderer, pGame->pWindow, characterPicture1); //gör en sträng av detta ist
+        pGame->pPlayerTexture[i] = createPlayerCharacter(pGame->pRenderer, pGame->pWindow, characterPicture); //gör en sträng av detta ist
         startPosition += 100; //så att spelarna får olika startpositioner
     }
 
