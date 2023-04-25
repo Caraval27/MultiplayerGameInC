@@ -19,4 +19,3 @@ void jumpPlayer(Player* pPlayer, float jumpHeight, int height, Mix_Chunk* pJumpS
 void playerCollidePlatform(Player* pPlayer, Platform** platforms, float* pJumpHeight, int windowHeight, Mix_Chunk* pJumpSound);
 void renderPlayer(Player* pPlayer, SDL_Renderer* pRenderer, SDL_Texture* pTexture);
 void destroyPlayer(Player* pPlayer);
-//void handlePlayer (Game* pGame, bool* pLeft, bool* pRight, int jumpHeight); //hur kommer jag åt hela game structen härifrån?
