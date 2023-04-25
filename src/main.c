@@ -76,7 +76,9 @@ int initiateGame(Game* pGame){
 
     pGame->pMainSound = Mix_LoadMUS("../assets/tempMainSound.mp3");
     if (!handleError(pGame, pGame->pWindow, Mix_GetError)) return 0;
-    //pGame->pJumpSound = Mix_LoadWAV("../assets/[jumpmusic].wav"); //for short sounds
+    
+    pGame->pJumpSound = Mix_LoadWAV("../assets/JumpEffect.wav"); //for short sounds
+    if (!handleError(pGame, pGame->pWindow, Mix_GetError)) return 0;
 
     FILE *fp;
     readFromFileKey(fp, pGame->keybinds);
@@ -96,7 +98,6 @@ int initiateGame(Game* pGame){
     pGame->pMoveLeft1Button = createButton(&pGame->moveLeft1ButtonRect, pGame->windowHeight, pGame->windowWidth, 100, -80);
     pGame->pMoveRight2Button = createButton(&pGame->moveRight2ButtonRect, pGame->windowHeight, pGame->windowWidth, 50, 80);
     pGame->pMoveLeft2Button = createButton(&pGame->moveLeft2ButtonRect, pGame->windowHeight, pGame->windowWidth, 100, 80);
-    
     pGame->pStartingPlatform = createPlatform(0, pGame->windowHeight - 100, pGame->windowWidth, 100);
     
     for(int i=0; i<nrOfPlayers; i++){
@@ -141,10 +142,9 @@ void runGame(Game* pGame){
 }
 
 void quitGame(Game* pGame){
-    /* if (pGame->pJumpSound){
-        Mix_FreeChunk(pGame->pJumpSound);
-        Mix_CloseAudio();
-    } */
+    if (pGame->pJumpSound){
+        destroyChuck(pGame->pJumpSound);
+    }
     if (pGame->pMainSound){
         destroyMusic(pGame->pMainSound);
     }
@@ -337,11 +337,11 @@ void handleOngoing(Game* pGame, SDL_Event event, bool* pIsRunning, bool* pRight,
     }
 
     movePlayer(pGame->players[0], *pLeft, *pRight, pGame->windowWidth);
-    jumpPlayer(pGame->players[0], *pJumpHeight, pGame->pStartingPlatform->yPos);
-    playerCollidePlatform(pGame->players[0], pGame->platforms, pJumpHeight, pGame->windowHeight);
+    jumpPlayer(pGame->players[0], *pJumpHeight, pGame->pStartingPlatform->yPos, pGame->pJumpSound);
+    playerCollidePlatform(pGame->players[0], pGame->platforms, pJumpHeight, pGame->windowHeight, pGame->pJumpSound);
 
-    jumpPlayer(pGame->players[1], *pJumpHeight, pGame->pStartingPlatform->yPos);
-    playerCollidePlatform(pGame->players[1], pGame->platforms, pJumpHeight, pGame->windowHeight);
+    jumpPlayer(pGame->players[1], *pJumpHeight, pGame->pStartingPlatform->yPos, pGame->pJumpSound);
+    playerCollidePlatform(pGame->players[1], pGame->platforms, pJumpHeight, pGame->windowHeight, pGame->pJumpSound);
 
     handleBackground(pGame->pBackground, pGame->pRenderer, pGame->pBackgroundTexture, pGame->windowWidth, pGame->windowHeight);
     renderPlayer(pGame->players[0], pGame->pRenderer, pGame->pPlayer1Texture); //player 1
