@@ -353,7 +353,12 @@ void handleOngoing(Game* pGame, SDL_Event event, bool* pIsRunning, bool* pRight,
 
     handleBackground(pGame->pBackground, pGame->pRenderer, pGame->pBackgroundTexture, pGame->windowWidth, pGame->windowHeight); //denna måste ligga före allt med player
     
-    handlePlayers(pGame, pLeft, pRight, pJumpHeight);
+    //handlePlayers(pGame, pLeft, pRight, pJumpHeight);
+    movePlayer(pGame->pPlayers[0], *pLeft, *pRight, pGame->windowWidth);
+    jumpPlayer(pGame->pPlayers[0], *pJumpHeight, pGame->pStartingPlatform->yPos, pGame->pJumpSound);
+    playerCollidePlatform(pGame->pPlayers[0], pGame->platforms, pJumpHeight, pGame->windowHeight, pGame->pJumpSound);
+    renderPlayer(pGame->pPlayers[0], pGame->pRenderer, pGame->pPlayerTexture[0]);
+
    
     handlePlatform(pGame->platforms, pGame->pRenderer, pGame->windowWidth);
     handleStartingPlatform(pGame->pStartingPlatform, pGame->pRenderer, pGame->pStartPlatformTexture, pGame->windowHeight, pSec);
@@ -412,7 +417,7 @@ void handleGameMenu(Game* pGame, int* pMousePos, SDL_Event event){
     // Gï¿½R Sï¿½ ATT MAN INTE KAN KOMMA TILL RESUMEMENU renderText(pGame->pResumeButtonText);
 }
 
-void handlePlayers(Game* pGame, bool *pLeft, bool *pRight, float *pJumpHeight){
+/*void handlePlayers(Game* pGame, bool *pLeft, bool *pRight, float *pJumpHeight){
 
     for (int i=0; i<pGame->pNrOfPlayers; i++) //av någon anledning dyker inte player 2 upp, förmodligen pga samma bild och position, samt båda rör sig med tangenttrycken
     {
@@ -425,10 +430,10 @@ void handlePlayers(Game* pGame, bool *pLeft, bool *pRight, float *pJumpHeight){
         }
         else
         {
-            jumpPlayer(pGame->pPlayers[i], *pJumpHeight, pGame->pStartingPlatform->yPos, pGame->pJumpSound);
+            //jumpPlayer(pGame->pPlayers[i], *pJumpHeight, pGame->pStartingPlatform->yPos, pGame->pJumpSound);
             playerCollidePlatform(pGame->pPlayers[i], pGame->platforms, pJumpHeight, pGame->windowHeight, pGame->pJumpSound);
             renderPlayer(pGame->pPlayers[i], pGame->pRenderer, pGame->pPlayerTexture[i]);
         }
 
     }
-}
+}*/
