@@ -1,5 +1,6 @@
 #include "../include/main.h"
 #define LENGTH 100
+#define MAXPLAYERS 10
 
 int main(int argv, char** args){
     Game game = {0};
@@ -44,11 +45,12 @@ int initiateGame(Game* pGame){
     pGame->windowHeight = displayMode.h;
     char characterPicture1[LENGTH] = "../assets/penguin.png";
     char characterPicture2[LENGTH] = "../assets/musse.png";
+    int numberOfPlayers = MAXPLAYERS;
 
     pGame->pWindow = SDL_CreateWindow("Totally not a doodle jump clone", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, pGame->windowWidth, pGame->windowHeight, 0);
     if (!handleError(pGame, pGame->pWindow, SDL_GetError)) return 0;
 
-    pGame->pRenderer = SDL_CreateRenderer(pGame->pWindow, -1, SDL_RENDERER_ACCELERATED|SDL_RENDERER_PRESENTVSYNC);
+    pGame->pRenderer = SDL_CreateRenderer(pGame->pWindow, -1, SDL_RENDERER_SOFTWARE|SDL_RENDERER_PRESENTVSYNC);
     if (!handleError(pGame, pGame->pRenderer, SDL_GetError)) return 0;
 
     pGame->pMainMenuTexture = createMainMenuImage(pGame->pWindow, pGame->pRenderer, &pGame->mainMenuRect, pGame->windowWidth, pGame->windowHeight);
@@ -89,9 +91,10 @@ int initiateGame(Game* pGame){
     pGame->pMoveRight2Button = createButton(&pGame->moveRight2ButtonRect, pGame->windowHeight, pGame->windowWidth, 50, 80);
     pGame->pMoveLeft2Button = createButton(&pGame->moveLeft2ButtonRect, pGame->windowHeight, pGame->windowWidth, 100, 80);
     
-    pGame->players[0] = createPlayer(pGame->windowWidth / 5, pGame->windowHeight, 60, 60, SPEED, 400); 
-    pGame->players[1] = createPlayer(2 * pGame->windowWidth / 5, pGame->windowHeight, 60, 60, SPEED, 400);
-
+    
+    for(int i=0; i<numberOfPlayers; i++){
+        pGame->players[i] = createPlayer(pGame->windowWidth / 5, pGame->windowHeight, 60, 60, SPEED, 400); 
+    }
     // KRASCHAR PÅ MAC initiateLanguage(fp, pGame);
 
     pGame->state = MAIN_MENU;
