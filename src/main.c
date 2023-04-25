@@ -33,7 +33,7 @@ int initiateGame(Game* pGame){
     if (Mix_OpenAudio(44100, MIX_DEFAULT_FORMAT, 2, 2048) < 0){
         printf("Error: %s\n", Mix_GetError());
         return 0;
-    } 
+    }
 
     SDL_DisplayMode displayMode;
     if (SDL_GetDesktopDisplayMode(0, &displayMode) != 0){
@@ -53,7 +53,7 @@ int initiateGame(Game* pGame){
     pGame->pWindow = SDL_CreateWindow("Totally not a doodle jump clone", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, pGame->windowWidth, pGame->windowHeight, 0);
     if (!handleError(pGame, pGame->pWindow, SDL_GetError)) return 0;
 
-    pGame->pRenderer = SDL_CreateRenderer(pGame->pWindow, -1, SDL_RENDERER_SOFTWARE|SDL_RENDERER_PRESENTVSYNC);
+    pGame->pRenderer = SDL_CreateRenderer(pGame->pWindow, -1, SDL_RENDERER_ACCELERATED|SDL_RENDERER_PRESENTVSYNC);
     if (!handleError(pGame, pGame->pRenderer, SDL_GetError)) return 0;
 
     pGame->pMainMenuTexture = createMainMenuImage(pGame->pWindow, pGame->pRenderer, &pGame->mainMenuRect, pGame->windowWidth, pGame->windowHeight);
@@ -76,7 +76,7 @@ int initiateGame(Game* pGame){
 
     pGame->pMainSound = Mix_LoadMUS("../assets/tempMainSound.mp3");
     if (!handleError(pGame, pGame->pWindow, Mix_GetError)) return 0;
-    
+
     pGame->pJumpSound = Mix_LoadWAV("../assets/JumpEffect.wav"); //for short sounds
     if (!handleError(pGame, pGame->pWindow, Mix_GetError)) return 0;
 
@@ -99,9 +99,9 @@ int initiateGame(Game* pGame){
     pGame->pMoveRight2Button = createButton(&pGame->moveRight2ButtonRect, pGame->windowHeight, pGame->windowWidth, 50, 80);
     pGame->pMoveLeft2Button = createButton(&pGame->moveLeft2ButtonRect, pGame->windowHeight, pGame->windowWidth, 100, 80);
     pGame->pStartingPlatform = createPlatform(0, pGame->windowHeight - 100, pGame->windowWidth, 100);
-    
+
     for(int i=0; i<nrOfPlayers; i++){
-        pGame->players[i] = createPlayer(pGame->windowWidth / 5, pGame->windowHeight, 60, 60, SPEED, 400); 
+        pGame->players[i] = createPlayer(pGame->windowWidth / 5, pGame->windowHeight, 60, 60, SPEED, 400);
         pGame->pPlayer1Texture = createPlayerCharacter(pGame->pRenderer, pGame->pWindow, characterPicture1);
     }
     // KRASCHAR P� MAC initiateLanguage(fp, pGame);
@@ -116,7 +116,7 @@ void runGame(Game* pGame){
     SDL_Event event;
     int mousePos, num, sec;
     float jumpHeight = pGame->windowHeight - JUMP_HEIGHT;
-    
+
     Mix_PlayMusic(pGame->pMainSound, -1);
     while (isRunning){
         switch (pGame->state) {
@@ -130,7 +130,7 @@ void runGame(Game* pGame){
             break;
             case GAME_MENU: handleGameMenu(pGame, &mousePos, event);
             break;
-            case GAME_OVER: 
+            case GAME_OVER:
             break;
             case QUIT: isRunning = false;
             break;
@@ -175,7 +175,7 @@ void quitGame(Game* pGame){
     }
     if (pGame->pPlayer1Texture){
         SDL_DestroyTexture(pGame->pPlayer1Texture);
-    }    
+    }
     if (pGame->pPlayer2Texture){
         SDL_DestroyTexture(pGame->pPlayer2Texture);
     }
@@ -259,7 +259,7 @@ void handleSettingsMenu(Game* pGame, SDL_Event event, int* pMousePos, int* pNum)
             *pNum = 1;
             pGame->state = ENTER_INPUT;
         }
-        
+
         *pMousePos = getMousePos(pGame->returnButtonRect, *pMousePos, pGame->pReturnButton);
         if (pGame->pReturnButton->buttonDistance < BUTTON_HEIGHT && *pMousePos && SDL_BUTTON(SDL_BUTTON_LEFT)){
             pGame->state = MAIN_MENU;
@@ -284,7 +284,7 @@ void handleSettingsMenu(Game* pGame, SDL_Event event, int* pMousePos, int* pNum)
                 initiateLanguage(fp, pGame);
             }
 
-            
+
             //char moveLeft[50] = SDL_GetKeyName(pGame->keybinds[1]);
             //pGame->pMoveRight2ButtonText = createText(pGame->pRenderer, pGame->pMainMenuFont, 255, 255, 255, moveRight, pGame->windowWidth, pGame->windowHeight, 100, 80);
             //pGame->pMoveLeft2ButtonText = createText(pGame->pRenderer, pGame->pMainMenuFont, 255, 255, 255, moveLeft, pGame->windowWidth, pGame->windowHeight, 100, 80);
@@ -296,7 +296,7 @@ void handleSettingsMenu(Game* pGame, SDL_Event event, int* pMousePos, int* pNum)
         }
 
         renderSettingsMenu(pGame);
-    }  
+    }
 }
 
 void renderSettingsMenu(Game *pGame){
@@ -324,8 +324,8 @@ void handleEnterInput(Game* pGame, SDL_Event event, int* pNum){
                 FILE *fp;
                 saveToFile(fp, pGame->keybinds);
                 pGame->state = MAIN_MENU;
-            } 
-            break; 
+            }
+            break;
         }
     }
 }
@@ -348,7 +348,7 @@ void handleOngoing(Game* pGame, SDL_Event event, bool* pIsRunning, bool* pRight,
     renderPlayer(pGame->players[1], pGame->pRenderer, pGame->pPlayer2Texture); //player 2
     handlePlatform(pGame->platforms, pGame->pRenderer, pGame->windowWidth);
     handleStartingPlatform(pGame->pStartingPlatform, pGame->pRenderer, pGame->pStartPlatformTexture, pGame->windowHeight, pSec);
-    
+
     SDL_Delay(1000/60);
 }
 
@@ -363,7 +363,7 @@ void handleInputOngoing(State* pState, SDL_Event* event, bool* pIsRunning, bool*
                 *pRight = true;
             } else if ((event->key.keysym.sym) == keybinds[1]){
                 *pLeft = true;
-        
+
             }
             // switch (event->key.keysym.sym){
             //     case SDLK_ESCAPE: *pState = GAME_MENU;
@@ -387,7 +387,7 @@ void handleInputOngoing(State* pState, SDL_Event* event, bool* pIsRunning, bool*
             //         break;
             // }
         break;
-        
+
     }
 }
 
