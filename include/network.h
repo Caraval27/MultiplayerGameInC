@@ -38,7 +38,7 @@ typedef struct {
 // Prepare the application to communicate over a network.
 // \param isHost True if the user is hosting a game, otherwise false.
 // \return Return 1 upon success. Return 0 otherwise.
-int initializeNetcode(NetworkData *pNetworkData, GameplayData *pGameplayData, bool isHost);
+int initializeNetcode(NetworkData *pNetworkData, GameplayData *pGameplayData, ClientCommand *pClientCommand, bool isHost);
 
 // Gets the IP-address of any incoming packets and, if unique, adds it to the list of clients.
 // The function is non-interrupting and should be ran repeatedly.
