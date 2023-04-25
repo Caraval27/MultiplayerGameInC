@@ -103,7 +103,7 @@ void handleStartingPlatform(Platform* pStartingPlatform, SDL_Renderer* pRenderer
         SDL_Rect sPlatformRect = {pStartingPlatform->xPos, pStartingPlatform->yPos, pStartingPlatform->width, pStartingPlatform->height};
         SDL_RenderCopy(pRenderer, pTexture, NULL, &sPlatformRect);
     }
-    if (*pSec > 200){
+    if (*pSec > 500){
         pStartingPlatform->yPos += PLATFORM_SPEED;
     }
 }
