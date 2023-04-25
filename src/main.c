@@ -96,6 +96,10 @@ int initiateGame(Game* pGame){
     pGame->pMoveLeft1Button = createButton(&pGame->moveLeft1ButtonRect, pGame->windowHeight, pGame->windowWidth, 100, -80);
     pGame->pMoveRight2Button = createButton(&pGame->moveRight2ButtonRect, pGame->windowHeight, pGame->windowWidth, 50, 80);
     pGame->pMoveLeft2Button = createButton(&pGame->moveLeft2ButtonRect, pGame->windowHeight, pGame->windowWidth, 100, 80);
+
+
+    pGame->pGameOverText = createText(pGame->pRenderer, pGame->pMainMenuFont, 255, 255, 255, "Game Over", pGame->windowWidth, pGame->windowHeight, 0, 0);
+
     
     pGame->pStartingPlatform = createPlatform(0, pGame->windowHeight - 100, pGame->windowWidth, 100);
     
@@ -128,7 +132,8 @@ void runGame(Game* pGame){
             break;
             case GAME_MENU: handleGameMenu(pGame, &mousePos, event);
             break;
-            case GAME_OVER: 
+            case GAME_OVER:
+                //renderText(pGame->pGameOverText);
             break;
             case QUIT: isRunning = false;
             break;
@@ -344,7 +349,7 @@ void handleOngoing(Game* pGame, SDL_Event event, bool* pIsRunning, bool* pRight,
     renderPlayer(pGame->players[1], pGame->pRenderer, pGame->pPlayer2Texture); //player 2
     handlePlatform(pGame->platforms, pGame->pRenderer, pGame->windowWidth);
     handleStartingPlatform(pGame->pStartingPlatform, pGame->pRenderer, pGame->pStartPlatformTexture, pGame->windowHeight, pSec);
-    
+    checkIf(pGame->players[0], pGame->windowHeight, &pGame->state);  
     SDL_Delay(1000/60);
 }
 

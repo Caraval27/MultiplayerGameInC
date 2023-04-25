@@ -65,3 +65,15 @@ SDL_Texture* createMainMenuImage(SDL_Window* pWindow, SDL_Renderer* pRenderer, S
 void renderMainMenu(SDL_Renderer* pRenderer, SDL_Texture* pTexture, SDL_Rect mainMenuRect){
     SDL_RenderCopy(pRenderer, pTexture, NULL, &mainMenuRect);
 }
+
+int playerIsDead(Player* pPlayer, int windowHeight){
+    if(pPlayer->yPos > windowHeight)
+        return 1;
+    return 0;
+}
+
+void checkIf(Player* pPlayer, int windowHeight, State* gameState){
+    if(playerIsDead(pPlayer, windowHeight)){
+        *gameState = MAIN_MENU;
+    }
+}
