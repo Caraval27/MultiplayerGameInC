@@ -4,7 +4,7 @@
 		{
 			"label": "make run",
 			"type": "shell",
-			"command": "make run",
+			"command": "make new",
 			"problemMatcher": [
 				"$gcc"
 			],
@@ -41,6 +41,32 @@
 			"presentation": {
 				"reveal": "never",
 				"revealProblems": "onProblem"
+			},
+			"options": {
+				"env": {
+					"MSYSTEM": "MINGW64",
+					"CHERE_INVOKING": "1",
+					"MSYS2_PATH_TYPE": "inherit"
+				},
+				"shell": {
+					"executable": "C:\\msys64\\usr\\bin\\bash.exe",
+					"args": [
+						"--login",
+						"-i",
+						"-c"
+					]
+				}
+			}
+		},
+		{
+			"label": "make new",
+			"type": "shell",
+			"command": "make new",
+			"problemMatcher": [
+				"$gcc"
+			],
+			"presentation": {
+				"focus": true
 			},
 			"options": {
 				"env": {
