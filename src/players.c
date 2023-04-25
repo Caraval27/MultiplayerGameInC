@@ -13,13 +13,24 @@ Player* createPlayer(int xPos, int yPos, int width, int height, int xVelocity, i
     return pPlayer;
 }
 
-/*void handlePlayer (Player* pPlayer, SDL_Renderer* pRenderer, SDL_Window* pWindow, char characterPicture[], bool left, bool right, int windowWidth, float jumpHeight,int height, Mix_Chunk* pJumpSound, Platform** platforms, int windowHeight){
+/*void handlePlayer (Game* pGame, bool* pLeft, bool* pRight, int jumpHeight){
+    for (int i=0; i<pGame->pNrOfPlayers; i++) //av någon anledning dyker inte player 2 upp, förmodligen pga samma bild och position, samt båda rör sig med tangenttrycken
+    {
+        if (i==0) //bara för att prova om spelare 2 dyker upp i loopen
+        {
+            movePlayer(pGame->pPlayers[i], *pLeft, *pRight, pGame->windowWidth);
+            jumpPlayer(pGame->pPlayers[i], jumpHeight, pGame->pStartingPlatform->yPos, pGame->pJumpSound);
+            playerCollidePlatform(pGame->pPlayers[i], pGame->platforms, jumpHeight, pGame->windowHeight, pGame->pJumpSound);
+            renderPlayer(pGame->pPlayers[i], pGame->pRenderer, pGame->pPlayerTexture[i]);
+        }
+        else
+        {
+            jumpPlayer(pGame->pPlayers[i], jumpHeight, pGame->pStartingPlatform->yPos, pGame->pJumpSound);
+            playerCollidePlatform(pGame->pPlayers[i], pGame->platforms, jumpHeight, pGame->windowHeight, pGame->pJumpSound);
+            renderPlayer(pGame->pPlayers[i], pGame->pRenderer, pGame->pPlayerTexture[i]);
+        }
 
-    createPlayerCharacter(&pRenderer, &pWindow, characterPicture);
-    movePlayer(&pPlayer, left, right, windowWidth);
-    jumpPlayer(&pPlayer, jumpHeight, height, &pJumpSound);
-    playerCollidePlatforms(&pPlayer, &platforms, &jumpHeight, windowHeight, &pJumpSound);
-    renderPlayer(&pPlayer, &pRenderer, &pTexture);
+    }
 }*/
 
 SDL_Texture* createPlayerCharacter(SDL_Renderer* pRenderer, SDL_Window* pWindow, char characterPicture[]){
