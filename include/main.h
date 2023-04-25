@@ -25,10 +25,10 @@ typedef struct {
     Text *pStartButtonText, *pQuitButtonText, *pResumeButtonText, *pMainMenuButtonText, *pSettingsButtonText, *pLanguageButtonText, *pEnglishButtonText,
     *pSwedishButtonText, *pReturnButtonText, *pMoveLeft1ButtonText, *pMoveRight1ButtonText, *pMoveLeft2ButtonText, *pMoveRight2ButtonText;
 
-    Player* pPlayer1, *pPlayer2;
+    Player* players[10];
 
     Platform *platforms[1000], *pStartingPlatform;
-    SDL_Rect player1Rect, player2Rect, platformRect, quitButtonRect, startButtonRect, resumeButtonRect, mainMenuButtonRect, settingsButtonRect, languageButtonRect,
+    SDL_Rect quitButtonRect, startButtonRect, resumeButtonRect, mainMenuButtonRect, settingsButtonRect, languageButtonRect,
     englishButtonRect, swedishButtonRect, returnButtonRect, moveLeft1ButtonRect, moveRight1ButtonRect, moveLeft2ButtonRect, moveRight2ButtonRect;
 
     int keybinds[NR_OF_KEYBINDS];
@@ -38,6 +38,7 @@ typedef struct {
 
 	NetworkData *pNetworkData;
 	GameplayData *pGameplayData;
+	ClientCommand *pClientCommand;
 } Game;
 
 int initiateGame(Game* pGame);
@@ -51,6 +52,6 @@ void handleMainMenu(Game* pGame, SDL_Event event, int* pMousePos);
 void handleSettingsMenu(Game* pGame, SDL_Event event, int* pMousePos, int* pNum);
 void renderSettingsMenu(Game *pGame);
 void handleEnterInput(Game* pGame, SDL_Event event, int* pNum);
-void handleOngoing(Game* pGame, SDL_Event event, bool* pIsRunning, bool* pRight, bool* pLeft, float* pCurrentPlatformY, float* pMaxJumpHeight, int* pSec);
+void handleOngoing(Game* pGame, SDL_Event event, bool* pIsRunning, bool* pRight, bool* pLeft, float* pMaxJumpHeight, int* pSec);
 void handleInputOngoing(State* pState, SDL_Event* event, bool* pIsRunning, bool* pRight, bool* pLeft, int keybinds[]);
 void handleGameMenu(Game* pGame, int* pMousePos, SDL_Event event);

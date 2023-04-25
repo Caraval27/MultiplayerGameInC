@@ -1,5 +1,6 @@
 #include "../include/main.h"
 #define LENGTH 100
+#define MAXPLAYERS 10
 
 int main(int argv, char** args){
     Game game = {0};
@@ -47,11 +48,12 @@ int initiateGame(Game* pGame){
     char backgroundPicture[LENGTH] = "../assets/background.png";
     char startingPlatformPicture[LENGTH] = "../assets/iceBlock.png";
     //char plattformsPicture[LENGTH] = ;
+    int numberOfPlayers = MAXPLAYERS;
 
     pGame->pWindow = SDL_CreateWindow("Totally not a doodle jump clone", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, pGame->windowWidth, pGame->windowHeight, 0);
     if (!handleError(pGame, pGame->pWindow, SDL_GetError)) return 0;
 
-    pGame->pRenderer = SDL_CreateRenderer(pGame->pWindow, -1, SDL_RENDERER_ACCELERATED|SDL_RENDERER_PRESENTVSYNC);
+    pGame->pRenderer = SDL_CreateRenderer(pGame->pWindow, -1, SDL_RENDERER_SOFTWARE|SDL_RENDERER_PRESENTVSYNC);
     if (!handleError(pGame, pGame->pRenderer, SDL_GetError)) return 0;
 
     pGame->pMainMenuTexture = createMainMenuImage(pGame->pWindow, pGame->pRenderer, &pGame->mainMenuRect, pGame->windowWidth, pGame->windowHeight);
@@ -95,12 +97,11 @@ int initiateGame(Game* pGame){
     pGame->pMoveRight2Button = createButton(&pGame->moveRight2ButtonRect, pGame->windowHeight, pGame->windowWidth, 50, 80);
     pGame->pMoveLeft2Button = createButton(&pGame->moveLeft2ButtonRect, pGame->windowHeight, pGame->windowWidth, 100, 80);
     
-    //createStartingPlatform(pGame->pStartingPlatform, pGame->windowWidth, pGame->windowHeight, pStart);
     pGame->pStartingPlatform = createPlatform(0, pGame->windowHeight - 100, pGame->windowWidth, 100);
-
-    pGame->pPlayer1 = createPlayer(pGame->windowWidth / 4, pGame->windowHeight, 60, 60, SPEED, 300); 
-    pGame->pPlayer2 = createPlayer(pGame->windowWidth / 2, pGame->windowHeight, 60, 60, SPEED, 300);
-
+    
+    for(int i=0; i<numberOfPlayers; i++){
+        pGame->players[i] = createPlayer(pGame->windowWidth / 5, pGame->windowHeight, 60, 60, SPEED, 400); 
+    }
     // KRASCHAR P� MAC initiateLanguage(fp, pGame);
 
     pGame->state = MAIN_MENU;
@@ -112,7 +113,7 @@ void runGame(Game* pGame){
     bool isRunning = true, left = false, right = false;
     SDL_Event event;
     int mousePos, num, sec;
-    float currentPlatformYPos = 0, JumpHeight = JUMP_HEIGHT;
+    float jumpHeight = pGame->windowHeight - JUMP_HEIGHT;
     
     Mix_PlayMusic(pGame->pMainSound, -1);
     while (isRunning){
@@ -123,7 +124,7 @@ void runGame(Game* pGame){
             break;
             case ENTER_INPUT: handleEnterInput(pGame, event, &num);
             break;
-            case ONGOING: handleOngoing(pGame, event, &isRunning, &right, &left, &currentPlatformYPos, &JumpHeight, &sec);
+            case ONGOING: handleOngoing(pGame, event, &isRunning, &right, &left, &jumpHeight, &sec);
             break;
             case GAME_MENU: handleGameMenu(pGame, &mousePos, event);
             break;
@@ -147,11 +148,11 @@ void quitGame(Game* pGame){
         destroyMusic(pGame->pMainSound);
     }
     destroyPlatform(pGame->platforms);
-    if (pGame->pPlayer1){
-        destroyPlayer(pGame->pPlayer1);
+    if (pGame->players[0]){
+        destroyPlayer(pGame->players[0]);
     }
-    if (pGame->pPlayer2){
-        destroyPlayer(pGame->pPlayer2);
+    if (pGame->players[1]){
+        destroyPlayer(pGame->players[1]);
     }
     if (pGame->pQuitButtonText){
         destroyText(pGame->pQuitButtonText);
@@ -325,22 +326,22 @@ void handleEnterInput(Game* pGame, SDL_Event event, int* pNum){
     }
 }
 
-void handleOngoing(Game* pGame, SDL_Event event, bool* pIsRunning, bool* pRight, bool* pLeft, float* pCurrentPlatformYPos, float* pJumpHeight, int* pSec){
+void handleOngoing(Game* pGame, SDL_Event event, bool* pIsRunning, bool* pRight, bool* pLeft, float* pJumpHeight, int* pSec){
     Mix_ResumeMusic();
     while (SDL_PollEvent(&event)){
         handleInputOngoing(&pGame->state, &event, pIsRunning, pRight, pLeft, pGame->keybinds);
     }
 
-    movePlayer(pGame->pPlayer1, *pLeft, *pRight, pGame->windowWidth);
-    jumpPlayer(pGame->pPlayer1, pGame->pStartingPlatform->yPos, *pCurrentPlatformYPos, *pJumpHeight);
-    playerCollidePlatform(pGame->pPlayer1, pGame->platforms, pCurrentPlatformYPos, pJumpHeight);
+    movePlayer(pGame->players[0], *pLeft, *pRight, pGame->windowWidth);
+    jumpPlayer(pGame->players[0], *pJumpHeight, pGame->pStartingPlatform->yPos);
+    playerCollidePlatform(pGame->players[0], pGame->platforms, pJumpHeight, pGame->windowHeight);
 
-    jumpPlayer(pGame->pPlayer2, pGame->pStartingPlatform->yPos, *pCurrentPlatformYPos, *pJumpHeight);
-    playerCollidePlatform(pGame->pPlayer2, pGame->platforms, pCurrentPlatformYPos, pJumpHeight);
+    jumpPlayer(pGame->players[1], *pJumpHeight, pGame->pStartingPlatform->yPos);
+    playerCollidePlatform(pGame->players[1], pGame->platforms, pJumpHeight, pGame->windowHeight);
 
     handleBackground(pGame->pBackground, pGame->pRenderer, pGame->pBackgroundTexture, pGame->windowWidth, pGame->windowHeight);
-    renderPlayer(pGame->pPlayer1, pGame->pRenderer, pGame->pPlayer1Texture); //player 1
-    renderPlayer(pGame->pPlayer2, pGame->pRenderer, pGame->pPlayer2Texture); //player 2
+    renderPlayer(pGame->players[0], pGame->pRenderer, pGame->pPlayer1Texture); //player 1
+    renderPlayer(pGame->players[1], pGame->pRenderer, pGame->pPlayer2Texture); //player 2
     handlePlatform(pGame->platforms, pGame->pRenderer, pGame->windowWidth);
     handleStartingPlatform(pGame->pStartingPlatform, pGame->pRenderer, pGame->pStartPlatformTexture, pGame->windowHeight, pSec);
     
