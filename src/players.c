@@ -35,11 +35,11 @@ SDL_Texture* createPlayerCharacter(SDL_Renderer* pPlayerRenderer, SDL_Window* pW
     return pPlayerTexture;
 }
 
-void jumpPlayer(Player* pPlayer, int windowHeight, float platformYPos, float jumpHeight){
+void jumpPlayer(Player* pPlayer, float height, float platformYPos, float jumpHeight){
     pPlayer->yPos += pPlayer->yVelocity / 60;
 
-    if (pPlayer->yPos + pPlayer->height >= windowHeight - platformYPos){ //<=platformY
-        pPlayer->yPos = windowHeight - pPlayer->height - platformYPos;
+    if (pPlayer->yPos + pPlayer->height >= height - platformYPos){ //<=platformY
+        pPlayer->yPos = height - pPlayer->height - platformYPos;
         pPlayer->yVelocity = -(pPlayer->yVelocity);
     }
     if (pPlayer->yPos <= 0){
