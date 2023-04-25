@@ -110,7 +110,7 @@ int initiateGame(Game* pGame){
     pGame->pStartingPlatform = createPlatform(0, pGame->windowHeight - 100, pGame->windowWidth, 100);
 
     
-    for(int i=0; i<pGame->pNrOfPlayers; i++){ //segmentation fault om man loopar mindre än 6 gånger??
+    for(int i=0; i<pGame->pNrOfPlayers; i++){ 
         int startPosition = 5;
         pGame->pPlayers[i] = createPlayer(pGame->windowWidth / startPosition, pGame->windowHeight, 60, 60, SPEED, 400);
         pGame->pPlayerTexture[i] = createPlayerCharacter(pGame->pRenderer, pGame->pWindow, characterPicture); //gör en sträng av detta ist
