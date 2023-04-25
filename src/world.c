@@ -92,6 +92,11 @@ void destroyMusic(Mix_Music* pMainSound){
     Mix_CloseAudio();
 }
 
+void destroyChuck(Mix_Chunk* pMusicChuck){
+    Mix_FreeChunk(pMusicChuck);
+    Mix_CloseAudio();
+}
+
 void handleStartingPlatform(Platform* pStartingPlatform, SDL_Renderer* pRenderer, SDL_Texture* pTexture, int windowHeight, int* pSec){
     (*pSec)++;
     if (pStartingPlatform->yPos < windowHeight){
