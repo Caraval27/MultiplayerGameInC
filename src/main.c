@@ -167,6 +167,9 @@ void quitGame(Game* pGame){
     if (pGame->pMainMenuButtonText){
         destroyText(pGame->pMainMenuButtonText);
     }
+    if (pGame->pStartingPlatform){
+        free(pGame->pStartingPlatform);
+    }
     if (pGame->pBackground){
         destroyBackground(pGame->pBackground);
     }
