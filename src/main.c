@@ -48,7 +48,7 @@ int initiateGame(Game* pGame){
     char backgroundPicture[LENGTH] = "../assets/background.png";
     char startingPlatformPicture[LENGTH] = "../assets/iceBlock.png";
     //char plattformsPicture[LENGTH] = ;
-    int numberOfPlayers = MAXPLAYERS;
+    int nrOfPlayers = MAXPLAYERS;
 
     pGame->pWindow = SDL_CreateWindow("Totally not a doodle jump clone", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, pGame->windowWidth, pGame->windowHeight, 0);
     if (!handleError(pGame, pGame->pWindow, SDL_GetError)) return 0;
@@ -65,8 +65,8 @@ int initiateGame(Game* pGame){
     pGame->pStartPlatformTexture = createBackgroundImage(pGame->pWindow, pGame->pRenderer, startingPlatformPicture);
     if (!handleError(pGame, pGame->pStartPlatformTexture, SDL_GetError)) return 0;
 
-    pGame->pPlayer1Texture = createPlayerCharacter(pGame->pRenderer, pGame->pWindow, characterPicture1);
-    if (!handleError(pGame, pGame->pPlayer1Texture, SDL_GetError)) return 0;
+    //pGame->pPlayer1Texture = createPlayerCharacter(pGame->pRenderer, pGame->pWindow, characterPicture1);
+    //if (!handleError(pGame, pGame->pPlayer1Texture, SDL_GetError)) return 0;
 
     pGame->pPlayer2Texture = createPlayerCharacter(pGame->pRenderer, pGame->pWindow, characterPicture2);
     if (!handleError(pGame, pGame->pPlayer2Texture, SDL_GetError)) return 0;
@@ -99,8 +99,9 @@ int initiateGame(Game* pGame){
     
     pGame->pStartingPlatform = createPlatform(0, pGame->windowHeight - 100, pGame->windowWidth, 100);
     
-    for(int i=0; i<numberOfPlayers; i++){
+    for(int i=0; i<nrOfPlayers; i++){
         pGame->players[i] = createPlayer(pGame->windowWidth / 5, pGame->windowHeight, 60, 60, SPEED, 400); 
+        pGame->pPlayer1Texture = createPlayerCharacter(pGame->pRenderer, pGame->pWindow, characterPicture1);
     }
     // KRASCHAR P� MAC initiateLanguage(fp, pGame);
 
