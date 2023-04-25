@@ -353,7 +353,25 @@ void handleOngoing(Game* pGame, SDL_Event event, bool* pIsRunning, bool* pRight,
 
     handleBackground(pGame->pBackground, pGame->pRenderer, pGame->pBackgroundTexture, pGame->windowWidth, pGame->windowHeight); //denna måste ligga före allt med player
     
-    handlePlayer(pGame, pLeft, pRight, pJumpHeight);
+    //handlePlayer(pGame, pLeft, pRight, pJumpHeight);
+
+    for (int i=0; i<pGame->pNrOfPlayers; i++) //av någon anledning dyker inte player 2 upp, förmodligen pga samma bild och position, samt båda rör sig med tangenttrycken
+    {
+        if (i==0) //bara för att prova om spelare 2 dyker upp i loopen
+        {
+            movePlayer(pGame->pPlayers[i], *pLeft, *pRight, pGame->windowWidth);
+            jumpPlayer(pGame->pPlayers[i], *pJumpHeight, pGame->pStartingPlatform->yPos, pGame->pJumpSound);
+            playerCollidePlatform(pGame->pPlayers[i], pGame->platforms, pJumpHeight, pGame->windowHeight, pGame->pJumpSound);
+            renderPlayer(pGame->pPlayers[i], pGame->pRenderer, pGame->pPlayerTexture[i]);
+        }
+        else
+        {
+            jumpPlayer(pGame->pPlayers[i], *pJumpHeight, pGame->pStartingPlatform->yPos, pGame->pJumpSound);
+            playerCollidePlatform(pGame->pPlayers[i], pGame->platforms, pJumpHeight, pGame->windowHeight, pGame->pJumpSound);
+            renderPlayer(pGame->pPlayers[i], pGame->pRenderer, pGame->pPlayerTexture[i]);
+        }
+
+    }
    
     handlePlatform(pGame->platforms, pGame->pRenderer, pGame->windowWidth);
     handleStartingPlatform(pGame->pStartingPlatform, pGame->pRenderer, pGame->pStartPlatformTexture, pGame->windowHeight, pSec);
