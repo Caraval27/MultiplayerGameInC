@@ -89,8 +89,8 @@ int initiateGame(Game* pGame){
     pGame->pMoveRight2Button = createButton(&pGame->moveRight2ButtonRect, pGame->windowHeight, pGame->windowWidth, 50, 80);
     pGame->pMoveLeft2Button = createButton(&pGame->moveLeft2ButtonRect, pGame->windowHeight, pGame->windowWidth, 100, 80);
     
-    pGame->pPlayer1 = createPlayer(pGame->windowWidth / 5, pGame->windowHeight, 60, 60, SPEED, 400); 
-    pGame->pPlayer2 = createPlayer(2 * pGame->windowWidth / 5, pGame->windowHeight, 60, 60, SPEED, 400);
+    pGame->players[0] = createPlayer(pGame->windowWidth / 5, pGame->windowHeight, 60, 60, SPEED, 400); 
+    pGame->players[1] = createPlayer(2 * pGame->windowWidth / 5, pGame->windowHeight, 60, 60, SPEED, 400);
 
     // KRASCHAR PÅ MAC initiateLanguage(fp, pGame);
 
@@ -138,11 +138,11 @@ void quitGame(Game* pGame){
         destroyMusic(pGame->pMainSound);
     }
     destroyPlatform(pGame->platforms);
-    if (pGame->pPlayer1){
-        destroyPlayer(pGame->pPlayer1);
+    if (pGame->players[0]){
+        destroyPlayer(pGame->players[0]);
     }
-    if (pGame->pPlayer2){
-        destroyPlayer(pGame->pPlayer2);
+    if (pGame->players[1]){
+        destroyPlayer(pGame->players[1]);
     }
     if (pGame->pQuitButtonText){
         destroyText(pGame->pQuitButtonText);
@@ -322,16 +322,16 @@ void handleOngoing(Game* pGame, SDL_Event event, bool* pIsRunning, bool* pRight,
         handleInputOngoing(&pGame->state, &event, pIsRunning, pRight, pLeft, pGame->keybinds);
     }
 
-    movePlayer(pGame->pPlayer1, *pLeft, *pRight, pGame->windowWidth);
-    jumpPlayer(pGame->pPlayer1, *pJumpHeight, pGame->windowHeight);
-    playerCollidePlatform(pGame->pPlayer1, pGame->platforms, pJumpHeight, pGame->windowHeight);
+    movePlayer(pGame->players[0], *pLeft, *pRight, pGame->windowWidth);
+    jumpPlayer(pGame->players[0], *pJumpHeight, pGame->windowHeight);
+    playerCollidePlatform(pGame->players[0], pGame->platforms, pJumpHeight, pGame->windowHeight);
 
-    jumpPlayer(pGame->pPlayer2, *pJumpHeight, pGame->windowHeight);
-    playerCollidePlatform(pGame->pPlayer2, pGame->platforms, pJumpHeight, pGame->windowHeight);
+    jumpPlayer(pGame->players[1], *pJumpHeight, pGame->windowHeight);
+    playerCollidePlatform(pGame->players[1], pGame->platforms, pJumpHeight, pGame->windowHeight);
 
     handleBackground(pGame->pBackground, pGame->pRenderer, pGame->pBackgroundTexture, pGame->windowWidth, pGame->windowHeight);
-    renderPlayer(pGame->pPlayer1, pGame->pRenderer, pGame->pPlayer1Texture); //player 1
-    renderPlayer(pGame->pPlayer2, pGame->pRenderer, pGame->pPlayer2Texture); //player 2
+    renderPlayer(pGame->players[0], pGame->pRenderer, pGame->pPlayer1Texture); //player 1
+    renderPlayer(pGame->players[1], pGame->pRenderer, pGame->pPlayer2Texture); //player 2
     handlePlatform(pGame->platforms, pGame->pRenderer, pGame->windowWidth);
 
     SDL_Delay(1000/60);
