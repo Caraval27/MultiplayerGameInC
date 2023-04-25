@@ -1,6 +1,6 @@
 #include "../include/main.h"
 #define LENGTH 100
-#define MAXPLAYERS 10
+#define MAXPLAYERS 6
 
 int main(int argv, char** args){
     Game game = {0};
@@ -70,11 +70,11 @@ int initiateGame(Game* pGame){
     pGame->pStartPlatformTexture = createBackgroundImage(pGame->pWindow, pGame->pRenderer, startingPlatformPicture);
     if (!handleError(pGame, pGame->pStartPlatformTexture, SDL_GetError)) return 0;
 
-    //pGame->pPlayer1Texture = createPlayerCharacter(pGame->pRenderer, pGame->pWindow, characterPicture1);
+    //pGame->pPlayerTexture[0] = createPlayerCharacter(pGame->pRenderer, pGame->pWindow, characterPicture1); 
     //if (!handleError(pGame, pGame->pPlayer1Texture, SDL_GetError)) return 0;
 
-    pGame->pPlayer2Texture = createPlayerCharacter(pGame->pRenderer, pGame->pWindow, characterPicture2);
-    if (!handleError(pGame, pGame->pPlayer2Texture, SDL_GetError)) return 0;
+    //pGame->pPlayerTexture[1] = createPlayerCharacter(pGame->pRenderer, pGame->pWindow, characterPicture2);
+    //if (!handleError(pGame, pGame->pPlayer2Texture, SDL_GetError)) return 0;
 
     pGame->pMainMenuFont = TTF_OpenFont("../assets/Ticketing.ttf", 25);
     if (!handleError(pGame, pGame->pWindow, TTF_GetError)) return 0;
@@ -107,13 +107,16 @@ int initiateGame(Game* pGame){
 
     pGame->pGameOverText = createText(pGame->pRenderer, pGame->pMainMenuFont, 255, 255, 255, "Game Over", pGame->windowWidth, pGame->windowHeight, 0, 0);
 
-    
     pGame->pStartingPlatform = createPlatform(0, pGame->windowHeight - 100, pGame->windowWidth, 100);
 
-    for(int i=0; i<nrOfPlayers; i++){
-        pGame->players[i] = createPlayer(pGame->windowWidth / 5, pGame->windowHeight, 60, 60, SPEED, 400);
-        pGame->pPlayer1Texture = createPlayerCharacter(pGame->pRenderer, pGame->pWindow, characterPicture1);
+    
+    for(int i=0; i<nrOfPlayers; i++){ //segmentation fault om man loopar mindre än 6 gånger??
+        int startPosition = 5;
+        pGame->pPlayers[i] = createPlayer(pGame->windowWidth / startPosition, pGame->windowHeight, 60, 60, SPEED, 400);
+        pGame->pPlayerTexture[i] = createPlayerCharacter(pGame->pRenderer, pGame->pWindow, characterPicture1); //gör en sträng av detta ist
+        startPosition += 100; //så att spelarna får olika startpositioner
     }
+
     // KRASCHAR Pï¿½ MAC initiateLanguage(fp, pGame);
 
     pGame->state = MAIN_MENU;
@@ -161,11 +164,11 @@ void quitGame(Game* pGame){
         destroyMusic(pGame->pMainSound);
     }
     destroyPlatform(pGame->platforms);
-    if (pGame->players[0]){
-        destroyPlayer(pGame->players[0]);
+    if (pGame->pPlayers[0]){
+        destroyPlayer(pGame->pPlayers[0]);
     }
-    if (pGame->players[1]){
-        destroyPlayer(pGame->players[1]);
+    if (pGame->pPlayers[1]){
+        destroyPlayer(pGame->pPlayers[1]);
     }
     if (pGame->pQuitButtonText){
         destroyText(pGame->pQuitButtonText);
@@ -348,16 +351,39 @@ void handleOngoing(Game* pGame, SDL_Event event, bool* pIsRunning, bool* pRight,
         handleInputOngoing(&pGame->state, &event, pIsRunning, pRight, pLeft, pGame->keybinds);
     }
 
-    movePlayer(pGame->players[0], *pLeft, *pRight, pGame->windowWidth);
-    jumpPlayer(pGame->players[0], *pJumpHeight, pGame->pStartingPlatform->yPos, pGame->pJumpSound);
-    playerCollidePlatform(pGame->players[0], pGame->platforms, pJumpHeight, pGame->windowHeight, pGame->pJumpSound);
+    handleBackground(pGame->pBackground, pGame->pRenderer, pGame->pBackgroundTexture, pGame->windowWidth, pGame->windowHeight); //denna måste ligga före allt med player
 
-    jumpPlayer(pGame->players[1], *pJumpHeight, pGame->pStartingPlatform->yPos, pGame->pJumpSound);
-    playerCollidePlatform(pGame->players[1], pGame->platforms, pJumpHeight, pGame->windowHeight, pGame->pJumpSound);
+    for (int i=0; i != 1; i++) //av någon anledning dyker inte player 2 upp, förmodligen pga samma bild och position, samt båda rör sig med tangenttrycken
+    {
+        if (i==0)
+        {
+            movePlayer(pGame->pPlayers[i], *pLeft, *pRight, pGame->windowWidth);
+            jumpPlayer(pGame->pPlayers[i], *pJumpHeight, pGame->pStartingPlatform->yPos, pGame->pJumpSound);
+            playerCollidePlatform(pGame->pPlayers[i], pGame->platforms, pJumpHeight, pGame->windowHeight, pGame->pJumpSound);
+            renderPlayer(pGame->pPlayers[i], pGame->pRenderer, pGame->pPlayerTexture[i]);
+        }
+        else
+        {
+            jumpPlayer(pGame->pPlayers[i], *pJumpHeight, pGame->pStartingPlatform->yPos, pGame->pJumpSound);
+            playerCollidePlatform(pGame->pPlayers[i], pGame->platforms, pJumpHeight, pGame->windowHeight, pGame->pJumpSound);
+            renderPlayer(pGame->pPlayers[i], pGame->pRenderer, pGame->pPlayerTexture[i]);
+        }
 
-    handleBackground(pGame->pBackground, pGame->pRenderer, pGame->pBackgroundTexture, pGame->windowWidth, pGame->windowHeight);
-    renderPlayer(pGame->players[0], pGame->pRenderer, pGame->pPlayer1Texture); //player 1
-    renderPlayer(pGame->players[1], pGame->pRenderer, pGame->pPlayer2Texture); //player 2
+    }
+
+        jumpPlayer(pGame->pPlayers[1], *pJumpHeight, pGame->pStartingPlatform->yPos, pGame->pJumpSound);
+        playerCollidePlatform(pGame->pPlayers[1], pGame->platforms, pJumpHeight, pGame->windowHeight, pGame->pJumpSound);
+        renderPlayer(pGame->pPlayers[1], pGame->pRenderer, pGame->pPlayerTexture[1]);
+
+    /*movePlayer(pGame->pPlayers[0], *pLeft, *pRight, pGame->windowWidth);
+    jumpPlayer(pGame->pPlayers[0], *pJumpHeight, pGame->pStartingPlatform->yPos, pGame->pJumpSound);
+    playerCollidePlatform(pGame->pPlayers[0], pGame->platforms, pJumpHeight, pGame->windowHeight, pGame->pJumpSound);
+    renderPlayer(pGame->pPlayers[0], pGame->pRenderer, pGame->pPlayerTexture[0]); //player 1
+
+    jumpPlayer(pGame->pPlayers[1], *pJumpHeight, pGame->pStartingPlatform->yPos, pGame->pJumpSound);
+    playerCollidePlatform(pGame->pPlayers[1], pGame->platforms, pJumpHeight, pGame->windowHeight, pGame->pJumpSound);
+    renderPlayer(pGame->pPlayers[1], pGame->pRenderer, pGame->pPlayerTexture[1]); //player 2*/
+
     handlePlatform(pGame->platforms, pGame->pRenderer, pGame->windowWidth);
     handleStartingPlatform(pGame->pStartingPlatform, pGame->pRenderer, pGame->pStartPlatformTexture, pGame->windowHeight, pSec);
     //checkIfPlayerDead(pGame->players[0], pGame->windowHeight, &pGame->state);  

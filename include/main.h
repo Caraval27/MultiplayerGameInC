@@ -25,7 +25,8 @@ typedef struct {
     Text *pStartButtonText, *pQuitButtonText, *pResumeButtonText, *pMainMenuButtonText, *pSettingsButtonText, *pLanguageButtonText, *pEnglishButtonText,
     *pSwedishButtonText, *pReturnButtonText, *pMoveLeft1ButtonText, *pMoveRight1ButtonText, *pMoveLeft2ButtonText, *pMoveRight2ButtonText, *pGameOverText; 
 
-    Player* players[10];
+    Player* pPlayers[6];
+    SDL_Texture* pPlayerTexture[6];
 
     Platform *platforms[1000], *pStartingPlatform;
     SDL_Rect quitButtonRect, startButtonRect, resumeButtonRect, mainMenuButtonRect, settingsButtonRect, languageButtonRect,

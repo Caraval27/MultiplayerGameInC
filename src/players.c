@@ -13,6 +13,15 @@ Player* createPlayer(int xPos, int yPos, int width, int height, int xVelocity, i
     return pPlayer;
 }
 
+/*void handlePlayer (Player* pPlayer, SDL_Renderer* pRenderer, SDL_Window* pWindow, char characterPicture[], bool left, bool right, int windowWidth, float jumpHeight,int height, Mix_Chunk* pJumpSound, Platform** platforms, int windowHeight){
+
+    createPlayerCharacter(&pRenderer, &pWindow, characterPicture);
+    movePlayer(&pPlayer, left, right, windowWidth);
+    jumpPlayer(&pPlayer, jumpHeight, height, &pJumpSound);
+    playerCollidePlatforms(&pPlayer, &platforms, &jumpHeight, windowHeight, &pJumpSound);
+    renderPlayer(&pPlayer, &pRenderer, &pTexture);
+}*/
+
 SDL_Texture* createPlayerCharacter(SDL_Renderer* pRenderer, SDL_Window* pWindow, char characterPicture[]){
     SDL_Surface* pSurface = IMG_Load(characterPicture);
     if (!pSurface) {
@@ -88,10 +97,10 @@ void playerCollidePlatform(Player* pPlayer, Platform** platforms, float* pJumpHe
     }
 } 
 
-void playerCollidePlayer(Player* pPlayer1, Player* pPlayer2)
+/*void playerCollidePlayer(Player* pPlayer1, Player* pPlayer2)
 {
 
-}
+}*/
 
 void renderPlayer(Player* pPlayer, SDL_Renderer* pRenderer, SDL_Texture* pTexture){
     SDL_Rect rect = {pPlayer->xPos, pPlayer->yPos, pPlayer->width, pPlayer->height};
