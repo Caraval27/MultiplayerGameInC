@@ -55,7 +55,7 @@ int initiateGame(Game* pGame){
 
 	Uint32 flags = SDL_RENDERER_ACCELERATED|SDL_RENDERER_PRESENTVSYNC;
 	#if __APPLE__ || __LINUX__
-		flags = SDL_RENDERER_SOFTWARE|SDL_RENDERER_PRESENTVSYNC
+		flags = (flags & !SDL_RENDERER_ACCELERATED) | SDL_RENDERER_SOFTWARE;
 	#endif
 
     pGame->pRenderer = SDL_CreateRenderer(pGame->pWindow, -1, flags);
