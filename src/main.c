@@ -79,7 +79,7 @@ int initiateGame(Game* pGame){
     pGame->pMainMenuFont = TTF_OpenFont("../assets/Ticketing.ttf", 25);
     if (!handleError(pGame, pGame->pWindow, TTF_GetError)) return 0;
 
-    pGame->pMainSound = Mix_LoadMUS("../assets/tempMainSound.mp3");
+    pGame->pMainSound = Mix_LoadMUS("../assets/MainThemeSoundtrack.mp3");
     if (!handleError(pGame, pGame->pWindow, Mix_GetError)) return 0;
 
     pGame->pJumpSound = Mix_LoadWAV("../assets/JumpEffect.wav"); //for short sounds
@@ -127,6 +127,7 @@ void runGame(Game* pGame){
     int mousePos, num, sec;
     float jumpHeight = pGame->windowHeight - JUMP_HEIGHT;
 
+    Mix_VolumeMusic(32);
     Mix_PlayMusic(pGame->pMainSound, -1);
     while (isRunning){
         switch (pGame->state) {
