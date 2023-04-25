@@ -53,6 +53,11 @@ int initiateGame(Game* pGame){
     pGame->pWindow = SDL_CreateWindow("Totally not a doodle jump clone", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, pGame->windowWidth, pGame->windowHeight, 0);
     if (!handleError(pGame, pGame->pWindow, SDL_GetError)) return 0;
 
+	Uint32 flags = SDL_RENDERER_ACCELERATED|SDL_RENDERER_PRESENTVSYNC;
+	#if __APPLE__ || __LINUX__
+		flags = SDL_RENDERER_SOFTWARE|SDL_RENDERER_PRESENTVSYNC
+	#endif
+
     pGame->pRenderer = SDL_CreateRenderer(pGame->pWindow, -1, SDL_RENDERER_ACCELERATED|SDL_RENDERER_PRESENTVSYNC);
     if (!handleError(pGame, pGame->pRenderer, SDL_GetError)) return 0;
 
