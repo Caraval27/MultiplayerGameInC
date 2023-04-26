@@ -22,7 +22,7 @@ typedef struct {
 } Button;
 
 SDL_Texture* createMainMenuImage(SDL_Window* pWindow, SDL_Renderer* pRenderer, SDL_Rect* pMenuBackgroundRect, int windowWidth, int windowHeight);
-void renderMainMenu(SDL_Renderer* pRenderer, SDL_Texture* pTexture, SDL_Rect menuBackgroundRect);
+void renderMenu(SDL_Renderer* pRenderer, SDL_Texture* pTexture, int windowWidth, int windowHeight);
 Button* createButton(float xPos, float yPos, float width, float height);
 void getMousePos(Button* pButton);
 void handleButton(Button* pButton, SDL_Renderer* pRenderer, State* pState, State desiredState);
