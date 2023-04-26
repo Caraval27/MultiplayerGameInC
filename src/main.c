@@ -171,7 +171,7 @@ void quitGame(Game* pGame){
     }
     destroyPlatform(pGame->platforms);
     if (pGame->platforms[0]){
-        destroyPlatform(&pGame->platforms[0]);
+        destroyPlatform(pGame->platforms);
     }
     /*destroyPlayer(pGame->pPlayers);
     if (pGame->pPlayers[0]){
