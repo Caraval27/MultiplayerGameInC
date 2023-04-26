@@ -1,27 +1,5 @@
 #include "../include/main.h"
 
-struct background{
-    float upperSrcYPos, upperSrcHeight;
-    float lowerSrcYPos, lowerSrcHeight;
-    float upperDstYPos, upperDstHeight;
-    float lowerDstYPos, lowerDstHeight;
-};
-
-Background* createBackground(int windowHeight){
-    Background* pBackground = malloc(sizeof(Background));
-
-    pBackground->upperSrcYPos = BACKGROUND_HEIGHT;
-    pBackground->upperSrcHeight = 0;
-    pBackground->lowerSrcYPos = BACKGROUND_HEIGHT - windowHeight;
-    pBackground->lowerSrcHeight = windowHeight;
-    pBackground->upperDstYPos = 0;
-    pBackground->upperDstHeight = 0;
-    pBackground->lowerDstYPos = 0;
-    pBackground->lowerDstHeight = windowHeight;
-
-    return pBackground;
-}
-
 SDL_Texture* createPicture(SDL_Window* pWindow, SDL_Renderer* pRenderer, char picture[]){
     SDL_Surface *pSurface = IMG_Load(picture);
     if (!pSurface) {
@@ -44,6 +22,21 @@ SDL_Texture* createPicture(SDL_Window* pWindow, SDL_Renderer* pRenderer, char pi
     return pTexture;
 }
 
+Background* createBackground(int windowHeight){
+    Background* pBackground = malloc(sizeof(Background));
+
+    pBackground->upperSrcYPos = BACKGROUND_HEIGHT;
+    pBackground->upperSrcHeight = 0;
+    pBackground->lowerSrcYPos = BACKGROUND_HEIGHT - windowHeight;
+    pBackground->lowerSrcHeight = windowHeight;
+    pBackground->upperDstYPos = 0;
+    pBackground->upperDstHeight = 0;
+    pBackground->lowerDstYPos = 0;
+    pBackground->lowerDstHeight = windowHeight;
+
+    return pBackground;
+}
+
 void handleBackground(Background* pBackground, SDL_Renderer* pRenderer, SDL_Texture* pTexture, int windowWidth, int windowHeight){
 
     if (pBackground->lowerSrcYPos < 0) {
@@ -54,7 +47,7 @@ void handleBackground(Background* pBackground, SDL_Renderer* pRenderer, SDL_Text
         pBackground->lowerDstYPos += BACKGROUND_SPEED;
         pBackground->lowerDstHeight -= BACKGROUND_SPEED;
     }
-    else{
+    else {
         pBackground->lowerSrcYPos -= BACKGROUND_SPEED;
     }
 
@@ -99,14 +92,13 @@ void destroyChunk(Mix_Chunk* pChunk){
 void handleStartingPlatform(Platform* pStartingPlatform, SDL_Renderer* pRenderer, SDL_Texture* pTexture, int windowHeight, int* pTime){
     (*pTime)++;
 
-    if (pStartingPlatform->yPos < windowHeight){
+    if (pStartingPlatform->yPos < windowHeight) {
         if (*pTime > 500) { 
             pStartingPlatform->yPos += PLATFORM_SPEED;
         }
         SDL_Rect sPlatformRect = {pStartingPlatform->xPos, pStartingPlatform->yPos, pStartingPlatform->width, pStartingPlatform->height};
         SDL_RenderCopy(pRenderer, pTexture, NULL, &sPlatformRect);
     }
-    
 }
 
 void resetStartingPlatform(Platform* pStartingPlatform, int windowHeight, int* pTime){
