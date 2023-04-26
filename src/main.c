@@ -172,10 +172,9 @@ void quitGame(Game* pGame){
     if (pGame->platforms[0]){
         destroyPlatform(pGame->platforms);
     }
-    /*destroyPlayer(pGame->pPlayers);
     if (pGame->pPlayers[0]){
         destroyPlayer(&pGame->pPlayers[0]);
-    }*/
+    }
     if (pGame->pQuitButtonText){
         destroyText(pGame->pQuitButtonText);
     }
