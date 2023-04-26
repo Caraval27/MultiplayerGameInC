@@ -67,14 +67,13 @@ void renderMainMenu(SDL_Renderer* pRenderer, SDL_Texture* pTexture, SDL_Rect mai
 }
 
 int playerIsDead(Player* pPlayer, int windowHeight){
-    if(pPlayer->yPos > windowHeight && pPlayer->alive)
+    if(pPlayer->yPos > windowHeight)
         return 1;
     return 0;
 }
 
 void checkIfPlayerDead(Player* pPlayer, int windowHeight, State* gameState){
     if(playerIsDead(pPlayer, windowHeight)){
-        //*gameState = MAIN_MENU;
-        pPlayer->alive = false;
+        *gameState = MAIN_MENU;
     }
 }
