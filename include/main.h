@@ -9,6 +9,43 @@
 #include "../include/text.h"
 #include "../include/network.h"
 
+#define MAX_PLAYERS 10
+#define BACKGROUND_PICTURE "../assets/background.png"
+#define PLATFORM_PICTURE "../assets/iceBlock.png"
+#define START_PLATFORM_PICTURE "../assets/iceBlock.png"
+#define CHARACTER_PICTURE "../assets/musse.png"
+#define MAIN_MENU_PICTURE "../assets/mainMenuBackground.png"
+
+/*typedef struct {
+    State state;
+    SDL_Window *pWindow;
+    int windowWidth, windowHeight;
+    SDL_Renderer *pRenderer;
+    SDL_RendererFlip *flip;
+    SDL_Texture *pBackgroundTexture, *pMenuTexture, *pStartPlatformTexture, *pPlatformTexture;
+    TTF_Font *pMenuFont;
+    Background* pBackground;
+    Button *pStartButton, *pQuitButton, *pResumeButton, *pMainMenuButton, *pSettingsButton, *pLanguageButton, *pEnglishButton, *pSwedishButton, *pReturnButton,
+    *pMoveLeft1Button, *pMoveRight1Button, *pMoveLeft2Button, *pMoveRight2Button;
+
+    Text *pStartButtonText, *pQuitButtonText, *pResumeButtonText, *pMainMenuButtonText, *pSettingsButtonText, *pLanguageButtonText, *pEnglishButtonText,
+    *pSwedishButtonText, *pReturnButtonText, *pMoveLeft1ButtonText, *pMoveRight1ButtonText, *pMoveLeft2ButtonText, *pMoveRight2ButtonText, *pGameOverText;
+
+    Player* pPlayers[MAX_PLAYERS];
+    SDL_Texture* pPlayerTextures[MAX_PLAYERS];
+    int pNrOfPlayers, nrOfPlayersLeft;
+
+    Platform *pPlatforms[1000], *pStartPlatform;
+
+    int keybinds[NR_OF_KEYBINDS];
+    char language[NR_OF_WORDS][50];
+    Mix_Chunk *pJumpSound;
+    Mix_Music *pMainSound;
+
+	NetworkData *pNetworkData;
+	GameplayData *pGameplayData;
+	ClientCommand *pClientCommand;
+} Game;*/
 
 int initiateGame(Game* pGame);
 void initiateLanguage(FILE *fp, Game *pGame);
