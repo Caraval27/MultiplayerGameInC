@@ -129,7 +129,7 @@ void runGame(Game* pGame){
     Mix_PlayMusic(pGame->pMainSound, -1);
     while (isRunning){
         switch (pGame->state) {
-            case MAIN_MENU: handleMainMenu(pGame, event, &time);
+            case MAIN_MENU: handleMainMenu(pGame, event, &time, &jumpHeight);
             break;
             case SETTINGS_MENU: handleSettingsMenu(pGame, event, &num);
             break;
@@ -224,7 +224,7 @@ void initiateLanguage(FILE *fp, Game *pGame){
     pGame->pMoveLeft1ButtonText = createText(pGame->pRenderer, pGame->pMainMenuFont, 255, 255, 255, pGame->language[8], pGame->windowWidth, pGame->windowHeight, 100, -80);
 }
 
-void handleMainMenu(Game* pGame, SDL_Event event, int* pTime){
+void handleMainMenu(Game* pGame, SDL_Event event, int* pTime, float* pJumpHeight){
     Mix_ResumeMusic();
 
     renderMenu(pGame->pRenderer, pGame->pMainMenuTexture, pGame->windowWidth, pGame->windowHeight);
@@ -240,7 +240,7 @@ void handleMainMenu(Game* pGame, SDL_Event event, int* pTime){
         if (event.type == SDL_QUIT) {
             pGame->state = QUIT;
         }
-        resetGame(pGame, pTime);
+        resetGame(pGame, pTime, pJumpHeight);
     }
         // KRASHCAR MAC renderText(pGame->pStartButtonText);
         // KRASCHAR MAC renderText(pGame->pSettingsButtonText);
@@ -434,9 +434,16 @@ void handlePlayers(Game* pGame, bool *pLeft, bool *pRight, float *pJumpHeight){
     }
 }
 
-void resetGame(Game* pGame, int* pTime){
+void resetGame(Game* pGame, int* pTime, float* pJumpHeight){
     if (pGame->state == ONGOING){
         resetStartingPlatform(pGame->pStartingPlatform, pGame->windowHeight, pTime);
         resetPlatform(pGame->platforms);
+        int startPosition = 2;
+        for(int i=0; i<pGame->pNrOfPlayers-1; i++){ //måste vara -1 annars blir det malloc fel
+            pGame->pPlayers[i] = createPlayer(pGame->windowWidth / startPosition, pGame->windowHeight, 60, 60, SPEED, 400);
+            pGame->pPlayerTextures[i] = createPlayerCharacter(pGame->pRenderer, pGame->pWindow, CHARACTER_PICTURE); //gör en sträng av detta ist
+            startPosition += 1;
+        }
+        *pJumpHeight = pGame->windowHeight - JUMP_HEIGHT;
     }
 }

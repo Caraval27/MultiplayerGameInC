@@ -53,7 +53,7 @@ void quitGame(Game* pGame);
 int handleError(Game* pGame, void* pMember, const char* (*GetError)());
 void initiateLanguage(FILE *fp, Game *pGame);
 
-void handleMainMenu(Game* pGame, SDL_Event event, int* pSec);
+void handleMainMenu(Game* pGame, SDL_Event event, int* pSec, float* pJumpHeight);
 void handleSettingsMenu(Game* pGame, SDL_Event event, int* pNum);
 void renderSettingsMenu(Game *pGame);
 void handleEnterInput(Game* pGame, SDL_Event event, int* pNum);
@@ -61,4 +61,4 @@ void handleOngoing(Game* pGame, SDL_Event event, bool* pIsRunning, bool* pRight,
 void handleInputOngoing(State* pState, SDL_Event* event, bool* pIsRunning, bool* pRight, bool* pLeft, int keybinds[]);
 void handleGameMenu(Game* pGame, SDL_Event event);
 void handlePlayers(Game* pGame, bool* pLeft, bool* pRight, float *pJumpHeight);
-void resetGame(Game* pGame, int* pTime);
+void resetGame(Game* pGame, int* pTime, float* pJumpHeight);
