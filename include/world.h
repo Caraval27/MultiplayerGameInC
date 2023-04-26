@@ -6,7 +6,12 @@
 #define BACKGROUND_HEIGHT 1536
 #define BACKGROUND_SPEED 1
 
-typedef struct background Background;
+typedef struct{
+    float upperSrcYPos, upperSrcHeight;
+    float lowerSrcYPos, lowerSrcHeight;
+    float upperDstYPos, upperDstHeight;
+    float lowerDstYPos, lowerDstHeight;
+} Background;
 
 Background* createBackground(int windowHeight);
 SDL_Texture* createPicture(SDL_Window* pWindow, SDL_Renderer* pRenderer, char picture[]);
