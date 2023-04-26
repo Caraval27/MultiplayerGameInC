@@ -21,8 +21,8 @@ void getMousePos(Button* pButton){
     int mouseXPos, mouseYPos;
 
     pButton->mouseState = SDL_GetMouseState(&mouseXPos, &mouseYPos);
-    pButton->mouseXDelta = (float)abs(mouseXPos - (pButton->xPos + pButton->width / 2));
-    pButton->mouseYDelta = (float)abs(mouseYPos - (pButton->yPos + pButton->height / 2));
+    pButton->mouseXDelta = fabsf(mouseXPos - (pButton->xPos + pButton->width / 2));
+    pButton->mouseYDelta = fabsf(mouseYPos - (pButton->yPos + pButton->height / 2));
 }
 
 void handleButton(Button* pButton, State* pState, State desiredState){
