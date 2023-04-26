@@ -78,7 +78,6 @@ void renderBackground(Background* pBackground, SDL_Renderer* pRenderer, SDL_Text
     SDL_Rect upperDstRect = {0, pBackground->upperDstYPos, windowWidth, pBackground->upperDstHeight};
     SDL_Rect lowerDstRect = {0, pBackground->lowerDstYPos, windowWidth, pBackground->lowerDstHeight};
 
-    
     SDL_RenderCopy(pRenderer, pTexture, &upperSrcRect, &upperDstRect);
     SDL_RenderCopy(pRenderer, pTexture, &lowerSrcRect, &lowerDstRect);
 }

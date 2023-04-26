@@ -9,6 +9,8 @@
 #include "../include/text.h"
 #include "../include/network.h"
 
+#define LENGTH 100
+
 typedef struct {
     State state;
     SDL_Window *pWindow;
@@ -28,8 +30,6 @@ typedef struct {
     Player* pPlayer1, *pPlayer2;
 
     Platform *platforms[1000];
-    SDL_Rect quitButtonRect, startButtonRect, resumeButtonRect, mainMenuButtonRect, settingsButtonRect, languageButtonRect,
-    englishButtonRect, swedishButtonRect, returnButtonRect, moveLeft1ButtonRect, moveRight1ButtonRect, moveLeft2ButtonRect, moveRight2ButtonRect;
 
     int keybinds[NR_OF_KEYBINDS];
     char language[NR_OF_WORDS][50];
@@ -48,10 +48,10 @@ void quitGame(Game* pGame);
 int handleError(Game* pGame, void* pMember, const char* (*GetError)());
 void initiateLanguage(FILE *fp, Game *pGame);
 
-void handleMainMenu(Game* pGame, SDL_Event event, int* pMousePos);
-void handleSettingsMenu(Game* pGame, SDL_Event event, int* pMousePos, int* pNum);
+void handleMainMenu(Game* pGame, SDL_Event event);
+void handleSettingsMenu(Game* pGame, SDL_Event event, int* pNum);
 void renderSettingsMenu(Game *pGame);
 void handleEnterInput(Game* pGame, SDL_Event event, int* pNum);
 void handleOngoing(Game* pGame, SDL_Event event, bool* pIsRunning, bool* pRight, bool* pLeft, float* pMaxJumpHeight);
 void handleInputOngoing(State* pState, SDL_Event* event, bool* pIsRunning, bool* pRight, bool* pLeft, int keybinds[]);
-void handleGameMenu(Game* pGame, int* pMousePos, SDL_Event event);
+void handleGameMenu(Game* pGame, SDL_Event event);

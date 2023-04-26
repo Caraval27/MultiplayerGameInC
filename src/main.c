@@ -1,5 +1,4 @@
 #include "../include/main.h"
-#define LENGTH 100
 
 int main(int argv, char** args){
     Game game = {0};
@@ -75,19 +74,19 @@ int initiateGame(Game* pGame){
     saveToFile(fp, pGame->keybinds);
 
     pGame->pBackground = createBackground(pGame->windowHeight);
-    pGame->pStartButton = createButton(&pGame->startButtonRect, pGame->windowHeight, pGame->windowWidth, 0, 0);
-    pGame->pSettingsButton = createButton(&pGame->settingsButtonRect, pGame->windowHeight, pGame->windowWidth, 50, 0);
-    pGame->pQuitButton = createButton(&pGame->quitButtonRect, pGame->windowHeight, pGame->windowWidth, 100, 0);
-    pGame->pResumeButton = createButton(&pGame->resumeButtonRect, pGame->windowHeight, pGame->windowWidth, 50, 0);
-    pGame->pMainMenuButton = createButton(&pGame->mainMenuButtonRect, pGame->windowHeight, pGame->windowWidth, 100, 0);
-    pGame->pLanguageButton = createButton(&pGame->languageButtonRect, pGame->windowHeight, pGame->windowWidth, -100, 0);
-    pGame->pEnglishButton = createButton(&pGame->englishButtonRect, pGame->windowHeight, pGame->windowWidth, -50, 0);
-    pGame->pSwedishButton = createButton(&pGame->swedishButtonRect, pGame->windowHeight, pGame->windowWidth, 0, 0);
-    pGame->pReturnButton = createButton(&pGame->returnButtonRect, pGame->windowHeight, pGame->windowWidth, 200, 0);
-    pGame->pMoveRight1Button = createButton(&pGame->moveRight1ButtonRect, pGame->windowHeight, pGame->windowWidth, 50, -80);
-    pGame->pMoveLeft1Button = createButton(&pGame->moveLeft1ButtonRect, pGame->windowHeight, pGame->windowWidth, 100, -80);
-    pGame->pMoveRight2Button = createButton(&pGame->moveRight2ButtonRect, pGame->windowHeight, pGame->windowWidth, 50, 80);
-    pGame->pMoveLeft2Button = createButton(&pGame->moveLeft2ButtonRect, pGame->windowHeight, pGame->windowWidth, 100, 80);
+    pGame->pStartButton = createButton((pGame->windowWidth - BUTTON_WIDTH) / 2, (pGame->windowHeight - BUTTON_HEIGHT) / 2, BUTTON_WIDTH, BUTTON_HEIGHT);
+    pGame->pSettingsButton = createButton((pGame->windowWidth - BUTTON_WIDTH) / 2, (pGame->windowHeight - BUTTON_HEIGHT) / 2 + 50, BUTTON_WIDTH, BUTTON_HEIGHT);
+    pGame->pQuitButton = createButton((pGame->windowWidth - BUTTON_WIDTH) / 2, (pGame->windowHeight - BUTTON_HEIGHT) / 2 + 100, BUTTON_WIDTH, BUTTON_HEIGHT);
+    pGame->pResumeButton = createButton((pGame->windowWidth - BUTTON_WIDTH) / 2, (pGame->windowHeight - BUTTON_HEIGHT) / 2 + 50, BUTTON_WIDTH, BUTTON_HEIGHT);
+    pGame->pMainMenuButton = createButton((pGame->windowWidth - BUTTON_WIDTH) / 2, (pGame->windowHeight - BUTTON_HEIGHT) / 2 + 100, BUTTON_WIDTH, BUTTON_HEIGHT);
+    pGame->pLanguageButton = createButton((pGame->windowWidth - BUTTON_WIDTH) / 2, (pGame->windowHeight - BUTTON_HEIGHT) / 2 - 100, BUTTON_WIDTH, BUTTON_HEIGHT);
+    pGame->pEnglishButton = createButton((pGame->windowWidth - BUTTON_WIDTH) / 2, (pGame->windowHeight - BUTTON_HEIGHT) / 2 - 50, BUTTON_WIDTH, BUTTON_HEIGHT);
+    pGame->pSwedishButton = createButton((pGame->windowWidth - BUTTON_WIDTH) / 2, (pGame->windowHeight - BUTTON_HEIGHT) / 2, BUTTON_WIDTH, BUTTON_HEIGHT);
+    pGame->pReturnButton = createButton((pGame->windowWidth - BUTTON_WIDTH) / 2, (pGame->windowHeight - BUTTON_HEIGHT) / 2 + 200, BUTTON_WIDTH, BUTTON_HEIGHT);
+    pGame->pMoveRight1Button = createButton((pGame->windowWidth - BUTTON_WIDTH) / 2 - 80, (pGame->windowHeight - BUTTON_HEIGHT) / 2 + 50, BUTTON_WIDTH, BUTTON_HEIGHT);
+    pGame->pMoveLeft1Button = createButton((pGame->windowWidth - BUTTON_WIDTH) / 2 - 80, (pGame->windowHeight - BUTTON_HEIGHT) / 2 + 100, BUTTON_WIDTH, BUTTON_HEIGHT);
+    pGame->pMoveRight2Button = createButton((pGame->windowWidth - BUTTON_WIDTH) / 2 + 80, (pGame->windowHeight - BUTTON_HEIGHT) / 2 + 50, BUTTON_WIDTH, BUTTON_HEIGHT);
+    pGame->pMoveLeft2Button = createButton((pGame->windowWidth - BUTTON_WIDTH) / 2 + 80, (pGame->windowHeight - BUTTON_HEIGHT) / 2 + 100, BUTTON_WIDTH, BUTTON_HEIGHT);
     
     pGame->pPlayer1 = createPlayer(pGame->windowWidth / 5, pGame->windowHeight, 60, 60, SPEED, 400); 
     pGame->pPlayer2 = createPlayer(2 * pGame->windowWidth / 5, pGame->windowHeight, 60, 60, SPEED, 400);
@@ -102,21 +101,21 @@ int initiateGame(Game* pGame){
 void runGame(Game* pGame){
     bool isRunning = true, left = false, right = false;
     SDL_Event event;
-    int mousePos, num;
+    int num;
     float jumpHeight = pGame->windowHeight - JUMP_HEIGHT;
     
     Mix_PlayMusic(pGame->pMainSound, -1);
     while (isRunning){
         switch (pGame->state) {
-            case MAIN_MENU: handleMainMenu(pGame, event, &mousePos);
+            case MAIN_MENU: handleMainMenu(pGame, event);
             break;
-            case SETTINGS_MENU: handleSettingsMenu(pGame, event, &mousePos, &num);
+            case SETTINGS_MENU: handleSettingsMenu(pGame, event, &num);
             break;
             case ENTER_INPUT: handleEnterInput(pGame, event, &num);
             break;
             case ONGOING: handleOngoing(pGame, event, &isRunning, &right, &left, &jumpHeight);
             break;
-            case GAME_MENU: handleGameMenu(pGame, &mousePos, event);
+            case GAME_MENU: handleGameMenu(pGame, event);
             break;
             case GAME_OVER: 
             break;
@@ -207,76 +206,78 @@ void initiateLanguage(FILE *fp, Game *pGame){
     pGame->pMoveLeft1ButtonText = createText(pGame->pRenderer, pGame->pMainMenuFont, 255, 255, 255, pGame->language[8], pGame->windowWidth, pGame->windowHeight, 100, -80);
 }
 
-void handleMainMenu(Game* pGame, SDL_Event event, int* pMousePos){
+void handleMainMenu(Game* pGame, SDL_Event event){
     Mix_ResumeMusic();
-    while (SDL_PollEvent(&event)){
-        *pMousePos = getMousePos(pGame->startButtonRect, *pMousePos, pGame->pStartButton);
-        handleButtonInput(pGame->pStartButton, *pMousePos, event, &pGame->state, ONGOING);
-        *pMousePos = getMousePos(pGame->settingsButtonRect, *pMousePos, pGame->pSettingsButton);
-        handleButtonInput(pGame->pSettingsButton, *pMousePos, event, &pGame->state, SETTINGS_MENU);
-        *pMousePos = getMousePos(pGame->quitButtonRect, *pMousePos, pGame->pQuitButton);
-        handleButtonInput(pGame->pQuitButton, *pMousePos, event, &pGame->state, QUIT);
 
-        renderMainMenu(pGame->pRenderer, pGame->pMainMenuTexture, pGame->mainMenuRect);
-        renderButton(pGame->pRenderer, pGame->startButtonRect, 250, 43, 226);
-        renderButton(pGame->pRenderer, pGame->settingsButtonRect, 170, 43, 226);
-        renderButton(pGame->pRenderer, pGame->quitButtonRect, 138, 43, 226);
+    renderMainMenu(pGame->pRenderer, pGame->pMainMenuTexture, pGame->mainMenuRect);
+    renderButton(pGame->pStartButton, pGame->pRenderer);
+    renderButton(pGame->pSettingsButton, pGame->pRenderer);
+    renderButton(pGame->pQuitButton, pGame->pRenderer);
+
+    while (SDL_PollEvent(&event)) {
+        handleButton(pGame->pStartButton, pGame->pRenderer, &pGame->state, ONGOING);
+        handleButton(pGame->pSettingsButton, pGame->pRenderer, &pGame->state, SETTINGS_MENU);
+        handleButton(pGame->pQuitButton, pGame->pRenderer, &pGame->state, QUIT);
+
+        if (event.type == SDL_QUIT) {
+            pGame->state = QUIT;
+        }
+    }
         // KRASHCAR MAC renderText(pGame->pStartButtonText);
         // KRASCHAR MAC renderText(pGame->pSettingsButtonText);
         // KRASCHAR MAC renderText(pGame->pQuitButtonText);
-    }
 }
 
-void handleSettingsMenu(Game* pGame, SDL_Event event, int* pMousePos, int* pNum){
+void handleSettingsMenu(Game* pGame, SDL_Event event, int* pNum){
     char chosenLang[LANG_LENGTH];
     bool showLang = false;
+
     while (SDL_PollEvent(&event)){
-        *pMousePos = getMousePos(pGame->languageButtonRect, *pMousePos, pGame->pLanguageButton);
-        if (pGame->pLanguageButton->buttonDistance < BUTTON_HEIGHT && *pMousePos && SDL_BUTTON(SDL_BUTTON_LEFT)){
+        getMousePos(pGame->pLanguageButton);
+        if (pGame->pLanguageButton->mouseDistance < BUTTON_HEIGHT && pGame->pLanguageButton->mouseState && SDL_BUTTON(SDL_BUTTON_LEFT)){
             showLang = !showLang;
         }
-        *pMousePos = getMousePos(pGame->moveRight2ButtonRect, *pMousePos, pGame->pMoveRight2Button);
-        if (pGame->pMoveRight2Button->buttonDistance < BUTTON_HEIGHT && *pMousePos && SDL_BUTTON(SDL_BUTTON_LEFT)){
+        getMousePos(pGame->pMoveRight2Button);
+        if (pGame->pMoveRight2Button->mouseDistance < BUTTON_HEIGHT && pGame->pMoveRight2Button->mouseState && SDL_BUTTON(SDL_BUTTON_LEFT)){
             *pNum = 0;
             pGame->state = ENTER_INPUT;
         }
-        *pMousePos = getMousePos(pGame->moveLeft2ButtonRect, *pMousePos, pGame->pMoveLeft2Button);
-        if (pGame->pMoveLeft2Button->buttonDistance < BUTTON_HEIGHT && *pMousePos && SDL_BUTTON(SDL_BUTTON_LEFT)){
+        getMousePos(pGame->pMoveLeft2Button);
+        if (pGame->pMoveLeft2Button->mouseDistance < BUTTON_HEIGHT && pGame->pMoveLeft2Button->mouseState && SDL_BUTTON(SDL_BUTTON_LEFT)){
             *pNum = 1;
             pGame->state = ENTER_INPUT;
         }
-        
-        *pMousePos = getMousePos(pGame->returnButtonRect, *pMousePos, pGame->pReturnButton);
-        if (pGame->pReturnButton->buttonDistance < BUTTON_HEIGHT && *pMousePos && SDL_BUTTON(SDL_BUTTON_LEFT)){
+        getMousePos(pGame->pReturnButton);
+        if (pGame->pReturnButton->mouseDistance < BUTTON_HEIGHT && pGame->pReturnButton->mouseState && SDL_BUTTON(SDL_BUTTON_LEFT)){
             pGame->state = MAIN_MENU;
             showLang = false;
         }
 
         renderMainMenu(pGame->pRenderer, pGame->pMainMenuTexture, pGame->mainMenuRect);
         if (showLang){
-            *pMousePos = getMousePos(pGame->englishButtonRect, *pMousePos, pGame->pEnglishButton);
-            if (pGame->pEnglishButton->buttonDistance < BUTTON_HEIGHT && *pMousePos && SDL_BUTTON(SDL_BUTTON_LEFT)){
+            getMousePos(pGame->pEnglishButton);
+            if (pGame->pEnglishButton->mouseDistance < BUTTON_HEIGHT && pGame->pEnglishButton->mouseState && SDL_BUTTON(SDL_BUTTON_LEFT)){
                 showLang = false;
                 strcpy(chosenLang, "english.txt");
             }
-            *pMousePos = getMousePos(pGame->swedishButtonRect, *pMousePos, pGame->pSwedishButton);
-            if (pGame->pSwedishButton->buttonDistance < BUTTON_HEIGHT && *pMousePos && SDL_BUTTON(SDL_BUTTON_LEFT)){
+            getMousePos(pGame->pSwedishButton);
+            if (pGame->pSwedishButton->mouseDistance < BUTTON_HEIGHT && pGame->pSwedishButton->mouseState && SDL_BUTTON(SDL_BUTTON_LEFT)){
                 showLang = false;
                 strcpy(chosenLang, "svenska.txt");
             }
+
             if (!showLang){
                 FILE *fp;
                 changeLanguageInFile(fp, chosenLang);
                 initiateLanguage(fp, pGame);
             }
 
-            
             //char moveLeft[50] = SDL_GetKeyName(pGame->keybinds[1]);
             //pGame->pMoveRight2ButtonText = createText(pGame->pRenderer, pGame->pMainMenuFont, 255, 255, 255, moveRight, pGame->windowWidth, pGame->windowHeight, 100, 80);
             //pGame->pMoveLeft2ButtonText = createText(pGame->pRenderer, pGame->pMainMenuFont, 255, 255, 255, moveLeft, pGame->windowWidth, pGame->windowHeight, 100, 80);
 
-            renderButton(pGame->pRenderer, pGame->englishButtonRect, 200, 43, 226);
-            renderButton(pGame->pRenderer, pGame->swedishButtonRect, 200, 43, 226);
+            renderButton(pGame->pEnglishButton, pGame->pRenderer);
+            renderButton(pGame->pSwedishButton, pGame->pRenderer);
             renderText(pGame->pEnglishButtonText);
             renderText(pGame->pSwedishButtonText);
         }
@@ -286,17 +287,17 @@ void handleSettingsMenu(Game* pGame, SDL_Event event, int* pMousePos, int* pNum)
 }
 
 void renderSettingsMenu(Game *pGame){
-    renderButton(pGame->pRenderer, pGame->languageButtonRect, 250, 43, 226);
+    renderButton(pGame->pLanguageButton, pGame->pRenderer);
     renderText(pGame->pLanguageButtonText);
-    renderButton(pGame->pRenderer, pGame->returnButtonRect, 250, 43, 226);
+    renderButton(pGame->pReturnButton, pGame->pRenderer);
     renderText(pGame->pReturnButtonText);
-    renderButton(pGame->pRenderer, pGame->moveRight1ButtonRect, 250, 43, 226);
+    renderButton(pGame->pMoveRight1Button, pGame->pRenderer);
     renderText(pGame->pMoveRight1ButtonText);
-    renderButton(pGame->pRenderer, pGame->moveLeft1ButtonRect, 250, 43, 226);
+    renderButton(pGame->pMoveLeft1Button, pGame->pRenderer);
     renderText(pGame->pMoveLeft1ButtonText);
-    renderButton(pGame->pRenderer, pGame->moveRight2ButtonRect, 250, 43, 226);
+    renderButton(pGame->pMoveRight2Button, pGame->pRenderer);
     //renderText(pGame->pMoveRight2ButtonText);
-    renderButton(pGame->pRenderer, pGame->moveLeft2ButtonRect, 250, 43, 226);
+    renderButton(pGame->pMoveLeft2Button, pGame->pRenderer);
 }
 
 void handleEnterInput(Game* pGame, SDL_Event event, int* pNum){
@@ -376,14 +377,21 @@ void handleInputOngoing(State* pState, SDL_Event* event, bool* pIsRunning, bool*
     }
 }
 
-void handleGameMenu(Game* pGame, int* pMousePos, SDL_Event event){
+void handleGameMenu(Game* pGame, SDL_Event event){
     Mix_PauseMusic();
-    *pMousePos = getMousePos(pGame->resumeButtonRect, *pMousePos, pGame->pResumeButton);
-    handleButtonInput(pGame->pResumeButton, *pMousePos, event, &pGame->state, ONGOING);
-    *pMousePos = getMousePos(pGame->mainMenuButtonRect, *pMousePos, pGame->pMainMenuButton);
-    handleButtonInput(pGame->pMainMenuButton, *pMousePos, event, &pGame->state, MAIN_MENU);
-    renderButton(pGame->pRenderer, pGame->mainMenuButtonRect, 138, 43, 226);
-    renderButton(pGame->pRenderer, pGame->resumeButtonRect, 250, 43, 226);
+
+    renderButton(pGame->pResumeButton, pGame->pRenderer);
+    renderButton(pGame->pMainMenuButton, pGame->pRenderer);
+
+    while (SDL_PollEvent(&event)) {
+        handleButton(pGame->pResumeButton, pGame->pRenderer, &pGame->state, ONGOING);
+        handleButton(pGame->pMainMenuButton, pGame->pRenderer, &pGame->state, MAIN_MENU);
+
+        if (event.type == SDL_QUIT) {
+            pGame->state = QUIT;
+        }
+    }
+    
     // G�R S� ATT MAN INTE KAN KOMMA TILL RESUMEMENU renderText(pGame->pMainMenuButtonText);
     // G�R S� ATT MAN INTE KAN KOMMA TILL RESUMEMENU renderText(pGame->pResumeButtonText);
 }

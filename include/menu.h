@@ -1,7 +1,7 @@
 #pragma once
 
-#define MENU_IMAGE_WIDTH 2200
-#define MENU_IMAGE_HEIGHT 1524
+#define MENU_WIDTH 2200
+#define MENU_HEIGHT 1524
 #define BUTTON_WIDTH 150
 #define BUTTON_HEIGHT 40
 
@@ -16,13 +16,15 @@ typedef enum {
 } State;
 
 typedef struct {
-    float buttonDistance;
-    int deltaX, deltaY;
+	float xPos, yPos;
+	float width, height;
+    float mouseState, mouseDistance;
 } Button;
 
-int getMousePos(SDL_Rect pButtonRect, int mousePos, Button* pButton);
-void handleButtonInput(Button* pQuitButton, int mousePos, SDL_Event event, State* pState, State desiredState);
-void renderButton(SDL_Renderer* pRenderer, SDL_Rect buttonRect, int r, int g, int b);
+Button* createButton(float xPos, float yPos, float width, float height);
+void getMousePos(Button* pButton);
+void handleButton(Button* pButton, SDL_Renderer* pRenderer, State* pState, State desiredState);
+void renderButton(Button * pButton, SDL_Renderer* pRenderer);
+void destroyButton(Button* pButton);
 SDL_Texture* createMainMenuImage(SDL_Window* pWindow, SDL_Renderer* pRenderer, SDL_Rect* pMenuBackgroundRect, int windowWidth, int windowHeight);
 void renderMainMenu(SDL_Renderer* pRenderer, SDL_Texture* pTexture, SDL_Rect menuBackgroundRect);
-Button* createButton(SDL_Rect* pButtonRect, int windowHeight, int windowWidth, int yOffset, int xOffset);

@@ -1,6 +1,6 @@
 #include "../include/main.h"
 
-Player* createPlayer(int xPos, int yPos, int width, int height, int xVelocity, int yVelocity){
+Player* createPlayer(float xPos, float yPos, float width, float height, float xVelocity, float yVelocity){
     Player* pPlayer = malloc(sizeof(Player));
 
     pPlayer->xPos = xPos;
@@ -37,10 +37,10 @@ SDL_Texture* createPlayerCharacter(SDL_Renderer* pRenderer, SDL_Window* pWindow,
 
 void movePlayer(Player* pPlayer, bool left, bool right, int windowWidth){
     if (left && !right) {
-        pPlayer->xPos -= (pPlayer->xVelocity) / 20;
+        pPlayer->xPos -= (pPlayer->xVelocity) / 60;
     }
     else if (right && !left) {
-        pPlayer->xPos += (pPlayer->xVelocity) / 20;
+        pPlayer->xPos += (pPlayer->xVelocity) / 60;
     }
 
     if (pPlayer->xPos < 0) {
@@ -76,7 +76,7 @@ void playerCollidePlatform(Player* pPlayer, Platform** platforms, float* pJumpHe
         pPlayer->xPos + pPlayer->width >= platforms[i]->xPos &&
         pPlayer->xPos <= platforms[i]->xPos + platforms[i]->width &&
         pPlayer->yPos + pPlayer->height >= platforms[i]->yPos &&
-        pPlayer->yPos + pPlayer->height < platforms[i]->yPos + pPlayer->yVelocity / 20) {
+        pPlayer->yPos + pPlayer->height < platforms[i]->yPos + pPlayer->yVelocity / 60) {
             pPlayer->yVelocity = -(pPlayer->yVelocity);
             *pJumpHeight = platforms[i]->yPos - JUMP_HEIGHT;
             /*if (*pJumpHeight < 1) {
