@@ -101,15 +101,7 @@ int initiateGame(Game* pGame){
     pGame->pNrOfPlayers = MAX_PLAYERS;
     pGame->nrOfPlayersLeft = MAX_PLAYERS;
     
-    initiatePlayers(pGame);
-    /*int startPosition = 2;
-    for(int i = 0; i < pGame->pNrOfPlayers; i++) { //måste vara -1 annars blir det malloc fel
-        printf("%d\n", i);
-
-        pGame->pPlayers[i] = createPlayer(pGame->windowWidth / startPosition, pGame->windowHeight, CHARACTER_WIDTH, CHARACTER_HEIGHT, MOVE_SPEED, JUMP_SPEED);
-        pGame->pPlayerTextures[i] = createPicture(pGame->pWindow, pGame->pRenderer, CHARACTER_PICTURE); //gör en sträng av detta ist
-        startPosition += 1;
-    }*/
+    initPlayers(pGame);
 
     FILE *fp;
     readFromFileKey(fp, pGame->keybinds);
@@ -393,12 +385,10 @@ void handleGameOverMenu(Game* pGame, SDL_Event event){
     // Gï¿½R Sï¿½ ATT MAN INTE KAN KOMMA TILL RESUMEMENU renderText(pGame->pMainMenuButtonText);
 }
 
-void initiatePlayers(Game* pGame){
+void initPlayers(Game* pGame){
     int startPosition = 2;
-    for(int i = 0; i < pGame->pNrOfPlayers; i++) { //måste vara -1 annars blir det malloc fel
-        printf("%d\n", i);
-
-        pGame->pPlayers[i] = createPlayer(pGame->windowWidth / startPosition, pGame->windowHeight, CHARACTER_WIDTH, CHARACTER_HEIGHT, MOVE_SPEED, JUMP_SPEED);
+    for(int i = 0; i < pGame->pNrOfPlayers; i++) {
+        pGame->pPlayers[i] = createPlayer(pGame->windowWidth / startPosition, pGame->windowHeight, CHARACTER_WIDTH, CHARACTER_HEIGHT, MOVE_SPEED, JUMP_SPEED); //ändra starterpositions
         pGame->pPlayerTextures[i] = createPicture(pGame->pWindow, pGame->pRenderer, CHARACTER_PICTURE); //gör en sträng av detta ist
         startPosition += 1;
     }

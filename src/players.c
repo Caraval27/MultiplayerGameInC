@@ -14,17 +14,6 @@ Player* createPlayer(float xPos, float yPos, float width, float height, float xV
     return pPlayer;
 }
 
-void initiatePlayers(Game* pGame){
-    int startPosition = 2;
-    for(int i = 0; i < pGame->pNrOfPlayers; i++) { //måste vara -1 annars blir det malloc fel
-        printf("%d\n", i);
-
-        pGame->pPlayers[i] = createPlayer(pGame->windowWidth / startPosition, pGame->windowHeight, CHARACTER_WIDTH, CHARACTER_HEIGHT, MOVE_SPEED, JUMP_SPEED);
-        pGame->pPlayerTextures[i] = createPicture(pGame->pWindow, pGame->pRenderer, CHARACTER_PICTURE); //gör en sträng av detta ist
-        startPosition += 1;
-    }
-}
-
 void movePlayer(Player* pPlayer, bool left, bool right, int windowWidth){
     if (pPlayer->alive) {
         if (left && !right) {
