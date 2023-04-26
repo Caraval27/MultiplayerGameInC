@@ -13,7 +13,7 @@
 #define CHARACTER_PICTURE "../assets/musse.png"
 #define BACKGROUND_PICTURE "../assets/background.png"
 #define STARTING_PLATFORM_PICTURE "../assets/iceBlock.png"
-#define MAIN_MENU_PICTURE "../assets/menuBackground.jpeg"
+#define MAIN_MENU_PICTURE "../assets/mainMenuBackground.png"
 
 typedef struct {
     State state;
