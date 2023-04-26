@@ -43,17 +43,21 @@ void handlePlatforms(Platform** pPlatforms, SDL_Renderer* pRenderer, SDL_Texture
     }
 }
 
-void resetPlatform(Platform** pPlatforms){
-    destroyPlatform(pPlatforms);
+void resetPlatforms(Platform** pPlatforms){
+    destroyPlatforms(pPlatforms);
     for(int i = 0; pPlatforms[i] != 0; i++){
         pPlatforms[i] = 0;
     }
 }
 
-void destroyPlatform(Platform** pPlatforms) {
+void destroyPlatform(Platform* pPlatform){
+    free(pPlatform);
+}
+
+void destroyPlatforms(Platform** pPlatforms){
     for (int i = 0; pPlatforms[i] != 0; i++) {
         if (pPlatforms[i]) {
-            free(pPlatforms[i]);
+            destroyPlatform;
         }
     }
 }

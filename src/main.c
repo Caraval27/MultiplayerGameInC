@@ -110,7 +110,7 @@ int initiateGame(Game* pGame){
     int startPosition = 2;
     for(int i=0; i<pGame->pNrOfPlayers-1; i++){ //måste vara -1 annars blir det malloc fel
 
-        pGame->pPlayers[i] = createPlayer(pGame->windowWidth / startPosition, pGame->windowHeight, 60, 60, SPEED, 400);
+        pGame->pPlayers[i] = createPlayer(pGame->windowWidth / startPosition, pGame->windowHeight, CHARACTER_WIDTH, CHARACTER_HEIGHT, MOVE_SPEED, JUMP_SPEED);
         pGame->pPlayerTextures[i] = createPicture(pGame->pWindow, pGame->pRenderer, CHARACTER_PICTURE); //gör en sträng av detta ist
         startPosition += 1;
     }
@@ -162,10 +162,10 @@ void quitGame(Game* pGame){
         destroyMusic(pGame->pMainSound);
     }
     if (pGame->pPlatforms[0]){
-        destroyPlatform(pGame->pPlatforms);
+        destroyPlatforms(pGame->pPlatforms);
     }
     if (pGame->pPlayers[0]){
-        destroyPlayer(&pGame->pPlayers[0]);
+        destroyPlayers(&pGame->pPlayers[0]);
     }
     if (pGame->pQuitButtonText){
         destroyText(pGame->pQuitButtonText);
@@ -180,7 +180,7 @@ void quitGame(Game* pGame){
         destroyText(pGame->pMainMenuButtonText);
     }
     if (pGame->pStartPlatform){
-        free(pGame->pStartPlatform);
+        destroyPlatform(pGame->pStartPlatform);
     }
     if (pGame->pBackground){
         destroyBackground(pGame->pBackground);
@@ -440,10 +440,10 @@ void handlePlayers(Game* pGame, bool *pLeft, bool *pRight, float *pJumpHeight){
 void resetGame(Game* pGame, int* pTime, float* pJumpHeight){
     if (pGame->state == ONGOING){
         resetStartPlatform(pGame->pStartPlatform, pGame->windowHeight, pTime);
-        resetPlatform(pGame->pPlatforms);
+        resetPlatforms(pGame->pPlatforms);
         int startPosition = 2;
         for(int i=0; i<pGame->pNrOfPlayers-1; i++){ //måste vara -1 annars blir det malloc fel
-            pGame->pPlayers[i] = createPlayer(pGame->windowWidth / startPosition, pGame->windowHeight, 60, 60, SPEED, 400);
+            pGame->pPlayers[i] = createPlayer(pGame->windowWidth / startPosition, pGame->windowHeight, 60, 60, MOVE_SPEED, 400);
             pGame->pPlayerTextures[i] = createPicture(pGame->pWindow, pGame->pRenderer, CHARACTER_PICTURE); //gör en sträng av detta ist
             startPosition += 1;
         }
