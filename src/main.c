@@ -133,7 +133,7 @@ void runGame(Game* pGame){
     Mix_PlayMusic(pGame->pMainSound, -1);
     while (isRunning){
         switch (pGame->state) {
-            case MAIN_MENU: handleMainMenu(pGame, event);
+            case MAIN_MENU: handleMainMenu(pGame, event, &sec);
             break;
             case SETTINGS_MENU: handleSettingsMenu(pGame, event, &num);
             break;
@@ -228,7 +228,7 @@ void initiateLanguage(FILE *fp, Game *pGame){
     pGame->pMoveLeft1ButtonText = createText(pGame->pRenderer, pGame->pMainMenuFont, 255, 255, 255, pGame->language[8], pGame->windowWidth, pGame->windowHeight, 100, -80);
 }
 
-void handleMainMenu(Game* pGame, SDL_Event event){
+void handleMainMenu(Game* pGame, SDL_Event event, int* pSec){
     Mix_ResumeMusic();
 
     renderMainMenu(pGame->pRenderer, pGame->pMainMenuTexture, pGame->mainMenuRect);

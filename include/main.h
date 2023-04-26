@@ -51,7 +51,7 @@ void quitGame(Game* pGame);
 int handleError(Game* pGame, void* pMember, const char* (*GetError)());
 void initiateLanguage(FILE *fp, Game *pGame);
 
-void handleMainMenu(Game* pGame, SDL_Event event);
+void handleMainMenu(Game* pGame, SDL_Event event, int* pSec);
 void handleSettingsMenu(Game* pGame, SDL_Event event, int* pNum);
 void renderSettingsMenu(Game *pGame);
 void handleEnterInput(Game* pGame, SDL_Event event, int* pNum);
