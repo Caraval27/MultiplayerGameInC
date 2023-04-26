@@ -1,4 +1,5 @@
 #include "../include/main.h"
+#include "../include/world.h"
 
 int main(int argv, char** args){
     Game game = {0};
