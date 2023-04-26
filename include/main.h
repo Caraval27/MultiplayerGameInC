@@ -12,7 +12,7 @@
 #define MAX_PLAYERS 6
 #define BACKGROUND_PICTURE "../assets/background.png"
 #define PLATFORM_PICTURE "../assets/iceBlock.png"
-#define STARTING_PLATFORM_PICTURE "../assets/iceBlock.png"
+#define START_PLATFORM_PICTURE "../assets/iceBlock.png"
 #define CHARACTER_PICTURE "../assets/musse.png"
 #define MAIN_MENU_PICTURE "../assets/mainMenuBackground.png"
 
@@ -22,7 +22,7 @@ typedef struct {
     int windowWidth, windowHeight;
     SDL_Renderer *pRenderer;
     SDL_RendererFlip *flip;
-    SDL_Texture *pBackgroundTexture, *pMainMenuTexture, *pStartPlatformTexture, *pPlatformTexture;
+    SDL_Texture *pBackgroundTexture, *pMenuTexture, *pStartPlatformTexture, *pPlatformTexture;
     TTF_Font *pMenuFont;
     Background* pBackground;
     Button *pStartButton, *pQuitButton, *pResumeButton, *pMainMenuButton, *pSettingsButton, *pLanguageButton, *pEnglishButton, *pSwedishButton, *pReturnButton,
@@ -33,7 +33,7 @@ typedef struct {
 
     Player* pPlayers[6];
     SDL_Texture* pPlayerTextures[6];
-    int pNrOfPlayers;
+    int pNrOfPlayers, nrOfPlayersLeft;
 
     Platform *pPlatforms[1000], *pStartPlatform;
 

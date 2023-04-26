@@ -7,3 +7,4 @@ Språk
 Återvänd
 Flytta höger:
 Flytta vänster:
+Du är död

@@ -57,7 +57,7 @@ void destroyPlatform(Platform* pPlatform){
 void destroyPlatforms(Platform** pPlatforms){
     for (int i = 0; pPlatforms[i] != 0; i++) {
         if (pPlatforms[i]) {
-            destroyPlatform;
+            destroyPlatform(pPlatforms[i]);
         }
     }
 }
