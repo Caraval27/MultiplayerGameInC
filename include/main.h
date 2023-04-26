@@ -31,7 +31,7 @@ typedef struct {
     Text *pStartButtonText, *pQuitButtonText, *pResumeButtonText, *pMainMenuButtonText, *pSettingsButtonText, *pLanguageButtonText, *pEnglishButtonText,
     *pSwedishButtonText, *pReturnButtonText, *pMoveLeft1ButtonText, *pMoveRight1ButtonText, *pMoveLeft2ButtonText, *pMoveRight2ButtonText, *pGameOverText;
 
-    Player *pPlayers[6];
+    Player* pPlayers[6];
     SDL_Texture* pPlayerTextures[6];
     int pNrOfPlayers;
 
@@ -54,12 +54,12 @@ void quitGame(Game* pGame);
 int handleError(Game* pGame, void* pMember, const char* (*GetError)());
 void initiateLanguage(FILE *fp, Game *pGame);
 
-void handleMainMenu(Game* pGame, SDL_Event event, int* pTime, float* pJumpHeight);
+void handleMainMenu(Game* pGame, SDL_Event event, int* pTime);
 void handleSettingsMenu(Game* pGame, SDL_Event event, int* pNum);
 void renderSettingsMenu(Game *pGame);
 void handleEnterInput(Game* pGame, SDL_Event event, int* pNum);
-void handleOngoing(Game* pGame, SDL_Event event, bool* pIsRunning, bool* pRight, bool* pLeft, float* pMaxJumpHeight, int* pTime);
+void handleOngoing(Game* pGame, SDL_Event event, bool* pIsRunning, bool* pRight, bool* pLeft, int* pTime);
 void handleInputOngoing(State* pState, SDL_Event* event, bool* pIsRunning, bool* pRight, bool* pLeft, int keybinds[]);
 void handleGameMenu(Game* pGame, SDL_Event event);
-void handlePlayers(Game* pGame, bool* pLeft, bool* pRight, float *pJumpHeight);
-void resetGame(Game* pGame, int* pTime, float* pJumpHeight);
+void handlePlayers(Game* pGame, bool* pLeft, bool* pRight);
+void resetGame(Game* pGame, int* pTime);

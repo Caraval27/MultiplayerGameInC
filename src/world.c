@@ -89,10 +89,10 @@ void destroyChunk(Mix_Chunk* pChunk){
     Mix_CloseAudio();
 }
 
-void handleStartPlatform(Platform* pStartPlatform, SDL_Renderer* pRenderer, SDL_Texture* pTexture, int windowHeight, int* pTime){
+void handleStartPlatform(Platform* pStartPlatform, Player* pPlayer, SDL_Renderer* pRenderer, SDL_Texture* pTexture, int windowHeight, int* pTime){
     (*pTime)++;
 
-    if (pStartPlatform->yPos < windowHeight) {
+    if (pStartPlatform->yPos < windowHeight + pPlayer->height) {
         if (*pTime > 500) { 
             pStartPlatform->yPos += PLATFORM_SPEED;
         }

@@ -32,29 +32,25 @@ void movePlayer(Player* pPlayer, bool left, bool right, int windowWidth){
     }
 }
 
-void jumpPlayer(Player* pPlayer, float jumpHeight, int startPlatformHeight, Mix_Chunk* pJumpSound){
+void jumpPlayer(Player* pPlayer, int startPlatformHeight, Mix_Chunk* pJumpSound){
     if (pPlayer->alive) {
-        pPlayer->yVelocity += GRAVITY / 60;
-        pPlayer->yPos += pPlayer->yVelocity / 60;
+        pPlayer->yVelocity += (GRAVITY / 60);
+        pPlayer->yPos += (pPlayer->yVelocity / 60);
 
         if (pPlayer->yPos <= 0) {
             pPlayer->yPos = 0;
-            pPlayer->yVelocity = MOVE_SPEED;
+            pPlayer->yVelocity = -(pPlayer->yVelocity) / 4;
         }
         else if (pPlayer->yPos >= startPlatformHeight - pPlayer->height) {
             pPlayer->yPos = startPlatformHeight - pPlayer->height;
-            pPlayer->yVelocity = -(MOVE_SPEED);
+            pPlayer->yVelocity = JUMP_SPEED;
             Mix_VolumeChunk(pJumpSound, 3);
             Mix_PlayChannel(-1, pJumpSound, 0);
-        }
-        else if (pPlayer->yPos <= jumpHeight - pPlayer->height) {
-            pPlayer->yPos = jumpHeight - pPlayer->height;
-            pPlayer->yVelocity = MOVE_SPEED;
         }
     }
 }
 
-void playerCollidePlatform(Player* pPlayer, Platform** pPlatforms, float* pJumpHeight, int windowHeight, Mix_Chunk* pJumpSound){
+void playerCollidePlatform(Player* pPlayer, Platform** pPlatforms, Mix_Chunk* pJumpSound){
     if (pPlayer->alive) {
         int i;
 
@@ -64,13 +60,9 @@ void playerCollidePlatform(Player* pPlayer, Platform** pPlatforms, float* pJumpH
             pPlayer->xPos <= pPlatforms[i]->xPos + pPlatforms[i]->width &&
             pPlayer->yPos + pPlayer->height >= pPlatforms[i]->yPos &&
             pPlayer->yPos + pPlayer->height < pPlatforms[i]->yPos + pPlayer->yVelocity / 60) {
-                pPlayer->yVelocity = -(MOVE_SPEED);
-                *pJumpHeight = pPlatforms[i]->yPos - JUMP_HEIGHT;
+                pPlayer->yVelocity = JUMP_SPEED;
                 Mix_VolumeChunk(pJumpSound, 3);
                 Mix_PlayChannel(-1, pJumpSound, 0);
-                /*if (*pJumpHeight < 1) {
-                    *pJumpHeight = 10 + pPlayer->height;
-                }*/
             }
         }
     }

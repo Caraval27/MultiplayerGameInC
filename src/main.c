@@ -126,19 +126,18 @@ void runGame(Game* pGame){
     bool isRunning = true, left = false, right = false;
     SDL_Event event;
     int num, time = 0;
-    float jumpHeight = pGame->windowHeight - JUMP_HEIGHT;
 
     Mix_VolumeMusic(32);
     Mix_PlayMusic(pGame->pMainSound, -1);
     while (isRunning){
         switch (pGame->state) {
-            case MAIN_MENU: handleMainMenu(pGame, event, &time, &jumpHeight);
+            case MAIN_MENU: handleMainMenu(pGame, event, &time);
             break;
             case SETTINGS_MENU: handleSettingsMenu(pGame, event, &num);
             break;
             case ENTER_INPUT: handleEnterInput(pGame, event, &num);
             break;
-            case ONGOING: handleOngoing(pGame, event, &isRunning, &right, &left, &jumpHeight, &time);
+            case ONGOING: handleOngoing(pGame, event, &isRunning, &right, &left, &time);
             break;
             case GAME_MENU: handleGameMenu(pGame, event);
             break;
@@ -227,7 +226,7 @@ void initiateLanguage(FILE *fp, Game *pGame){
     pGame->pMoveLeft1ButtonText = createText(pGame->pRenderer, pGame->pMainMenuFont, 255, 255, 255, pGame->language[8], pGame->windowWidth, pGame->windowHeight, 100, -80);
 }
 
-void handleMainMenu(Game* pGame, SDL_Event event, int* pTime, float* pJumpHeight){
+void handleMainMenu(Game* pGame, SDL_Event event, int* pTime){
     Mix_ResumeMusic();
 
     renderMenu(pGame->pRenderer, pGame->pMainMenuTexture, pGame->windowWidth, pGame->windowHeight);
@@ -243,7 +242,7 @@ void handleMainMenu(Game* pGame, SDL_Event event, int* pTime, float* pJumpHeight
         if (event.type == SDL_QUIT) {
             pGame->state = QUIT;
         }
-        resetGame(pGame, pTime, pJumpHeight);
+        resetGame(pGame, pTime);
     }
         // KRASHCAR MAC renderText(pGame->pStartButtonText);
         // KRASCHAR MAC renderText(pGame->pSettingsButtonText);
@@ -342,19 +341,18 @@ void handleEnterInput(Game* pGame, SDL_Event event, int* pNum){
     }
 }
 
-void handleOngoing(Game* pGame, SDL_Event event, bool* pIsRunning, bool* pRight, bool* pLeft, float* pJumpHeight, int* pTime){
+void handleOngoing(Game* pGame, SDL_Event event, bool* pIsRunning, bool* pRight, bool* pLeft, int* pTime){
     Mix_ResumeMusic();
+
     while (SDL_PollEvent(&event)){
         handleInputOngoing(&pGame->state, &event, pIsRunning, pRight, pLeft, pGame->keybinds);
     }
 
     handleBackground(pGame->pBackground, pGame->pRenderer, pGame->pBackgroundTexture, pGame->windowWidth, pGame->windowHeight); //denna måste ligga före allt med player
-
-    handlePlayers(pGame, pLeft, pRight, pJumpHeight);
-
+    handlePlayers(pGame, pLeft, pRight);
+    handleStartPlatform(pGame->pStartPlatform, pGame->pPlayers[0], pGame->pRenderer, pGame->pStartPlatformTexture, pGame->windowHeight, pTime);
     handlePlatforms(pGame->pPlatforms, pGame->pRenderer, pGame->pPlatformTexture, pGame->windowWidth);
-    handleStartPlatform(pGame->pStartPlatform, pGame->pRenderer, pGame->pStartPlatformTexture, pGame->windowHeight, pTime);
-    //checkIfPlayerDead(pGame->pPlayers[0], pGame->windowHeight, &pGame->state);
+
     SDL_Delay(1000/60);
 }
 
@@ -416,28 +414,31 @@ void handleGameMenu(Game* pGame, SDL_Event event){
     // Gï¿½R Sï¿½ ATT MAN INTE KAN KOMMA TILL RESUMEMENU renderText(pGame->pResumeButtonText);
 }
 
-void handlePlayers(Game* pGame, bool *pLeft, bool *pRight, float *pJumpHeight){
+void handlePlayers(Game* pGame, bool *pLeft, bool *pRight){
 
     for (int i = 0; i < pGame->pNrOfPlayers - 1; i++) //av någon anledning dyker inte player 2 upp, förmodligen pga samma bild och position, samt båda rör sig med tangenttrycken
     {
         if (i == 0) //bara för att prova om spelare 2 dyker upp i loopen
         {
             movePlayer(pGame->pPlayers[i], *pLeft, *pRight, pGame->windowWidth);
-            jumpPlayer(pGame->pPlayers[i], *pJumpHeight, pGame->pStartPlatform->yPos, pGame->pJumpSound);
-            playerCollidePlatform(pGame->pPlayers[i], pGame->pPlatforms, pJumpHeight, pGame->windowHeight, pGame->pJumpSound);
+            jumpPlayer(pGame->pPlayers[i], pGame->pStartPlatform->yPos, pGame->pJumpSound);
+            playerCollidePlatform(pGame->pPlayers[i], pGame->pPlatforms, pGame->pJumpSound);
+            checkIfPlayerDead(pGame->pPlayers[i], pGame->windowHeight, &pGame->state);
             renderPlayer(pGame->pPlayers[i], pGame->pRenderer, pGame->pPlayerTextures[i]);
+
         }
         else
         {
-            jumpPlayer(pGame->pPlayers[i], *pJumpHeight, pGame->pStartPlatform->yPos, pGame->pJumpSound);
-            playerCollidePlatform(pGame->pPlayers[i], pGame->pPlatforms, pJumpHeight, pGame->windowHeight, pGame->pJumpSound);
+            jumpPlayer(pGame->pPlayers[i], pGame->pStartPlatform->yPos, pGame->pJumpSound);
+            playerCollidePlatform(pGame->pPlayers[i], pGame->pPlatforms, pGame->pJumpSound);
+            checkIfPlayerDead(pGame->pPlayers[i], pGame->windowHeight, &pGame->state);
             renderPlayer(pGame->pPlayers[i], pGame->pRenderer, pGame->pPlayerTextures[i]);
         }
 
     }
 }
 
-void resetGame(Game* pGame, int* pTime, float* pJumpHeight){
+void resetGame(Game* pGame, int* pTime){
     if (pGame->state == ONGOING){
         resetStartPlatform(pGame->pStartPlatform, pGame->windowHeight, pTime);
         resetPlatforms(pGame->pPlatforms);
@@ -447,6 +448,5 @@ void resetGame(Game* pGame, int* pTime, float* pJumpHeight){
             pGame->pPlayerTextures[i] = createPicture(pGame->pWindow, pGame->pRenderer, CHARACTER_PICTURE); //gör en sträng av detta ist
             startPosition += 1;
         }
-        *pJumpHeight = pGame->windowHeight - JUMP_HEIGHT;
     }
 }
