@@ -9,8 +9,11 @@
 #include "../include/text.h"
 #include "../include/network.h"
 
-#define LENGTH 100
-#define MAX_PLAYERS 6;
+#define MAX_PLAYERS 6
+#define CHARACTER_PICTURE "../assets/musse.png"
+#define BACKGROUND_PICTURE "../assets/background.png"
+#define STARTING_PLATFORM_PICTURE "../assets/iceBlock.png"
+#define MAIN_MENU_PICTURE "../assets/menuBackground.jpeg"
 
 typedef struct {
     State state;
@@ -20,7 +23,6 @@ typedef struct {
     SDL_RendererFlip *flip;
     SDL_Texture *pBackgroundTexture, *pMainMenuTexture, *pStartPlatformTexture;
     TTF_Font *pMainMenuFont;
-    SDL_Rect mainMenuRect;
     Background* pBackground;
     Button *pStartButton, *pQuitButton, *pResumeButton, *pMainMenuButton, *pSettingsButton, *pLanguageButton, *pEnglishButton, *pSwedishButton, *pReturnButton,
     *pMoveLeft1Button, *pMoveRight1Button, *pMoveLeft2Button, *pMoveRight2Button;
@@ -29,7 +31,7 @@ typedef struct {
     *pSwedishButtonText, *pReturnButtonText, *pMoveLeft1ButtonText, *pMoveRight1ButtonText, *pMoveLeft2ButtonText, *pMoveRight2ButtonText, *pGameOverText;
 
     Player *pPlayers[6];
-    SDL_Texture* pPlayerTexture[6];
+    SDL_Texture* pPlayerTextures[6];
     int pNrOfPlayers;
 
     Platform *platforms[1000], *pStartingPlatform;

@@ -1,5 +1,11 @@
 #include "../include/main.h"
 
+void renderMenu(SDL_Renderer* pRenderer, SDL_Texture* pTexture, int windowWidth, int windowHeight){
+    SDL_Rect rect = {0, 0, windowWidth, windowHeight};
+
+    SDL_RenderCopy(pRenderer, pTexture, NULL, &rect);
+}
+
 Button* createButton(float xPos, float yPos, float width, float height){
     Button* pButton = malloc(sizeof(Button));
 
@@ -27,8 +33,6 @@ void handleButton(Button* pButton, SDL_Renderer* pRenderer, State* pState, State
     if (pButton->mouseDistance < BUTTON_HEIGHT && pButton->mouseState && SDL_BUTTON(SDL_BUTTON_LEFT)) {
         *pState = desiredState;
     }
-
-    renderButton(pButton, pRenderer);
 }
 
 void renderButton(Button* pButton, SDL_Renderer* pRenderer){
@@ -42,46 +46,15 @@ void destroyButton(Button* pButton){
     free(pButton);
 }
 
-SDL_Texture* createMainMenuImage(SDL_Window* pWindow, SDL_Renderer* pRenderer, SDL_Rect* pMainMenuRect, int windowWidth, int windowHeight){
-    SDL_Surface* pSurface = IMG_Load("../assets/menuBackground.jpeg");
-    if (!pSurface) {
-        printf("Error: %s\n", SDL_GetError());
-        SDL_DestroyRenderer(pRenderer);
-        SDL_DestroyWindow(pWindow);
-        SDL_Quit();
-        exit(1);
-    }
-    SDL_Texture* pTexture = SDL_CreateTextureFromSurface(pRenderer, pSurface);
-    if (!pTexture) {
-        printf("Error: %s\n", SDL_GetError());
-        SDL_DestroyRenderer(pRenderer);
-        SDL_DestroyWindow(pWindow);
-        SDL_Quit();
-        exit(1);
-    }
-    SDL_FreeSurface(pSurface);
-
-    pMainMenuRect->w = windowWidth; // size
-    pMainMenuRect->h = windowHeight;
-    pMainMenuRect->x = 0; //left
-    pMainMenuRect->y = 0; //right
-    //SDL_QueryTexture(pTexture, NULL, NULL, &pMenuBackgroundRect->w, &pMenuBackgroundRect->h);
-
-    return pTexture;
-}
-
-void renderMainMenu(SDL_Renderer* pRenderer, SDL_Texture* pTexture, SDL_Rect mainMenuRect){
-    SDL_RenderCopy(pRenderer, pTexture, NULL, &mainMenuRect);
-}
-
 int playerIsDead(Player* pPlayer, int windowHeight){
-    if(pPlayer->yPos > windowHeight)
+    if(pPlayer->yPos >= windowHeight) {
         return 1;
+    }  
     return 0;
 }
 
 void checkIfPlayerDead(Player* pPlayer, int windowHeight, State* gameState){
-    if(playerIsDead(pPlayer, windowHeight)){
+    if(playerIsDead(pPlayer, windowHeight)) {
         *gameState = MAIN_MENU;
     }
 }

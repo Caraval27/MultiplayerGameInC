@@ -37,7 +37,10 @@ SDL_Texture* createPlayerCharacter(SDL_Renderer* pRenderer, SDL_Window* pWindow,
 }
 
 void movePlayer(Player* pPlayer, bool left, bool right, int windowWidth){
-    if(!pPlayer->alive) return;
+    if (!pPlayer->alive) {
+        return;
+    }
+
     if (left && !right) {
         pPlayer->xPos -= (pPlayer->xVelocity) / 60;
     }
@@ -53,30 +56,34 @@ void movePlayer(Player* pPlayer, bool left, bool right, int windowWidth){
     }
 }
 
-void jumpPlayer(Player* pPlayer, float jumpHeight, int height, Mix_Chunk* pJumpSound){
+void jumpPlayer(Player* pPlayer, float jumpHeight, int startingPlatformHeight, Mix_Chunk* pJumpSound){
+    if (!pPlayer->alive) {
+        return;
+    }
 
-    if(!pPlayer->alive) return;
     pPlayer->yPos += pPlayer->yVelocity / 60;
 
     if (pPlayer->yPos <= 0) {
         pPlayer->yPos = 0;
         pPlayer->yVelocity = -(pPlayer->yVelocity);
     }
-    else if (pPlayer->yPos >= height - pPlayer->height) {
-        pPlayer->yPos = height - pPlayer->height;
+    else if (pPlayer->yPos >= startingPlatformHeight - pPlayer->height) {
+        pPlayer->yPos = startingPlatformHeight - pPlayer->height;
         pPlayer->yVelocity = -(pPlayer->yVelocity);
         Mix_VolumeChunk(pJumpSound, 16);
         Mix_PlayChannel(-1, pJumpSound, 0);
     }
-    if (pPlayer->yPos <= jumpHeight - pPlayer->height) {
+    else if (pPlayer->yPos <= jumpHeight - pPlayer->height) {
         pPlayer->yPos = jumpHeight - pPlayer->height;
         pPlayer->yVelocity = -(pPlayer->yVelocity);
     }
 }
 
 void playerCollidePlatform(Player* pPlayer, Platform** platforms, float* pJumpHeight, int windowHeight, Mix_Chunk* pJumpSound){
+    if (!pPlayer->alive) {
+        return;
+    }
 
-    if(!pPlayer->alive) return;
     int i;
 
     for (i = 0; platforms[i] != 0; i++) {
@@ -102,7 +109,10 @@ void playerCollidePlatform(Player* pPlayer, Platform** platforms, float* pJumpHe
 }*/
 
 void renderPlayer(Player* pPlayer, SDL_Renderer* pRenderer, SDL_Texture* pTexture){
-    if(!pPlayer->alive) return;
+    if (!pPlayer->alive) {
+        return;
+    }
+
     SDL_Rect rect = {pPlayer->xPos, pPlayer->yPos, pPlayer->width, pPlayer->height};
 
     SDL_RenderCopy(pRenderer, pTexture, NULL, &rect);
@@ -116,10 +126,10 @@ void destroyPlayer(Player** pPlayers) {
     }
 }
 
-void destroyPlayerTexture(SDL_Texture** pPlayerTexture) {
-    for (int i = 0; pPlayerTexture[i] != 0; i++) {
-        if (pPlayerTexture[i]) {
-            free(pPlayerTexture[i]);
+void destroyPlayerTexture(SDL_Texture** pPlayerTextures) {
+    for (int i = 0; pPlayerTextures[i] != 0; i++) {
+        if (pPlayerTextures[i]) {
+            free(pPlayerTextures[i]);
         }
     }
 }

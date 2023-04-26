@@ -22,7 +22,7 @@ Background* createBackground(int windowHeight){
     return pBackground;
 }
 
-SDL_Texture* createBackgroundImage(SDL_Window* pWindow, SDL_Renderer* pRenderer, char picture[]){
+SDL_Texture* createPicture(SDL_Window* pWindow, SDL_Renderer* pRenderer, char picture[]){
     SDL_Surface *pSurface = IMG_Load(picture);
     if (!pSurface) {
         printf("Error: %s\n", SDL_GetError());
@@ -86,28 +86,30 @@ void destroyBackground(Background* pBackground){
     free(pBackground);
 }
 
-void destroyMusic(Mix_Music* pMainSound){
-    Mix_FreeMusic(pMainSound);
+void destroyMusic(Mix_Music* pMusic){
+    Mix_FreeMusic(pMusic);
     Mix_CloseAudio();
 }
 
-void destroyChuck(Mix_Chunk* pMusicChuck){
-    Mix_FreeChunk(pMusicChuck);
+void destroyChunk(Mix_Chunk* pChunk){
+    Mix_FreeChunk(pChunk);
     Mix_CloseAudio();
 }
 
-void handleStartingPlatform(Platform* pStartingPlatform, SDL_Renderer* pRenderer, SDL_Texture* pTexture, int windowHeight, int* pSec){
-    (*pSec)++;
+void handleStartingPlatform(Platform* pStartingPlatform, SDL_Renderer* pRenderer, SDL_Texture* pTexture, int windowHeight, int* pTime){
+    (*pTime)++;
+
     if (pStartingPlatform->yPos < windowHeight){
+        if (*pTime > 500) { 
+            pStartingPlatform->yPos += PLATFORM_SPEED;
+        }
         SDL_Rect sPlatformRect = {pStartingPlatform->xPos, pStartingPlatform->yPos, pStartingPlatform->width, pStartingPlatform->height};
         SDL_RenderCopy(pRenderer, pTexture, NULL, &sPlatformRect);
     }
-    if (*pSec > 500){
-        pStartingPlatform->yPos += PLATFORM_SPEED;
-    }
+    
 }
 
-void resetStartingPlatform(Platform* pStartingPlatform, int windowHeight, int* pSec){
+void resetStartingPlatform(Platform* pStartingPlatform, int windowHeight, int* pTime){
     pStartingPlatform->yPos = windowHeight - 100;
-    *pSec = 0;
+    *pTime = 0;
 }
