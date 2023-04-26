@@ -164,12 +164,13 @@ void quitGame(Game* pGame){
         destroyMusic(pGame->pMainSound);
     }
     destroyPlatform(pGame->platforms);
-    if (pGame->pPlayers[0]){
-        destroyPlayer(pGame->pPlayers[0]);
+    if (pGame->platforms[0]){
+        destroyPlatform(&pGame->platforms[0]);
     }
+    /*destroyPlayer(pGame->pPlayers);
     if (pGame->pPlayers[0]){
-        destroyPlayer(pGame->pPlayers[0]);
-    }
+        destroyPlayers(&pGame->pPlayers[0]);
+    }*/
     if (pGame->pQuitButtonText){
         destroyText(pGame->pQuitButtonText);
     }
@@ -187,12 +188,6 @@ void quitGame(Game* pGame){
     }
     if (pGame->pBackground){
         destroyBackground(pGame->pBackground);
-    }
-    if (pGame->pPlayer1Texture){
-        SDL_DestroyTexture(pGame->pPlayer1Texture);
-    }
-    if (pGame->pPlayer2Texture){
-        SDL_DestroyTexture(pGame->pPlayer2Texture);
     }
     if (pGame->pBackgroundTexture){
         SDL_DestroyTexture(pGame->pBackgroundTexture);

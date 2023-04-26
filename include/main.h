@@ -15,7 +15,7 @@ typedef struct {
     int windowWidth, windowHeight;
     SDL_Renderer *pRenderer;
     SDL_RendererFlip *flip;
-    SDL_Texture *pBackgroundTexture, *pMainMenuTexture, *pPlayer1Texture, *pPlayer2Texture, *pStartPlatformTexture;
+    SDL_Texture *pBackgroundTexture, *pMainMenuTexture, *pStartPlatformTexture;
     TTF_Font *pMainMenuFont;
     SDL_Rect mainMenuRect;
     Background* pBackground;
@@ -25,7 +25,7 @@ typedef struct {
     Text *pStartButtonText, *pQuitButtonText, *pResumeButtonText, *pMainMenuButtonText, *pSettingsButtonText, *pLanguageButtonText, *pEnglishButtonText,
     *pSwedishButtonText, *pReturnButtonText, *pMoveLeft1ButtonText, *pMoveRight1ButtonText, *pMoveLeft2ButtonText, *pMoveRight2ButtonText, *pGameOverText; 
 
-    Player* pPlayers[6];
+    Player *pPlayers[6];
     SDL_Texture* pPlayerTexture[6];
     int pNrOfPlayers;
 

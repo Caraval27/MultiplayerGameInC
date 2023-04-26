@@ -106,3 +106,11 @@ void destroyPlayer(Player** pPlayers) {
         }
     }
 }
+
+void destroyPlayerTexture(SDL_Texture** pPlayerTexture) {
+    for (int i = 0; pPlayerTexture[i] != 0; i++) {
+        if (pPlayerTexture[i]) {
+            free(pPlayerTexture[i]);
+        }
+    }
+}
