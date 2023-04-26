@@ -240,6 +240,7 @@ void handleMainMenu(Game* pGame, SDL_Event event, int* pTime){
         if (event.type == SDL_QUIT) {
             pGame->state = QUIT;
         }
+        resetGame(pGame, pTime);
     }
         // KRASHCAR MAC renderText(pGame->pStartButtonText);
         // KRASCHAR MAC renderText(pGame->pSettingsButtonText);
@@ -430,5 +431,12 @@ void handlePlayers(Game* pGame, bool *pLeft, bool *pRight, float *pJumpHeight){
             renderPlayer(pGame->pPlayers[i], pGame->pRenderer, pGame->pPlayerTextures[i]);
         }
 
+    }
+}
+
+void resetGame(Game* pGame, int* pTime){
+    if (pGame->state == ONGOING){
+        resetStartingPlatform(pGame->pStartingPlatform, pGame->windowHeight, pTime);
+        resetPlatform(pGame->platforms);
     }
 }

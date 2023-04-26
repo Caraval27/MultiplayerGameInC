@@ -51,3 +51,10 @@ void destroyPlatform(Platform** platforms) {
         }
     }
 }
+
+void resetPlatform(Platform** platforms){
+    destroyPlatform(platforms);
+    for(int i = 0; platforms[i] != 0; i++){
+        platforms[i] = 0;
+    }
+}
