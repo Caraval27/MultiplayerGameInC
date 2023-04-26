@@ -7,3 +7,4 @@ Language
 Return
 Move right:
 Move left:
+You are Dead

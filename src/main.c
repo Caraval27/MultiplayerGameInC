@@ -225,6 +225,7 @@ void initiateLanguage(FILE *fp, Game *pGame){
     pGame->pReturnButtonText = createText(pGame->pRenderer, pGame->pMainMenuFont, 255, 255, 255, pGame->language[6], pGame->windowWidth, pGame->windowHeight, 200, 0);
     pGame->pMoveRight1ButtonText = createText(pGame->pRenderer, pGame->pMainMenuFont, 255, 255, 255, pGame->language[7], pGame->windowWidth, pGame->windowHeight, 50, -80);
     pGame->pMoveLeft1ButtonText = createText(pGame->pRenderer, pGame->pMainMenuFont, 255, 255, 255, pGame->language[8], pGame->windowWidth, pGame->windowHeight, 100, -80);
+    pGame->pGameOverText = createText(pGame->pRenderer, pGame->pMainMenuFont, 255, 255, 255, pGame->language[9], pGame->windowWidth, pGame->windowHeight, 100, -80);
 }
 
 void handleMainMenu(Game* pGame, SDL_Event event, int* pTime){
@@ -426,6 +427,7 @@ void handlePlayers(Game* pGame, bool *pLeft, bool *pRight){
             playerCollidePlatform(pGame->pPlayers[i], pGame->pPlatforms, pGame->pJumpSound);
             checkIfPlayerDead(pGame->pPlayers[i], pGame->windowHeight, &pGame->state, &pGame->nrOfPlayersLeft);
             renderPlayer(pGame->pPlayers[i], pGame->pRenderer, pGame->pPlayerTextures[i]);
+            if(!pGame->pPlayers[i]->alive) renderText(pGame->pGameOverText);
 
         }
         else
