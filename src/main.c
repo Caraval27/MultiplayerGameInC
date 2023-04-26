@@ -164,8 +164,7 @@ void runGame(Game* pGame){
                 break;
             case GAME_MENU: handleGameMenu(pGame, event);
                 break;
-            case GAME_OVER:
-                //renderText(pGame->pGameOverText);
+            case GAME_OVER: handleGameOverMenu(pGame, event);
                 break;
             case QUIT: isRunning = false;
                 break;
@@ -374,6 +373,22 @@ void renderGameMenu(Game* pGame){
     renderButton(pGame->pMainMenuButton, pGame->pRenderer);
     // G�R S� ATT MAN INTE KAN KOMMA TILL RESUMEMENU renderText(pGame->pMainMenuButtonText);
     // G�R S� ATT MAN INTE KAN KOMMA TILL RESUMEMENU renderText(pGame->pResumeButtonText);
+}
+
+void handleGameOverMenu(Game* pGame, SDL_Event event){
+    //Mix_PauseMusic();
+    //renderText();
+    renderButton(pGame->pMainMenuButton, pGame->pRenderer);
+
+    while (SDL_PollEvent(&event)) {
+        handleButton(pGame->pMainMenuButton, &pGame->state, MAIN_MENU);
+
+        if (event.type == SDL_QUIT) {
+            pGame->state = QUIT;
+        }
+    }
+
+    // G�R S� ATT MAN INTE KAN KOMMA TILL RESUMEMENU renderText(pGame->pMainMenuButtonText);
 }
 
 void handlePlayers(Game* pGame, bool *pLeft, bool *pRight){

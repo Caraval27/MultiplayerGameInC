@@ -62,12 +62,10 @@ void handleOngoing(Game* pGame, SDL_Event event, bool* pIsRunning, bool* pRight,
 void handleInputOngoing(Game* pGame, SDL_Event* event, bool* pIsRunning, bool* pRight, bool* pLeft);
 void handleGameMenu(Game* pGame, SDL_Event event);
 void renderGameMenu(Game* pGame);
+void handleGameOverMenu(Game* pGame, SDL_Event event);
 
 void handlePlayers(Game* pGame, bool* pLeft, bool* pRight);
 
 void resetGame(Game* pGame, int* pTime);
 
 void quitGame(Game* pGame);
-
-
-
