@@ -1,2 +1,4 @@
 build
+./*.txt
+assets/textfiles/keybinds.txt
 assets/textfiles/settings.txt

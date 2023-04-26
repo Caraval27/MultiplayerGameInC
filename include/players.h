@@ -19,4 +19,5 @@ void movePlayer(Player* pPlayer, bool left, bool right, int windowWidth);
 void jumpPlayer(Player* pPlayer, float jumpHeight, int height, Mix_Chunk* pJumpSound);
 void playerCollidePlatform(Player* pPlayer, Platform** platforms, float* pJumpHeight, int windowHeight, Mix_Chunk* pJumpSound);
 void renderPlayer(Player* pPlayer, SDL_Renderer* pRenderer, SDL_Texture* pTexture);
-void destroyPlayer(Player* pPlayer);
+void destroyPlayer(Player** pPlayer);
+void destroyPlayerTexture(SDL_Texture** pPlayerTexture);

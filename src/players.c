@@ -65,6 +65,7 @@ void jumpPlayer(Player* pPlayer, float jumpHeight, int height, Mix_Chunk* pJumpS
     else if (pPlayer->yPos >= height - pPlayer->height) { 
         pPlayer->yPos = height - pPlayer->height;
         pPlayer->yVelocity = -(pPlayer->yVelocity);
+        Mix_VolumeChunk(pJumpSound, 16);
         Mix_PlayChannel(-1, pJumpSound, 0);
     }
     if (pPlayer->yPos <= jumpHeight - pPlayer->height) {
@@ -86,6 +87,7 @@ void playerCollidePlatform(Player* pPlayer, Platform** platforms, float* pJumpHe
         pPlayer->yPos + pPlayer->height < platforms[i]->yPos + pPlayer->yVelocity / 20) {
             pPlayer->yVelocity = -(pPlayer->yVelocity);
             *pJumpHeight = platforms[i]->yPos - JUMP_HEIGHT;
+            Mix_VolumeChunk(pJumpSound, 16);
             Mix_PlayChannel(-1, pJumpSound, 0);
             /*if (*pJumpHeight < 1) {
                 *pJumpHeight = 10 + pPlayer->height;
@@ -94,10 +96,10 @@ void playerCollidePlatform(Player* pPlayer, Platform** platforms, float* pJumpHe
     }
 } 
 
-void playerCollidePlayer(Player* pPlayer1, Player* pPlayer2)
+/*void playerCollidePlayer(Player* pPlayer1, Player* pPlayer2)
 {
 
-}
+}*/
 
 void renderPlayer(Player* pPlayer, SDL_Renderer* pRenderer, SDL_Texture* pTexture){
     if(!pPlayer->alive) return;
@@ -106,6 +108,18 @@ void renderPlayer(Player* pPlayer, SDL_Renderer* pRenderer, SDL_Texture* pTextur
     SDL_RenderCopy(pRenderer, pTexture, NULL, &rect);
 }
 
-void destroyPlayer(Player* pPlayer){
-    free(pPlayer);
+void destroyPlayer(Player** pPlayers) {
+    for (int i = 0; pPlayers[i] != 0; i++) {
+        if (pPlayers[i]) {
+            free(pPlayers[i]);
+        }
+    }
+}
+
+void destroyPlayerTexture(SDL_Texture** pPlayerTexture) {
+    for (int i = 0; pPlayerTexture[i] != 0; i++) {
+        if (pPlayerTexture[i]) {
+            free(pPlayerTexture[i]);
+        }
+    }
 }
