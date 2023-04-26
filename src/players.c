@@ -9,6 +9,7 @@ Player* createPlayer(int xPos, int yPos, int width, int height, int xVelocity, i
     pPlayer->height = height;
     pPlayer->xVelocity = xVelocity;
     pPlayer->yVelocity = yVelocity;
+    pPlayer->alive = true;
 
     return pPlayer;
 }
@@ -36,6 +37,7 @@ SDL_Texture* createPlayerCharacter(SDL_Renderer* pRenderer, SDL_Window* pWindow,
 }
 
 void movePlayer(Player* pPlayer, bool left, bool right, int windowWidth){
+    if(!pPlayer->alive) return;
     if (left && !right) {
         pPlayer->xPos -= (pPlayer->xVelocity) / 20;
     }
@@ -52,6 +54,8 @@ void movePlayer(Player* pPlayer, bool left, bool right, int windowWidth){
 }
 
 void jumpPlayer(Player* pPlayer, float jumpHeight, int height, Mix_Chunk* pJumpSound){
+
+    if(!pPlayer->alive) return;
     pPlayer->yPos += pPlayer->yVelocity / 60;
 
     if (pPlayer->yPos <= 0) {
@@ -70,6 +74,8 @@ void jumpPlayer(Player* pPlayer, float jumpHeight, int height, Mix_Chunk* pJumpS
 }
 
 void playerCollidePlatform(Player* pPlayer, Platform** platforms, float* pJumpHeight, int windowHeight, Mix_Chunk* pJumpSound){
+    
+    if(!pPlayer->alive) return;
     int i; 
 
     for (i = 0; platforms[i] != 0; i++) {
@@ -94,6 +100,7 @@ void playerCollidePlayer(Player* pPlayer1, Player* pPlayer2)
 }
 
 void renderPlayer(Player* pPlayer, SDL_Renderer* pRenderer, SDL_Texture* pTexture){
+    if(!pPlayer->alive) return;
     SDL_Rect rect = {pPlayer->xPos, pPlayer->yPos, pPlayer->width, pPlayer->height};
 
     SDL_RenderCopy(pRenderer, pTexture, NULL, &rect);

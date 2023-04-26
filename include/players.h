@@ -10,6 +10,7 @@ typedef struct {
     float width, height;
     float xVelocity, yVelocity;
     SDL_Texture* playerTexture;
+    bool alive;
 } Player;
 
 Player* createPlayer(int xPos, int yPos, int width, int height, int xVelocity, int yVelocity);
