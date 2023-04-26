@@ -100,14 +100,16 @@ int initiateGame(Game* pGame){
 
     pGame->pNrOfPlayers = MAX_PLAYERS;
     pGame->nrOfPlayersLeft = MAX_PLAYERS;
-    int startPosition = 2;
-    for(int i = 0; i < pGame->pNrOfPlayers - 1; i++) { //måste vara -1 annars blir det malloc fel
+    
+    initiatePlayers(pGame);
+    /*int startPosition = 2;
+    for(int i = 0; i < pGame->pNrOfPlayers; i++) { //måste vara -1 annars blir det malloc fel
         printf("%d\n", i);
 
         pGame->pPlayers[i] = createPlayer(pGame->windowWidth / startPosition, pGame->windowHeight, CHARACTER_WIDTH, CHARACTER_HEIGHT, MOVE_SPEED, JUMP_SPEED);
         pGame->pPlayerTextures[i] = createPicture(pGame->pWindow, pGame->pRenderer, CHARACTER_PICTURE); //gör en sträng av detta ist
         startPosition += 1;
-    }
+    }*/
 
     FILE *fp;
     readFromFileKey(fp, pGame->keybinds);
@@ -391,9 +393,20 @@ void handleGameOverMenu(Game* pGame, SDL_Event event){
     // Gï¿½R Sï¿½ ATT MAN INTE KAN KOMMA TILL RESUMEMENU renderText(pGame->pMainMenuButtonText);
 }
 
+void initiatePlayers(Game* pGame){
+    int startPosition = 2;
+    for(int i = 0; i < pGame->pNrOfPlayers; i++) { //måste vara -1 annars blir det malloc fel
+        printf("%d\n", i);
+
+        pGame->pPlayers[i] = createPlayer(pGame->windowWidth / startPosition, pGame->windowHeight, CHARACTER_WIDTH, CHARACTER_HEIGHT, MOVE_SPEED, JUMP_SPEED);
+        pGame->pPlayerTextures[i] = createPicture(pGame->pWindow, pGame->pRenderer, CHARACTER_PICTURE); //gör en sträng av detta ist
+        startPosition += 1;
+    }
+}
+
 void handlePlayers(Game* pGame, bool *pLeft, bool *pRight){
 
-    for (int i = 0; i < pGame->pNrOfPlayers - 1; i++) //av någon anledning dyker inte player 2 upp, förmodligen pga samma bild och position, samt båda rör sig med tangenttrycken
+    for (int i = 0; i < pGame->pNrOfPlayers ; i++) //av någon anledning dyker inte player 2 upp, förmodligen pga samma bild och position, samt båda rör sig med tangenttrycken
     {
         if (i == 0) //bara för att prova om spelare 2 dyker upp i loopen
         {

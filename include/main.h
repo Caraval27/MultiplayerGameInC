@@ -9,7 +9,7 @@
 #include "../include/text.h"
 #include "../include/network.h"
 
-#define MAX_PLAYERS 6
+#define MAX_PLAYERS 10
 #define BACKGROUND_PICTURE "../assets/background.png"
 #define PLATFORM_PICTURE "../assets/iceBlock.png"
 #define START_PLATFORM_PICTURE "../assets/iceBlock.png"
@@ -31,8 +31,8 @@ typedef struct {
     Text *pStartButtonText, *pQuitButtonText, *pResumeButtonText, *pMainMenuButtonText, *pSettingsButtonText, *pLanguageButtonText, *pEnglishButtonText,
     *pSwedishButtonText, *pReturnButtonText, *pMoveLeft1ButtonText, *pMoveRight1ButtonText, *pMoveLeft2ButtonText, *pMoveRight2ButtonText, *pGameOverText;
 
-    Player* pPlayers[6];
-    SDL_Texture* pPlayerTextures[6];
+    Player* pPlayers[MAX_PLAYERS];
+    SDL_Texture* pPlayerTextures[MAX_PLAYERS];
     int pNrOfPlayers, nrOfPlayersLeft;
 
     Platform *pPlatforms[1000], *pStartPlatform;
@@ -65,6 +65,7 @@ void renderGameMenu(Game* pGame);
 void handleGameOverMenu(Game* pGame, SDL_Event event);
 
 void handlePlayers(Game* pGame, bool* pLeft, bool* pRight);
+void initiatePlayer(Game* pGame);
 
 void resetGame(Game* pGame, int* pTime);
 
