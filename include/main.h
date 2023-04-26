@@ -10,6 +10,7 @@
 #include "../include/network.h"
 
 #define LENGTH 100
+#define MAX_PLAYERS 6;
 
 typedef struct {
     State state;
@@ -17,7 +18,7 @@ typedef struct {
     int windowWidth, windowHeight;
     SDL_Renderer *pRenderer;
     SDL_RendererFlip *flip;
-    SDL_Texture *pBackgroundTexture, *pMainMenuTexture, *pPlayer1Texture, *pPlayer2Texture;
+    SDL_Texture *pBackgroundTexture, *pMainMenuTexture, *pStartPlatformTexture;
     TTF_Font *pMainMenuFont;
     SDL_Rect mainMenuRect;
     Background* pBackground;
@@ -25,11 +26,13 @@ typedef struct {
     *pMoveLeft1Button, *pMoveRight1Button, *pMoveLeft2Button, *pMoveRight2Button;
 
     Text *pStartButtonText, *pQuitButtonText, *pResumeButtonText, *pMainMenuButtonText, *pSettingsButtonText, *pLanguageButtonText, *pEnglishButtonText,
-    *pSwedishButtonText, *pReturnButtonText, *pMoveLeft1ButtonText, *pMoveRight1ButtonText, *pMoveLeft2ButtonText, *pMoveRight2ButtonText;
+    *pSwedishButtonText, *pReturnButtonText, *pMoveLeft1ButtonText, *pMoveRight1ButtonText, *pMoveLeft2ButtonText, *pMoveRight2ButtonText, *pGameOverText; 
 
-    Player* pPlayer1, *pPlayer2;
+    Player *pPlayers[6];
+    SDL_Texture* pPlayerTexture[6];
+    int pNrOfPlayers;
 
-    Platform *platforms[1000];
+    Platform *platforms[1000], *pStartingPlatform;
 
     int keybinds[NR_OF_KEYBINDS];
     char language[NR_OF_WORDS][50];
@@ -52,6 +55,7 @@ void handleMainMenu(Game* pGame, SDL_Event event);
 void handleSettingsMenu(Game* pGame, SDL_Event event, int* pNum);
 void renderSettingsMenu(Game *pGame);
 void handleEnterInput(Game* pGame, SDL_Event event, int* pNum);
-void handleOngoing(Game* pGame, SDL_Event event, bool* pIsRunning, bool* pRight, bool* pLeft, float* pMaxJumpHeight);
+void handleOngoing(Game* pGame, SDL_Event event, bool* pIsRunning, bool* pRight, bool* pLeft, float* pMaxJumpHeight, int* pSec);
 void handleInputOngoing(State* pState, SDL_Event* event, bool* pIsRunning, bool* pRight, bool* pLeft, int keybinds[]);
 void handleGameMenu(Game* pGame, SDL_Event event);
+void handlePlayers(Game* pGame, bool* pLeft, bool* pRight, float *pJumpHeight);

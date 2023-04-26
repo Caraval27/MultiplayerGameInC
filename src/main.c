@@ -31,7 +31,7 @@ int initiateGame(Game* pGame){
     if (Mix_OpenAudio(44100, MIX_DEFAULT_FORMAT, 2, 2048) < 0){
         printf("Error: %s\n", Mix_GetError());
         return 0;
-    } 
+    }
 
     SDL_DisplayMode displayMode;
     if (SDL_GetDesktopDisplayMode(0, &displayMode) != 0){
@@ -41,33 +41,47 @@ int initiateGame(Game* pGame){
     }
     pGame->windowWidth = displayMode.w;
     pGame->windowHeight = displayMode.h;
-    char characterPicture1[LENGTH] = "../assets/penguin.png";
-    char characterPicture2[LENGTH] = "../assets/musse.png";
+    //char characterPicture[6][LENGTH] = {"../assets/penguin.png","../assets/musse.png"};
+    char characterPicture[LENGTH] = "../assets/musse.png";
+    char backgroundPicture[LENGTH] = "../assets/background.png";
+    char startingPlatformPicture[LENGTH] = "../assets/iceBlock.png";
+    //char plattformsPicture[LENGTH] = ;
+    pGame->pNrOfPlayers = MAX_PLAYERS;
 
     pGame->pWindow = SDL_CreateWindow("Totally not a doodle jump clone", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, pGame->windowWidth, pGame->windowHeight, 0);
     if (!handleError(pGame, pGame->pWindow, SDL_GetError)) return 0;
 
-    pGame->pRenderer = SDL_CreateRenderer(pGame->pWindow, -1, SDL_RENDERER_ACCELERATED|SDL_RENDERER_PRESENTVSYNC);
+	Uint32 flags = SDL_RENDERER_ACCELERATED|SDL_RENDERER_PRESENTVSYNC;
+	#if __APPLE__ || __LINUX__
+		flags = (flags & !SDL_RENDERER_ACCELERATED) | SDL_RENDERER_SOFTWARE;
+	#endif
+
+    pGame->pRenderer = SDL_CreateRenderer(pGame->pWindow, -1, flags);
     if (!handleError(pGame, pGame->pRenderer, SDL_GetError)) return 0;
 
     pGame->pMainMenuTexture = createMainMenuImage(pGame->pWindow, pGame->pRenderer, &pGame->mainMenuRect, pGame->windowWidth, pGame->windowHeight);
     if (!handleError(pGame, pGame->pMainMenuTexture, SDL_GetError)) return 0;
 
-    pGame->pBackgroundTexture = createBackgroundImage(pGame->pWindow, pGame->pRenderer);
+    pGame->pBackgroundTexture = createBackgroundImage(pGame->pWindow, pGame->pRenderer, backgroundPicture);
     if (!handleError(pGame, pGame->pBackgroundTexture, SDL_GetError)) return 0;
 
-    pGame->pPlayer1Texture = createPlayerCharacter(pGame->pRenderer, pGame->pWindow, characterPicture1);
-    if (!handleError(pGame, pGame->pPlayer1Texture, SDL_GetError)) return 0;
+    pGame->pStartPlatformTexture = createBackgroundImage(pGame->pWindow, pGame->pRenderer, startingPlatformPicture);
+    if (!handleError(pGame, pGame->pStartPlatformTexture, SDL_GetError)) return 0;
 
-    pGame->pPlayer2Texture = createPlayerCharacter(pGame->pRenderer, pGame->pWindow, characterPicture2);
-    if (!handleError(pGame, pGame->pPlayer2Texture, SDL_GetError)) return 0;
+    //pGame->pPlayerTexture[0] = createPlayerCharacter(pGame->pRenderer, pGame->pWindow, characterPicture1); 
+    //if (!handleError(pGame, pGame->pPlayer1Texture, SDL_GetError)) return 0;
+
+    //pGame->pPlayerTexture[1] = createPlayerCharacter(pGame->pRenderer, pGame->pWindow, characterPicture2);
+    //if (!handleError(pGame, pGame->pPlayer2Texture, SDL_GetError)) return 0;
 
     pGame->pMainMenuFont = TTF_OpenFont("../assets/Ticketing.ttf", 25);
     if (!handleError(pGame, pGame->pWindow, TTF_GetError)) return 0;
 
-    pGame->pMainSound = Mix_LoadMUS("../assets/tempMainSound.mp3");
+    pGame->pMainSound = Mix_LoadMUS("../assets/MainThemeSoundtrack.mp3");
     if (!handleError(pGame, pGame->pWindow, Mix_GetError)) return 0;
-    //pGame->pJumpSound = Mix_LoadWAV("../assets/[jumpmusic].wav"); //for short sounds
+
+    pGame->pJumpSound = Mix_LoadWAV("../assets/JumpEffect.wav"); //for short sounds
+    if (!handleError(pGame, pGame->pWindow, Mix_GetError)) return 0;
 
     FILE *fp;
     readFromFileKey(fp, pGame->keybinds);
@@ -87,11 +101,22 @@ int initiateGame(Game* pGame){
     pGame->pMoveLeft1Button = createButton((pGame->windowWidth - BUTTON_WIDTH) / 2 - 80, (pGame->windowHeight - BUTTON_HEIGHT) / 2 + 100, BUTTON_WIDTH, BUTTON_HEIGHT);
     pGame->pMoveRight2Button = createButton((pGame->windowWidth - BUTTON_WIDTH) / 2 + 80, (pGame->windowHeight - BUTTON_HEIGHT) / 2 + 50, BUTTON_WIDTH, BUTTON_HEIGHT);
     pGame->pMoveLeft2Button = createButton((pGame->windowWidth - BUTTON_WIDTH) / 2 + 80, (pGame->windowHeight - BUTTON_HEIGHT) / 2 + 100, BUTTON_WIDTH, BUTTON_HEIGHT);
-    
-    pGame->pPlayer1 = createPlayer(pGame->windowWidth / 5, pGame->windowHeight, 60, 60, SPEED, 400); 
-    pGame->pPlayer2 = createPlayer(2 * pGame->windowWidth / 5, pGame->windowHeight, 60, 60, SPEED, 400);
 
-    // KRASCHAR PÅ MAC initiateLanguage(fp, pGame);
+
+
+    pGame->pGameOverText = createText(pGame->pRenderer, pGame->pMainMenuFont, 255, 255, 255, "Game Over", pGame->windowWidth, pGame->windowHeight, 0, 0);
+
+    pGame->pStartingPlatform = createPlatform(0, pGame->windowHeight - 100, pGame->windowWidth, 100);
+
+    int startPosition = 2;
+    for(int i=0; i<pGame->pNrOfPlayers-1; i++){ //måste vara -1 annars blir det malloc fel
+        
+        pGame->pPlayers[i] = createPlayer(pGame->windowWidth / startPosition, pGame->windowHeight, 60, 60, SPEED, 400);
+        pGame->pPlayerTexture[i] = createPlayerCharacter(pGame->pRenderer, pGame->pWindow, characterPicture); //gör en sträng av detta ist
+        startPosition += 1; 
+    }
+
+    // KRASCHAR Pï¿½ MAC initiateLanguage(fp, pGame);
 
     pGame->state = MAIN_MENU;
 
@@ -101,9 +126,10 @@ int initiateGame(Game* pGame){
 void runGame(Game* pGame){
     bool isRunning = true, left = false, right = false;
     SDL_Event event;
-    int num;
+    int num, sec;
     float jumpHeight = pGame->windowHeight - JUMP_HEIGHT;
-    
+
+    Mix_VolumeMusic(32);
     Mix_PlayMusic(pGame->pMainSound, -1);
     while (isRunning){
         switch (pGame->state) {
@@ -113,11 +139,12 @@ void runGame(Game* pGame){
             break;
             case ENTER_INPUT: handleEnterInput(pGame, event, &num);
             break;
-            case ONGOING: handleOngoing(pGame, event, &isRunning, &right, &left, &jumpHeight);
+            case ONGOING: handleOngoing(pGame, event, &isRunning, &right, &left, &jumpHeight, &sec);
             break;
             case GAME_MENU: handleGameMenu(pGame, event);
             break;
-            case GAME_OVER: 
+            case GAME_OVER:
+                //renderText(pGame->pGameOverText);
             break;
             case QUIT: isRunning = false;
             break;
@@ -129,19 +156,17 @@ void runGame(Game* pGame){
 }
 
 void quitGame(Game* pGame){
-    /* if (pGame->pJumpSound){
-        Mix_FreeChunk(pGame->pJumpSound);
-        Mix_CloseAudio();
-    } */
+    if (pGame->pJumpSound){
+        destroyChuck(pGame->pJumpSound);
+    }
     if (pGame->pMainSound){
         destroyMusic(pGame->pMainSound);
     }
-    destroyPlatform(pGame->platforms);
-    if (pGame->pPlayer1){
-        destroyPlayer(pGame->pPlayer1);
+    if (pGame->platforms[0]){
+        destroyPlatform(pGame->platforms);
     }
-    if (pGame->pPlayer2){
-        destroyPlayer(pGame->pPlayer2);
+    if (pGame->pPlayers[0]){
+        destroyPlayer(&pGame->pPlayers[0]);
     }
     if (pGame->pQuitButtonText){
         destroyText(pGame->pQuitButtonText);
@@ -155,14 +180,11 @@ void quitGame(Game* pGame){
     if (pGame->pMainMenuButtonText){
         destroyText(pGame->pMainMenuButtonText);
     }
+    if (pGame->pStartingPlatform){
+        free(pGame->pStartingPlatform);
+    }
     if (pGame->pBackground){
         destroyBackground(pGame->pBackground);
-    }
-    if (pGame->pPlayer1Texture){
-        SDL_DestroyTexture(pGame->pPlayer1Texture);
-    }    
-    if (pGame->pPlayer2Texture){
-        SDL_DestroyTexture(pGame->pPlayer2Texture);
     }
     if (pGame->pBackgroundTexture){
         SDL_DestroyTexture(pGame->pBackgroundTexture);
@@ -281,9 +303,12 @@ void handleSettingsMenu(Game* pGame, SDL_Event event, int* pNum){
             renderText(pGame->pEnglishButtonText);
             renderText(pGame->pSwedishButtonText);
         }
-
+        renderButton(pGame->pLanguageButton, pGame->pRenderer);
+        renderButton(pGame->pMoveRight2Button, pGame->pRenderer);
+        renderButton(pGame->pMoveLeft2Button, pGame->pRenderer);
+        renderButton(pGame->pReturnButton, pGame->pRenderer);
         renderSettingsMenu(pGame);
-    }  
+    }
 }
 
 void renderSettingsMenu(Game *pGame){
@@ -311,30 +336,25 @@ void handleEnterInput(Game* pGame, SDL_Event event, int* pNum){
                 FILE *fp;
                 saveToFile(fp, pGame->keybinds);
                 pGame->state = MAIN_MENU;
-            } 
-            break; 
+            }
+            break;
         }
     }
 }
 
-void handleOngoing(Game* pGame, SDL_Event event, bool* pIsRunning, bool* pRight, bool* pLeft, float* pJumpHeight){
+void handleOngoing(Game* pGame, SDL_Event event, bool* pIsRunning, bool* pRight, bool* pLeft, float* pJumpHeight, int* pSec){
     Mix_ResumeMusic();
     while (SDL_PollEvent(&event)){
         handleInputOngoing(&pGame->state, &event, pIsRunning, pRight, pLeft, pGame->keybinds);
     }
 
-    movePlayer(pGame->pPlayer1, *pLeft, *pRight, pGame->windowWidth);
-    jumpPlayer(pGame->pPlayer1, *pJumpHeight, pGame->windowHeight);
-    playerCollidePlatform(pGame->pPlayer1, pGame->platforms, pJumpHeight, pGame->windowHeight);
+    handleBackground(pGame->pBackground, pGame->pRenderer, pGame->pBackgroundTexture, pGame->windowWidth, pGame->windowHeight); //denna måste ligga före allt med player
+    
+    handlePlayers(pGame, pLeft, pRight, pJumpHeight);
 
-    jumpPlayer(pGame->pPlayer2, *pJumpHeight, pGame->windowHeight);
-    playerCollidePlatform(pGame->pPlayer2, pGame->platforms, pJumpHeight, pGame->windowHeight);
-
-    handleBackground(pGame->pBackground, pGame->pRenderer, pGame->pBackgroundTexture, pGame->windowWidth, pGame->windowHeight);
-    renderPlayer(pGame->pPlayer1, pGame->pRenderer, pGame->pPlayer1Texture); //player 1
-    renderPlayer(pGame->pPlayer2, pGame->pRenderer, pGame->pPlayer2Texture); //player 2
     handlePlatform(pGame->platforms, pGame->pRenderer, pGame->windowWidth);
-
+    handleStartingPlatform(pGame->pStartingPlatform, pGame->pRenderer, pGame->pStartPlatformTexture, pGame->windowHeight, pSec);
+    //checkIfPlayerDead(pGame->pPlayers[0], pGame->windowHeight, &pGame->state);  
     SDL_Delay(1000/60);
 }
 
@@ -349,7 +369,7 @@ void handleInputOngoing(State* pState, SDL_Event* event, bool* pIsRunning, bool*
                 *pRight = true;
             } else if ((event->key.keysym.sym) == keybinds[1]){
                 *pLeft = true;
-        
+
             }
             // switch (event->key.keysym.sym){
             //     case SDLK_ESCAPE: *pState = GAME_MENU;
@@ -373,7 +393,7 @@ void handleInputOngoing(State* pState, SDL_Event* event, bool* pIsRunning, bool*
             //         break;
             // }
         break;
-        
+
     }
 }
 
@@ -394,4 +414,25 @@ void handleGameMenu(Game* pGame, SDL_Event event){
     
     // Gï¿½R Sï¿½ ATT MAN INTE KAN KOMMA TILL RESUMEMENU renderText(pGame->pMainMenuButtonText);
     // Gï¿½R Sï¿½ ATT MAN INTE KAN KOMMA TILL RESUMEMENU renderText(pGame->pResumeButtonText);
+}
+
+void handlePlayers(Game* pGame, bool *pLeft, bool *pRight, float *pJumpHeight){
+
+    for (int i=0; i<pGame->pNrOfPlayers-1; i++) //av någon anledning dyker inte player 2 upp, förmodligen pga samma bild och position, samt båda rör sig med tangenttrycken
+    {
+        if (i==0) //bara för att prova om spelare 2 dyker upp i loopen
+        {
+            movePlayer(pGame->pPlayers[i], *pLeft, *pRight, pGame->windowWidth);
+            jumpPlayer(pGame->pPlayers[i], *pJumpHeight, pGame->pStartingPlatform->yPos, pGame->pJumpSound);
+            playerCollidePlatform(pGame->pPlayers[i], pGame->platforms, pJumpHeight, pGame->windowHeight, pGame->pJumpSound);
+            renderPlayer(pGame->pPlayers[i], pGame->pRenderer, pGame->pPlayerTexture[i]);
+        }
+        else
+        {
+            jumpPlayer(pGame->pPlayers[i], *pJumpHeight, pGame->pStartingPlatform->yPos, pGame->pJumpSound);
+            playerCollidePlatform(pGame->pPlayers[i], pGame->platforms, pJumpHeight, pGame->windowHeight, pGame->pJumpSound);
+            renderPlayer(pGame->pPlayers[i], pGame->pRenderer, pGame->pPlayerTexture[i]);
+        }
+
+    }
 }

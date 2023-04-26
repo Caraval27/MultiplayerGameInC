@@ -78,7 +78,7 @@ void joinHost(NetworkData *pNetworkData) {
 int receiveHostBroadcast(NetworkData *pNetworkData, GameplayData *pGameplayData) {
 	while (SDLNet_UDP_Recv(pNetworkData->pSocket, pNetworkData->pPacket)) {
 		if (pNetworkData->pPacket->address.host != pNetworkData->serverIP.host
-			|| pNetworkData->pPacket->address.port != pNetworkData->serverIP.port) return 0;
+			|| pNetworkData->pPacket->address.port != pNetworkData->serverIP.port) continue;
 		memcpy(pGameplayData, pNetworkData->pPacket->data, sizeof(GameplayData));
 		return 1;
 	}
