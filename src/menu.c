@@ -55,6 +55,5 @@ void checkIfPlayerDead(Player* pPlayer, int windowHeight, State* pState, int* pN
     if(playerIsDead(pPlayer, windowHeight)) {
         pPlayer->alive = false;
         (*pNrOfPlayersLeft)--;
-        //*pState = MAIN_MENU;
     }
 }

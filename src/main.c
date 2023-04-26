@@ -269,15 +269,15 @@ void handleSettingsMenu(Game* pGame, SDL_Event event, int* pNum){
 void renderSettingsMenu(Game *pGame){
     renderButton(pGame->pLanguageButton, pGame->pRenderer);
     renderText(pGame->pLanguageButtonText);
-    renderButton(pGame->pReturnButton, pGame->pRenderer);
-    renderText(pGame->pReturnButtonText);
     renderButton(pGame->pMoveRight1Button, pGame->pRenderer);
     renderText(pGame->pMoveRight1ButtonText);
     renderButton(pGame->pMoveLeft1Button, pGame->pRenderer);
     renderText(pGame->pMoveLeft1ButtonText);
     renderButton(pGame->pMoveRight2Button, pGame->pRenderer);
-    //renderText(pGame->pMoveRight2ButtonText);
+    renderText(pGame->pMoveRight2ButtonText);
     renderButton(pGame->pMoveLeft2Button, pGame->pRenderer);
+    renderButton(pGame->pReturnButton, pGame->pRenderer);
+    renderText(pGame->pReturnButtonText);
 }
 
 void handleEnterInput(Game* pGame, SDL_Event event, int* pNum){
@@ -432,35 +432,62 @@ void resetGame(Game* pGame, int* pTime){
 }
 
 void quitGame(Game* pGame){
-    if (pGame->pJumpSound) {
-        destroyChunk(pGame->pJumpSound);
+    if (pGame->pSwedishButton) {
+        destroyButton(pGame->pSwedishButton);
     }
-    if (pGame->pMainSound) {
-        destroyMusic(pGame->pMainSound);
+    if (pGame->pEnglishButton) {
+        destroyButton(pGame->pEnglishButton);
     }
-    if (pGame->pMainMenuButtonText) {
-        destroyText(pGame->pMainMenuButtonText);
+    if (pGame->pReturnButton) {
+        destroyButton(pGame->pReturnButton);
     }
-    if (pGame->pResumeButtonText) {
-        destroyText(pGame->pResumeButtonText);
+    if (pGame->pMoveLeft2Button) {
+        destroyButton(pGame->pMoveLeft2Button);
     }
-    if (pGame->pQuitButtonText) {
-        destroyText(pGame->pQuitButtonText);
+    if (pGame->pMoveRight2Button) {
+        destroyButton(pGame->pMoveRight2Button);
     }
-    if (pGame->pStartButtonText) {
-        destroyText(pGame->pStartButtonText);
+    if (pGame->pLanguageButton) {
+        destroyButton(pGame->pLanguageButton);
     }
-    if (pGame->pStartPlatform) {
-        destroyPlatform(pGame->pStartPlatform);
+    if (pGame->pMainMenuButton) {
+        destroyButton(pGame->pMainMenuButton);
+    }
+    if (pGame->pResumeButton) {
+        destroyButton(pGame->pResumeButton);
+    }
+    if (pGame->pQuitButton) {
+        destroyButton(pGame->pQuitButton);
+    }
+    if (pGame->pStartButton) {
+        destroyButton(pGame->pStartButton);
     }
     if (pGame->pPlayers[0]) {
         destroyPlayers(&pGame->pPlayers[0]);
+    }
+    if (pGame->pStartPlatform) {
+        destroyPlatform(pGame->pStartPlatform);
     }
     if (pGame->pPlatforms[0]) {
         destroyPlatforms(pGame->pPlatforms);
     }
     if (pGame->pBackground) {
         destroyBackground(pGame->pBackground);
+    }
+    if (pGame->pJumpSound) {
+        destroyChunk(pGame->pJumpSound);
+    }
+    if (pGame->pMainSound) {
+        destroyMusic(pGame->pMainSound);
+    }
+    if (pGame->pPlayerTextures[0]) {
+        destroyPlayerTextures(pGame->pPlayerTextures);
+    }
+    if (pGame->pStartPlatformTexture) {
+        SDL_DestroyTexture(pGame->pStartPlatformTexture);
+    }
+    if (pGame->pPlatformTexture) {
+        SDL_DestroyTexture(pGame->pPlatformTexture);
     }
     if (pGame->pBackgroundTexture) {
         SDL_DestroyTexture(pGame->pBackgroundTexture);
@@ -475,6 +502,7 @@ void quitGame(Game* pGame){
         SDL_DestroyWindow(pGame->pWindow);
     }
     //destro playerRenderer?
+    Mix_CloseAudio();
     Mix_Quit();
     TTF_Quit();
     SDL_Quit();

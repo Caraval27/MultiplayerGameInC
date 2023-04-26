@@ -81,12 +81,10 @@ void destroyBackground(Background* pBackground){
 
 void destroyMusic(Mix_Music* pMusic){
     Mix_FreeMusic(pMusic);
-    Mix_CloseAudio();
 }
 
 void destroyChunk(Mix_Chunk* pChunk){
     Mix_FreeChunk(pChunk);
-    Mix_CloseAudio();
 }
 
 void handleStartPlatform(Platform* pStartPlatform, Platform* pFirstPlatform, Player* pPlayer, SDL_Renderer* pRenderer, SDL_Texture* pTexture, int windowHeight, int* pTime){
