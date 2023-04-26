@@ -15,3 +15,4 @@ void scrollPlatform(Platform* pPlatform);
 void renderPlatform(SDL_Renderer* pRenderer, Platform* pPlatform);
 void handlePlatform(Platform** Platforms, SDL_Renderer* pRenderer, int windowWidth);
 void destroyPlatform(Platform** Platforms);
+void resetPlatform(Platform** platforms);

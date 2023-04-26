@@ -61,3 +61,4 @@ void handleOngoing(Game* pGame, SDL_Event event, bool* pIsRunning, bool* pRight,
 void handleInputOngoing(State* pState, SDL_Event* event, bool* pIsRunning, bool* pRight, bool* pLeft, int keybinds[]);
 void handleGameMenu(Game* pGame, SDL_Event event);
 void handlePlayers(Game* pGame, bool* pLeft, bool* pRight, float *pJumpHeight);
+void resetGame(Game* pGame, int* pTime);
