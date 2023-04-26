@@ -110,12 +110,18 @@ int initiateGame(Game* pGame){
     pGame->pStartingPlatform = createPlatform(0, pGame->windowHeight - 100, pGame->windowWidth, 100);
 
     
-    for(int i=0; i<pGame->pNrOfPlayers; i++){ 
+    /*for(int i=0; i<pGame->pNrOfPlayers; i++){ 
         int startPosition = 5;
         pGame->pPlayers[i] = createPlayer(pGame->windowWidth / startPosition, pGame->windowHeight, 60, 60, SPEED, 400);
         pGame->pPlayerTexture[i] = createPlayerCharacter(pGame->pRenderer, pGame->pWindow, characterPicture); //gör en sträng av detta ist
         startPosition += 100; //så att spelarna får olika startpositioner
-    }
+    }*/
+
+    pGame->pPlayers[0] = createPlayer(pGame->windowWidth / 5, pGame->windowHeight, 60, 60, SPEED, 400);
+    pGame->pPlayerTexture[0] = createPlayerCharacter(pGame->pRenderer, pGame->pWindow, characterPicture); //gör en sträng av detta ist
+
+    pGame->pPlayers[1] = createPlayer(pGame->windowWidth / 10, pGame->windowHeight, 60, 60, SPEED, 400);
+    pGame->pPlayerTexture[1] = createPlayerCharacter(pGame->pRenderer, pGame->pWindow, characterPicture); //gör en sträng av detta ist
 
     // KRASCHAR Pï¿½ MAC initiateLanguage(fp, pGame);
 
@@ -354,6 +360,8 @@ void handleOngoing(Game* pGame, SDL_Event event, bool* pIsRunning, bool* pRight,
     playerCollidePlatform(pGame->pPlayers[0], pGame->platforms, pJumpHeight, pGame->windowHeight, pGame->pJumpSound);
     renderPlayer(pGame->pPlayers[0], pGame->pRenderer, pGame->pPlayerTexture[0]);
 
+    jumpPlayer(pGame->pPlayers[1], *pJumpHeight, pGame->pStartingPlatform->yPos, pGame->pJumpSound);
+    renderPlayer(pGame->pPlayers[1], pGame->pRenderer, pGame->pPlayerTexture[1]);
    
     handlePlatform(pGame->platforms, pGame->pRenderer, pGame->windowWidth);
     handleStartingPlatform(pGame->pStartingPlatform, pGame->pRenderer, pGame->pStartPlatformTexture, pGame->windowHeight, pSec);
