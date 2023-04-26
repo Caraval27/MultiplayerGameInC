@@ -89,19 +89,18 @@ void destroyChunk(Mix_Chunk* pChunk){
     Mix_CloseAudio();
 }
 
-void handleStartingPlatform(Platform* pStartingPlatform, SDL_Renderer* pRenderer, SDL_Texture* pTexture, int windowHeight, int* pTime){
+void handleStartPlatform(Platform* pStartPlatform, SDL_Renderer* pRenderer, SDL_Texture* pTexture, int windowHeight, int* pTime){
     (*pTime)++;
 
-    if (pStartingPlatform->yPos < windowHeight) {
+    if (pStartPlatform->yPos < windowHeight) {
         if (*pTime > 500) { 
-            pStartingPlatform->yPos += PLATFORM_SPEED;
+            pStartPlatform->yPos += PLATFORM_SPEED;
         }
-        SDL_Rect sPlatformRect = {pStartingPlatform->xPos, pStartingPlatform->yPos, pStartingPlatform->width, pStartingPlatform->height};
-        SDL_RenderCopy(pRenderer, pTexture, NULL, &sPlatformRect);
+        renderPlatform(pStartPlatform, pRenderer, pTexture);
     }
 }
 
-void resetStartingPlatform(Platform* pStartingPlatform, int windowHeight, int* pTime){
-    pStartingPlatform->yPos = windowHeight - 100;
+void resetStartPlatform(Platform* pStartPlatform, int windowHeight, int* pTime){
+    pStartPlatform->yPos = windowHeight - 100;
     *pTime = 0;
 }

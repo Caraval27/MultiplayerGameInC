@@ -64,6 +64,9 @@ int initiateGame(Game* pGame){
     pGame->pStartPlatformTexture = createPicture(pGame->pWindow, pGame->pRenderer, STARTING_PLATFORM_PICTURE);
     if (!handleError(pGame, pGame->pStartPlatformTexture, SDL_GetError)) return 0;
 
+    pGame->pPlatformTexture = createPicture(pGame->pWindow, pGame->pRenderer, PLATFORM_PICTURE);
+    if (!handleError(pGame, pGame->pStartPlatformTexture, SDL_GetError)) return 0;
+
     //pGame->pPlayerTexture[0] = createPlayerCharacter(pGame->pRenderer, pGame->pWindow, characterPicture1);
     //if (!handleError(pGame, pGame->pPlayer1Texture, SDL_GetError)) return 0;
 
@@ -102,13 +105,13 @@ int initiateGame(Game* pGame){
 
     pGame->pGameOverText = createText(pGame->pRenderer, pGame->pMainMenuFont, 255, 255, 255, "Game Over", pGame->windowWidth, pGame->windowHeight, 0, 0);
 
-    pGame->pStartingPlatform = createPlatform(0, pGame->windowHeight - 100, pGame->windowWidth, 100);
+    pGame->pStartPlatform = createPlatform(0, pGame->windowHeight - 100, pGame->windowWidth, 100);
 
     int startPosition = 2;
     for(int i=0; i<pGame->pNrOfPlayers-1; i++){ //måste vara -1 annars blir det malloc fel
 
         pGame->pPlayers[i] = createPlayer(pGame->windowWidth / startPosition, pGame->windowHeight, 60, 60, SPEED, 400);
-        pGame->pPlayerTextures[i] = createPlayerCharacter(pGame->pRenderer, pGame->pWindow, CHARACTER_PICTURE); //gör en sträng av detta ist
+        pGame->pPlayerTextures[i] = createPicture(pGame->pWindow, pGame->pRenderer, CHARACTER_PICTURE); //gör en sträng av detta ist
         startPosition += 1;
     }
 
@@ -158,8 +161,8 @@ void quitGame(Game* pGame){
     if (pGame->pMainSound){
         destroyMusic(pGame->pMainSound);
     }
-    if (pGame->platforms[0]){
-        destroyPlatform(pGame->platforms);
+    if (pGame->pPlatforms[0]){
+        destroyPlatform(pGame->pPlatforms);
     }
     if (pGame->pPlayers[0]){
         destroyPlayer(&pGame->pPlayers[0]);
@@ -176,8 +179,8 @@ void quitGame(Game* pGame){
     if (pGame->pMainMenuButtonText){
         destroyText(pGame->pMainMenuButtonText);
     }
-    if (pGame->pStartingPlatform){
-        free(pGame->pStartingPlatform);
+    if (pGame->pStartPlatform){
+        free(pGame->pStartPlatform);
     }
     if (pGame->pBackground){
         destroyBackground(pGame->pBackground);
@@ -349,8 +352,8 @@ void handleOngoing(Game* pGame, SDL_Event event, bool* pIsRunning, bool* pRight,
 
     handlePlayers(pGame, pLeft, pRight, pJumpHeight);
 
-    handlePlatform(pGame->platforms, pGame->pRenderer, pGame->windowWidth);
-    handleStartingPlatform(pGame->pStartingPlatform, pGame->pRenderer, pGame->pStartPlatformTexture, pGame->windowHeight, pTime);
+    handlePlatforms(pGame->pPlatforms, pGame->pRenderer, pGame->pPlatformTexture, pGame->windowWidth);
+    handleStartPlatform(pGame->pStartPlatform, pGame->pRenderer, pGame->pStartPlatformTexture, pGame->windowHeight, pTime);
     //checkIfPlayerDead(pGame->pPlayers[0], pGame->windowHeight, &pGame->state);
     SDL_Delay(1000/60);
 }
@@ -420,14 +423,14 @@ void handlePlayers(Game* pGame, bool *pLeft, bool *pRight, float *pJumpHeight){
         if (i == 0) //bara för att prova om spelare 2 dyker upp i loopen
         {
             movePlayer(pGame->pPlayers[i], *pLeft, *pRight, pGame->windowWidth);
-            jumpPlayer(pGame->pPlayers[i], *pJumpHeight, pGame->pStartingPlatform->yPos, pGame->pJumpSound);
-            playerCollidePlatform(pGame->pPlayers[i], pGame->platforms, pJumpHeight, pGame->windowHeight, pGame->pJumpSound);
+            jumpPlayer(pGame->pPlayers[i], *pJumpHeight, pGame->pStartPlatform->yPos, pGame->pJumpSound);
+            playerCollidePlatform(pGame->pPlayers[i], pGame->pPlatforms, pJumpHeight, pGame->windowHeight, pGame->pJumpSound);
             renderPlayer(pGame->pPlayers[i], pGame->pRenderer, pGame->pPlayerTextures[i]);
         }
         else
         {
-            jumpPlayer(pGame->pPlayers[i], *pJumpHeight, pGame->pStartingPlatform->yPos, pGame->pJumpSound);
-            playerCollidePlatform(pGame->pPlayers[i], pGame->platforms, pJumpHeight, pGame->windowHeight, pGame->pJumpSound);
+            jumpPlayer(pGame->pPlayers[i], *pJumpHeight, pGame->pStartPlatform->yPos, pGame->pJumpSound);
+            playerCollidePlatform(pGame->pPlayers[i], pGame->pPlatforms, pJumpHeight, pGame->windowHeight, pGame->pJumpSound);
             renderPlayer(pGame->pPlayers[i], pGame->pRenderer, pGame->pPlayerTextures[i]);
         }
 
@@ -436,12 +439,12 @@ void handlePlayers(Game* pGame, bool *pLeft, bool *pRight, float *pJumpHeight){
 
 void resetGame(Game* pGame, int* pTime, float* pJumpHeight){
     if (pGame->state == ONGOING){
-        resetStartingPlatform(pGame->pStartingPlatform, pGame->windowHeight, pTime);
-        resetPlatform(pGame->platforms);
+        resetStartPlatform(pGame->pStartPlatform, pGame->windowHeight, pTime);
+        resetPlatform(pGame->pPlatforms);
         int startPosition = 2;
         for(int i=0; i<pGame->pNrOfPlayers-1; i++){ //måste vara -1 annars blir det malloc fel
             pGame->pPlayers[i] = createPlayer(pGame->windowWidth / startPosition, pGame->windowHeight, 60, 60, SPEED, 400);
-            pGame->pPlayerTextures[i] = createPlayerCharacter(pGame->pRenderer, pGame->pWindow, CHARACTER_PICTURE); //gör en sträng av detta ist
+            pGame->pPlayerTextures[i] = createPicture(pGame->pWindow, pGame->pRenderer, CHARACTER_PICTURE); //gör en sträng av detta ist
             startPosition += 1;
         }
         *pJumpHeight = pGame->windowHeight - JUMP_HEIGHT;

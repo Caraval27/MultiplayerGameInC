@@ -14,10 +14,9 @@ typedef struct {
 } Player;
 
 Player* createPlayer(float xPos, float yPos, float width, float height, float xVelocity, float yVelocity);
-SDL_Texture* createPlayerCharacter(SDL_Renderer* pRenderer, SDL_Window* pWindow, char characterPicture[]);
 void movePlayer(Player* pPlayer, bool left, bool right, int windowWidth);
 void jumpPlayer(Player* pPlayer, float jumpHeight, int height, Mix_Chunk* pJumpSound);
-void playerCollidePlatform(Player* pPlayer, Platform** platforms, float* pJumpHeight, int windowHeight, Mix_Chunk* pJumpSound);
+void playerCollidePlatform(Player* pPlayer, Platform** pPlatforms, float* pJumpHeight, int windowHeight, Mix_Chunk* pJumpSound);
 void renderPlayer(Player* pPlayer, SDL_Renderer* pRenderer, SDL_Texture* pTexture);
 void destroyPlayer(Player** pPlayer);
 void destroyPlayerTexture(SDL_Texture** pPlayerTexture);

@@ -16,45 +16,44 @@ void scrollPlatform(Platform* pPlatform) {
 	// remember to destroy plank if out of bounds
 }
 
-void renderPlatform(SDL_Renderer* pRenderer, Platform* pPlatform) {
+void renderPlatform(Platform* pPlatform, SDL_Renderer* pRenderer, SDL_Texture* pTexture) {
 	SDL_Rect rect = {pPlatform->xPos, pPlatform->yPos, pPlatform->width, pPlatform->height};
 
-	SDL_SetRenderDrawColor(pRenderer, 255, 0, 0, 255);
-	SDL_RenderFillRect(pRenderer, &rect);
+    SDL_RenderCopy(pRenderer, pTexture, NULL, &rect);
 }
 
-void handlePlatform(Platform** platforms, SDL_Renderer* pRenderer, int windowWidth){
+void handlePlatforms(Platform** pPlatforms, SDL_Renderer* pRenderer, SDL_Texture* pTexture, int windowWidth){
     int i = 0;
 
     if (SDL_GetTicks64() % 1000 < 17) {
         i = 0;
-        while (platforms[i]) i++; // Variabel som direkt visar antalet plattformar?
+        while (pPlatforms[i]) i++; // Variabel som direkt visar antalet plattformar?
         int width = PLATFORM_WIDTH;
         int height = PLATFORM_HEIGHT;
         int x = (rand() % (windowWidth - width - (width / 4) * 2)) + width / 4;
         int y = 0 - height;
-        platforms[i] = createPlatform(x, y, width, height);
+        pPlatforms[i] = createPlatform(x, y, width, height);
     }
 
     i = 0;
-    while (platforms[i]) {
-        renderPlatform(pRenderer, platforms[i]);
-        scrollPlatform(platforms[i]);
+    while (pPlatforms[i]) {
+        renderPlatform(pPlatforms[i], pRenderer, pTexture);
+        scrollPlatform(pPlatforms[i]);
         i++;
     }
 }
 
-void destroyPlatform(Platform** platforms) {
-    for (int i = 0; platforms[i] != 0; i++) {
-        if (platforms[i]) {
-            free(platforms[i]);
-        }
+void resetPlatform(Platform** pPlatforms){
+    destroyPlatform(pPlatforms);
+    for(int i = 0; pPlatforms[i] != 0; i++){
+        pPlatforms[i] = 0;
     }
 }
 
-void resetPlatform(Platform** platforms){
-    destroyPlatform(platforms);
-    for(int i = 0; platforms[i] != 0; i++){
-        platforms[i] = 0;
+void destroyPlatform(Platform** pPlatforms) {
+    for (int i = 0; pPlatforms[i] != 0; i++) {
+        if (pPlatforms[i]) {
+            free(pPlatforms[i]);
+        }
     }
 }

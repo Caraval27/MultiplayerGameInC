@@ -10,9 +10,10 @@
 #include "../include/network.h"
 
 #define MAX_PLAYERS 6
-#define CHARACTER_PICTURE "../assets/musse.png"
 #define BACKGROUND_PICTURE "../assets/background.png"
+#define PLATFORM_PICTURE "../assets/iceBlock.png"
 #define STARTING_PLATFORM_PICTURE "../assets/iceBlock.png"
+#define CHARACTER_PICTURE "../assets/musse.png"
 #define MAIN_MENU_PICTURE "../assets/mainMenuBackground.png"
 
 typedef struct {
@@ -21,7 +22,7 @@ typedef struct {
     int windowWidth, windowHeight;
     SDL_Renderer *pRenderer;
     SDL_RendererFlip *flip;
-    SDL_Texture *pBackgroundTexture, *pMainMenuTexture, *pStartPlatformTexture;
+    SDL_Texture *pBackgroundTexture, *pMainMenuTexture, *pStartPlatformTexture, *pPlatformTexture;
     TTF_Font *pMainMenuFont;
     Background* pBackground;
     Button *pStartButton, *pQuitButton, *pResumeButton, *pMainMenuButton, *pSettingsButton, *pLanguageButton, *pEnglishButton, *pSwedishButton, *pReturnButton,
@@ -34,7 +35,7 @@ typedef struct {
     SDL_Texture* pPlayerTextures[6];
     int pNrOfPlayers;
 
-    Platform *platforms[1000], *pStartingPlatform;
+    Platform *pPlatforms[1000], *pStartPlatform;
 
     int keybinds[NR_OF_KEYBINDS];
     char language[NR_OF_WORDS][50];

@@ -14,28 +14,6 @@ Player* createPlayer(float xPos, float yPos, float width, float height, float xV
     return pPlayer;
 }
 
-SDL_Texture* createPlayerCharacter(SDL_Renderer* pRenderer, SDL_Window* pWindow, char characterPicture[]){
-    SDL_Surface* pSurface = IMG_Load(characterPicture);
-    if (!pSurface) {
-        printf("Error: %s\n", SDL_GetError());
-        SDL_DestroyRenderer(pRenderer);
-        SDL_DestroyWindow(pWindow);
-        SDL_Quit();
-        exit (1);
-    }
-    SDL_Texture* pTexture = SDL_CreateTextureFromSurface(pRenderer, pSurface);
-    if (!pTexture) {
-        printf("Error: %s\n",SDL_GetError());
-        SDL_DestroyRenderer(pRenderer);
-        SDL_DestroyWindow(pWindow);
-        SDL_Quit();
-        exit (1);
-    }
-    SDL_FreeSurface(pSurface);
-
-    return pTexture;
-}
-
 void movePlayer(Player* pPlayer, bool left, bool right, int windowWidth){
     if (!pPlayer->alive) {
         return;
@@ -56,7 +34,7 @@ void movePlayer(Player* pPlayer, bool left, bool right, int windowWidth){
     }
 }
 
-void jumpPlayer(Player* pPlayer, float jumpHeight, int startingPlatformHeight, Mix_Chunk* pJumpSound){
+void jumpPlayer(Player* pPlayer, float jumpHeight, int startPlatformHeight, Mix_Chunk* pJumpSound){
     if (!pPlayer->alive) {
         return;
     }
@@ -67,8 +45,8 @@ void jumpPlayer(Player* pPlayer, float jumpHeight, int startingPlatformHeight, M
         pPlayer->yPos = 0;
         pPlayer->yVelocity = -(pPlayer->yVelocity);
     }
-    else if (pPlayer->yPos >= startingPlatformHeight - pPlayer->height) {
-        pPlayer->yPos = startingPlatformHeight - pPlayer->height;
+    else if (pPlayer->yPos >= startPlatformHeight - pPlayer->height) {
+        pPlayer->yPos = startPlatformHeight - pPlayer->height;
         pPlayer->yVelocity = -(pPlayer->yVelocity);
         Mix_VolumeChunk(pJumpSound, 16);
         Mix_PlayChannel(-1, pJumpSound, 0);
@@ -79,21 +57,21 @@ void jumpPlayer(Player* pPlayer, float jumpHeight, int startingPlatformHeight, M
     }
 }
 
-void playerCollidePlatform(Player* pPlayer, Platform** platforms, float* pJumpHeight, int windowHeight, Mix_Chunk* pJumpSound){
+void playerCollidePlatform(Player* pPlayer, Platform** pPlatforms, float* pJumpHeight, int windowHeight, Mix_Chunk* pJumpSound){
     if (!pPlayer->alive) {
         return;
     }
 
     int i;
 
-    for (i = 0; platforms[i] != 0; i++) {
+    for (i = 0; pPlatforms[i] != 0; i++) {
         if (pPlayer->yVelocity > 0 &&
-        pPlayer->xPos + pPlayer->width >= platforms[i]->xPos &&
-        pPlayer->xPos <= platforms[i]->xPos + platforms[i]->width &&
-        pPlayer->yPos + pPlayer->height >= platforms[i]->yPos &&
-        pPlayer->yPos + pPlayer->height < platforms[i]->yPos + pPlayer->yVelocity / 60) {
+        pPlayer->xPos + pPlayer->width >= pPlatforms[i]->xPos &&
+        pPlayer->xPos <= pPlatforms[i]->xPos + pPlatforms[i]->width &&
+        pPlayer->yPos + pPlayer->height >= pPlatforms[i]->yPos &&
+        pPlayer->yPos + pPlayer->height < pPlatforms[i]->yPos + pPlayer->yVelocity / 60) {
             pPlayer->yVelocity = -(pPlayer->yVelocity);
-            *pJumpHeight = platforms[i]->yPos - JUMP_HEIGHT;
+            *pJumpHeight = pPlatforms[i]->yPos - JUMP_HEIGHT;
             Mix_VolumeChunk(pJumpSound, 16);
             Mix_PlayChannel(-1, pJumpSound, 0);
             /*if (*pJumpHeight < 1) {
@@ -129,7 +107,7 @@ void destroyPlayer(Player** pPlayers) {
 void destroyPlayerTexture(SDL_Texture** pPlayerTextures) {
     for (int i = 0; pPlayerTextures[i] != 0; i++) {
         if (pPlayerTextures[i]) {
-            free(pPlayerTextures[i]);
+            SDL_DestroyTexture(pPlayerTextures[i]);
         }
     }
 }
