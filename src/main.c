@@ -114,7 +114,7 @@ int initiateGame(Game* pGame){
         int startPosition = 5;
         pGame->pPlayers[i] = createPlayer(pGame->windowWidth / startPosition, pGame->windowHeight, 60, 60, SPEED, 400);
         pGame->pPlayerTexture[i] = createPlayerCharacter(pGame->pRenderer, pGame->pWindow, characterPicture); //gör en sträng av detta ist
-        startPosition += 100; //så att spelarna får olika startpositioner
+        startPosition += 100; //detta funkar inte av någon anledning
     }
 
     // KRASCHAR Pï¿½ MAC initiateLanguage(fp, pGame);
