@@ -43,6 +43,7 @@ int initiateGame(Game* pGame){
     pGame->windowHeight = displayMode.h;
 
     pGame->pNrOfPlayers = MAX_PLAYERS;
+    pGame->nrOfPlayersLeft = MAX_PLAYERS;
 
     pGame->pWindow = SDL_CreateWindow("Totally not a doodle jump clone", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, pGame->windowWidth, pGame->windowHeight, 0);
     if (!handleError(pGame, pGame->pWindow, SDL_GetError)) return 0;
@@ -109,7 +110,7 @@ int initiateGame(Game* pGame){
 
     int startPosition = 2;
     for(int i=0; i<pGame->pNrOfPlayers-1; i++){ //måste vara -1 annars blir det malloc fel
-
+        printf("%d\n", i);
         pGame->pPlayers[i] = createPlayer(pGame->windowWidth / startPosition, pGame->windowHeight, CHARACTER_WIDTH, CHARACTER_HEIGHT, MOVE_SPEED, JUMP_SPEED);
         pGame->pPlayerTextures[i] = createPicture(pGame->pWindow, pGame->pRenderer, CHARACTER_PICTURE); //gör en sträng av detta ist
         startPosition += 1;
@@ -423,7 +424,7 @@ void handlePlayers(Game* pGame, bool *pLeft, bool *pRight){
             movePlayer(pGame->pPlayers[i], *pLeft, *pRight, pGame->windowWidth);
             jumpPlayer(pGame->pPlayers[i], pGame->pStartPlatform->yPos, pGame->pJumpSound);
             playerCollidePlatform(pGame->pPlayers[i], pGame->pPlatforms, pGame->pJumpSound);
-            checkIfPlayerDead(pGame->pPlayers[i], pGame->windowHeight, &pGame->state);
+            checkIfPlayerDead(pGame->pPlayers[i], pGame->windowHeight, &pGame->state, &pGame->nrOfPlayersLeft);
             renderPlayer(pGame->pPlayers[i], pGame->pRenderer, pGame->pPlayerTextures[i]);
 
         }
@@ -431,7 +432,7 @@ void handlePlayers(Game* pGame, bool *pLeft, bool *pRight){
         {
             jumpPlayer(pGame->pPlayers[i], pGame->pStartPlatform->yPos, pGame->pJumpSound);
             playerCollidePlatform(pGame->pPlayers[i], pGame->pPlatforms, pGame->pJumpSound);
-            checkIfPlayerDead(pGame->pPlayers[i], pGame->windowHeight, &pGame->state);
+            checkIfPlayerDead(pGame->pPlayers[i], pGame->windowHeight, &pGame->state, &pGame->nrOfPlayersLeft);
             renderPlayer(pGame->pPlayers[i], pGame->pRenderer, pGame->pPlayerTextures[i]);
         }
 

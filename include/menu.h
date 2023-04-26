@@ -30,4 +30,4 @@ void handleButton(Button* pButton, State* pState, State desiredState);
 void renderButton(Button* pButton, SDL_Renderer* pRenderer);
 void destroyButton(Button* pButton);
 int playerIsDead(Player* pPlayer, int windowHeight);
-void checkIfPlayerDead(Player* pPlayer, int windowHeight, State* pState);
+void checkIfPlayerDead(Player* pPlayer, int windowHeight, State* pState, int* nrOfPlayersLeft);

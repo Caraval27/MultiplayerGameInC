@@ -33,7 +33,7 @@ typedef struct {
 
     Player* pPlayers[6];
     SDL_Texture* pPlayerTextures[6];
-    int pNrOfPlayers;
+    int pNrOfPlayers, nrOfPlayersLeft;
 
     Platform *pPlatforms[1000], *pStartPlatform;
 
