@@ -23,7 +23,7 @@ typedef struct {
     SDL_Renderer *pRenderer;
     SDL_RendererFlip *flip;
     SDL_Texture *pBackgroundTexture, *pMainMenuTexture, *pStartPlatformTexture, *pPlatformTexture;
-    TTF_Font *pMainMenuFont;
+    TTF_Font *pMenuFont;
     Background* pBackground;
     Button *pStartButton, *pQuitButton, *pResumeButton, *pMainMenuButton, *pSettingsButton, *pLanguageButton, *pEnglishButton, *pSwedishButton, *pReturnButton,
     *pMoveLeft1Button, *pMoveRight1Button, *pMoveLeft2Button, *pMoveRight2Button;

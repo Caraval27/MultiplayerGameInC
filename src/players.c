@@ -44,7 +44,7 @@ void jumpPlayer(Player* pPlayer, int startPlatformHeight, Mix_Chunk* pJumpSound)
         else if (pPlayer->yPos >= startPlatformHeight - pPlayer->height) {
             pPlayer->yPos = startPlatformHeight - pPlayer->height;
             pPlayer->yVelocity = JUMP_SPEED;
-            Mix_VolumeChunk(pJumpSound, 3);
+            Mix_VolumeChunk(pJumpSound, 20);
             Mix_PlayChannel(-1, pJumpSound, 0);
         }
     }
@@ -61,7 +61,6 @@ void playerCollidePlatform(Player* pPlayer, Platform** pPlatforms, Mix_Chunk* pJ
             pPlayer->yPos + pPlayer->height >= pPlatforms[i]->yPos &&
             pPlayer->yPos + pPlayer->height < pPlatforms[i]->yPos + pPlayer->yVelocity / 60) {
                 pPlayer->yVelocity = JUMP_SPEED;
-                Mix_VolumeChunk(pJumpSound, 3);
                 Mix_PlayChannel(-1, pJumpSound, 0);
             }
         }

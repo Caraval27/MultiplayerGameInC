@@ -21,5 +21,5 @@ void renderBackground(Background* pBackground, SDL_Renderer* pRenderer, SDL_Text
 void destroyBackground(Background* pBackground);
 void destroyMusic(Mix_Music* pMainSound);
 void destroyChunk(Mix_Chunk* pMusicChunk);
-void handleStartPlatform(Platform* pStartPlatform, Player* pPlayer, SDL_Renderer* pRenderer, SDL_Texture* pTexture, int windowHeight, int* pTime);
+void handleStartPlatform(Platform* pStartPlatform, Platform* pFirstPlatform, Player* pPlayer, SDL_Renderer* pRenderer, SDL_Texture* pTexture, int windowHeight, int* pTime);
 void resetStartPlatform(Platform* pStartPlatform, int windowHeight, int* pTime);
