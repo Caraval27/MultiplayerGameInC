@@ -99,6 +99,10 @@ void renderPlayer(Player* pPlayer, SDL_Renderer* pRenderer, SDL_Texture* pTextur
     SDL_RenderCopy(pRenderer, pTexture, NULL, &rect);
 }
 
-void destroyPlayer(Player* pPlayer){
-    free(pPlayer);
+void destroyPlayer(Player** pPlayers) {
+    for (int i = 0; pPlayers[i] != 0; i++) {
+        if (pPlayers[i]) {
+            free(pPlayers[i]);
+        }
+    }
 }

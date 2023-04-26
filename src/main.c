@@ -167,8 +167,8 @@ void quitGame(Game* pGame){
     if (pGame->pPlayers[0]){
         destroyPlayer(pGame->pPlayers[0]);
     }
-    if (pGame->pPlayers[1]){
-        destroyPlayer(pGame->pPlayers[1]);
+    if (pGame->pPlayers[0]){
+        destroyPlayer(pGame->pPlayers[0]);
     }
     if (pGame->pQuitButtonText){
         destroyText(pGame->pQuitButtonText);
