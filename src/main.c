@@ -365,7 +365,7 @@ void handleOngoing(Game* pGame, SDL_Event event, bool* pIsRunning, bool* pRight,
    
     handlePlatform(pGame->platforms, pGame->pRenderer, pGame->windowWidth);
     handleStartingPlatform(pGame->pStartingPlatform, pGame->pRenderer, pGame->pStartPlatformTexture, pGame->windowHeight, pSec);
-    checkIfPlayerDead(pGame->players[0], pGame->windowHeight, &pGame->state);  
+    checkIfPlayerDead(pGame->pPlayers[0], pGame->windowHeight, &pGame->state);  
     SDL_Delay(1000/60);
 }
 
