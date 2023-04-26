@@ -109,12 +109,12 @@ int initiateGame(Game* pGame){
 
     pGame->pStartingPlatform = createPlatform(0, pGame->windowHeight - 100, pGame->windowWidth, 100);
 
-    
+    int startPosition = 2;
     for(int i=0; i<pGame->pNrOfPlayers-1; i++){ //måste vara -1 annars blir det malloc fel
-        int startPosition = 5;
+        
         pGame->pPlayers[i] = createPlayer(pGame->windowWidth / startPosition, pGame->windowHeight, 60, 60, SPEED, 400);
         pGame->pPlayerTexture[i] = createPlayerCharacter(pGame->pRenderer, pGame->pWindow, characterPicture); //gör en sträng av detta ist
-        startPosition += 100; //detta funkar inte av någon anledning
+        startPosition += 1; //detta funkar inte av någon anledning
     }
 
     // KRASCHAR Pï¿½ MAC initiateLanguage(fp, pGame);
