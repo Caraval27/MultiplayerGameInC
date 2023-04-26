@@ -2,7 +2,7 @@
 
 Button* createButton(float xPos, float yPos, float width, float height){
     Button* pButton = malloc(sizeof(Button));
-    
+
     pButton->xPos = xPos;
     pButton->yPos = yPos;
     pButton->width = width;
@@ -12,8 +12,8 @@ Button* createButton(float xPos, float yPos, float width, float height){
 }
 
 void getMousePos(Button* pButton){
-    int mouseXPos, mouseYPos;  
-    int mouseXDelta, mouseYDelta;  
+    int mouseXPos, mouseYPos;
+    int mouseXDelta, mouseYDelta;
 
     pButton->mouseState = SDL_GetMouseState(&mouseXPos, &mouseYPos);
     mouseXDelta = mouseXPos - (pButton->xPos + pButton->width / 2);

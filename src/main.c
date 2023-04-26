@@ -68,7 +68,7 @@ int initiateGame(Game* pGame){
     pGame->pStartPlatformTexture = createBackgroundImage(pGame->pWindow, pGame->pRenderer, startingPlatformPicture);
     if (!handleError(pGame, pGame->pStartPlatformTexture, SDL_GetError)) return 0;
 
-    //pGame->pPlayerTexture[0] = createPlayerCharacter(pGame->pRenderer, pGame->pWindow, characterPicture1); 
+    //pGame->pPlayerTexture[0] = createPlayerCharacter(pGame->pRenderer, pGame->pWindow, characterPicture1);
     //if (!handleError(pGame, pGame->pPlayer1Texture, SDL_GetError)) return 0;
 
     //pGame->pPlayerTexture[1] = createPlayerCharacter(pGame->pRenderer, pGame->pWindow, characterPicture2);
@@ -110,10 +110,10 @@ int initiateGame(Game* pGame){
 
     int startPosition = 2;
     for(int i=0; i<pGame->pNrOfPlayers-1; i++){ //måste vara -1 annars blir det malloc fel
-        
+
         pGame->pPlayers[i] = createPlayer(pGame->windowWidth / startPosition, pGame->windowHeight, 60, 60, SPEED, 400);
         pGame->pPlayerTexture[i] = createPlayerCharacter(pGame->pRenderer, pGame->pWindow, characterPicture); //gör en sträng av detta ist
-        startPosition += 1; 
+        startPosition += 1;
     }
 
     // KRASCHAR Pï¿½ MAC initiateLanguage(fp, pGame);
@@ -349,12 +349,12 @@ void handleOngoing(Game* pGame, SDL_Event event, bool* pIsRunning, bool* pRight,
     }
 
     handleBackground(pGame->pBackground, pGame->pRenderer, pGame->pBackgroundTexture, pGame->windowWidth, pGame->windowHeight); //denna måste ligga före allt med player
-    
+
     handlePlayers(pGame, pLeft, pRight, pJumpHeight);
 
     handlePlatform(pGame->platforms, pGame->pRenderer, pGame->windowWidth);
     handleStartingPlatform(pGame->pStartingPlatform, pGame->pRenderer, pGame->pStartPlatformTexture, pGame->windowHeight, pSec);
-    //checkIfPlayerDead(pGame->pPlayers[0], pGame->windowHeight, &pGame->state);  
+    //checkIfPlayerDead(pGame->pPlayers[0], pGame->windowHeight, &pGame->state);
     SDL_Delay(1000/60);
 }
 
@@ -411,7 +411,7 @@ void handleGameMenu(Game* pGame, SDL_Event event){
             pGame->state = QUIT;
         }
     }
-    
+
     // Gï¿½R Sï¿½ ATT MAN INTE KAN KOMMA TILL RESUMEMENU renderText(pGame->pMainMenuButtonText);
     // Gï¿½R Sï¿½ ATT MAN INTE KAN KOMMA TILL RESUMEMENU renderText(pGame->pResumeButtonText);
 }

@@ -18,9 +18,9 @@ SDL_Texture* createPlayerCharacter(SDL_Renderer* pRenderer, SDL_Window* pWindow,
     SDL_Surface* pSurface = IMG_Load(characterPicture);
     if (!pSurface) {
         printf("Error: %s\n", SDL_GetError());
-        SDL_DestroyRenderer(pRenderer); 
-        SDL_DestroyWindow(pWindow); 
-        SDL_Quit(); 
+        SDL_DestroyRenderer(pRenderer);
+        SDL_DestroyWindow(pWindow);
+        SDL_Quit();
         exit (1);
     }
     SDL_Texture* pTexture = SDL_CreateTextureFromSurface(pRenderer, pSurface);
@@ -29,7 +29,7 @@ SDL_Texture* createPlayerCharacter(SDL_Renderer* pRenderer, SDL_Window* pWindow,
         SDL_DestroyRenderer(pRenderer);
         SDL_DestroyWindow(pWindow);
         SDL_Quit();
-        exit (1);    
+        exit (1);
     }
     SDL_FreeSurface(pSurface);
 
@@ -62,7 +62,7 @@ void jumpPlayer(Player* pPlayer, float jumpHeight, int height, Mix_Chunk* pJumpS
         pPlayer->yPos = 0;
         pPlayer->yVelocity = -(pPlayer->yVelocity);
     }
-    else if (pPlayer->yPos >= height - pPlayer->height) { 
+    else if (pPlayer->yPos >= height - pPlayer->height) {
         pPlayer->yPos = height - pPlayer->height;
         pPlayer->yVelocity = -(pPlayer->yVelocity);
         Mix_VolumeChunk(pJumpSound, 16);
@@ -75,9 +75,9 @@ void jumpPlayer(Player* pPlayer, float jumpHeight, int height, Mix_Chunk* pJumpS
 }
 
 void playerCollidePlatform(Player* pPlayer, Platform** platforms, float* pJumpHeight, int windowHeight, Mix_Chunk* pJumpSound){
-    
+
     if(!pPlayer->alive) return;
-    int i; 
+    int i;
 
     for (i = 0; platforms[i] != 0; i++) {
         if (pPlayer->yVelocity > 0 &&
@@ -94,7 +94,7 @@ void playerCollidePlatform(Player* pPlayer, Platform** platforms, float* pJumpHe
             }*/
         }
     }
-} 
+}
 
 /*void playerCollidePlayer(Player* pPlayer1, Player* pPlayer2)
 {

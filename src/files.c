@@ -31,7 +31,7 @@ void readFromFileLang(FILE *fp, char language[NR_OF_WORDS][50]){
     if (fp != NULL){
         fscanf(fp, "%[^\n]%*c", readLang);
         strcat(target, readLang);
-    } else{                 
+    } else{
         fp = fopen("../assets/textfiles/settings.txt", "w");
         fprintf(fp, "english.txt");
     }
@@ -42,11 +42,11 @@ void readFromFileLang(FILE *fp, char language[NR_OF_WORDS][50]){
             fscanf(fp, "%[^\n]%*c", language[i]);
         }
         fclose(fp);
-    } else{                 
+    } else{
         fp = fopen(target, "w");
         fprintf(fp, "Start game\nSettings\nQuit\nResume game\nMain menu\nLanguage\nReturn\nMove right:\nMove left:");
         fclose(fp);
-        
+
         fp = fopen(target, "r");
         for (int i = 0; i < NR_OF_WORDS; i++){
             fscanf(fp, "%[^\n]%*c", language[i]);
