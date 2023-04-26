@@ -16,7 +16,7 @@
 #define CHARACTER_PICTURE "../assets/musse.png"
 #define MAIN_MENU_PICTURE "../assets/mainMenuBackground.png"
 
-/*typedef struct {
+typedef struct {
     State state;
     SDL_Window *pWindow;
     int windowWidth, windowHeight;
@@ -45,7 +45,7 @@
 	NetworkData *pNetworkData;
 	GameplayData *pGameplayData;
 	ClientCommand *pClientCommand;
-} Game;*/
+} Game;
 
 int initiateGame(Game* pGame);
 void initiateLanguage(FILE *fp, Game *pGame);
