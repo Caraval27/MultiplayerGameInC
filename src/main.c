@@ -352,12 +352,12 @@ void handleOngoing(Game* pGame, SDL_Event event, bool* pIsRunning, bool* pRight,
     jumpPlayer(pGame->players[0], *pJumpHeight, pGame->pStartingPlatform->yPos, pGame->pJumpSound);
     playerCollidePlatform(pGame->players[0], pGame->platforms, pJumpHeight, pGame->windowHeight, pGame->pJumpSound);
 
-    //jumpPlayer(pGame->players[1], *pJumpHeight, pGame->pStartingPlatform->yPos, pGame->pJumpSound);
-    //playerCollidePlatform(pGame->players[1], pGame->platforms, pJumpHeight, pGame->windowHeight, pGame->pJumpSound);
+    jumpPlayer(pGame->players[1], *pJumpHeight, pGame->pStartingPlatform->yPos, pGame->pJumpSound);
+    playerCollidePlatform(pGame->players[1], pGame->platforms, pJumpHeight, pGame->windowHeight, pGame->pJumpSound);
 
     handleBackground(pGame->pBackground, pGame->pRenderer, pGame->pBackgroundTexture, pGame->windowWidth, pGame->windowHeight);
     renderPlayer(pGame->players[0], pGame->pRenderer, pGame->pPlayer1Texture); //player 1
-    //renderPlayer(pGame->players[1], pGame->pRenderer, pGame->pPlayer2Texture); //player 2
+    renderPlayer(pGame->players[1], pGame->pRenderer, pGame->pPlayer2Texture); //player 2
     handlePlatform(pGame->platforms, pGame->pRenderer, pGame->windowWidth);
     handleStartingPlatform(pGame->pStartingPlatform, pGame->pRenderer, pGame->pStartPlatformTexture, pGame->windowHeight, pSec);
     checkIfPlayerDead(pGame->players[0], pGame->windowHeight, &pGame->state);  
