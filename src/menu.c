@@ -21,8 +21,8 @@ void getMousePos(Button* pButton){
     int mouseXPos, mouseYPos;
 
     pButton->mouseState = SDL_GetMouseState(&mouseXPos, &mouseYPos);
-    pButton->mouseXDelta = abs(mouseXPos - (pButton->xPos + pButton->width / 2));
-    pButton->mouseYDelta = abs(mouseYPos - (pButton->yPos + pButton->height / 2));
+    pButton->mouseXDelta = (float)abs(mouseXPos - (pButton->xPos + pButton->width / 2));
+    pButton->mouseYDelta = (float)abs(mouseYPos - (pButton->yPos + pButton->height / 2));
 }
 
 void handleButton(Button* pButton, State* pState, State desiredState){
@@ -54,7 +54,7 @@ int playerIsDead(Player* pPlayer, int windowHeight){
 void checkIfPlayerDead(Player* pPlayer, int windowHeight, State* pState, int* pNrOfPlayersLeft){
     if(playerIsDead(pPlayer, windowHeight)) {
         pPlayer->alive = false;
-        *pNrOfPlayersLeft--;
+        (*pNrOfPlayersLeft)--;
         //*pState = MAIN_MENU;
     }
 }
