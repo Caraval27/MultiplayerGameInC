@@ -106,3 +106,8 @@ void handleStartingPlatform(Platform* pStartingPlatform, SDL_Renderer* pRenderer
         pStartingPlatform->yPos += PLATFORM_SPEED;
     }
 }
+
+void resetStartingPlatform(Platform* pStartingPlatform, int windowHeight, int* pSec){
+    pStartingPlatform->yPos = windowHeight - 100;
+    *pSec = 0;
+}
