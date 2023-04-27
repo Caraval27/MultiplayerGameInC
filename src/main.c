@@ -81,7 +81,6 @@ int initiateGame(Game* pGame){
     if (!handleError(pGame, pGame->pWindow, Mix_GetError)) return 0;
 
     pGame->pBackground = createBackground(pGame->windowHeight);
-
     pGame->pStartButton = createButton((pGame->windowWidth - BUTTON_WIDTH) / 2, (pGame->windowHeight - BUTTON_HEIGHT) / 2, BUTTON_WIDTH, BUTTON_HEIGHT);
     pGame->pSettingsButton = createButton((pGame->windowWidth - BUTTON_WIDTH) / 2, (pGame->windowHeight - BUTTON_HEIGHT) / 2 + 50, BUTTON_WIDTH, BUTTON_HEIGHT);
     pGame->pQuitButton = createButton((pGame->windowWidth - BUTTON_WIDTH) / 2, (pGame->windowHeight - BUTTON_HEIGHT) / 2 + 100, BUTTON_WIDTH, BUTTON_HEIGHT);
@@ -95,7 +94,6 @@ int initiateGame(Game* pGame){
     pGame->pMoveLeft1Button = createButton((pGame->windowWidth - BUTTON_WIDTH) / 2 - 80, (pGame->windowHeight - BUTTON_HEIGHT) / 2 + 100, BUTTON_WIDTH, BUTTON_HEIGHT);
     pGame->pMoveRight2Button = createButton((pGame->windowWidth - BUTTON_WIDTH) / 2 + 80, (pGame->windowHeight - BUTTON_HEIGHT) / 2 + 50, BUTTON_WIDTH, BUTTON_HEIGHT);
     pGame->pMoveLeft2Button = createButton((pGame->windowWidth - BUTTON_WIDTH) / 2 + 80, (pGame->windowHeight - BUTTON_HEIGHT) / 2 + 100, BUTTON_WIDTH, BUTTON_HEIGHT);
-
     pGame->pStartPlatform = createPlatform(0, pGame->windowHeight - 100, pGame->windowWidth, 100);
 
     pGame->pNrOfPlayers = MAX_PLAYERS;
@@ -422,15 +420,9 @@ void handlePlayers(Game* pGame, bool *pLeft, bool *pRight){
 
 void resetGame(Game* pGame, int* pTime){
     if (pGame->state == ONGOING) {
-        int startPosition = 2;
-
         resetStartPlatform(pGame->pStartPlatform, pGame->windowHeight, pTime);
         resetPlatforms(pGame->pPlatforms);
-        for(int i = 0; i < pGame->pNrOfPlayers -1 ; i++) { //måste vara -1 annars blir det malloc fel
-            pGame->pPlayers[i] = createPlayer(pGame->windowWidth / startPosition, pGame->windowHeight, 60, 60, MOVE_SPEED, 400);
-            pGame->pPlayerTextures[i] = createPicture(pGame->pWindow, pGame->pRenderer, CHARACTER_PICTURE); //gör en sträng av detta ist
-            startPosition += 1;
-        }
+        initPlayers(pGame);
     }
 }
 
