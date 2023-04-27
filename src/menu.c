@@ -45,9 +45,9 @@ void destroyButton(Button* pButton){
 }
 
 int playerIsDead(Player* pPlayer, int windowHeight){
-    if(pPlayer->yPos + pPlayer->height >= windowHeight + pPlayer->yVelocity / 60) {
+    if(pPlayer->alive && pPlayer->yPos + pPlayer->height >= windowHeight + pPlayer->yVelocity / 60) {
         return 1;
-    } 
+    }
     return 0;
 }
 
@@ -55,5 +55,11 @@ void checkIfPlayerDead(Player* pPlayer, int windowHeight, State* pState, int* pN
     if(playerIsDead(pPlayer, windowHeight)) {
         pPlayer->alive = false;
         (*pNrOfPlayersLeft)--;
+    }
+}
+
+void handleWin(int nrOfPlayersLeft, State* pState){
+    if (nrOfPlayersLeft <= 1) {
+        *pState = GAME_OVER;
     }
 }

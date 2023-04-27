@@ -81,7 +81,6 @@ int initiateGame(Game* pGame){
     if (!handleError(pGame, pGame->pWindow, Mix_GetError)) return 0;
 
     pGame->pBackground = createBackground(pGame->windowHeight);
-
     pGame->pStartButton = createButton((pGame->windowWidth - BUTTON_WIDTH) / 2, (pGame->windowHeight - BUTTON_HEIGHT) / 2, BUTTON_WIDTH, BUTTON_HEIGHT);
     pGame->pSettingsButton = createButton((pGame->windowWidth - BUTTON_WIDTH) / 2, (pGame->windowHeight - BUTTON_HEIGHT) / 2 + 50, BUTTON_WIDTH, BUTTON_HEIGHT);
     pGame->pQuitButton = createButton((pGame->windowWidth - BUTTON_WIDTH) / 2, (pGame->windowHeight - BUTTON_HEIGHT) / 2 + 100, BUTTON_WIDTH, BUTTON_HEIGHT);
@@ -95,25 +94,21 @@ int initiateGame(Game* pGame){
     pGame->pMoveLeft1Button = createButton((pGame->windowWidth - BUTTON_WIDTH) / 2 - 80, (pGame->windowHeight - BUTTON_HEIGHT) / 2 + 100, BUTTON_WIDTH, BUTTON_HEIGHT);
     pGame->pMoveRight2Button = createButton((pGame->windowWidth - BUTTON_WIDTH) / 2 + 80, (pGame->windowHeight - BUTTON_HEIGHT) / 2 + 50, BUTTON_WIDTH, BUTTON_HEIGHT);
     pGame->pMoveLeft2Button = createButton((pGame->windowWidth - BUTTON_WIDTH) / 2 + 80, (pGame->windowHeight - BUTTON_HEIGHT) / 2 + 100, BUTTON_WIDTH, BUTTON_HEIGHT);
-
     pGame->pStartPlatform = createPlatform(0, pGame->windowHeight - 100, pGame->windowWidth, 100);
 
     pGame->pNrOfPlayers = MAX_PLAYERS;
     pGame->nrOfPlayersLeft = MAX_PLAYERS;
-    int startPosition = 2;
-    for(int i = 0; i < pGame->pNrOfPlayers - 1; i++) { //måste vara -1 annars blir det malloc fel
-        printf("%d\n", i);
 
-        pGame->pPlayers[i] = createPlayer(pGame->windowWidth / startPosition, pGame->windowHeight, CHARACTER_WIDTH, CHARACTER_HEIGHT, MOVE_SPEED, JUMP_SPEED);
-        pGame->pPlayerTextures[i] = createPicture(pGame->pWindow, pGame->pRenderer, CHARACTER_PICTURE); //gör en sträng av detta ist
-        startPosition += 1;
-    }
+    pGame->pGameOverText = createText(pGame->pRenderer, pGame->pMenuFont, 255, 255, 255, "Game Over", pGame->windowWidth, pGame->windowHeight, -200, 0);
+
+    initPlayers(pGame);
 
     FILE *fp;
     readFromFileKey(fp, pGame->keybinds);
     saveToFile(fp, pGame->keybinds);
     // KRASCHAR Pï¿½ MAC initiateLanguage(fp, pGame);
 
+    pGame->flip = SDL_FLIP_NONE;
     pGame->state = MAIN_MENU;
 
     return 1;
@@ -322,9 +317,9 @@ void handleEnterInput(Game* pGame, SDL_Event event, int* pNum){
             case SDL_KEYDOWN:
                 if (event.key.keysym.sym == SDLK_ESCAPE) {
                     pGame->state = SETTINGS_MENU;
-                }   
+                }
                 else {
-                    pGame->keybinds[*pNum] = (event.key.keysym.sym);    
+                    pGame->keybinds[*pNum] = (event.key.keysym.sym);
                     saveToFile(fp, pGame->keybinds);
                     pGame->state = SETTINGS_MENU;
                 }
@@ -358,6 +353,7 @@ void handleOngoingInput(Game* pGame, SDL_Event* event, bool* pIsRunning, bool* p
             }
             else if ((event->key.keysym.sym) == pGame->keybinds[0]) {
                 *pRight = true;
+                pGame->flip = SDL_FLIP_HORIZONTAL;
             }
             else if ((event->key.keysym.sym) == pGame->keybinds[1]) {
                 *pLeft = true;
@@ -375,6 +371,7 @@ void handleOngoingInput(Game* pGame, SDL_Event* event, bool* pIsRunning, bool* p
         case SDL_KEYUP:
             if ((event->key.keysym.sym) == pGame->keybinds[0]) {
                 *pRight = false;
+                pGame->flip = SDL_FLIP_NONE;
             }
             else if ((event->key.keysym.sym) == pGame->keybinds[1]) {
                 *pLeft = false;
@@ -444,47 +441,49 @@ void handleGameOverMenu(Game* pGame, SDL_Event event){
 
 void renderGameOverMenu(Game* pGame){
     renderButton(pGame->pMainMenuButton, pGame->pRenderer);
-
     // Gï¿½R Sï¿½ ATT MAN INTE KAN KOMMA TILL RESUMEMENU renderText(pGame->pMainMenuButtonText);
+}
+
+void initPlayers(Game* pGame){
+    float startPosition = 1;
+    pGame->nrOfPlayersLeft = MAX_PLAYERS;
+
+    for(int i = 0; i < pGame->pNrOfPlayers; i++) {
+        pGame->pPlayers[i] = createPlayer(startPosition * pGame->windowWidth / 7, pGame->windowHeight, CHARACTER_WIDTH, CHARACTER_HEIGHT, MOVE_SPEED, JUMP_SPEED); //ändra starterpositions
+        pGame->pPlayerTextures[i] = createPicture(pGame->pWindow, pGame->pRenderer, CHARACTER_PICTURE); //gör en sträng av detta ist
+        startPosition += 1;
+    }
 }
 
 void handlePlayers(Game* pGame, bool *pLeft, bool *pRight){
 
-    for (int i = 0; i < pGame->pNrOfPlayers - 1; i++) //av någon anledning dyker inte player 2 upp, förmodligen pga samma bild och position, samt båda rör sig med tangenttrycken
+    for (int i = 0; i < pGame->pNrOfPlayers; i++) //av någon anledning dyker inte player 2 upp, förmodligen pga samma bild och position, samt båda rör sig med tangenttrycken
     {
-        if (i == 0) //bara för att prova om spelare 2 dyker upp i loopen
-        {
+        if (i == 0) { //bara för att prova om spelare 2 dyker upp i loopen
             movePlayer(pGame->pPlayers[i], *pLeft, *pRight, pGame->windowWidth);
             jumpPlayer(pGame->pPlayers[i], pGame->pStartPlatform->yPos, pGame->pJumpSound);
             playerCollidePlatform(pGame->pPlayers[i], pGame->pPlatforms, pGame->pJumpSound);
             checkIfPlayerDead(pGame->pPlayers[i], pGame->windowHeight, &pGame->state, &pGame->nrOfPlayersLeft);
-            renderPlayer(pGame->pPlayers[i], pGame->pRenderer, pGame->pPlayerTextures[i]);
-            //if(!pGame->pPlayers[i]->alive) renderText(pGame->pGameOverText);
-
+            renderPlayer(pGame->pPlayers[i], pGame->pRenderer, pGame->pPlayerTextures[i], pGame->flip);
+            if (pGame->pPlayers[i]->alive) {
+                renderText(pGame->pGameOverText);
+            }
         }
-        else
-        {
+        else {
             jumpPlayer(pGame->pPlayers[i], pGame->pStartPlatform->yPos, pGame->pJumpSound);
             playerCollidePlatform(pGame->pPlayers[i], pGame->pPlatforms, pGame->pJumpSound);
             checkIfPlayerDead(pGame->pPlayers[i], pGame->windowHeight, &pGame->state, &pGame->nrOfPlayersLeft);
-            renderPlayer(pGame->pPlayers[i], pGame->pRenderer, pGame->pPlayerTextures[i]);
-            //if(!pGame->pPlayers[i]->alive) renderText(pGame->pGameOverText);
+            renderPlayer(pGame->pPlayers[i], pGame->pRenderer, pGame->pPlayerTextures[i], SDL_FLIP_NONE);
         }
-
     }
+    handleWin(pGame->nrOfPlayersLeft, &pGame->state);
 }
 
 void resetGame(Game* pGame, int* pTime){
     if (pGame->state == ONGOING) {
-        int startPosition = 2;
-
         resetStartPlatform(pGame->pStartPlatform, pGame->windowHeight, pTime);
         resetPlatforms(pGame->pPlatforms);
-        for(int i = 0; i < pGame->pNrOfPlayers -1 ; i++) { //måste vara -1 annars blir det malloc fel
-            pGame->pPlayers[i] = createPlayer(pGame->windowWidth / startPosition, pGame->windowHeight, 60, 60, MOVE_SPEED, 400);
-            pGame->pPlayerTextures[i] = createPicture(pGame->pWindow, pGame->pRenderer, CHARACTER_PICTURE); //gör en sträng av detta ist
-            startPosition += 1;
-        }
+        initPlayers(pGame);
     }
 }
 

@@ -19,6 +19,6 @@ Player* createPlayer(float xPos, float yPos, float width, float height, float xV
 void movePlayer(Player* pPlayer, bool left, bool right, int windowWidth);
 void jumpPlayer(Player* pPlayer, int startPlatformHeight, Mix_Chunk* pJumpSound);
 void playerCollidePlatform(Player* pPlayer, Platform** pPlatforms, Mix_Chunk* pJumpSound);
-void renderPlayer(Player* pPlayer, SDL_Renderer* pRenderer, SDL_Texture* pTexture);
+void renderPlayer(Player* pPlayer, SDL_Renderer* pRenderer, SDL_Texture* pTexture, SDL_RendererFlip flip);
 void destroyPlayers(Player** pPlayer);
 void destroyPlayerTextures(SDL_Texture** pPlayerTexture);

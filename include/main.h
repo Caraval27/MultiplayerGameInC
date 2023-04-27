@@ -9,7 +9,7 @@
 #include "../include/text.h"
 #include "../include/network.h"
 
-#define MAX_PLAYERS 6
+#define MAX_PLAYERS 10
 #define BACKGROUND_PICTURE "../assets/background.png"
 #define PLATFORM_PICTURE "../assets/iceBlock.png"
 #define START_PLATFORM_PICTURE "../assets/iceBlock.png"
@@ -21,7 +21,7 @@ typedef struct {
     SDL_Window *pWindow;
     int windowWidth, windowHeight;
     SDL_Renderer *pRenderer;
-    SDL_RendererFlip *flip;
+    //SDL_RendererFlip *flip;
     SDL_Texture *pBackgroundTexture, *pMenuTexture, *pStartPlatformTexture, *pPlatformTexture;
     TTF_Font *pMenuFont;
     Background* pBackground;
@@ -31,10 +31,10 @@ typedef struct {
     Text *pStartButtonText, *pQuitButtonText, *pResumeButtonText, *pMainMenuButtonText, *pSettingsButtonText, *pLanguageButtonText, *pEnglishButtonText,
     *pSwedishButtonText, *pReturnButtonText, *pMoveLeft1ButtonText, *pMoveRight1ButtonText, *pMoveLeft2ButtonText, *pMoveRight2ButtonText, *pGameOverText;
 
-    Player* pPlayers[6];
-    SDL_Texture* pPlayerTextures[6];
+    Player* pPlayers[MAX_PLAYERS];
+    SDL_Texture* pPlayerTextures[MAX_PLAYERS];
     int pNrOfPlayers, nrOfPlayersLeft;
-
+    SDL_RendererFlip flip;
     Platform *pPlatforms[1000], *pStartPlatform;
 
     int keybinds[NR_OF_KEYBINDS];
@@ -68,6 +68,7 @@ void handleGameOverMenu(Game* pGame, SDL_Event event);
 void renderGameOverMenu(Game* pGame);
 
 void handlePlayers(Game* pGame, bool* pLeft, bool* pRight);
+void initPlayers(Game* pGame);
 
 void resetGame(Game* pGame, int* pTime);
 

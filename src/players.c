@@ -72,16 +72,16 @@ void playerCollidePlatform(Player* pPlayer, Platform** pPlatforms, Mix_Chunk* pJ
 
 }*/
 
-void renderPlayer(Player* pPlayer, SDL_Renderer* pRenderer, SDL_Texture* pTexture){
+void renderPlayer(Player* pPlayer, SDL_Renderer* pRenderer, SDL_Texture* pTexture, SDL_RendererFlip flip){
     if (pPlayer->alive) {
         SDL_Rect rect = {pPlayer->xPos, pPlayer->yPos, pPlayer->width, pPlayer->height};
 
-        SDL_RenderCopy(pRenderer, pTexture, NULL, &rect);
+        SDL_RenderCopyEx(pRenderer, pTexture, NULL, &rect, 0.0, NULL, flip);
     }
 }
 
 void destroyPlayers(Player** pPlayers) {
-    for (int i = 0; pPlayers[i] != 0; i++) {
+    for (int i = 0; i != MAX_PLAYERS; i++) {
         if (pPlayers[i]) {
             free(pPlayers[i]);
         }
@@ -89,7 +89,7 @@ void destroyPlayers(Player** pPlayers) {
 }
 
 void destroyPlayerTextures(SDL_Texture** pPlayerTextures) {
-    for (int i = 0; pPlayerTextures[i] != 0; i++) {
+    for (int i = 0; i != MAX_PLAYERS; i++) {
         if (pPlayerTextures[i]) {
             SDL_DestroyTexture(pPlayerTextures[i]);
         }
