@@ -179,14 +179,28 @@ void runGame(Game* pGame){
 }
 
 void handleMainMenu(Game* pGame, SDL_Event event, int* pTime){
+    bool buttonPressed = false;
+
     Mix_ResumeMusic();
 
     renderMainMenu(pGame);
 
     while (SDL_PollEvent(&event)) {
-        handleButton(pGame->pStartButton, &pGame->state, ONGOING);
-        handleButton(pGame->pSettingsButton, &pGame->state, SETTINGS_MENU);
-        handleButton(pGame->pQuitButton, &pGame->state, QUIT);
+        handleButton(pGame->pStartButton, &buttonPressed);
+        if (buttonPressed) {
+            pGame->state = ONGOING;
+            buttonPressed = false;
+        }
+        handleButton(pGame->pSettingsButton, &buttonPressed);
+        if (buttonPressed) {
+            pGame->state = SETTINGS_MENU;
+            buttonPressed = false;
+        }
+        handleButton(pGame->pQuitButton, &buttonPressed);
+        if (buttonPressed) {
+            pGame->state = QUIT;
+            buttonPressed = false;
+        }
 
         resetGame(pGame, pTime);
 
@@ -209,29 +223,33 @@ void renderMainMenu(Game* pGame){
 }
 
 void handleSettingsMenu(Game* pGame, SDL_Event event, int* pNum){
-    bool showLang = false;
+    bool buttonPressed = false, showLang = false;
 
     renderSettingsMenu(pGame);
 
     while (SDL_PollEvent(&event)){
-        getMousePos(pGame->pLanguageButton);
-        if (pGame->pLanguageButton->mouseXDelta <= BUTTON_WIDTH / 2 && pGame->pLanguageButton->mouseYDelta <= BUTTON_HEIGHT / 2 && pGame->pLanguageButton->mouseState && SDL_BUTTON(SDL_BUTTON_LEFT)){
+        handleButton(pGame->pLanguageButton, &buttonPressed);
+        if (buttonPressed) {
             showLang = true;
+            buttonPressed = false;
         }
-        getMousePos(pGame->pMoveRight2Button);
-        if (pGame->pMoveRight2Button->mouseXDelta <= BUTTON_WIDTH / 2 && pGame->pMoveRight2Button->mouseYDelta <= BUTTON_HEIGHT / 2 && pGame->pMoveRight2Button->mouseState && SDL_BUTTON(SDL_BUTTON_LEFT)){
+        handleButton(pGame->pMoveRight2Button, &buttonPressed);
+        if (buttonPressed) {
             *pNum = 0;
             pGame->state = ENTER_INPUT;
+            buttonPressed = false;
         }
-        getMousePos(pGame->pMoveLeft2Button);
-        if (pGame->pMoveLeft2Button->mouseXDelta <= BUTTON_WIDTH / 2 && pGame->pMoveLeft2Button->mouseYDelta <= BUTTON_HEIGHT / 2 && pGame->pMoveLeft2Button->mouseState && SDL_BUTTON(SDL_BUTTON_LEFT)){
+        handleButton(pGame->pMoveLeft2Button, &buttonPressed);
+        if (buttonPressed) {
             *pNum = 1;
             pGame->state = ENTER_INPUT;
+            buttonPressed = false;
         }
-        getMousePos(pGame->pReturnButton);
-        if (pGame->pReturnButton->mouseXDelta <= BUTTON_WIDTH / 2 && pGame->pReturnButton->mouseYDelta <= BUTTON_HEIGHT / 2 && pGame->pReturnButton->mouseState && SDL_BUTTON(SDL_BUTTON_LEFT)){
+        handleButton(pGame->pReturnButton, &buttonPressed);
+        if (buttonPressed){
             pGame->state = MAIN_MENU;
             showLang = false;
+            buttonPressed = false;
         }
 
         if (showLang){
@@ -259,20 +277,23 @@ void renderSettingsMenu(Game* pGame){
 }
 
 void handleLanguageMenu(Game* pGame, bool* pShowLang){
+    bool buttonPressed = false;
     char chosenLang[LANG_LENGTH];
     FILE *fp;
 
     renderLanguageMenu(pGame);
 
-    getMousePos(pGame->pEnglishButton);
-    if (pGame->pEnglishButton->mouseXDelta <= BUTTON_WIDTH / 2 && pGame->pEnglishButton->mouseYDelta <= BUTTON_HEIGHT / 2 && pGame->pEnglishButton->mouseState && SDL_BUTTON(SDL_BUTTON_LEFT)){
+    handleButton(pGame->pEnglishButton, &buttonPressed);
+    if (buttonPressed){
         strcpy(chosenLang, "english.txt");
         *pShowLang = false;
+        buttonPressed = false;
     }
-    getMousePos(pGame->pSwedishButton);
-    if (pGame->pSwedishButton->mouseXDelta <= BUTTON_WIDTH / 2 && pGame->pSwedishButton->mouseYDelta <= BUTTON_HEIGHT / 2 && pGame->pSwedishButton->mouseState && SDL_BUTTON(SDL_BUTTON_LEFT)){
+    handleButton(pGame->pSwedishButton, &buttonPressed);
+    if (buttonPressed){
         strcpy(chosenLang, "svenska.txt");
         *pShowLang = false;
+        buttonPressed = false;
     }
 
     if (!*pShowLang){
@@ -369,13 +390,23 @@ void handleOngoingInput(Game* pGame, SDL_Event* event, bool* pIsRunning, bool* p
 }
 
 void handleGameMenu(Game* pGame, SDL_Event event){
+    bool buttonPressed = false;
+
     Mix_PauseMusic();
 
     renderGameMenu(pGame);
 
     while (SDL_PollEvent(&event)) {
-        handleButton(pGame->pResumeButton, &pGame->state, ONGOING);
-        handleButton(pGame->pMainMenuButton, &pGame->state, MAIN_MENU);
+        handleButton(pGame->pResumeButton, &buttonPressed);
+        if (buttonPressed) {
+            pGame->state = ONGOING;
+            buttonPressed = false;
+        }
+        handleButton(pGame->pMainMenuButton, &buttonPressed);
+        if (buttonPressed) {
+            pGame->state = MAIN_MENU;
+            buttonPressed = false;
+        }
 
         if (event.type == SDL_QUIT) {
             pGame->state = QUIT;
@@ -392,17 +423,27 @@ void renderGameMenu(Game* pGame){
 }
 
 void handleGameOverMenu(Game* pGame, SDL_Event event){
-    //Mix_PauseMusic();
-    //renderText();
-    renderButton(pGame->pMainMenuButton, pGame->pRenderer);
+    bool buttonPressed;
+
+    Mix_PauseMusic();
+
+    renderGameOverMenu(pGame);
 
     while (SDL_PollEvent(&event)) {
-        handleButton(pGame->pMainMenuButton, &pGame->state, MAIN_MENU);
+        handleButton(pGame->pMainMenuButton, &buttonPressed);
+        if (buttonPressed) {
+            pGame->state == MAIN_MENU;
+            buttonPressed = false;
+        }
 
         if (event.type == SDL_QUIT) {
             pGame->state = QUIT;
         }
     }
+}
+
+void renderGameOverMenu(Game* pGame){
+    renderButton(pGame->pMainMenuButton, pGame->pRenderer);
 
     // G�R S� ATT MAN INTE KAN KOMMA TILL RESUMEMENU renderText(pGame->pMainMenuButtonText);
 }

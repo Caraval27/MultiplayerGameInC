@@ -25,11 +25,11 @@ void getMousePos(Button* pButton){
     pButton->mouseYDelta = fabsf(mouseYPos - (pButton->yPos + pButton->height / 2));
 }
 
-void handleButton(Button* pButton, State* pState, State desiredState){
+void handleButton(Button* pButton, bool* pPressed){
     getMousePos(pButton);
 
     if (pButton->mouseXDelta <= BUTTON_WIDTH / 2 && pButton->mouseYDelta <= BUTTON_HEIGHT / 2 && pButton->mouseState && SDL_BUTTON(SDL_BUTTON_LEFT)) {
-        *pState = desiredState;
+        *pPressed = true;
     }
 }
 
@@ -45,9 +45,9 @@ void destroyButton(Button* pButton){
 }
 
 int playerIsDead(Player* pPlayer, int windowHeight){
-    if(pPlayer->yPos >= windowHeight) {
+    if(pPlayer->yPos + pPlayer->height >= windowHeight + pPlayer->yVelocity / 60) {
         return 1;
-    }  
+    } 
     return 0;
 }
 

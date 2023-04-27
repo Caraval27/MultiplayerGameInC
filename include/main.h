@@ -65,6 +65,7 @@ void handleOngoingInput(Game* pGame, SDL_Event* event, bool* pIsRunning, bool* p
 void handleGameMenu(Game* pGame, SDL_Event event);
 void renderGameMenu(Game* pGame);
 void handleGameOverMenu(Game* pGame, SDL_Event event);
+void renderGameOverMenu(Game* pGame);
 
 void handlePlayers(Game* pGame, bool* pLeft, bool* pRight);
 
