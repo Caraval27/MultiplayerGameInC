@@ -99,7 +99,7 @@ int initiateGame(Game* pGame){
     pGame->pNrOfPlayers = MAX_PLAYERS;
     pGame->nrOfPlayersLeft = MAX_PLAYERS;
 
-    pGame->pGameOverText = createText(pGame->pRenderer, pGame->pMenuFont, 255, 255, 255, "Game Over", pGame->windowWidth, pGame->windowHeight, 100, -80);
+    pGame->pGameOverText = createText(pGame->pRenderer, pGame->pMenuFont, 255, 255, 255, "Game Over", pGame->windowWidth, pGame->windowHeight, -200, 0);
 
     initPlayers(pGame);
 
@@ -399,6 +399,7 @@ void handlePlayers(Game* pGame, bool *pLeft, bool *pRight){
 
     for (int i = 0; i < pGame->pNrOfPlayers ; i++) //av någon anledning dyker inte player 2 upp, förmodligen pga samma bild och position, samt båda rör sig med tangenttrycken
     {
+        handleWin(pGame->nrOfPlayersLeft, &pGame->state);
         if (i == 0) //bara för att prova om spelare 2 dyker upp i loopen
         {
             movePlayer(pGame->pPlayers[i], *pLeft, *pRight, pGame->windowWidth);
@@ -407,7 +408,6 @@ void handlePlayers(Game* pGame, bool *pLeft, bool *pRight){
             checkIfPlayerDead(pGame->pPlayers[i], pGame->windowHeight, &pGame->state, &pGame->nrOfPlayersLeft);
             renderPlayer(pGame->pPlayers[i], pGame->pRenderer, pGame->pPlayerTextures[i]);
             if(!pGame->pPlayers[i]->alive) renderText(pGame->pGameOverText);
-            //handleWin(pGame->nrOfPlayersLeft, &pGame->state);
 
         }
         else
