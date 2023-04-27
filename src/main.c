@@ -99,7 +99,7 @@ int initiateGame(Game* pGame){
     pGame->pNrOfPlayers = MAX_PLAYERS;
     pGame->nrOfPlayersLeft = MAX_PLAYERS;
 
-    pGame->pGameOverText = createText(pGame->pRenderer, pGame->pMenuFont, 255, 255, 255, "Game Over", pGame->windowWidth, pGame->windowHeight, -200, 0);
+    pGame->pGameOverText = createText(pGame->pRenderer, pGame->pMenuFont, 255, 255, 255, "You are dead", pGame->windowWidth, pGame->windowHeight, -200, 0);
 
     initPlayers(pGame);
 
@@ -357,6 +357,7 @@ void handleOngoingInput(Game* pGame, SDL_Event* event, bool* pIsRunning, bool* p
             }
             else if ((event->key.keysym.sym) == pGame->keybinds[1]) {
                 *pLeft = true;
+                pGame->flip = SDL_FLIP_HORIZONTAL;
 
             }
             // switch (event->key.keysym.sym){
@@ -375,6 +376,7 @@ void handleOngoingInput(Game* pGame, SDL_Event* event, bool* pIsRunning, bool* p
             }
             else if ((event->key.keysym.sym) == pGame->keybinds[1]) {
                 *pLeft = false;
+                pGame->flip = SDL_FLIP_NONE;
             }
             // switch(event->key.keysym.sym){
             //     case SDLK_LEFT: *pLeft = false;
