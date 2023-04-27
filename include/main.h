@@ -21,7 +21,7 @@ typedef struct {
     SDL_Window *pWindow;
     int windowWidth, windowHeight;
     SDL_Renderer *pRenderer;
-    SDL_RendererFlip *flip;
+    //SDL_RendererFlip *flip;
     SDL_Texture *pBackgroundTexture, *pMenuTexture, *pStartPlatformTexture, *pPlatformTexture;
     TTF_Font *pMenuFont;
     Background* pBackground;
@@ -34,7 +34,7 @@ typedef struct {
     Player* pPlayers[MAX_PLAYERS];
     SDL_Texture* pPlayerTextures[MAX_PLAYERS];
     int pNrOfPlayers, nrOfPlayersLeft;
-
+    SDL_RendererFlip flip;
     Platform *pPlatforms[1000], *pStartPlatform;
 
     int keybinds[NR_OF_KEYBINDS];

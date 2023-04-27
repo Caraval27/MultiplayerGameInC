@@ -108,6 +108,7 @@ int initiateGame(Game* pGame){
     saveToFile(fp, pGame->keybinds);
     // KRASCHAR P� MAC initiateLanguage(fp, pGame);
 
+    pGame->flip = SDL_FLIP_NONE;
     pGame->state = MAIN_MENU;
 
     return 1;
@@ -316,6 +317,7 @@ void handleInputOngoing(Game* pGame, SDL_Event* event, bool* pIsRunning, bool* p
             }
             else if ((event->key.keysym.sym) == pGame->keybinds[0]) {
                 *pRight = true;
+                pGame->flip = SDL_FLIP_HORIZONTAL;
             }
             else if ((event->key.keysym.sym) == pGame->keybinds[1]) {
                 *pLeft = true;
@@ -333,6 +335,7 @@ void handleInputOngoing(Game* pGame, SDL_Event* event, bool* pIsRunning, bool* p
         case SDL_KEYUP:
             if ((event->key.keysym.sym) == pGame->keybinds[0]) {
                 *pRight = false;
+                pGame->flip = SDL_FLIP_NONE;
             }
             else if ((event->key.keysym.sym) == pGame->keybinds[1]) {
                 *pLeft = false;
@@ -406,7 +409,7 @@ void handlePlayers(Game* pGame, bool *pLeft, bool *pRight){
             jumpPlayer(pGame->pPlayers[i], pGame->pStartPlatform->yPos, pGame->pJumpSound);
             playerCollidePlatform(pGame->pPlayers[i], pGame->pPlatforms, pGame->pJumpSound);
             checkIfPlayerDead(pGame->pPlayers[i], pGame->windowHeight, &pGame->state, &pGame->nrOfPlayersLeft);
-            renderPlayer(pGame->pPlayers[i], pGame->pRenderer, pGame->pPlayerTextures[i]);
+            renderPlayer(pGame->pPlayers[i], pGame->pRenderer, pGame->pPlayerTextures[i], pGame->flip);
             if(!pGame->pPlayers[i]->alive) renderText(pGame->pGameOverText);
 
         }
@@ -415,7 +418,7 @@ void handlePlayers(Game* pGame, bool *pLeft, bool *pRight){
             jumpPlayer(pGame->pPlayers[i], pGame->pStartPlatform->yPos, pGame->pJumpSound);
             playerCollidePlatform(pGame->pPlayers[i], pGame->pPlatforms, pGame->pJumpSound);
             checkIfPlayerDead(pGame->pPlayers[i], pGame->windowHeight, &pGame->state, &pGame->nrOfPlayersLeft);
-            renderPlayer(pGame->pPlayers[i], pGame->pRenderer, pGame->pPlayerTextures[i]);
+            renderPlayer(pGame->pPlayers[i], pGame->pRenderer, pGame->pPlayerTextures[i], SDL_FLIP_NONE);
             //if(!pGame->pPlayers[i]->alive) renderText(pGame->pGameOverText);
         }
 

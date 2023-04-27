@@ -72,11 +72,11 @@ void playerCollidePlatform(Player* pPlayer, Platform** pPlatforms, Mix_Chunk* pJ
 
 }*/
 
-void renderPlayer(Player* pPlayer, SDL_Renderer* pRenderer, SDL_Texture* pTexture){
+void renderPlayer(Player* pPlayer, SDL_Renderer* pRenderer, SDL_Texture* pTexture, SDL_RendererFlip flip){
     if (pPlayer->alive) {
         SDL_Rect rect = {pPlayer->xPos, pPlayer->yPos, pPlayer->width, pPlayer->height};
 
-        SDL_RenderCopy(pRenderer, pTexture, NULL, &rect);
+        SDL_RenderCopyEx(pRenderer, pTexture, NULL, &rect, 0.0, NULL, flip);
     }
 }
 
