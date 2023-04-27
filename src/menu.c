@@ -59,5 +59,5 @@ void checkIfPlayerDead(Player* pPlayer, int windowHeight, State* pState, int* pN
 }
 
 void handleWin(int nrOfPlayersLeft, State* pState){
-    if(nrOfPlayersLeft == 1) *pState = GAME_OVER;
+    if(nrOfPlayersLeft <= 1) *pState = GAME_OVER;
 }

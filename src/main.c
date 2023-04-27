@@ -407,7 +407,7 @@ void handlePlayers(Game* pGame, bool *pLeft, bool *pRight){
             checkIfPlayerDead(pGame->pPlayers[i], pGame->windowHeight, &pGame->state, &pGame->nrOfPlayersLeft);
             renderPlayer(pGame->pPlayers[i], pGame->pRenderer, pGame->pPlayerTextures[i]);
             if(!pGame->pPlayers[i]->alive) renderText(pGame->pGameOverText);
-            handleWin(pGame->nrOfPlayersLeft, &pGame->state);
+            //handleWin(pGame->nrOfPlayersLeft, &pGame->state);
 
         }
         else
