@@ -98,7 +98,9 @@ int initiateGame(Game* pGame){
 
     pGame->pNrOfPlayers = MAX_PLAYERS;
     pGame->nrOfPlayersLeft = MAX_PLAYERS;
-    
+
+    pGame->pGameOverText = createText(pGame->pRenderer, pGame->pMenuFont, 255, 255, 255, "Game Over", pGame->windowWidth, pGame->windowHeight, 100, -80);
+
     initPlayers(pGame);
 
     FILE *fp;
@@ -385,6 +387,7 @@ void handleGameOverMenu(Game* pGame, SDL_Event event){
 
 void initPlayers(Game* pGame){
     int startPosition = 2;
+    pGame->nrOfPlayersLeft = MAX_PLAYERS;
     for(int i = 0; i < pGame->pNrOfPlayers; i++) {
         pGame->pPlayers[i] = createPlayer(pGame->windowWidth / startPosition, pGame->windowHeight, CHARACTER_WIDTH, CHARACTER_HEIGHT, MOVE_SPEED, JUMP_SPEED); //ändra starterpositions
         pGame->pPlayerTextures[i] = createPicture(pGame->pWindow, pGame->pRenderer, CHARACTER_PICTURE); //gör en sträng av detta ist
@@ -403,7 +406,8 @@ void handlePlayers(Game* pGame, bool *pLeft, bool *pRight){
             playerCollidePlatform(pGame->pPlayers[i], pGame->pPlatforms, pGame->pJumpSound);
             checkIfPlayerDead(pGame->pPlayers[i], pGame->windowHeight, &pGame->state, &pGame->nrOfPlayersLeft);
             renderPlayer(pGame->pPlayers[i], pGame->pRenderer, pGame->pPlayerTextures[i]);
-            //if(!pGame->pPlayers[i]->alive) renderText(pGame->pGameOverText);
+            if(!pGame->pPlayers[i]->alive) renderText(pGame->pGameOverText);
+            handleWin(pGame->nrOfPlayersLeft, &pGame->state);
 
         }
         else
