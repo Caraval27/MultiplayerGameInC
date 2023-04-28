@@ -15,9 +15,9 @@ Player* createPlayer(float xPos, float yPos, float width, float height, float xV
 }
 
 
-void initPlayer(Player** pPlayers, int nrOfPlayersLeft, int pNrOfPlayers, int windowWidth, int windowHeight, SDL_Texture** pPlayerTextures, SDL_Window* pWindow, SDL_Renderer* pRenderer){
+void initPlayer(Player** pPlayers, int *pNrOfPlayersLeft, int pNrOfPlayers, int windowWidth, int windowHeight, SDL_Texture** pPlayerTextures, SDL_Window* pWindow, SDL_Renderer* pRenderer){
     float startPosition = 1;
-    nrOfPlayersLeft = MAX_PLAYERS;
+    *pNrOfPlayersLeft = MAX_PLAYERS;
     for(int i = 0; i < pNrOfPlayers; i++) {
         pPlayers[i] = createPlayer(startPosition * windowWidth / 7, windowHeight, CHARACTER_WIDTH, CHARACTER_HEIGHT, MOVE_SPEED, JUMP_SPEED); //ändra starterpositions
         pPlayerTextures[i] = createPicture(pWindow, pRenderer, CHARACTER_PICTURE); //gör en sträng av detta ist

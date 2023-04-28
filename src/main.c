@@ -102,7 +102,7 @@ int initiateGame(Game* pGame){
     pGame->pGameOverText = createText(pGame->pRenderer, pGame->pMenuFont, 255, 255, 255, "You are dead", pGame->windowWidth, pGame->windowHeight, -200, 0);
 
     //initPlayers(pGame);
-    initPlayer(pGame->pPlayers, pGame->nrOfPlayersLeft, pGame->pNrOfPlayers, pGame->windowWidth, pGame->windowHeight,pGame->pPlayerTextures, pGame->pWindow, pGame->pRenderer);
+    initPlayer(pGame->pPlayers, &pGame->nrOfPlayersLeft, pGame->pNrOfPlayers, pGame->windowWidth, pGame->windowHeight,pGame->pPlayerTextures, pGame->pWindow, pGame->pRenderer);
 
     FILE *fp;
     readFromFileKey(fp, pGame->keybinds);
@@ -454,7 +454,7 @@ void resetGame(Game* pGame, int* pTime){
     if (pGame->state == ONGOING) {
         resetStartPlatform(pGame->pStartPlatform, pGame->windowHeight, pTime);
         resetPlatforms(pGame->pPlatforms);
-        initPlayer(pGame->pPlayers, pGame->nrOfPlayersLeft, pGame->pNrOfPlayers, pGame->windowWidth, pGame->windowHeight,pGame->pPlayerTextures, pGame->pWindow, pGame->pRenderer);
+        initPlayer(pGame->pPlayers, &pGame->nrOfPlayersLeft, pGame->pNrOfPlayers, pGame->windowWidth, pGame->windowHeight,pGame->pPlayerTextures, pGame->pWindow, pGame->pRenderer);
     }
 }
 

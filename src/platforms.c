@@ -27,10 +27,10 @@ void handlePlatforms(Platform** pPlatforms, SDL_Renderer* pRenderer, SDL_Texture
 
     if (SDL_GetTicks64() % 1000 < 17) {
 
-		cleanupPlatforms(pPlatforms, windowHeight);
+		//cleanupPlatforms(pPlatforms, windowHeight);
 
         i = 0;
-        
+
         while (pPlatforms[i]) i++; // Variabel som direkt visar antalet plattformar?
         width = PLATFORM_WIDTH;
         height = PLATFORM_HEIGHT;
