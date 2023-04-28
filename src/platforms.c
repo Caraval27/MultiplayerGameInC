@@ -22,10 +22,13 @@ void renderPlatform(Platform* pPlatform, SDL_Renderer* pRenderer, SDL_Texture* p
     SDL_RenderCopy(pRenderer, pTexture, NULL, &rect);
 }
 
-void handlePlatforms(Platform** pPlatforms, SDL_Renderer* pRenderer, SDL_Texture* pTexture, int windowWidth){
+void handlePlatforms(Platform** pPlatforms, SDL_Renderer* pRenderer, SDL_Texture* pTexture, int windowWidth, int windowHeight) {
     int i = 0;
 
     if (SDL_GetTicks64() % 1000 < 17) {
+
+		cleanupPlatforms(pPlatforms, windowHeight);
+
         i = 0;
         while (pPlatforms[i]) i++; // Variabel som direkt visar antalet plattformar?
         int width = PLATFORM_WIDTH;
@@ -60,4 +63,19 @@ void destroyPlatforms(Platform** pPlatforms){
             destroyPlatform(pPlatforms[i]);
         }
     }
+}
+
+void cleanupPlatforms(Platform **pPlatforms, int windowHeight) {
+	Platform **tempArray = malloc(sizeof(200));
+	int tempArrayLength = 0;
+	for (int i = 0; pPlatforms[i] != NULL; i++) {
+		if (pPlatforms[i]->yPos < windowHeight * 1.5) {
+			tempArray[tempArrayLength] = pPlatforms[i];
+		} else {
+			free(pPlatforms[i]);
+			pPlatforms[i] = NULL;
+		}
+		tempArrayLength++;
+	}
+	pPlatforms = tempArray;
 }
