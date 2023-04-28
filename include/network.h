@@ -4,7 +4,7 @@
 #include "../include/players.h"
 
 #define PORT 3000
-#define PACKET_SIZE 512
+#define PACKET_SIZE 256
 #define CLIENT_LIMIT 6
 #define SERVER_IP "127.0.0.1"
 
