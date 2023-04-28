@@ -101,7 +101,8 @@ int initiateGame(Game* pGame){
 
     pGame->pGameOverText = createText(pGame->pRenderer, pGame->pMenuFont, 255, 255, 255, "You are dead", pGame->windowWidth, pGame->windowHeight, -200, 0);
 
-    initPlayers(pGame);
+    //initPlayers(pGame);
+    initPlayer(pGame->pPlayers, pGame->nrOfPlayersLeft, pGame->pNrOfPlayers, pGame->windowWidth, pGame->windowHeight,pGame->pPlayerTextures, pGame->pWindow, pGame->pRenderer);
 
     FILE *fp;
     readFromFileKey(fp, pGame->keybinds);
@@ -447,16 +448,6 @@ void renderGameOverMenu(Game* pGame){
     // Gï¿½R Sï¿½ ATT MAN INTE KAN KOMMA TILL RESUMEMENU renderText(pGame->pMainMenuButtonText);
 }
 
-void initPlayers(Game* pGame){
-    float startPosition = 1;
-    pGame->nrOfPlayersLeft = MAX_PLAYERS;
-
-    for(int i = 0; i < pGame->pNrOfPlayers; i++) {
-        pGame->pPlayers[i] = createPlayer(startPosition * pGame->windowWidth / 7, pGame->windowHeight, CHARACTER_WIDTH, CHARACTER_HEIGHT, MOVE_SPEED, JUMP_SPEED); //ändra starterpositions
-        pGame->pPlayerTextures[i] = createPicture(pGame->pWindow, pGame->pRenderer, CHARACTER_PICTURE); //gör en sträng av detta ist
-        startPosition += 1;
-    }
-}
 
 void handlePlayers(Game* pGame, bool *pLeft, bool *pRight){
 
@@ -486,7 +477,7 @@ void resetGame(Game* pGame, int* pTime){
     if (pGame->state == ONGOING) {
         resetStartPlatform(pGame->pStartPlatform, pGame->windowHeight, pTime);
         resetPlatforms(pGame->pPlatforms);
-        initPlayers(pGame);
+        initPlayer(pGame->pPlayers, pGame->nrOfPlayersLeft, pGame->pNrOfPlayers, pGame->windowWidth, pGame->windowHeight,pGame->pPlayerTextures, pGame->pWindow, pGame->pRenderer);
     }
 }
 
