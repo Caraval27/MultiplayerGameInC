@@ -118,7 +118,7 @@ int initiateGame(Game* pGame){
     FILE *fp;
     readFromFileKey(fp, pGame->keybinds);
     saveToFile(fp, pGame->keybinds);
-    // KRASCHAR P� MAC initiateLanguage(fp, pGame);
+    initiateLanguage(fp, pGame);
 
     pGame->flip = SDL_FLIP_NONE;
     pGame->state = MAIN_MENU;
@@ -127,6 +127,24 @@ int initiateGame(Game* pGame){
 }
 
 void initiateLanguage(FILE *fp, Game *pGame){
+    //readFromFileLang(fp, pGame->language);
+    pGame->pStartButtonText = createText(pGame->pRenderer, pGame->pMenuFont, 255, 255, 255, "start", pGame->windowWidth, pGame->windowHeight, 0, 0);
+    pGame->pSettingsButtonText = createText(pGame->pRenderer, pGame->pMenuFont, 255, 255, 255, "settings", pGame->windowWidth, pGame->windowHeight, 50, 0);
+    pGame->pQuitButtonText = createText(pGame->pRenderer, pGame->pMenuFont, 255, 255, 255, "avsluta", pGame->windowWidth, pGame->windowHeight, 100, 0);
+    pGame->pResumeButtonText = createText(pGame->pRenderer, pGame->pMenuFont, 255, 255, 255, "resume", pGame->windowWidth, pGame->windowHeight, 50, 0);
+    pGame->pMainMenuButtonText = createText(pGame->pRenderer, pGame->pMenuFont, 255, 255, 255, "mainmenu", pGame->windowWidth, pGame->windowHeight, 100, 0);
+    pGame->pLanguageButtonText = createText(pGame->pRenderer, pGame->pMenuFont, 255, 255, 255, "language", pGame->windowWidth, pGame->windowHeight, -100, 0);
+    pGame->pReturnButtonText = createText(pGame->pRenderer, pGame->pMenuFont, 255, 255, 255, "return", pGame->windowWidth, pGame->windowHeight, 200, 0);
+    pGame->pMoveRightButtonText = createText(pGame->pRenderer, pGame->pMenuFont, 255, 255, 255, "movright", pGame->windowWidth, pGame->windowHeight, 50, -80);
+    pGame->pMoveLeftButtonText = createText(pGame->pRenderer, pGame->pMenuFont, 255, 255, 255, "moveleft", pGame->windowWidth, pGame->windowHeight, 100, -80);
+    pGame->pGameOverText = createText(pGame->pRenderer, pGame->pMenuFont, 255, 255, 255, "gameover", pGame->windowWidth, pGame->windowHeight, 100, -80);
+    pGame->pEnglishButtonText = createText(pGame->pRenderer, pGame->pMenuFont, 255, 255, 255, "English", pGame->windowWidth, pGame->windowHeight, -50, 0);
+    pGame->pSwedishButtonText = createText(pGame->pRenderer, pGame->pMenuFont, 255, 255, 255, "Svenska", pGame->windowWidth, pGame->windowHeight, 0, 0);
+    //pGame->pMoveLeft1ButtonText = createText(pGame->pRenderer, pGame->pMenuFont, 255, 255, 255, moveLeft, pGame->windowWidth, pGame->windowHeight, 100, 80);
+    //pGame->pMoveRight1ButtonText = createText(pGame->pRenderer, pGame->pMenuFont, 255, 255, 255, moveRight, pGame->windowWidth, pGame->windowHeight, 100, 80);
+}
+
+/*void initiateLanguage(FILE *fp, Game *pGame){
     readFromFileLang(fp, pGame->language);
     pGame->pStartButtonText = createText(pGame->pRenderer, pGame->pMenuFont, 255, 255, 255, pGame->language[0], pGame->windowWidth, pGame->windowHeight, 0, 0);
     pGame->pSettingsButtonText = createText(pGame->pRenderer, pGame->pMenuFont, 255, 255, 255, pGame->language[1], pGame->windowWidth, pGame->windowHeight, 50, 0);
@@ -142,7 +160,7 @@ void initiateLanguage(FILE *fp, Game *pGame){
     pGame->pSwedishButtonText = createText(pGame->pRenderer, pGame->pMenuFont, 255, 255, 255, "Svenska", pGame->windowWidth, pGame->windowHeight, 0, 0);
     //pGame->pMoveLeft1ButtonText = createText(pGame->pRenderer, pGame->pMenuFont, 255, 255, 255, moveLeft, pGame->windowWidth, pGame->windowHeight, 100, 80);
     //pGame->pMoveRight1ButtonText = createText(pGame->pRenderer, pGame->pMenuFont, 255, 255, 255, moveRight, pGame->windowWidth, pGame->windowHeight, 100, 80);
-}
+}*/
 
 int handleError(Game* pGame, void* pMember, const char* (*GetError)(void)){
     if (!pMember){
@@ -224,9 +242,9 @@ void renderMainMenu(Game* pGame){
     renderButton(pGame->pSettingsButton, pGame->pRenderer);
     renderButton(pGame->pQuitButton, pGame->pRenderer);
 
-    // KRASHCAR MAC renderText(pGame->pStartButtonText);
-    // KRASCHAR MAC renderText(pGame->pSettingsButtonText);
-    // KRASCHAR MAC renderText(pGame->pQuitButtonText);
+    renderText(pGame->pStartButtonText);
+    renderText(pGame->pSettingsButtonText);
+    renderText(pGame->pQuitButtonText);
 }
 
 void handleSettingsMenu(Game* pGame, SDL_Event event, int* pNum){
@@ -261,6 +279,9 @@ void handleSettingsMenu(Game* pGame, SDL_Event event, int* pNum){
 
         if (showLang){
             handleLanguageMenu(pGame, &showLang);
+        }
+        if (event.type == SDL_QUIT) {
+            pGame->state = QUIT;
         }
     }
 }
@@ -464,8 +485,8 @@ void renderGameMenu(Game* pGame){
     renderButton(pGame->pResumeButton, pGame->pRenderer);
     renderButton(pGame->pMainMenuButton, pGame->pRenderer);
 
-    // G�R S� ATT MAN INTE KAN KOMMA TILL RESUMEMENU renderText(pGame->pMainMenuButtonText);
-    // G�R S� ATT MAN INTE KAN KOMMA TILL RESUMEMENU renderText(pGame->pResumeButtonText);
+    renderText(pGame->pMainMenuButtonText);
+    renderText(pGame->pResumeButtonText);
 }
 
 void handleGameOverMenu(Game* pGame, SDL_Event event){
@@ -502,7 +523,7 @@ void handleGameOverMenu(Game* pGame, SDL_Event event){
 
 void renderGameOverMenu(Game* pGame){
     renderButton(pGame->pMainMenuButton, pGame->pRenderer);
-    // G�R S� ATT MAN INTE KAN KOMMA TILL RESUMEMENU renderText(pGame->pMainMenuButtonText);
+    renderText(pGame->pMainMenuButtonText);
 }
 
 
@@ -584,7 +605,6 @@ void quitGame(Game* pGame){
     if (pGame->pWindow) {
         SDL_DestroyWindow(pGame->pWindow);
     }
-    //destro playerRenderer?
     Mix_CloseAudio();
     Mix_Quit();
     TTF_Quit();
