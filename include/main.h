@@ -52,13 +52,13 @@ int handleError(Game* pGame, void* pMember, const char* (*GetError)(void));
 
 void runGame(Game* pGame);
 
-void handleMainMenu(Game* pGame, SDL_Event event, int* pTime);
+void handleMainMenu(Game* pGame, SDL_Event event);
 void renderMainMenu(Game* pGame);
 void handleSettingsMenu(Game* pGame, SDL_Event event, int* pNum);
 void renderSettingsMenu(Game *pGame);
 void handleLanguageMenu(Game* pGame, bool* pShowLang);
 void renderLanguageMenu(Game* pGame);
-void handleLobbyMenu(Game* pGame, SDL_Event event);
+void handleLobbyMenu(Game* pGame, SDL_Event event, int* pTime);
 void renderLobbyMenu(Game* pGame);
 void handleEnterInput(Game* pGame, SDL_Event event, int* pNum);
 void handleOngoing(Game* pGame, SDL_Event event, bool* pIsRunning, bool* pRight, bool* pLeft, int* pTime);

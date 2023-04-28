@@ -155,13 +155,13 @@ void runGame(Game* pGame){
 
     while (isRunning){
         switch (pGame->state) {
-            case MAIN_MENU: handleMainMenu(pGame, event, &time);
+            case MAIN_MENU: handleMainMenu(pGame, event);
                 break;
             case SETTINGS_MENU: handleSettingsMenu(pGame, event, &num);
                 break;
             case ENTER_INPUT: handleEnterInput(pGame, event, &num);
                 break;
-            case LOBBY_MENU: handleLobbyMenu(pGame, event);
+            case LOBBY_MENU: handleLobbyMenu(pGame, event, &time);
                 break;
             case ONGOING: handleOngoing(pGame, event, &isRunning, &right, &left, &time);
                 break;
@@ -179,7 +179,7 @@ void runGame(Game* pGame){
     }
 }
 
-void handleMainMenu(Game* pGame, SDL_Event event, int* pTime){
+void handleMainMenu(Game* pGame, SDL_Event event){
     bool buttonPressed = false;
 
     Mix_ResumeMusic();
@@ -202,8 +202,6 @@ void handleMainMenu(Game* pGame, SDL_Event event, int* pTime){
             pGame->state = QUIT;
             buttonPressed = false;
         }
-
-        resetGame(pGame, pTime);
 
         if (event.type == SDL_QUIT) {
             pGame->state = QUIT;
@@ -316,7 +314,7 @@ void renderLanguageMenu(Game* pGame){
     renderText(pGame->pSwedishButtonText);
 }
 
-void handleLobbyMenu(Game* pGame, SDL_Event event){
+void handleLobbyMenu(Game* pGame, SDL_Event event, int* pTime){
     bool buttonPressed = false;
 
     while (SDL_PollEvent(&event)) {
@@ -337,6 +335,8 @@ void handleLobbyMenu(Game* pGame, SDL_Event event){
             pGame->state = MAIN_MENU;
             buttonPressed = false;
         }
+
+        resetGame(pGame, pTime);
     }
 }
 
