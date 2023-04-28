@@ -94,6 +94,9 @@ int initiateGame(Game* pGame){
     pGame->pMainMenuButton = createButton((pGame->windowWidth - BUTTON_WIDTH) / 2, (pGame->windowHeight - BUTTON_HEIGHT) / 2 + 100, BUTTON_WIDTH, BUTTON_HEIGHT);
     //pGame->pMoveLeft1Button = createButton((pGame->windowWidth - BUTTON_WIDTH) / 2 - 80, (pGame->windowHeight - BUTTON_HEIGHT) / 2 + 100, BUTTON_WIDTH, BUTTON_HEIGHT);
     //pGame->pMoveRight1Button = createButton((pGame->windowWidth - BUTTON_WIDTH) / 2 - 80, (pGame->windowHeight - BUTTON_HEIGHT) / 2 + 50, BUTTON_WIDTH, BUTTON_HEIGHT);
+    pGame->pCreateLobbyButton = createButton((pGame->windowWidth - BUTTON_WIDTH) / 2, (pGame->windowHeight - BUTTON_HEIGHT) / 2 + 0, BUTTON_WIDTH, BUTTON_HEIGHT);
+    pGame->pJoinLobbyButton = createButton((pGame->windowWidth - BUTTON_WIDTH) / 2, (pGame->windowHeight - BUTTON_HEIGHT) / 2 + 50, BUTTON_WIDTH, BUTTON_HEIGHT);
+
     pGame->pStartPlatform = createPlatform(0, pGame->windowHeight - 100, pGame->windowWidth, 100);
 
     pGame->pNrOfPlayers = MAX_PLAYERS;
@@ -158,6 +161,8 @@ void runGame(Game* pGame){
                 break;
             case ENTER_INPUT: handleEnterInput(pGame, event, &num);
                 break;
+            case LOBBY_MENU: handleLobbyMenu(pGame, event);
+                break;
             case ONGOING: handleOngoing(pGame, event, &isRunning, &right, &left, &time);
                 break;
             case GAME_MENU: handleGameMenu(pGame, event);
@@ -184,7 +189,7 @@ void handleMainMenu(Game* pGame, SDL_Event event, int* pTime){
     while (SDL_PollEvent(&event)) {
         handleButton(pGame->pStartButton, &buttonPressed);
         if (buttonPressed) {
-            pGame->state = ONGOING;
+            pGame->state = LOBBY_MENU;
             buttonPressed = false;
         }
         handleButton(pGame->pSettingsButton, &buttonPressed);
@@ -309,6 +314,36 @@ void renderLanguageMenu(Game* pGame){
 
     renderText(pGame->pEnglishButtonText);
     renderText(pGame->pSwedishButtonText);
+}
+
+void handleLobbyMenu(Game* pGame, SDL_Event event){
+    bool buttonPressed = false;
+
+    while (SDL_PollEvent(&event)) {
+        handleButton(pGame->pCreateLobbyButton, &buttonPressed);
+        if (buttonPressed) {
+            initializeNetcode(pGame->pNetworkData, pGame->pGameplayData, pGame->pClientCommand, true);
+            pGame->state = ONGOING;
+            buttonPressed = false;
+        }
+        handleButton(pGame->pJoinLobbyButton, &buttonPressed);
+        if (buttonPressed) {
+            joinHost(pGame->pNetworkData);
+            pGame->state = ONGOING;
+            buttonPressed = false;
+        }
+        handleButton(pGame->pReturnButton, &buttonPressed);
+        if (buttonPressed){
+            pGame->state = MAIN_MENU;
+            buttonPressed = false;
+        }
+    }
+}
+
+void renderLobbyMenu(Game* pGame){
+    renderButton(pGame->pCreateLobbyButton, pGame->pRenderer);
+    renderButton(pGame->pJoinLobbyButton, pGame->pRenderer);
+    renderButton(pGame->pReturnButton, pGame->pRenderer);
 }
 
 void handleEnterInput(Game* pGame, SDL_Event event, int* pNum){
