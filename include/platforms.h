@@ -12,7 +12,7 @@ typedef struct {
     float width, height;
 } Platform;
 
-Platform* createPlatform(float xPos, float yPos, float width, float height);
+Platform *createPlatform(float xPos, float yPos, float width, float height);
 void scrollPlatform(Platform* pPlatform);
 void renderPlatform(Platform* pPlatform, SDL_Renderer* pRenderer, SDL_Texture* pTexture);
 void handlePlatforms(Platform** pPlatforms, SDL_Renderer* pRenderer, SDL_Texture* pTexture, int windowWidth, int windowHeight);
