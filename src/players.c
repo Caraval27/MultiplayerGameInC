@@ -25,29 +25,29 @@ void initPlayer(Player** pPlayers, int nrOfPlayersLeft, int pNrOfPlayers, int wi
     }
 }
 
-/*void handlePlayers(Player** pPlayers, int pNrOfPlayers, int *nrOfPlayersLeft, bool *pLeft, bool *pRight, int windowWidth, int windowHeight, Platform** pStartPlatform, Mix_Chunk *pJumpSound, State state, SDL_Renderer* pRenderer, SDL_Texture** pPlayerTextures){
+void handlePlayers(Player** pPlayers, int pNrOfPlayers, int *nrOfPlayersLeft, bool *pLeft, bool *pRight, int windowWidth, int windowHeight, Platform* pStartPlatform, Mix_Chunk *pJumpSound, State* pState, SDL_Renderer* pRenderer, SDL_Texture** pPlayerTextures, SDL_RendererFlip flip, Platform** pPlatforms, Text* pGameOverText){
 
-    for (int i = 0; i < pGame->pNrOfPlayers; i++) //av någon anledning dyker inte player 2 upp, förmodligen pga samma bild och position, samt båda rör sig med tangenttrycken
+    for (int i = 0; i < pNrOfPlayers; i++) //av någon anledning dyker inte player 2 upp, förmodligen pga samma bild och position, samt båda rör sig med tangenttrycken
     {
         if (i == 0) { //bara för att prova om spelare 2 dyker upp i loopen
-            movePlayer(pGame->pPlayers[i], *pLeft, *pRight, pGame->windowWidth);
-            jumpPlayer(pGame->pPlayers[i], pGame->pStartPlatform->yPos, pGame->pJumpSound);
-            playerCollidePlatform(pGame->pPlayers[i], pGame->pPlatforms, pGame->pJumpSound);
-            checkIfPlayerDead(pGame->pPlayers[i], pGame->windowHeight, &pGame->state, &pGame->nrOfPlayersLeft);
-            renderPlayer(pGame->pPlayers[i], pGame->pRenderer, pGame->pPlayerTextures[i], pGame->flip);
-            if (!pGame->pPlayers[i]->alive) {
-                renderText(pGame->pGameOverText);
+            movePlayer(pPlayers[i], *pLeft, *pRight, windowWidth);
+            jumpPlayer(pPlayers[i], pStartPlatform->yPos, pJumpSound);
+            playerCollidePlatform(pPlayers[i], pPlatforms, pJumpSound);
+            checkIfPlayerDead(pPlayers[i], windowHeight, pState, nrOfPlayersLeft);
+            renderPlayer(pPlayers[i], pRenderer, pPlayerTextures[i], flip);
+            if (!pPlayers[i]->alive) {
+                renderText(pGameOverText);
             }
         }
         else {
-            jumpPlayer(pGame->pPlayers[i], pGame->pStartPlatform->yPos, pGame->pJumpSound);
-            playerCollidePlatform(pGame->pPlayers[i], pGame->pPlatforms, pGame->pJumpSound);
-            checkIfPlayerDead(pGame->pPlayers[i], pGame->windowHeight, &pGame->state, &pGame->nrOfPlayersLeft);
-            renderPlayer(pGame->pPlayers[i], pGame->pRenderer, pGame->pPlayerTextures[i], SDL_FLIP_NONE);
+            jumpPlayer(pPlayers[i], pStartPlatform->yPos, pJumpSound);
+            playerCollidePlatform(pPlayers[i], pPlatforms, pJumpSound);
+            checkIfPlayerDead(pPlayers[i], windowHeight, pState, nrOfPlayersLeft);
+            renderPlayer(pPlayers[i], pRenderer, pPlayerTextures[i], SDL_FLIP_NONE);
         }
     }
-    handleWin(pGame->nrOfPlayersLeft, &pGame->state);
-}*/
+    handleWin(*nrOfPlayersLeft, pState);
+}
 
 
 void movePlayer(Player* pPlayer, bool left, bool right, int windowWidth){
@@ -116,6 +116,7 @@ void renderPlayer(Player* pPlayer, SDL_Renderer* pRenderer, SDL_Texture* pTextur
     }
 }
 
+
 void destroyPlayers(Player** pPlayers) {
     for (int i = 0; i != MAX_PLAYERS; i++) {
         if (pPlayers[i]) {
@@ -129,5 +130,25 @@ void destroyPlayerTextures(SDL_Texture** pPlayerTextures) {
         if (pPlayerTextures[i]) {
             SDL_DestroyTexture(pPlayerTextures[i]);
         }
+    }
+}
+
+int playerIsDead(Player* pPlayer, int windowHeight){
+    if(pPlayer->alive && pPlayer->yPos + pPlayer->height >= windowHeight + pPlayer->yVelocity / 60) {
+        return 1;
+    }
+    return 0;
+}
+
+void checkIfPlayerDead(Player* pPlayer, int windowHeight, State* pState, int* pNrOfPlayersLeft){
+    if(playerIsDead(pPlayer, windowHeight)) {
+        pPlayer->alive = false;
+        (*pNrOfPlayersLeft)--;
+    }
+}
+
+void handleWin(int nrOfPlayersLeft, State* pState){
+    if (nrOfPlayersLeft <= 1) {
+        *pState = GAME_OVER;
     }
 }

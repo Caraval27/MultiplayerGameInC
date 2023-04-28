@@ -340,8 +340,7 @@ void handleOngoing(Game* pGame, SDL_Event event, bool* pIsRunning, bool* pRight,
     handleBackground(pGame->pBackground, pGame->pRenderer, pGame->pBackgroundTexture, pGame->windowWidth, pGame->windowHeight); //denna måste ligga före allt med player
     handlePlatforms(pGame->pPlatforms, pGame->pRenderer, pGame->pPlatformTexture, pGame->windowWidth, pGame->windowHeight);
     handleStartPlatform(pGame->pStartPlatform, pGame->pPlatforms[0], pGame->pPlayers[0], pGame->pRenderer, pGame->pStartPlatformTexture, pGame->windowHeight, pTime);
-    handlePlayers(pGame, pLeft, pRight);
-    //handlePlayers(pGame-pPlayers, pGame->pNrOfPlayers, pGame->nrOfPlayersLeft, pLeft, pRight, pGame->windowWidth, pGame->windowHeight, pGame->pPlatforms, pGame->pJumpSound, pGame->state, pGame->pRenderer, pGame->pPlayerTextures);
+    handlePlayers(pGame->pPlayers, pGame->pNrOfPlayers, &pGame->nrOfPlayersLeft, pLeft, pRight, pGame->windowWidth, pGame->windowHeight, pGame->pStartPlatform, pGame->pJumpSound, &pGame->state, pGame->pRenderer, pGame->pPlayerTextures, pGame->flip, pGame->pPlatforms, pGame->pGameOverText);
 
 
     SDL_Delay(1000/60);
@@ -450,30 +449,6 @@ void renderGameOverMenu(Game* pGame){
     // Gï¿½R Sï¿½ ATT MAN INTE KAN KOMMA TILL RESUMEMENU renderText(pGame->pMainMenuButtonText);
 }
 
-
-void handlePlayers(Game* pGame, bool *pLeft, bool *pRight){
-
-    for (int i = 0; i < pGame->pNrOfPlayers; i++) //av någon anledning dyker inte player 2 upp, förmodligen pga samma bild och position, samt båda rör sig med tangenttrycken
-    {
-        if (i == 0) { //bara för att prova om spelare 2 dyker upp i loopen
-            movePlayer(pGame->pPlayers[i], *pLeft, *pRight, pGame->windowWidth);
-            jumpPlayer(pGame->pPlayers[i], pGame->pStartPlatform->yPos, pGame->pJumpSound);
-            playerCollidePlatform(pGame->pPlayers[i], pGame->pPlatforms, pGame->pJumpSound);
-            checkIfPlayerDead(pGame->pPlayers[i], pGame->windowHeight, &pGame->state, &pGame->nrOfPlayersLeft);
-            renderPlayer(pGame->pPlayers[i], pGame->pRenderer, pGame->pPlayerTextures[i], pGame->flip);
-            if (!pGame->pPlayers[i]->alive) {
-                renderText(pGame->pGameOverText);
-            }
-        }
-        else {
-            jumpPlayer(pGame->pPlayers[i], pGame->pStartPlatform->yPos, pGame->pJumpSound);
-            playerCollidePlatform(pGame->pPlayers[i], pGame->pPlatforms, pGame->pJumpSound);
-            checkIfPlayerDead(pGame->pPlayers[i], pGame->windowHeight, &pGame->state, &pGame->nrOfPlayersLeft);
-            renderPlayer(pGame->pPlayers[i], pGame->pRenderer, pGame->pPlayerTextures[i], SDL_FLIP_NONE);
-        }
-    }
-    handleWin(pGame->nrOfPlayersLeft, &pGame->state);
-}
 
 void resetGame(Game* pGame, int* pTime){
     if (pGame->state == ONGOING) {

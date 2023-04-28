@@ -1,7 +1,8 @@
 #pragma once
 
+#include "../include/main.h"
 #include "../include/platforms.h"
-#include "players.h"
+#include "../include/players.h"
 
 #define BACKGROUND_WIDTH 1024
 #define BACKGROUND_HEIGHT 1536

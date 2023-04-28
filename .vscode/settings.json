@@ -25,7 +25,11 @@
 		"world.h": "c",
 		"xutility": "c",
 		"string.h": "c",
-		"libraries.h": "c"
+		"libraries.h": "c",
+		"__bit_reference": "c",
+		"bitset": "c",
+		"menu.h": "c",
+		"text.h": "c"
 	},
 	"C_Cpp.default.configurationProvider": "ms-vscode.makefile-tools",
 	"files.encoding": "iso885910",

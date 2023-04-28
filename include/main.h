@@ -21,7 +21,6 @@ typedef struct {
     SDL_Window *pWindow;
     int windowWidth, windowHeight;
     SDL_Renderer *pRenderer;
-    //SDL_RendererFlip *flip;
     SDL_Texture *pBackgroundTexture, *pMenuTexture, *pStartPlatformTexture, *pPlatformTexture;
     TTF_Font *pMenuFont;
     Background* pBackground;
@@ -67,7 +66,7 @@ void renderGameMenu(Game* pGame);
 void handleGameOverMenu(Game* pGame, SDL_Event event);
 void renderGameOverMenu(Game* pGame);
 
-void handlePlayers(Game* pGame, bool* pLeft, bool* pRight);
+//void handlePlayers(Game* pGame, bool* pLeft, bool* pRight);
 
 void resetGame(Game* pGame, int* pTime);
 
