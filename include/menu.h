@@ -26,7 +26,7 @@ SDL_Texture* createMainMenuImage(SDL_Window* pWindow, SDL_Renderer* pRenderer, S
 void renderMenu(SDL_Renderer* pRenderer, SDL_Texture* pTexture, int windowWidth, int windowHeight);
 Button* createButton(float xPos, float yPos, float width, float height);
 void getMousePos(Button* pButton);
-void handleButton(Button* pButton, State* pState, State desiredState);
+void handleButton(Button* pButton, bool* pPressed);
 void renderButton(Button* pButton, SDL_Renderer* pRenderer);
 void destroyButton(Button* pButton);
 int playerIsDead(Player* pPlayer, int windowHeight);

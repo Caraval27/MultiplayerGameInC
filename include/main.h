@@ -25,17 +25,17 @@ typedef struct {
     SDL_Texture *pBackgroundTexture, *pMenuTexture, *pStartPlatformTexture, *pPlatformTexture;
     TTF_Font *pMenuFont;
     Background* pBackground;
-    Button *pStartButton, *pQuitButton, *pResumeButton, *pMainMenuButton, *pSettingsButton, *pLanguageButton, *pEnglishButton, *pSwedishButton, *pReturnButton,
-    *pMoveLeft1Button, *pMoveRight1Button, *pMoveLeft2Button, *pMoveRight2Button;
+    Button *pStartButton,  *pSettingsButton, *pQuitButton, *pLanguageButton, *pMoveLeftButton, *pMoveRightButton, *pReturnButton, *pEnglishButton, *pSwedishButton, *pResumeButton, *pMainMenuButton,
+    *pMoveLeft1Button, *pMoveRight1Button;
 
-    Text *pStartButtonText, *pQuitButtonText, *pResumeButtonText, *pMainMenuButtonText, *pSettingsButtonText, *pLanguageButtonText, *pEnglishButtonText,
-    *pSwedishButtonText, *pReturnButtonText, *pMoveLeft1ButtonText, *pMoveRight1ButtonText, *pMoveLeft2ButtonText, *pMoveRight2ButtonText, *pGameOverText;
+    Text *pStartButtonText, *pSettingsButtonText, *pQuitButtonText, *pLanguageButtonText,  *pMoveLeftButtonText, *pMoveRightButtonText, *pReturnButtonText, *pEnglishButtonText,
+    *pSwedishButtonText, *pResumeButtonText, *pMainMenuButtonText, *pMoveLeft1ButtonText, *pMoveRight1ButtonText,*pGameOverText;
 
     Player* pPlayers[MAX_PLAYERS];
     SDL_Texture* pPlayerTextures[MAX_PLAYERS];
     int pNrOfPlayers, nrOfPlayersLeft;
     SDL_RendererFlip flip;
-    Platform *pPlatforms[1000], *pStartPlatform;
+    Platform *pPlatforms[100], *pStartPlatform;
 
     int keybinds[NR_OF_KEYBINDS];
     char language[NR_OF_WORDS][50];
@@ -57,12 +57,15 @@ void handleMainMenu(Game* pGame, SDL_Event event, int* pTime);
 void renderMainMenu(Game* pGame);
 void handleSettingsMenu(Game* pGame, SDL_Event event, int* pNum);
 void renderSettingsMenu(Game *pGame);
+void handleLanguageMenu(Game* pGame, bool* pShowLang);
+void renderLanguageMenu(Game* pGame);
 void handleEnterInput(Game* pGame, SDL_Event event, int* pNum);
 void handleOngoing(Game* pGame, SDL_Event event, bool* pIsRunning, bool* pRight, bool* pLeft, int* pTime);
-void handleInputOngoing(Game* pGame, SDL_Event* event, bool* pIsRunning, bool* pRight, bool* pLeft);
+void handleOngoingInput(Game* pGame, SDL_Event* event, bool* pIsRunning, bool* pRight, bool* pLeft);
 void handleGameMenu(Game* pGame, SDL_Event event);
 void renderGameMenu(Game* pGame);
 void handleGameOverMenu(Game* pGame, SDL_Event event);
+void renderGameOverMenu(Game* pGame);
 
 void handlePlayers(Game* pGame, bool* pLeft, bool* pRight);
 void initPlayers(Game* pGame);

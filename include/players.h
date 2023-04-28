@@ -5,7 +5,7 @@
 #define CHARACTER_WIDTH 60
 #define CHARACTER_HEIGHT 60
 #define MOVE_SPEED 300
-#define JUMP_SPEED -700
+#define JUMP_SPEED -1000
 #define GRAVITY 1200
 
 typedef struct {
