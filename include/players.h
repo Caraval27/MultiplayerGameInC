@@ -20,10 +20,10 @@ typedef struct {
 } Player;
 
 Player* createPlayer(float xPos, float yPos, float width, float height, float xVelocity, float yVelocity);
-void initPlayers(Player** pPlayers, int pNrOfPlayers, int windowWidth, int windowHeight, SDL_Texture** pPlayerTextures, SDL_Window* pWindow, SDL_Renderer* pRenderer);
+void initPlayers(Player** pPlayers, int* pNrOfPlayers, int *pNrOfPlayersLeft, int windowWidth, float startPlatformHeight, SDL_Texture** pPlayerTextures, SDL_Window* pWindow, SDL_Renderer* pRenderer);
 void handlePlayers(Player** pPlayers, int pNrOfPlayers, int *nrOfPlayersLeft, bool *pLeft, bool *pRight, int windowWidth, int windowHeight, Platform* pStartPlatform, Mix_Chunk *pJumpSound, State* pState, SDL_Renderer* pRenderer, SDL_Texture** pPlayerTextures, SDL_RendererFlip flip, Platform** pPlatforms, Text* pGameOverText);
 void movePlayer(Player* pPlayer, bool left, bool right, int windowWidth);
-void jumpPlayer(Player* pPlayer, int startPlatformHeight, Mix_Chunk* pJumpSound);
+void jumpPlayer(Player* pPlayer, int startPlatformYPos, Mix_Chunk* pJumpSound);
 void playerCollidePlatform(Player* pPlayer, Platform** pPlatforms, Mix_Chunk* pJumpSound);
 void renderPlayer(Player* pPlayer, SDL_Renderer* pRenderer, SDL_Texture* pTexture, SDL_RendererFlip flip);
 void destroyPlayers(Player** pPlayer);

@@ -99,9 +99,6 @@ int initiateGame(Game* pGame){
 
     pGame->pStartPlatform = createPlatform(0, pGame->windowHeight - 100, pGame->windowWidth, 100);
 
-    pGame->nrOfPlayers = MAX_PLAYERS;
-    pGame->nrOfPlayersLeft = MAX_PLAYERS;
-
     pGame->pGameOverText = createText(pGame->pRenderer, pGame->pMenuFont, 255, 255, 255, "You are dead", pGame->windowWidth, pGame->windowHeight, -200, 0);
     pGame->pWhoWonText[0] = createText(pGame->pRenderer, pGame->pMenuFont, 255, 255, 255, "Player 0 won", pGame->windowWidth, pGame->windowHeight, -300, 0);
     pGame->pWhoWonText[1] = createText(pGame->pRenderer, pGame->pMenuFont, 255, 255, 255, "Player 1 won", pGame->windowWidth, pGame->windowHeight, -300, 0);
@@ -111,7 +108,7 @@ int initiateGame(Game* pGame){
     pGame->pWhoWonText[5] = createText(pGame->pRenderer, pGame->pMenuFont, 255, 255, 255, "Player 5 won", pGame->windowWidth, pGame->windowHeight, -300, 0);
     pGame->pWhoWonText[6] = createText(pGame->pRenderer, pGame->pMenuFont, 255, 255, 255, "You won!", pGame->windowWidth, pGame->windowHeight, -300, 0);
 
-    initPlayers(pGame->pPlayers, pGame->nrOfPlayers, pGame->windowWidth, pGame->windowHeight,pGame->pPlayerTextures, pGame->pWindow, pGame->pRenderer);
+    initPlayers(pGame->pPlayers, &pGame->nrOfPlayers, &pGame->nrOfPlayersLeft, pGame->windowWidth, pGame->pStartPlatform->yPos, pGame->pPlayerTextures, pGame->pWindow, pGame->pRenderer);
 
     FILE *fp;
     readFromFileKey(fp, pGame->keybinds);
@@ -468,16 +465,21 @@ void renderGameMenu(Game* pGame){
 void handleGameOverMenu(Game* pGame, SDL_Event event){
     bool buttonPressed = false;
     int i;
-    for(i = 0; i < pGame->nrOfPlayers; i++)
-        if(pGame->pPlayers[i]->alive)
-            break;
-    if(i <= pGame->nrOfPlayers-1)
-        renderText(pGame->pWhoWonText[i]);
-    else
-        renderText(pGame->pWhoWonText[MAX_PLAYERS]);
+
     Mix_PauseMusic();
 
     renderGameOverMenu(pGame);
+    for(i = 0; i < pGame->nrOfPlayers; i++) {
+        if (pGame->pPlayers[i]->alive) {
+            break;
+        }
+    }
+    if (i <= pGame->nrOfPlayers - 1) {
+        renderText(pGame->pWhoWonText[i]);
+    }
+    else {
+        renderText(pGame->pWhoWonText[MAX_PLAYERS]);
+    }
 
     while (SDL_PollEvent(&event)) {
         handleButton(pGame->pMainMenuButton, &buttonPressed);
@@ -500,9 +502,9 @@ void renderGameOverMenu(Game* pGame){
 
 void resetGame(Game* pGame, int* pTime){
     if (pGame->state == ONGOING) {
-        resetStartPlatform(pGame->pStartPlatform, pGame->windowHeight, pTime);
         resetPlatforms(pGame->pPlatforms);
-        initPlayers(pGame->pPlayers, pGame->nrOfPlayers, pGame->windowWidth, pGame->windowHeight,pGame->pPlayerTextures, pGame->pWindow, pGame->pRenderer);
+        resetStartPlatform(pGame->pStartPlatform, pGame->windowHeight, pTime);
+        initPlayers(pGame->pPlayers, &pGame->nrOfPlayers, &pGame->nrOfPlayersLeft, pGame->windowWidth, pGame->pStartPlatform->yPos, pGame->pPlayerTextures, pGame->pWindow, pGame->pRenderer);
     }
 }
 

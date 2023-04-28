@@ -15,11 +15,14 @@ Player* createPlayer(float xPos, float yPos, float width, float height, float xV
 }
 
 
-void initPlayers(Player** pPlayers, int nrOfPlayers, int windowWidth, int windowHeight, SDL_Texture** pPlayerTextures, SDL_Window* pWindow, SDL_Renderer* pRenderer){
-    int startPosition = 1;
+void initPlayers(Player** pPlayers, int* pNrOfPlayers, int* pNrOfPlayersLeft, int windowWidth, float startPlatformYPos, SDL_Texture** pPlayerTextures, SDL_Window* pWindow, SDL_Renderer* pRenderer){
+    int startPosition = 1, i;
 
-    for(int i = 0; i < nrOfPlayers; i++) {
-        pPlayers[i] = createPlayer(startPosition * windowWidth / (nrOfPlayers + 1), windowHeight, CHARACTER_WIDTH, CHARACTER_HEIGHT, MOVE_SPEED, JUMP_SPEED); //ändra starterpositions
+    *pNrOfPlayers = MAX_PLAYERS;
+    *pNrOfPlayersLeft = MAX_PLAYERS;
+
+    for(i = 0; i < *pNrOfPlayers; i++) {
+        pPlayers[i] = createPlayer(startPosition * windowWidth / (*pNrOfPlayers + 1), startPlatformYPos - CHARACTER_HEIGHT, CHARACTER_WIDTH, CHARACTER_HEIGHT, MOVE_SPEED, JUMP_SPEED); //ändra starterpositions
         pPlayerTextures[i] = createPicture(pWindow, pRenderer, CHARACTER_PICTURE); //gör en sträng av detta ist
         startPosition += 1;
     }
@@ -68,7 +71,7 @@ void movePlayer(Player* pPlayer, bool left, bool right, int windowWidth){
     }
 }
 
-void jumpPlayer(Player* pPlayer, int startPlatformHeight, Mix_Chunk* pJumpSound){
+void jumpPlayer(Player* pPlayer, int startPlatformYPos, Mix_Chunk* pJumpSound){
     if (pPlayer->alive) {
         pPlayer->yVelocity += (GRAVITY / 60);
         pPlayer->yPos += (pPlayer->yVelocity / 60);
@@ -77,8 +80,8 @@ void jumpPlayer(Player* pPlayer, int startPlatformHeight, Mix_Chunk* pJumpSound)
             pPlayer->yPos = 0;
             pPlayer->yVelocity = -(pPlayer->yVelocity) / 4;
         }
-        else if (pPlayer->yPos >= startPlatformHeight - pPlayer->height) {
-            pPlayer->yPos = startPlatformHeight - pPlayer->height;
+        else if (pPlayer->yPos >= startPlatformYPos - pPlayer->height) {
+            pPlayer->yPos = startPlatformYPos - pPlayer->height;
             pPlayer->yVelocity = JUMP_SPEED;
             Mix_VolumeChunk(pJumpSound, 10);
             Mix_PlayChannel(-1, pJumpSound, 0);

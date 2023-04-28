@@ -43,23 +43,3 @@ void renderButton(Button* pButton, SDL_Renderer* pRenderer){
 void destroyButton(Button* pButton){
     free(pButton);
 }
-
-/*int playerIsDead(Player* pPlayer, int windowHeight){
-    if(pPlayer->alive && pPlayer->yPos + pPlayer->height >= windowHeight + pPlayer->yVelocity / 60) {
-        return 1;
-    }
-    return 0;
-}
-
-void checkIfPlayerDead(Player* pPlayer, int windowHeight, State* pState, int* pNrOfPlayersLeft){
-    if(playerIsDead(pPlayer, windowHeight)) {
-        pPlayer->alive = false;
-        (*pNrOfPlayersLeft)--;
-    }
-}
-
-void handleWin(int nrOfPlayersLeft, State* pState){
-    if (nrOfPlayersLeft <= 1) {
-        *pState = GAME_OVER;
-    }
-}*/
