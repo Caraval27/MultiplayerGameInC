@@ -451,7 +451,7 @@ void renderGameOverMenu(Game* pGame){
 }
 
 
-/*void handlePlayers(Game* pGame, bool *pLeft, bool *pRight){
+void handlePlayers(Game* pGame, bool *pLeft, bool *pRight){
 
     for (int i = 0; i < pGame->pNrOfPlayers; i++) //av någon anledning dyker inte player 2 upp, förmodligen pga samma bild och position, samt båda rör sig med tangenttrycken
     {
@@ -473,7 +473,7 @@ void renderGameOverMenu(Game* pGame){
         }
     }
     handleWin(pGame->nrOfPlayersLeft, &pGame->state);
-}*/
+}
 
 void resetGame(Game* pGame, int* pTime){
     if (pGame->state == ONGOING) {
