@@ -35,7 +35,7 @@ typedef struct {
     SDL_Texture* pPlayerTextures[MAX_PLAYERS];
     int pNrOfPlayers, nrOfPlayersLeft;
     SDL_RendererFlip flip;
-    Platform *pPlatforms[1000], *pStartPlatform;
+    Platform *pPlatforms[100], *pStartPlatform;
 
     int keybinds[NR_OF_KEYBINDS];
     char language[NR_OF_WORDS][50];
