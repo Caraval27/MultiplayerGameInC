@@ -14,6 +14,41 @@ Player* createPlayer(float xPos, float yPos, float width, float height, float xV
     return pPlayer;
 }
 
+
+void initPlayer(Player** pPlayers, int nrOfPlayersLeft, int pNrOfPlayers, int windowWidth, int windowHeight, SDL_Texture** pPlayerTextures, SDL_Window* pWindow, SDL_Renderer* pRenderer){
+    int startPosition = 2;
+    nrOfPlayersLeft = MAX_PLAYERS;
+    for(int i = 0; i < pNrOfPlayers; i++) {
+        pPlayers[i] = createPlayer(windowWidth / startPosition, windowHeight, CHARACTER_WIDTH, CHARACTER_HEIGHT, MOVE_SPEED, JUMP_SPEED); //ändra starterpositions
+        pPlayerTextures[i] = createPicture(pWindow, pRenderer, CHARACTER_PICTURE); //gör en sträng av detta ist
+        startPosition += 1;
+    }
+}
+
+void handlePlayers(Player** pPlayers, int pNrOfPlayers, int *nrOfPlayersLeft, bool *pLeft, bool *pRight, int windowWidth, int windowHeight, Platform** pStartPlatform, Mix_Chunk *pJumpSound, State state, SDL_Renderer* pRenderer, SDL_Texture** pPlayerTextures){
+
+    for (int i = 0; i < pGame->pNrOfPlayers; i++) //av någon anledning dyker inte player 2 upp, förmodligen pga samma bild och position, samt båda rör sig med tangenttrycken
+    {
+        if (i == 0) { //bara för att prova om spelare 2 dyker upp i loopen
+            movePlayer(pGame->pPlayers[i], *pLeft, *pRight, pGame->windowWidth);
+            jumpPlayer(pGame->pPlayers[i], pGame->pStartPlatform->yPos, pGame->pJumpSound);
+            playerCollidePlatform(pGame->pPlayers[i], pGame->pPlatforms, pGame->pJumpSound);
+            checkIfPlayerDead(pGame->pPlayers[i], pGame->windowHeight, &pGame->state, &pGame->nrOfPlayersLeft);
+            renderPlayer(pGame->pPlayers[i], pGame->pRenderer, pGame->pPlayerTextures[i], pGame->flip);
+            if (!pGame->pPlayers[i]->alive) {
+                renderText(pGame->pGameOverText);
+            }
+        }
+        else {
+            jumpPlayer(pGame->pPlayers[i], pGame->pStartPlatform->yPos, pGame->pJumpSound);
+            playerCollidePlatform(pGame->pPlayers[i], pGame->pPlatforms, pGame->pJumpSound);
+            checkIfPlayerDead(pGame->pPlayers[i], pGame->windowHeight, &pGame->state, &pGame->nrOfPlayersLeft);
+            renderPlayer(pGame->pPlayers[i], pGame->pRenderer, pGame->pPlayerTextures[i], SDL_FLIP_NONE);
+        }
+    }
+    handleWin(pGame->nrOfPlayersLeft, &pGame->state);
+}
+
 void movePlayer(Player* pPlayer, bool left, bool right, int windowWidth){
     if (pPlayer->alive) {
         if (left && !right) {

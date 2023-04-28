@@ -91,7 +91,7 @@ void handleStartPlatform(Platform* pStartPlatform, Platform* pFirstPlatform, Pla
     (*pTime)++;
 
     if (pStartPlatform->yPos < windowHeight) {
-        if (pFirstPlatform && pFirstPlatform->yPos == pStartPlatform->yPos - pFirstPlatform->height) { 
+        if (pFirstPlatform && pFirstPlatform->yPos == pStartPlatform->yPos - pFirstPlatform->height) {
             pStartPlatform->yPos += PLATFORM_SPEED;
         }
         renderPlatform(pStartPlatform, pRenderer, pTexture);

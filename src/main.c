@@ -341,6 +341,8 @@ void handleOngoing(Game* pGame, SDL_Event event, bool* pIsRunning, bool* pRight,
     handlePlatforms(pGame->pPlatforms, pGame->pRenderer, pGame->pPlatformTexture, pGame->windowWidth, pGame->windowHeight);
     handleStartPlatform(pGame->pStartPlatform, pGame->pPlatforms[0], pGame->pPlayers[0], pGame->pRenderer, pGame->pStartPlatformTexture, pGame->windowHeight, pTime);
     handlePlayers(pGame, pLeft, pRight);
+    //handlePlayers(pGame-pPlayers, pGame->pNrOfPlayers, pGame->nrOfPlayersLeft, pLeft, pRight, pGame->windowWidth, pGame->windowHeight, pGame->pPlatforms, pGame->pJumpSound, pGame->state, pGame->pRenderer, pGame->pPlayerTextures);
+
 
     SDL_Delay(1000/60);
 }
@@ -449,7 +451,7 @@ void renderGameOverMenu(Game* pGame){
 }
 
 
-void handlePlayers(Game* pGame, bool *pLeft, bool *pRight){
+/*void handlePlayers(Game* pGame, bool *pLeft, bool *pRight){
 
     for (int i = 0; i < pGame->pNrOfPlayers; i++) //av någon anledning dyker inte player 2 upp, förmodligen pga samma bild och position, samt båda rör sig med tangenttrycken
     {
@@ -471,7 +473,7 @@ void handlePlayers(Game* pGame, bool *pLeft, bool *pRight){
         }
     }
     handleWin(pGame->nrOfPlayersLeft, &pGame->state);
-}
+}*/
 
 void resetGame(Game* pGame, int* pTime){
     if (pGame->state == ONGOING) {

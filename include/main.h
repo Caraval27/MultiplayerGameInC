@@ -68,7 +68,6 @@ void handleGameOverMenu(Game* pGame, SDL_Event event);
 void renderGameOverMenu(Game* pGame);
 
 void handlePlayers(Game* pGame, bool* pLeft, bool* pRight);
-void initPlayers(Game* pGame);
 
 void resetGame(Game* pGame, int* pTime);
 
