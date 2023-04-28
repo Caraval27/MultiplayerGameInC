@@ -25,11 +25,11 @@ typedef struct {
     SDL_Texture *pBackgroundTexture, *pMenuTexture, *pStartPlatformTexture, *pPlatformTexture;
     TTF_Font *pMenuFont;
     Background* pBackground;
-    Button *pStartButton, *pQuitButton, *pResumeButton, *pMainMenuButton, *pSettingsButton, *pLanguageButton, *pEnglishButton, *pSwedishButton, *pReturnButton,
-    *pMoveLeft1Button, *pMoveRight1Button, *pMoveLeft2Button, *pMoveRight2Button;
+    Button *pStartButton,  *pSettingsButton, *pQuitButton, *pLanguageButton, *pMoveLeftButton, *pMoveRightButton, *pReturnButton, *pEnglishButton, *pSwedishButton, *pResumeButton, *pMainMenuButton,
+    *pMoveLeft1Button, *pMoveRight1Button;
 
-    Text *pStartButtonText, *pQuitButtonText, *pResumeButtonText, *pMainMenuButtonText, *pSettingsButtonText, *pLanguageButtonText, *pEnglishButtonText,
-    *pSwedishButtonText, *pReturnButtonText, *pMoveLeft1ButtonText, *pMoveRight1ButtonText, *pMoveLeft2ButtonText, *pMoveRight2ButtonText, *pGameOverText;
+    Text *pStartButtonText, *pSettingsButtonText, *pQuitButtonText, *pLanguageButtonText,  *pMoveLeftButtonText, *pMoveRightButtonText, *pReturnButtonText, *pEnglishButtonText,
+    *pSwedishButtonText, *pResumeButtonText, *pMainMenuButtonText, *pMoveLeft1ButtonText, *pMoveRight1ButtonText,*pGameOverText;
 
     Player* pPlayers[MAX_PLAYERS];
     SDL_Texture* pPlayerTextures[MAX_PLAYERS];
