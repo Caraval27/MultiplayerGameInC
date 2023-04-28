@@ -25,7 +25,7 @@ void initPlayer(Player** pPlayers, int nrOfPlayersLeft, int pNrOfPlayers, int wi
     }
 }
 
-void handlePlayers(Player** pPlayers, int pNrOfPlayers, int *nrOfPlayersLeft, bool *pLeft, bool *pRight, int windowWidth, int windowHeight, Platform** pStartPlatform, Mix_Chunk *pJumpSound, State state, SDL_Renderer* pRenderer, SDL_Texture** pPlayerTextures){
+/*void handlePlayers(Player** pPlayers, int pNrOfPlayers, int *nrOfPlayersLeft, bool *pLeft, bool *pRight, int windowWidth, int windowHeight, Platform** pStartPlatform, Mix_Chunk *pJumpSound, State state, SDL_Renderer* pRenderer, SDL_Texture** pPlayerTextures){
 
     for (int i = 0; i < pGame->pNrOfPlayers; i++) //av någon anledning dyker inte player 2 upp, förmodligen pga samma bild och position, samt båda rör sig med tangenttrycken
     {
@@ -47,7 +47,8 @@ void handlePlayers(Player** pPlayers, int pNrOfPlayers, int *nrOfPlayersLeft, bo
         }
     }
     handleWin(pGame->nrOfPlayersLeft, &pGame->state);
-}
+}*/
+
 
 void movePlayer(Player* pPlayer, bool left, bool right, int windowWidth){
     if (pPlayer->alive) {
