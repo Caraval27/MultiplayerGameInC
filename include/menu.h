@@ -1,8 +1,6 @@
 #pragma once
 
-
-#define MENU_WIDTH 2200
-#define MENU_HEIGHT 1524
+#define MAIN_MENU_PICTURE "../assets/mainMenuBackground.png"
 #define BUTTON_WIDTH 150
 #define BUTTON_HEIGHT 40
 

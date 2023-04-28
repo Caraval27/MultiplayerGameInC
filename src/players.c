@@ -15,11 +15,11 @@ Player* createPlayer(float xPos, float yPos, float width, float height, float xV
 }
 
 
-void initPlayer(Player** pPlayers, int *pNrOfPlayersLeft, int pNrOfPlayers, int windowWidth, int windowHeight, SDL_Texture** pPlayerTextures, SDL_Window* pWindow, SDL_Renderer* pRenderer){
-    float startPosition = 1;
-    *pNrOfPlayersLeft = MAX_PLAYERS;
-    for(int i = 0; i < pNrOfPlayers; i++) {
-        pPlayers[i] = createPlayer(startPosition * windowWidth / 7, windowHeight, CHARACTER_WIDTH, CHARACTER_HEIGHT, MOVE_SPEED, JUMP_SPEED); //ändra starterpositions
+void initPlayers(Player** pPlayers, int nrOfPlayers, int windowWidth, int windowHeight, SDL_Texture** pPlayerTextures, SDL_Window* pWindow, SDL_Renderer* pRenderer){
+    int startPosition = 1;
+
+    for(int i = 0; i < nrOfPlayers; i++) {
+        pPlayers[i] = createPlayer(startPosition * windowWidth / (nrOfPlayers + 1), windowHeight, CHARACTER_WIDTH, CHARACTER_HEIGHT, MOVE_SPEED, JUMP_SPEED); //ändra starterpositions
         pPlayerTextures[i] = createPicture(pWindow, pRenderer, CHARACTER_PICTURE); //gör en sträng av detta ist
         startPosition += 1;
     }
@@ -134,7 +134,7 @@ void destroyPlayerTextures(SDL_Texture** pPlayerTextures) {
 }
 
 int playerIsDead(Player* pPlayer, int windowHeight){
-    if(pPlayer->alive && pPlayer->yPos + pPlayer->height >= windowHeight + pPlayer->yVelocity / 60) {
+    if(pPlayer->alive && pPlayer->yPos + pPlayer->height >= windowHeight) {
         return 1;
     }
     return 0;

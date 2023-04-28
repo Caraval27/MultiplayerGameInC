@@ -1,8 +1,8 @@
 #pragma once
 
-#define NR_OF_KEYBINDS 3
 #define NR_OF_WORDS 10
 #define LANG_LENGTH 20
+#define NR_OF_KEYBINDS 3
 
 void saveToFile(FILE *fp, int keybinds[NR_OF_KEYBINDS]);
 void readFromFileKey(FILE *fp, int keybinds[NR_OF_KEYBINDS]);

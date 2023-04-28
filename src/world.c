@@ -86,19 +86,3 @@ void destroyMusic(Mix_Music* pMusic){
 void destroyChunk(Mix_Chunk* pChunk){
     Mix_FreeChunk(pChunk);
 }
-
-void handleStartPlatform(Platform* pStartPlatform, Platform* pFirstPlatform, Player* pPlayer, SDL_Renderer* pRenderer, SDL_Texture* pTexture, int windowHeight, int* pTime){
-    (*pTime)++;
-
-    if (pStartPlatform->yPos < windowHeight) {
-        if (pFirstPlatform && pFirstPlatform->yPos == pStartPlatform->yPos - pFirstPlatform->height) {
-            pStartPlatform->yPos += PLATFORM_SPEED;
-        }
-        renderPlatform(pStartPlatform, pRenderer, pTexture);
-    }
-}
-
-void resetStartPlatform(Platform* pStartPlatform, int windowHeight, int* pTime){
-    pStartPlatform->yPos = windowHeight - 100;
-    *pTime = 0;
-}

@@ -1,9 +1,6 @@
 #pragma once
 
-#include "../include/main.h"
-#include "../include/platforms.h"
-#include "../include/players.h"
-
+#define BACKGROUND_PICTURE "../assets/background.png"
 #define BACKGROUND_WIDTH 1024
 #define BACKGROUND_HEIGHT 1536
 #define BACKGROUND_SPEED 1
@@ -22,5 +19,3 @@ void renderBackground(Background* pBackground, SDL_Renderer* pRenderer, SDL_Text
 void destroyBackground(Background* pBackground);
 void destroyMusic(Mix_Music* pMainSound);
 void destroyChunk(Mix_Chunk* pMusicChunk);
-void handleStartPlatform(Platform* pStartPlatform, Platform* pFirstPlatform, Player* pPlayer, SDL_Renderer* pRenderer, SDL_Texture* pTexture, int windowHeight, int* pTime);
-void resetStartPlatform(Platform* pStartPlatform, int windowHeight, int* pTime);

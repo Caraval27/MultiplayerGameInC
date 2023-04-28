@@ -35,7 +35,7 @@ void handlePlatforms(Platform** pPlatforms, SDL_Renderer* pRenderer, SDL_Texture
         width = PLATFORM_WIDTH;
         height = PLATFORM_HEIGHT;
         y = 0 - height;
-        for (j = 0; j < NR_PLATFORM_SAME_Y; j++)
+        for (j = 0; j < Y_NR_OF_PLATFORMS; j++)
         {
             x = (rand() % (windowWidth - width - (width / 4) * 2)) + width / 4;
             if (i > 0 && x + PLATFORM_WIDTH >= pPlatforms[i-1]->xPos && x <= pPlatforms[i-1]->xPos + PLATFORM_WIDTH){
@@ -43,7 +43,7 @@ void handlePlatforms(Platform** pPlatforms, SDL_Renderer* pRenderer, SDL_Texture
             }
             else{
                 pPlatforms[i] = createPlatform(x, y, width, height);
-                if(j != NR_PLATFORM_SAME_Y - 1) i++;
+                if(j != Y_NR_OF_PLATFORMS - 1) i++;
             }
         }
     }
@@ -56,11 +56,27 @@ void handlePlatforms(Platform** pPlatforms, SDL_Renderer* pRenderer, SDL_Texture
     }
 }
 
+void handleStartPlatform(Platform* pStartPlatform, Platform* pFirstPlatform, SDL_Renderer* pRenderer, SDL_Texture* pTexture, int windowHeight, int* pTime){
+    (*pTime)++;
+
+    if (pStartPlatform->yPos < windowHeight) {
+        if (pFirstPlatform && pFirstPlatform->yPos == pStartPlatform->yPos - pFirstPlatform->height) {
+            pStartPlatform->yPos += PLATFORM_SPEED;
+        }
+        renderPlatform(pStartPlatform, pRenderer, pTexture);
+    }
+}
+
 void resetPlatforms(Platform** pPlatforms){
     destroyPlatforms(pPlatforms);
     for(int i = 0; pPlatforms[i] != 0; i++){
         pPlatforms[i] = 0;
     }
+}
+
+void resetStartPlatform(Platform* pStartPlatform, int windowHeight, int* pTime){
+    pStartPlatform->yPos = windowHeight - 100;
+    *pTime = 0;
 }
 
 void destroyPlatform(Platform* pPlatform){
