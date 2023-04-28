@@ -34,6 +34,11 @@ int initiateGame(Game* pGame){
         quitGame(pGame);
         return 0;
     }
+
+	pGame->pNetworkData = malloc(sizeof(NetworkData));
+	pGame->pGameplayData = malloc(sizeof(GameplayData));
+	pGame->pClientCommand = malloc(sizeof(ClientCommand));
+
     pGame->windowWidth = displayMode.w;
     pGame->windowHeight = displayMode.h;
 
@@ -323,12 +328,13 @@ void handleLobbyMenu(Game* pGame, SDL_Event event, int* pTime){
     while (SDL_PollEvent(&event)) {
         handleButton(pGame->pCreateLobbyButton, &buttonPressed);
         if (buttonPressed) {
-            initializeNetcode(pGame->pNetworkData, pGame->pGameplayData, pGame->pClientCommand, true);
+            initializeNetcode(pGame->pNetworkData, true);
             pGame->state = ONGOING;
             buttonPressed = false;
         }
         handleButton(pGame->pJoinLobbyButton, &buttonPressed);
         if (buttonPressed) {
+            initializeNetcode(pGame->pNetworkData, false);
             joinHost(pGame->pNetworkData);
             pGame->state = ONGOING;
             buttonPressed = false;

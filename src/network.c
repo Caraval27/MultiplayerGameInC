@@ -1,22 +1,20 @@
 #include "../include/network.h"
 
-int initializeNetcode(NetworkData *pNetworkData, GameplayData *pGameplayData, ClientCommand *pClientCommand, bool isHost) {
-	pNetworkData = malloc(sizeof(NetworkData));
-	pGameplayData = malloc(sizeof(GameplayData));
-	pClientCommand = malloc(sizeof(ClientCommand));
+int initializeNetcode(NetworkData *pNetworkData, bool isHost) {
 	pNetworkData->isHost = isHost;
 	pNetworkData->pSocket = SDLNet_UDP_Open(isHost ? PORT : 0);
 	pNetworkData->pPacket = SDLNet_AllocPacket(PACKET_SIZE);
 	if (!pNetworkData->pSocket || !pNetworkData->pPacket) {
-		printf("%s\n", SDLNet_GetError());
+		printf("error: %s\n", SDLNet_GetError());
 		return 0;
 	}
 	if (!isHost) {
 		if (SDLNet_ResolveHost(&pNetworkData->serverIP, SERVER_IP, PORT) == -1) {
-			printf("%s\n", SDLNet_GetError());
+			printf("error: %s\n", SDLNet_GetError());
 			return 0;
 		}
 	}
+	printf("netcode initialization complete. isHost = %d\n", isHost);
 	return 1;
 }
 
@@ -68,11 +66,19 @@ void handleClientCommands(NetworkData *pNetworkData, ClientCommand *pClientComma
 	}
 }
 
-void joinHost(NetworkData *pNetworkData) {
-	if (!pNetworkData->serverIP.host) {}
+int joinHost(NetworkData *pNetworkData) {
+	if (!pNetworkData->serverIP.host) {
+		printf("error: unable to send packet due to unresolved serverIP\n");
+		return 0;
+	}
 	pNetworkData->pPacket->address.host = pNetworkData->serverIP.host;
 	pNetworkData->pPacket->address.port = pNetworkData->serverIP.port;
-	SDLNet_UDP_Send(pNetworkData->pSocket, -1, pNetworkData->pPacket);
+	if (!SDLNet_UDP_Send(pNetworkData->pSocket, -1, pNetworkData->pPacket)) {
+		printf("error: failed to send packet: %s\n", SDLNet_GetError());
+		return 0;
+	}
+	printf("join request sent! waiting for reply...\n");
+	return 1;
 }
 
 int receiveHostBroadcast(NetworkData *pNetworkData, GameplayData *pGameplayData) {
