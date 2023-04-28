@@ -23,16 +23,26 @@ void renderPlatform(Platform* pPlatform, SDL_Renderer* pRenderer, SDL_Texture* p
 }
 
 void handlePlatforms(Platform** pPlatforms, SDL_Renderer* pRenderer, SDL_Texture* pTexture, int windowWidth){
-    int i = 0;
+    int i = 0, j = 0, width = 0, height = 0, x = 0, y = 0;
 
     if (SDL_GetTicks64() % 1000 < 17) {
         i = 0;
+        
         while (pPlatforms[i]) i++; // Variabel som direkt visar antalet plattformar?
-        int width = PLATFORM_WIDTH;
-        int height = PLATFORM_HEIGHT;
-        int x = (rand() % (windowWidth - width - (width / 4) * 2)) + width / 4;
-        int y = 0 - height;
-        pPlatforms[i] = createPlatform(x, y, width, height);
+        width = PLATFORM_WIDTH;
+        height = PLATFORM_HEIGHT;
+        y = 0 - height;
+        for (j = 0; j < NR_PLATFORM_SAME_Y; j++)
+        {
+            x = (rand() % (windowWidth - width - (width / 4) * 2)) + width / 4;
+            if (i > 0 && x + PLATFORM_WIDTH >= pPlatforms[i-1]->xPos && x <= pPlatforms[i-1]->xPos + PLATFORM_WIDTH){
+                j--;
+            }
+            else{
+                pPlatforms[i] = createPlatform(x, y, width, height);
+                if(j != NR_PLATFORM_SAME_Y - 1) i++;
+            }
+        }
     }
 
     i = 0;

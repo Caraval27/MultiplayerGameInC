@@ -1,7 +1,8 @@
 #pragma once
 
-#define PLATFORM_WIDTH 200
+#define PLATFORM_WIDTH 100
 #define PLATFORM_HEIGHT 20
+#define NR_PLATFORM_SAME_Y 2
 #define PLATFORM_SPEED 2
 #define MAX_NR_PLATFORMS 4
 
