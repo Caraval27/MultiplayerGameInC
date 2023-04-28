@@ -23,11 +23,11 @@ Text* createText(SDL_Renderer* pRenderer, TTF_Font* pFont, int r, int g, int b, 
     return pText;
 }
 
-void renderText(Text *pText) {
+void renderText(Text* pText) {
     SDL_RenderCopy(pText->pRenderer, pText->pTexture, NULL, &pText->textRect);
 }
 
-void destroyText(Text *pText) {
+void destroyText(Text* pText) {
     SDL_DestroyTexture(pText->pTexture);
     free(pText);
 }

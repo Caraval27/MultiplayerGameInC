@@ -1,7 +1,7 @@
 #include "../include/main.h"
 
-Platform *createPlatform(float xPos, float yPos, float width, float height) {
-	Platform *pPlatform = malloc(sizeof(Platform));
+Platform* createPlatform(float xPos, float yPos, float width, float height) {
+	Platform* pPlatform = malloc(sizeof(Platform));
 
 	pPlatform->xPos = xPos;
 	pPlatform->yPos = yPos;
