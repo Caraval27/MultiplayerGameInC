@@ -68,11 +68,6 @@ int initiateGame(Game* pGame){
     if (!handleError(pGame, pGame->pStartPlatformTexture, SDL_GetError)) {
         return 0;
     }
-    //pGame->pPlayerTexture[0] = createPlayerCharacter(pGame->pRenderer, pGame->pWindow, characterPicture1);
-    //if (!handleError(pGame, pGame->pPlayer1Texture, SDL_GetError)) return 0;
-    //pGame->pPlayerTexture[1] = createPlayerCharacter(pGame->pRenderer, pGame->pWindow, characterPicture2);
-    //if (!handleError(pGame, pGame->pPlayer2Texture, SDL_GetError)) return 0;
-
     pGame->pMenuFont = TTF_OpenFont("../assets/Ticketing.ttf", 25);
     if (!handleError(pGame, pGame->pWindow, TTF_GetError)) return 0;
 
