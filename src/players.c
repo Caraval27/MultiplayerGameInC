@@ -80,7 +80,7 @@ void jumpPlayer(Player* pPlayer, int startPlatformHeight, Mix_Chunk* pJumpSound)
         else if (pPlayer->yPos >= startPlatformHeight - pPlayer->height) {
             pPlayer->yPos = startPlatformHeight - pPlayer->height;
             pPlayer->yVelocity = JUMP_SPEED;
-            Mix_VolumeChunk(pJumpSound, 20);
+            Mix_VolumeChunk(pJumpSound, 10);
             Mix_PlayChannel(-1, pJumpSound, 0);
         }
     }
