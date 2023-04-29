@@ -108,7 +108,11 @@ int initiateGame(Game* pGame){
     pGame->pWhoWonText[3] = createText(pGame->pRenderer, pGame->pMenuFont, 255, 255, 255, "Player 3 won", pGame->windowWidth, pGame->windowHeight, -300, 0);
     pGame->pWhoWonText[4] = createText(pGame->pRenderer, pGame->pMenuFont, 255, 255, 255, "Player 4 won", pGame->windowWidth, pGame->windowHeight, -300, 0);
     pGame->pWhoWonText[5] = createText(pGame->pRenderer, pGame->pMenuFont, 255, 255, 255, "Player 5 won", pGame->windowWidth, pGame->windowHeight, -300, 0);
-    pGame->pWhoWonText[6] = createText(pGame->pRenderer, pGame->pMenuFont, 255, 255, 255, "You won!", pGame->windowWidth, pGame->windowHeight, -300, 0);
+    pGame->pWhoWonText[6] = createText(pGame->pRenderer, pGame->pMenuFont, 255, 255, 255, "Player 6 won", pGame->windowWidth, pGame->windowHeight, -300, 0);
+    pGame->pWhoWonText[7] = createText(pGame->pRenderer, pGame->pMenuFont, 255, 255, 255, "Player 7 won", pGame->windowWidth, pGame->windowHeight, -300, 0);
+    pGame->pWhoWonText[8] = createText(pGame->pRenderer, pGame->pMenuFont, 255, 255, 255, "Player 8 won", pGame->windowWidth, pGame->windowHeight, -300, 0);
+    pGame->pWhoWonText[9] = createText(pGame->pRenderer, pGame->pMenuFont, 255, 255, 255, "Player 9 won", pGame->windowWidth, pGame->windowHeight, -300, 0);
+    pGame->pWhoWonText[10] = createText(pGame->pRenderer, pGame->pMenuFont, 255, 255, 255, "You won!", pGame->windowWidth, pGame->windowHeight, -300, 0);
 
     initPlayers(pGame->pPlayers, &pGame->nrOfPlayers, &pGame->nrOfPlayersLeft, pGame->windowWidth, pGame->pStartPlatform->yPos, pGame->pPlayerTextures, pGame->pWindow, pGame->pRenderer);
 
