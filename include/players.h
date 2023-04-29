@@ -17,6 +17,7 @@ typedef struct {
     float width, height;
     float xVelocity, yVelocity;
     bool alive;
+	IPaddress ip;
 } Player;
 
 Player* createPlayer(float xPos, float yPos, float width, float height, float xVelocity, float yVelocity);
