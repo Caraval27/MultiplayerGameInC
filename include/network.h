@@ -42,7 +42,7 @@ int initializeNetcode(NetworkData *pNetworkData, bool isHost);
 
 // Gets the IP-address of any incoming packets and, if unique, adds it to the list of clients.
 // The function is non-interrupting and should be ran repeatedly.
-void listenForNewClients(NetworkData *pNetworkData);
+int listenForNewClients(NetworkData *pNetworkData);
 
 // Package the current gameplay state and broadcast it to all connected clients.
 // \param *pGameplayData Struct containing the gameplay state to be sent.

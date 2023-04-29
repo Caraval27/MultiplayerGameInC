@@ -361,7 +361,6 @@ void handleLobbyMenu(Game* pGame, SDL_Event event, int* pTime){
         handleButton(pGame->pJoinLobbyButton, &buttonPressed);
         if (buttonPressed) {
             initializeNetcode(pGame->pNetworkData, false);
-            joinHost(pGame->pNetworkData);
             pGame->state = ONGOING;
             buttonPressed = false;
         }
@@ -418,6 +417,15 @@ void handleOngoing(Game* pGame, SDL_Event event, bool* pIsRunning, bool* pRight,
     handleStartPlatform(pGame->pStartPlatform, pGame->pPlatforms[0], pGame->pRenderer, pGame->pStartPlatformTexture, pGame->windowHeight, pTime);
     handlePlayers(pGame->pPlayers, pGame->nrOfPlayers, &pGame->nrOfPlayersLeft, pLeft, pRight, pGame->windowWidth, pGame->windowHeight, pGame->pStartPlatform, pGame->pJumpSound, pGame->pWinSound, &pGame->state, pGame->pRenderer, pGame->pPlayerTextures, pGame->flip, pGame->pPlatforms, pGame->pGameOverText);
 
+	if (pGame->pNetworkData->isHost) {
+		int newClients = listenForNewClients(pGame->pNetworkData);
+	} else {
+		if (SDL_GetTicks64() % 1000 < 17) {
+			ClientCommand temp;
+			*pGame->pClientCommand = temp;
+			sendClientCommand(pGame->pNetworkData, pGame->pClientCommand);
+		}
+	}
 
     SDL_Delay(1000/60);
 }
