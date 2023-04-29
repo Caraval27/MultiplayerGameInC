@@ -417,15 +417,38 @@ void handleOngoing(Game* pGame, SDL_Event event, bool* pIsRunning, bool* pRight,
     handleStartPlatform(pGame->pStartPlatform, pGame->pPlatforms[0], pGame->pRenderer, pGame->pStartPlatformTexture, pGame->windowHeight, pTime);
     handlePlayers(pGame->pPlayers, pGame->nrOfPlayers, &pGame->nrOfPlayersLeft, pLeft, pRight, pGame->windowWidth, pGame->windowHeight, pGame->pStartPlatform, pGame->pJumpSound, pGame->pWinSound, &pGame->state, pGame->pRenderer, pGame->pPlayerTextures, pGame->flip, pGame->pPlatforms, pGame->pGameOverText);
 
-	if (pGame->pNetworkData->isHost) {
-		int newClients = listenForNewClients(pGame->pNetworkData);
-	} else {
-		if (SDL_GetTicks64() % 1000 < 17) {
-			ClientCommand temp;
-			*pGame->pClientCommand = temp;
-			sendClientCommand(pGame->pNetworkData, pGame->pClientCommand);
+	////////////////////////////////////////////////////////////////////////////////////////////////////
+	////////////////////////////////////////////////////////////////////////////////////////////////////
+	////////////////////////////////////////////////////////////////////////////////////////////////////
+
+	// Alex Nätverkszon (TM)
+
+	if (SDL_GetTicks64() % 1000 < 17) {
+		if (pGame->pNetworkData->isHost) {
+			listenForNewClients(pGame->pNetworkData);
+			GameplayData temp;
+			*pGame->pGameplayData = temp;
+			broadcastToClients(pGame->pNetworkData, pGame->pGameplayData);
+		} else {
+			if (pGame->pNetworkData->hasJoined) {
+				if (listenForHostBroadcast(pGame->pNetworkData, pGame->pGameplayData)) {
+					// apply gameplaydata
+				}
+			} else {
+				ClientCommand temp;
+				*pGame->pClientCommand = temp;
+				sendClientCommand(pGame->pNetworkData, pGame->pClientCommand);
+				if (listenForHostBroadcast(pGame->pNetworkData, pGame->pGameplayData)) {
+					pGame->pNetworkData->hasJoined = true;
+					printf("acknowledgement received!\n");
+				}
+			}
 		}
 	}
+
+	////////////////////////////////////////////////////////////////////////////////////////////////////
+	////////////////////////////////////////////////////////////////////////////////////////////////////
+	////////////////////////////////////////////////////////////////////////////////////////////////////
 
     SDL_Delay(1000/60);
 }

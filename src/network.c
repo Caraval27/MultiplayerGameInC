@@ -61,13 +61,15 @@ int listenForNewClients(NetworkData *pNetworkData) {
 }
 
 void broadcastToClients(NetworkData *pNetworkData, GameplayData *pGameplayData) {
-	int nClients = 0;
-	while (!pNetworkData->clients[nClients].host) nClients++;
-	for (int i; i < nClients; i++) {
+	for (int i = 0; pNetworkData->clients[i].host; i++) {
 		memcpy(pNetworkData->pPacket->data, pGameplayData, sizeof(GameplayData));
 		pNetworkData->pPacket->len = sizeof(GameplayData);
 		pNetworkData->pPacket->address = pNetworkData->clients[i];
-		SDLNet_UDP_Send(pNetworkData->pSocket, -1, pNetworkData->pPacket);
+		if (SDLNet_UDP_Send(pNetworkData->pSocket, -1, pNetworkData->pPacket)) {
+			printf("broadcast sent to client %d\n", i);
+		} else {
+			printf("failed to send broadcast\n");
+		}
 	}
 }
 
@@ -93,12 +95,14 @@ void handleClientCommands(NetworkData *pNetworkData, ClientCommand *pClientComma
 	}
 }
 
-int receiveHostBroadcast(NetworkData *pNetworkData, GameplayData *pGameplayData) {
+int listenForHostBroadcast(NetworkData *pNetworkData, GameplayData *pGameplayData) {
+	int nBroadcasts = 0;
 	while (SDLNet_UDP_Recv(pNetworkData->pSocket, pNetworkData->pPacket)) {
 		if (pNetworkData->pPacket->address.host != pNetworkData->serverIP.host
 			|| pNetworkData->pPacket->address.port != pNetworkData->serverIP.port) continue;
 		memcpy(pGameplayData, pNetworkData->pPacket->data, sizeof(GameplayData));
-		return 1;
+		nBroadcasts++;
+		printf("broadcast received!\n");
 	}
-	return 0;
+	return nBroadcasts;
 }
