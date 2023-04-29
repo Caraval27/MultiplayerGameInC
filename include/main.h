@@ -21,7 +21,7 @@ typedef struct {
     *pMoveLeft1Button, *pMoveRight1Button, *pCreateLobbyButton, *pJoinLobbyButton;
 
     Text *pStartButtonText, *pSettingsButtonText, *pQuitButtonText, *pLanguageButtonText,  *pMoveLeftButtonText, *pMoveRightButtonText, *pReturnButtonText, *pEnglishButtonText,
-    *pSwedishButtonText, *pResumeButtonText, *pMainMenuButtonText, *pMoveLeft1ButtonText, *pMoveRight1ButtonText,*pGameOverText;
+    *pSwedishButtonText, *pResumeButtonText, *pMainMenuButtonText, *pMoveLeft1ButtonText, *pMoveRight1ButtonText,*pGameOverText, *pCreateLobbyButtonText, *pJoinLobbyButtonText;
     Text* pWhoWonText[MAX_PLAYERS + 1];
     Player* pPlayers[MAX_PLAYERS];
     SDL_Texture* pPlayerTextures[MAX_PLAYERS];
