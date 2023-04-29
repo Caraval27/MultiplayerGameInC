@@ -5,9 +5,6 @@
 			"label": "make",
 			"type": "shell",
 			"command": "make ${input:make-argument}",
-			"problemMatcher": [
-				"$gcc"
-			],
 			"presentation": {
 				"focus": true,
 			},
@@ -28,6 +25,56 @@
 			"group": {
 				"kind": "build",
 				"isDefault": true
+			}
+		},
+		{
+			"label": "launch-instances",
+			"dependsOn": ["launch-instance1", "launch-instance2"],
+		},
+		{
+			"label": "launch-instance1",
+			"type": "shell",
+			"command": "make run",
+			"presentation": {
+				// "focus": true,
+				"panel": "dedicated"
+			},
+			"options": {
+				"env": {
+					"MSYSTEM": "MINGW64",
+					"CHERE_INVOKING": "1",
+				},
+				"shell": {
+					"executable": "C:\\msys64\\usr\\bin\\bash.exe",
+					"args": [
+						"--login",
+						"-i",
+						"-c"
+					]
+				}
+			}
+		},
+		{
+			"label": "launch-instance2",
+			"type": "shell",
+			"command": "make run",
+			"presentation": {
+				// "focus": true,
+				"panel": "dedicated"
+			},
+			"options": {
+				"env": {
+					"MSYSTEM": "MINGW64",
+					"CHERE_INVOKING": "1",
+				},
+				"shell": {
+					"executable": "C:\\msys64\\usr\\bin\\bash.exe",
+					"args": [
+						"--login",
+						"-i",
+						"-c"
+					]
+				}
 			}
 		}
 	],
