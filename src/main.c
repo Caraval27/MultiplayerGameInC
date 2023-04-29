@@ -77,7 +77,9 @@ int initiateGame(Game* pGame){
     }
     pGame->pMainSound = Mix_LoadMUS("../assets/MainThemeSoundtrack.mp3");
     if (!handleError(pGame, pGame->pWindow, Mix_GetError)) return 0;
-    pGame->pJumpSound = Mix_LoadWAV("../assets/JumpEffect.wav"); //for short sounds
+    pGame->pJumpSound = Mix_LoadWAV("../assets/JumpEffect.wav");
+    if (!handleError(pGame, pGame->pWindow, Mix_GetError)) return 0;
+    pGame->pWinSound = Mix_LoadWAV("../assets/tempWinSound.wav");
     if (!handleError(pGame, pGame->pWindow, Mix_GetError)) return 0;
 
     pGame->pBackground = createBackground(pGame->windowHeight);
@@ -410,7 +412,7 @@ void handleOngoing(Game* pGame, SDL_Event event, bool* pIsRunning, bool* pRight,
     handleBackground(pGame->pBackground, pGame->pRenderer, pGame->pBackgroundTexture, pGame->windowWidth, pGame->windowHeight); //denna måste ligga före allt med player
     handlePlatforms(pGame->pPlatforms, pGame->pRenderer, pGame->pPlatformTexture, pGame->windowWidth, pGame->windowHeight);
     handleStartPlatform(pGame->pStartPlatform, pGame->pPlatforms[0], pGame->pRenderer, pGame->pStartPlatformTexture, pGame->windowHeight, pTime);
-    handlePlayers(pGame->pPlayers, pGame->nrOfPlayers, &pGame->nrOfPlayersLeft, pLeft, pRight, pGame->windowWidth, pGame->windowHeight, pGame->pStartPlatform, pGame->pJumpSound, &pGame->state, pGame->pRenderer, pGame->pPlayerTextures, pGame->flip, pGame->pPlatforms, pGame->pGameOverText);
+    handlePlayers(pGame->pPlayers, pGame->nrOfPlayers, &pGame->nrOfPlayersLeft, pLeft, pRight, pGame->windowWidth, pGame->windowHeight, pGame->pStartPlatform, pGame->pJumpSound, pGame->pWinSound, &pGame->state, pGame->pRenderer, pGame->pPlayerTextures, pGame->flip, pGame->pPlatforms, pGame->pGameOverText);
 
 
     SDL_Delay(1000/60);
@@ -581,6 +583,9 @@ void quitGame(Game* pGame){
     }
     if (pGame->pBackground) {
         destroyBackground(pGame->pBackground);
+    }
+    if (pGame->pWinSound) {
+        destroyChunk(pGame->pWinSound);
     }
     if (pGame->pJumpSound) {
         destroyChunk(pGame->pJumpSound);

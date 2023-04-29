@@ -31,7 +31,7 @@ typedef struct {
 
     int keybinds[NR_OF_KEYBINDS];
     char language[NR_OF_WORDS][50];
-    Mix_Chunk *pJumpSound;
+    Mix_Chunk *pJumpSound, *pWinSound;
     Mix_Music *pMainSound;
 
 	NetworkData *pNetworkData;
