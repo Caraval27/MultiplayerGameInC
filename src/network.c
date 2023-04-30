@@ -10,7 +10,12 @@ int initializeNetcode(NetworkData *pNetworkData, bool isHost) {
 		printf("error: failed to open socket: %s\n", SDLNet_GetError());
 		return 0;
 	}
-	if (!isHost) {
+	if (isHost) {
+		for (int i = 0; i < CLIENT_LIMIT; i++) {
+			pNetworkData->clients[i] = returnEmptyClientObject();
+		}
+	} else {
+		pNetworkData->hasJoined = false;
 		if (SDLNet_ResolveHost(&pNetworkData->server, SERVER_IP, PORT) == -1) {
 			printf("error: failed to resolve host: %s\n", SDLNet_GetError());
 			return 0;
@@ -59,19 +64,23 @@ int listenForNewClients(NetworkData *pNetworkData) {
 		printf("incoming packet ip host: %d\n", packetHost);
 		printf("incoming packet ip port: %d\n", packetPort);
 		int nClients = 0;
-		while (pNetworkData->clients[nClients].host) {
-			if (packetHost == pNetworkData->clients[nClients].host
-				&& packetPort == pNetworkData->clients[nClients].port) {
+		while (pNetworkData->clients[nClients].ip.host && nClients < CLIENT_LIMIT) {
+			if (packetHost == pNetworkData->clients[nClients].ip.host
+				&& packetPort == pNetworkData->clients[nClients].ip.port) {
 				unique = false;
 				break;
 			}
 			nClients++;
 		}
-		if (unique) {
-			pNetworkData->clients[nClients] = pNetworkData->pPacket->address;
+		if (unique && nClients < CLIENT_LIMIT) {
+			pNetworkData->clients[nClients].ip = pNetworkData->pPacket->address;
+			pNetworkData->clients[nClients].lastSeen = SDL_GetTicks64();
 			newClients++;
-			printf("client added to list\n");
+			printf("client added to list. lastSeen = %d\n",
+				pNetworkData->clients[nClients].lastSeen);
 			printf("new total clients: %d\n", nClients + 1);
+		} else if (unique) {
+			printf("join request rejected: client limit reached\n");
 		} else {
 			printf("join request rejected: duplicate ip\n");
 		}
@@ -80,15 +89,19 @@ int listenForNewClients(NetworkData *pNetworkData) {
 }
 
 void broadcastToClients(NetworkData *pNetworkData, GameplayData *pGameplayData) {
-	for (int i = 0; pNetworkData->clients[i].host; i++) {
+	int nBroadcasts = 0;
+	for (int i = 0; pNetworkData->clients[i].ip.host && i < CLIENT_LIMIT; i++) {
 		memcpy(pNetworkData->pPacket->data, pGameplayData, sizeof(GameplayData));
 		pNetworkData->pPacket->len = sizeof(GameplayData);
-		pNetworkData->pPacket->address = pNetworkData->clients[i];
+		pNetworkData->pPacket->address = pNetworkData->clients[i].ip;
 		if (SDLNet_UDP_Send(pNetworkData->pSocket, -1, pNetworkData->pPacket)) {
-			printf("broadcast sent to client at index %d\n", i);
+			nBroadcasts++;
 		} else {
-			printf("failed to send broadcast\n");
+			printf("failed to send broadcast to client at index %d\n", i);
 		}
+	}
+	if (nBroadcasts > 0) {
+		printf("broadcast sent to %d client(s)\n", nBroadcasts);
 	}
 }
 
@@ -109,9 +122,9 @@ void handleClientCommands(NetworkData *pNetworkData, ClientCommand *pClientComma
 		int validClient = 0;
 		{
 			int i = 0;
-			while (!validClient && pNetworkData->clients[i].host) {
-				if (pNetworkData->clients[i].host != pNetworkData->pPacket->address.host
-					&& pNetworkData->clients[i].port != pNetworkData->pPacket->address.port) {
+			while (!validClient && pNetworkData->clients[i].ip.host) {
+				if (pNetworkData->clients[i].ip.host != pNetworkData->pPacket->address.host
+					&& pNetworkData->clients[i].ip.port != pNetworkData->pPacket->address.port) {
 					validClient = 1;
 				} else {
 					i++;
@@ -122,6 +135,24 @@ void handleClientCommands(NetworkData *pNetworkData, ClientCommand *pClientComma
 			memcpy(pClientCommand, pNetworkData->pPacket->data, sizeof(ClientCommand));
 			// if legal command, modify pGameplayData
 			// perhaps call another function
+		}
+	}
+}
+
+Client returnEmptyClientObject() {
+	Client clientTemp;
+	clientTemp.ip.host = 0;
+	clientTemp.ip.port = 0;
+	clientTemp.lastSeen = 0;
+	return clientTemp;
+}
+
+void removeClient(NetworkData *pNetworkData, int index) {
+	for (int i = index; pNetworkData->clients[i].ip.host && i < CLIENT_LIMIT; i++) {
+		if (i == CLIENT_LIMIT - 1) {
+			pNetworkData->clients[i] = returnEmptyClientObject();
+		} else {
+			pNetworkData->clients[i] = pNetworkData->clients[i + 1];
 		}
 	}
 }
