@@ -425,20 +425,23 @@ void handleOngoing(Game* pGame, SDL_Event event, bool* pIsRunning, bool* pRight,
 
 	if (isHost) {
 		GameplayData temp;
-		// Här ska data hämtas från andra structar och läggas i varabeln "temp".
-		// Just nu har "GameplayData" definierats som att bara innehålla en array av Player-objekt.
+		// SERVER
+		// Här ska data hämtas från andra structar och läggas in i varabeln "temp".
+		// Just nu har GameplayData definierats som att bara innehålla en array av Player-objekt.
 		// Ni kan hitta den aktuella definitionen i "network.h".
-		// Koden som flyttar data in i "temp" MÅSTE ligga precis här, där dessa kommentarer är skrivna.
+		// Koden som flyttar data in i "temp" måste ligga precis här vid dessa kommentarer.
 		*pGame->pGameplayData = temp;
 	}
 
 	runNetcode(pGame->pNetworkData, pGame->pGameplayData, pGame->pClientCommand);
 
 	if (!isHost) {
-		// Vid den här punkten har "pGameplayData" uppdaterats med data från servern.
+		// KLIENT
+		// Vid den här punkten har pGame->pGameplayData uppdaterats med data från servern.
 		// Denna data, som är tillgänglig via pGame->pGameplayData, ska nu läggas in i
-		// de andra structarna (dvs pGame->pPlayers[i]).
-		// Som sagt ser ni vad pGameplayData kan innehålla genom att kolla i "network.h".
+		// de andra structarna (exempelvis pGame->pPlayers[i]).
+		// Som sagt ser ni vad GameplayData kan innehålla genom att kolla i "network.h".
+		// Koden måste ligga inom klammerparenteserna.
 	}
 
 	////////////////////////////////////////////////////////////////////////////////////////////////////

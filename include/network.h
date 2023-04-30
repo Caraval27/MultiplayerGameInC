@@ -24,16 +24,13 @@ typedef struct {
 
 typedef enum {
 	MOVEMENT,
-	JUMP,
 	LEAVE
 } CommandType;
 
-// \param direction MOVEMENT: True if pointing right, False if pointing left.
-// \param mode MOVEMENT: True if the movement is to be started, False if it is to be stopped.
+// \param direction MOVEMENT: 1 if pointing right, -1 if pointing left, 0 if motionless
 typedef struct {
 	CommandType commandType;
-	bool direction;
-	bool mode;
+	int direction;
 } ClientCommand;
 
 // Prepare the application to communicate over a network.
