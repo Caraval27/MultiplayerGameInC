@@ -11,7 +11,7 @@ int initializeNetcode(NetworkData *pNetworkData, bool isHost) {
 		return 0;
 	}
 	if (!isHost) {
-		if (SDLNet_ResolveHost(&pNetworkData->serverIP, SERVER_IP, PORT) == -1) {
+		if (SDLNet_ResolveHost(&pNetworkData->server, SERVER_IP, PORT) == -1) {
 			printf("error: failed to resolve host: %s\n", SDLNet_GetError());
 			return 0;
 		}
@@ -32,7 +32,7 @@ void runNetcode(NetworkData *pNetworkData, GameplayData *pGameplayData, ClientCo
 				sendClientCommand(pNetworkData, pClientCommand);
 				if (listenForHostBroadcast(pNetworkData, pGameplayData)) {
 					pNetworkData->hasJoined = true;
-					printf("acknowledgement received!\n");
+					printf("acknowledgement received\n");
 				}
 			}
 		}
@@ -42,7 +42,7 @@ void runNetcode(NetworkData *pNetworkData, GameplayData *pGameplayData, ClientCo
 void sendClientCommand(NetworkData *pNetworkData, ClientCommand *pClientCommand) {
 	memcpy(pNetworkData->pPacket->data, pClientCommand, sizeof(ClientCommand));
 	pNetworkData->pPacket->len = sizeof(ClientCommand);
-	pNetworkData->pPacket->address = pNetworkData->serverIP;
+	pNetworkData->pPacket->address = pNetworkData->server;
 	if (SDLNet_UDP_Send(pNetworkData->pSocket, -1, pNetworkData->pPacket)) {
 		printf("packet sent\n");
 	} else {
@@ -70,7 +70,7 @@ int listenForNewClients(NetworkData *pNetworkData) {
 		if (unique) {
 			pNetworkData->clients[nClients] = pNetworkData->pPacket->address;
 			newClients++;
-			printf("client added to list!\n");
+			printf("client added to list\n");
 			printf("new total clients: %d\n", nClients + 1);
 		} else {
 			printf("join request rejected: duplicate ip\n");
@@ -95,11 +95,11 @@ void broadcastToClients(NetworkData *pNetworkData, GameplayData *pGameplayData) 
 int listenForHostBroadcast(NetworkData *pNetworkData, GameplayData *pGameplayData) {
 	int nBroadcasts = 0;
 	while (SDLNet_UDP_Recv(pNetworkData->pSocket, pNetworkData->pPacket)) {
-		if (pNetworkData->pPacket->address.host != pNetworkData->serverIP.host
-			|| pNetworkData->pPacket->address.port != pNetworkData->serverIP.port) continue;
+		if (pNetworkData->pPacket->address.host != pNetworkData->server.host
+			|| pNetworkData->pPacket->address.port != pNetworkData->server.port) continue;
 		memcpy(pGameplayData, pNetworkData->pPacket->data, sizeof(GameplayData));
 		nBroadcasts++;
-		printf("broadcast received!\n");
+		printf("broadcast received\n");
 	}
 	return nBroadcasts;
 }

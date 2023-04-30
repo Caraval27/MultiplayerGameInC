@@ -6,12 +6,12 @@
 			"type": "shell",
 			"command": "make ${input:make-argument}",
 			"presentation": {
-				"focus": true,
+				"focus": true
 			},
 			"options": {
 				"env": {
 					"MSYSTEM": "MINGW64",
-					"CHERE_INVOKING": "1",
+					"CHERE_INVOKING": "1"
 				},
 				"shell": {
 					"executable": "C:\\msys64\\usr\\bin\\bash.exe",
@@ -28,21 +28,16 @@
 			}
 		},
 		{
-			"label": "launch-instances",
-			"dependsOn": ["launch-instance1", "launch-instance2"],
-		},
-		{
-			"label": "launch-instance1",
+			"label": "launch-instance",
 			"type": "shell",
 			"command": "make run",
 			"presentation": {
-				// "focus": true,
 				"panel": "dedicated"
 			},
 			"options": {
 				"env": {
 					"MSYSTEM": "MINGW64",
-					"CHERE_INVOKING": "1",
+					"CHERE_INVOKING": "1"
 				},
 				"shell": {
 					"executable": "C:\\msys64\\usr\\bin\\bash.exe",
@@ -52,30 +47,8 @@
 						"-c"
 					]
 				}
-			}
-		},
-		{
-			"label": "launch-instance2",
-			"type": "shell",
-			"command": "make run",
-			"presentation": {
-				// "focus": true,
-				"panel": "dedicated"
 			},
-			"options": {
-				"env": {
-					"MSYSTEM": "MINGW64",
-					"CHERE_INVOKING": "1",
-				},
-				"shell": {
-					"executable": "C:\\msys64\\usr\\bin\\bash.exe",
-					"args": [
-						"--login",
-						"-i",
-						"-c"
-					]
-				}
-			}
+			"problemMatcher": []
 		}
 	],
 	"inputs": [

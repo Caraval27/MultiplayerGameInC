@@ -9,12 +9,12 @@
 #define SERVER_IP "127.0.0.1"
 
 typedef struct {
-	bool isHost;
-	bool hasJoined;
 	UDPsocket pSocket;
 	UDPpacket *pPacket;
+	bool isHost;
+	bool hasJoined;
 	IPaddress clients[CLIENT_LIMIT];
-	IPaddress serverIP;
+	IPaddress server;
 } NetworkData;
 
 typedef struct {
