@@ -421,36 +421,25 @@ void handleOngoing(Game* pGame, SDL_Event event, bool* pIsRunning, bool* pRight,
 	////////////////////////////////////////////////////////////////////////////////////////////////////
 	////////////////////////////////////////////////////////////////////////////////////////////////////
 
-	// Alex Nätverkszon (TM)
+	bool isHost = pGame->pNetworkData->isHost;
 
-	if (SDL_GetTicks64() % 1000 < 17) {
-		if (pGame->pNetworkData->isHost) {
-			listenForNewClients(pGame->pNetworkData);
-			GameplayData temp;
-			*pGame->pGameplayData = temp;
-			broadcastToClients(pGame->pNetworkData, pGame->pGameplayData);
-		} else {
-			if (pGame->pNetworkData->hasJoined) {
-				if (listenForHostBroadcast(pGame->pNetworkData, pGame->pGameplayData)) {
-					// apply gameplaydata
-				}
-			} else {
-				ClientCommand temp;
-				*pGame->pClientCommand = temp;
-				sendClientCommand(pGame->pNetworkData, pGame->pClientCommand);
-				if (listenForHostBroadcast(pGame->pNetworkData, pGame->pGameplayData)) {
-					pGame->pNetworkData->hasJoined = true;
-					printf("acknowledgement received!\n");
-				}
-			}
-		}
+	if (isHost) {
+		GameplayData temp;
+		// get data from other structs and apply them to temp
+		*pGame->pGameplayData = temp;
+	}
+
+	runNetcode(pGame->pNetworkData, pGame->pGameplayData, pGame->pClientCommand);
+
+	if (!isHost) {
+		// apply data from pGameplayData to other structs
 	}
 
 	////////////////////////////////////////////////////////////////////////////////////////////////////
 	////////////////////////////////////////////////////////////////////////////////////////////////////
 	////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    SDL_Delay(1000/60);
+    SDL_Delay(1000/1000);
 }
 
 void handleOngoingInput(Game* pGame, SDL_Event* event, bool* pIsRunning, bool* pRight, bool* pLeft){
