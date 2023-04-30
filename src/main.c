@@ -427,7 +427,7 @@ void handleOngoing(Game* pGame, SDL_Event event, bool* pIsRunning, bool* pRight,
 		GameplayData temp;
 		// Här ska data hämtas från andra structar och läggas i varabeln "temp".
 		// Just nu har "GameplayData" definierats som att bara innehålla en array av Player-objekt.
-		// Ni kan hitta definitionen i "network.h".
+		// Ni kan hitta den aktuella definitionen i "network.h".
 		// Koden som flyttar data in i "temp" MÅSTE ligga precis här, där dessa kommentarer är skrivna.
 		*pGame->pGameplayData = temp;
 	}
@@ -438,6 +438,7 @@ void handleOngoing(Game* pGame, SDL_Event event, bool* pIsRunning, bool* pRight,
 		// Vid den här punkten har "pGameplayData" uppdaterats med data från servern.
 		// Denna data, som är tillgänglig via pGame->pGameplayData, ska nu läggas in i
 		// de andra structarna (dvs pGame->pPlayers[i]).
+		// Som sagt ser ni vad pGameplayData kan innehålla genom att kolla i "network.h".
 	}
 
 	////////////////////////////////////////////////////////////////////////////////////////////////////
