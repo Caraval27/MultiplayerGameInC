@@ -3,7 +3,7 @@
 #include "../include/libraries.h"
 #include "../include/players.h"
 
-#define PORT 50016
+#define PORT 3016
 #define PACKET_SIZE 256
 #define CLIENT_LIMIT 6
 #define SERVER_IP "127.0.0.1"
