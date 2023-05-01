@@ -37,10 +37,9 @@ int initiateGame(Game* pGame){
 
 	pGame->pNetworkData = malloc(sizeof(NetworkData));
 	pGame->pGameplayData = malloc(sizeof(GameplayData));
-	pGame->pClientCommand = malloc(sizeof(ClientCommand));
 	*pGame->pNetworkData = (NetworkData){0};
 	*pGame->pGameplayData = (GameplayData){0};
-	*pGame->pClientCommand = (ClientCommand){0};
+	*pGame->pClientCommands = (ClientCommand){0};
 
     pGame->windowWidth = displayMode.w;
     pGame->windowHeight = displayMode.h;
@@ -415,11 +414,6 @@ void handleOngoing(Game* pGame, SDL_Event event, bool* pIsRunning, bool* pRight,
         handleOngoingInput(pGame, &event, pIsRunning, pRight, pLeft);
     }
 
-    handleBackground(pGame->pBackground, pGame->pRenderer, pGame->pBackgroundTexture, pGame->windowWidth, pGame->windowHeight); //denna måste ligga före allt med player
-    handlePlatforms(pGame->pPlatforms, pGame->pRenderer, pGame->pPlatformTexture, pGame->windowWidth, pGame->windowHeight);
-    handleStartPlatform(pGame->pStartPlatform, pGame->pPlatforms[0], pGame->pRenderer, pGame->pStartPlatformTexture, pGame->windowHeight, pTime);
-    handlePlayers(pGame->pPlayers, pGame->nrOfPlayers, &pGame->nrOfPlayersLeft, pLeft, pRight, pGame->windowWidth, pGame->windowHeight, pGame->pStartPlatform, pGame->pJumpSound, pGame->pWinSound, &pGame->state, pGame->pRenderer, pGame->pPlayerTextures, pGame->flip, pGame->pPlatforms, pGame->pGameOverText);
-
 	////////////////////////////////////////////////////////////////////////////////////////////////////
 	////////////////////////////////////////////////////////////////////////////////////////////////////
 	////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -436,9 +430,17 @@ void handleOngoing(Game* pGame, SDL_Event event, bool* pIsRunning, bool* pRight,
 		*pGame->pGameplayData = temp;
 	}
 
-	runNetcode(pGame->pNetworkData, pGame->pGameplayData, pGame->pClientCommand);
+	runNetcode(pGame->pNetworkData, pGame->pGameplayData, pGame->pClientCommands);
 
-	if (!isHost) {
+	if (isHost) {
+		// SERVER
+		// Arrayen hos pGame->pClientCommands innehåller nu ett antal (0 är möjligt) kommandon,
+		// där varje kommando förmedlar någon handling som en klient vill utföra. Här ska dessa
+		// handlingar appliceras på vår lokala (serverns) version av spelet. Definitionen av
+		// hur ett kommando ser ut hittas i "network.h".
+		// Rensa hela arrayen när alla kommandon har applicerats:
+		*pGame->pClientCommands = (ClientCommand){0};
+	} else {
 		// KLIENT
 		// Vid den här punkten har pGame->pGameplayData uppdaterats med data från servern.
 		// Denna data, som är tillgänglig via pGame->pGameplayData, ska nu läggas in i
@@ -450,6 +452,12 @@ void handleOngoing(Game* pGame, SDL_Event event, bool* pIsRunning, bool* pRight,
 	////////////////////////////////////////////////////////////////////////////////////////////////////
 	////////////////////////////////////////////////////////////////////////////////////////////////////
 	////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    handleBackground(pGame->pBackground, pGame->pRenderer, pGame->pBackgroundTexture, pGame->windowWidth, pGame->windowHeight); //denna måste ligga före allt med player
+    handlePlatforms(pGame->pPlatforms, pGame->pRenderer, pGame->pPlatformTexture, pGame->windowWidth, pGame->windowHeight);
+	// bortkommenterad för tillfället när vi testar netcoden
+    // handleStartPlatform(pGame->pStartPlatform, pGame->pPlatforms[0], pGame->pRenderer, pGame->pStartPlatformTexture, pGame->windowHeight, pTime);
+    handlePlayers(pGame->pPlayers, pGame->nrOfPlayers, &pGame->nrOfPlayersLeft, pLeft, pRight, pGame->windowWidth, pGame->windowHeight, pGame->pStartPlatform, pGame->pJumpSound, pGame->pWinSound, &pGame->state, pGame->pRenderer, pGame->pPlayerTextures, pGame->flip, pGame->pPlatforms, pGame->pGameOverText);
 
     SDL_Delay(1000/1000);
 }
