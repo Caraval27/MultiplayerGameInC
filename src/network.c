@@ -10,12 +10,7 @@ int initializeNetcode(NetworkData *pNetworkData, bool isHost) {
 		printf("error: failed to open socket: %s\n", SDLNet_GetError());
 		return 0;
 	}
-	if (isHost) {
-		for (int i = 0; i < CLIENT_LIMIT; i++) {
-			pNetworkData->clients[i] = returnEmptyClientObject();
-		}
-	} else {
-		pNetworkData->hasJoined = false;
+	if (!isHost) {
 		if (SDLNet_ResolveHost(&pNetworkData->server, SERVER_IP, PORT) == -1) {
 			printf("error: failed to resolve host: %s\n", SDLNet_GetError());
 			return 0;
@@ -139,18 +134,10 @@ void handleClientCommands(NetworkData *pNetworkData, ClientCommand *pClientComma
 	}
 }
 
-Client returnEmptyClientObject() {
-	Client clientTemp;
-	clientTemp.ip.host = 0;
-	clientTemp.ip.port = 0;
-	clientTemp.lastSeen = 0;
-	return clientTemp;
-}
-
 void removeClient(NetworkData *pNetworkData, int index) {
 	for (int i = index; pNetworkData->clients[i].ip.host && i < CLIENT_LIMIT; i++) {
 		if (i == CLIENT_LIMIT - 1) {
-			pNetworkData->clients[i] = returnEmptyClientObject();
+			pNetworkData->clients[i] = (Client){0};
 		} else {
 			pNetworkData->clients[i] = pNetworkData->clients[i + 1];
 		}

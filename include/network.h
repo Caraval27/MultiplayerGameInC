@@ -67,7 +67,5 @@ int listenForHostBroadcast(NetworkData *pNetworkData, GameplayData *pGameplayDat
 // Get any incoming packets and, if from a valid client, integrate their commands into the game.
 void handleClientCommands(NetworkData *pNetworkData, ClientCommand *pClientCommand, GameplayData *pGameplayData);
 
-Client returnEmptyClientObject();
-
 // Remove a client at a given index.
 void removeClient(NetworkData *pNetworkData, int index);

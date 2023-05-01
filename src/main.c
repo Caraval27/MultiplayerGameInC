@@ -38,6 +38,9 @@ int initiateGame(Game* pGame){
 	pGame->pNetworkData = malloc(sizeof(NetworkData));
 	pGame->pGameplayData = malloc(sizeof(GameplayData));
 	pGame->pClientCommand = malloc(sizeof(ClientCommand));
+	*pGame->pNetworkData = (NetworkData){0};
+	*pGame->pGameplayData = (GameplayData){0};
+	*pGame->pClientCommand = (ClientCommand){0};
 
     pGame->windowWidth = displayMode.w;
     pGame->windowHeight = displayMode.h;
