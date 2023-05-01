@@ -59,6 +59,7 @@
 			"options": [
 				"run",
 				"new",
+				"rebuild",
 				"all",
 				"clean",
 				"launch",

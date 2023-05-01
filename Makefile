@@ -32,10 +32,6 @@ endif
 SRCS := $(wildcard $(SRCDIR)/*.c)
 OBJS := $(SRCS:$(SRCDIR)/%.c=$(BUILDDIR)/%.o)
 
-.PHONY: all clean run launch
-
-all: $(BUILDDIR)/$(EXECUTABLE)
-
 $(BUILDDIR)/$(EXECUTABLE): $(OBJS) | $(BUILDDIR)
 	$(CC) -o $@ $(OBJS) $(LDFLAGS)
 
@@ -45,12 +41,20 @@ $(BUILDDIR)/%.o: $(SRCDIR)/%.c | $(BUILDDIR)
 $(BUILDDIR):
 	mkdir -p $(BUILDDIR)
 
+.PHONY: all clean rebuild run launch
+
+all: $(BUILDDIR)/$(EXECUTABLE)
+
 clean:
 	rm -f -r $(BUILDDIR)/*
 
 new:
 	$(MAKE) clean
 	$(MAKE) run
+
+rebuild:
+	$(MAKE) clean
+	$(MAKE) all
 
 run:
 	$(MAKE) all
