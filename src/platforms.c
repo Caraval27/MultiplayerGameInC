@@ -13,7 +13,6 @@ Platform *createPlatform(float xPos, float yPos, float width, float height) {
 
 void scrollPlatform(Platform* pPlatform) {
 	pPlatform->yPos += PLATFORM_SPEED;
-	// remember to destroy plank if out of bounds
 }
 
 void renderPlatform(Platform* pPlatform, SDL_Renderer* pRenderer, SDL_Texture* pTexture) {
@@ -27,11 +26,11 @@ void handlePlatforms(Platform** pPlatforms, SDL_Renderer* pRenderer, SDL_Texture
 
     if (SDL_GetTicks64() % 1000 < 17) {
 
-		//cleanupPlatforms(pPlatforms, windowHeight);
+		cleanupPlatforms(pPlatforms, windowHeight);
 
         i = 0;
 
-        while (pPlatforms[i]) i++; // Variabel som direkt visar antalet plattformar?
+        while (pPlatforms[i] != NULL) i++;
         width = PLATFORM_WIDTH;
         height = PLATFORM_HEIGHT;
         y = 0 - height;
@@ -43,6 +42,7 @@ void handlePlatforms(Platform** pPlatforms, SDL_Renderer* pRenderer, SDL_Texture
             }
             else{
                 pPlatforms[i] = createPlatform(x, y, width, height);
+
                 if(j != Y_NR_OF_PLATFORMS - 1) i++;
             }
         }
@@ -68,7 +68,6 @@ void handleStartPlatform(Platform* pStartPlatform, Platform* pFirstPlatform, SDL
 }
 
 void resetPlatforms(Platform** pPlatforms){
-    destroyPlatforms(pPlatforms);
     for(int i = 0; pPlatforms[i] != 0; i++){
         pPlatforms[i] = 0;
     }
@@ -92,16 +91,21 @@ void destroyPlatforms(Platform** pPlatforms){
 }
 
 void cleanupPlatforms(Platform **pPlatforms, int windowHeight) {
-	Platform **tempArray = malloc(sizeof(200));
-	int tempArrayLength = 0;
-	for (int i = 0; pPlatforms[i] != NULL; i++) {
-		if (pPlatforms[i]->yPos < windowHeight * 1.5) {
-			tempArray[tempArrayLength] = pPlatforms[i];
-		} else {
+	int limit = 20;
+	int nPlatforms = 0;
+	while (pPlatforms[nPlatforms] != NULL) nPlatforms++;
+	int overflow = nPlatforms - limit;
+	if (overflow <= 0) return;
+
+	for (int i = 0; i < nPlatforms; i++) {
+		if (i < overflow) {
 			free(pPlatforms[i]);
+		}
+		if (i < limit) {
+			pPlatforms[i] = pPlatforms[i + overflow];
+		}
+		if (limit <= i && i < nPlatforms) {
 			pPlatforms[i] = NULL;
 		}
-		tempArrayLength++;
 	}
-	pPlatforms = tempArray;
 }

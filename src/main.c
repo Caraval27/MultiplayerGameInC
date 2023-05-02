@@ -34,6 +34,13 @@ int initiateGame(Game* pGame){
         quitGame(pGame);
         return 0;
     }
+
+	pGame->pNetworkData = malloc(sizeof(NetworkData));
+	pGame->pGameplayData = malloc(sizeof(GameplayData));
+	*pGame->pNetworkData = (NetworkData){0};
+	*pGame->pGameplayData = (GameplayData){0};
+	*pGame->pClientCommands = (ClientCommand){0};
+
     pGame->windowWidth = displayMode.w;
     pGame->windowHeight = displayMode.h;
 
@@ -63,11 +70,6 @@ int initiateGame(Game* pGame){
     if (!handleError(pGame, pGame->pStartPlatformTexture, SDL_GetError)) {
         return 0;
     }
-    //pGame->pPlayerTexture[0] = createPlayerCharacter(pGame->pRenderer, pGame->pWindow, characterPicture1);
-    //if (!handleError(pGame, pGame->pPlayer1Texture, SDL_GetError)) return 0;
-    //pGame->pPlayerTexture[1] = createPlayerCharacter(pGame->pRenderer, pGame->pWindow, characterPicture2);
-    //if (!handleError(pGame, pGame->pPlayer2Texture, SDL_GetError)) return 0;
-
     pGame->pMenuFont = TTF_OpenFont("../assets/Ticketing.ttf", 25);
     if (!handleError(pGame, pGame->pWindow, TTF_GetError)) return 0;
 
@@ -77,7 +79,9 @@ int initiateGame(Game* pGame){
     }
     pGame->pMainSound = Mix_LoadMUS("../assets/MainThemeSoundtrack.mp3");
     if (!handleError(pGame, pGame->pWindow, Mix_GetError)) return 0;
-    pGame->pJumpSound = Mix_LoadWAV("../assets/JumpEffect.wav"); //for short sounds
+    pGame->pJumpSound = Mix_LoadWAV("../assets/JumpEffect.wav");
+    if (!handleError(pGame, pGame->pWindow, Mix_GetError)) return 0;
+    pGame->pWinSound = Mix_LoadWAV("../assets/tempWinSound.wav");
     if (!handleError(pGame, pGame->pWindow, Mix_GetError)) return 0;
 
     pGame->pBackground = createBackground(pGame->windowHeight);
@@ -106,12 +110,16 @@ int initiateGame(Game* pGame){
     pGame->pWhoWonText[3] = createText(pGame->pRenderer, pGame->pMenuFont, 255, 255, 255, "Player 3 won", pGame->windowWidth, pGame->windowHeight, -300, 0);
     pGame->pWhoWonText[4] = createText(pGame->pRenderer, pGame->pMenuFont, 255, 255, 255, "Player 4 won", pGame->windowWidth, pGame->windowHeight, -300, 0);
     pGame->pWhoWonText[5] = createText(pGame->pRenderer, pGame->pMenuFont, 255, 255, 255, "Player 5 won", pGame->windowWidth, pGame->windowHeight, -300, 0);
-    pGame->pWhoWonText[6] = createText(pGame->pRenderer, pGame->pMenuFont, 255, 255, 255, "You won!", pGame->windowWidth, pGame->windowHeight, -300, 0);
+    pGame->pWhoWonText[6] = createText(pGame->pRenderer, pGame->pMenuFont, 255, 255, 255, "Player 6 won", pGame->windowWidth, pGame->windowHeight, -300, 0);
+    pGame->pWhoWonText[7] = createText(pGame->pRenderer, pGame->pMenuFont, 255, 255, 255, "Player 7 won", pGame->windowWidth, pGame->windowHeight, -300, 0);
+    pGame->pWhoWonText[8] = createText(pGame->pRenderer, pGame->pMenuFont, 255, 255, 255, "Player 8 won", pGame->windowWidth, pGame->windowHeight, -300, 0);
+    pGame->pWhoWonText[9] = createText(pGame->pRenderer, pGame->pMenuFont, 255, 255, 255, "Player 9 won", pGame->windowWidth, pGame->windowHeight, -300, 0);
+    pGame->pWhoWonText[10] = createText(pGame->pRenderer, pGame->pMenuFont, 255, 255, 255, "You won!", pGame->windowWidth, pGame->windowHeight, -300, 0);
 
     FILE *fp;
     readFromFileKey(fp, pGame->keybinds);
     saveToFile(fp, pGame->keybinds);
-    // KRASCHAR Pï¿½ MAC initiateLanguage(fp, pGame);
+    initiateLanguage(fp, pGame);
 
     pGame->flip = SDL_FLIP_NONE;
     pGame->state = MAIN_MENU;
@@ -120,6 +128,26 @@ int initiateGame(Game* pGame){
 }
 
 void initiateLanguage(FILE *fp, Game *pGame){
+    //readFromFileLang(fp, pGame->language);
+    pGame->pStartButtonText = createText(pGame->pRenderer, pGame->pMenuFont, 255, 255, 255, "Start Game", pGame->windowWidth, pGame->windowHeight, 0, 0);
+    pGame->pSettingsButtonText = createText(pGame->pRenderer, pGame->pMenuFont, 255, 255, 255, "Settings", pGame->windowWidth, pGame->windowHeight, 50, 0);
+    pGame->pQuitButtonText = createText(pGame->pRenderer, pGame->pMenuFont, 255, 255, 255, "Quit", pGame->windowWidth, pGame->windowHeight, 100, 0);
+    pGame->pResumeButtonText = createText(pGame->pRenderer, pGame->pMenuFont, 255, 255, 255, "Resume Game", pGame->windowWidth, pGame->windowHeight, 50, 0);
+    pGame->pMainMenuButtonText = createText(pGame->pRenderer, pGame->pMenuFont, 255, 255, 255, "Main Menu", pGame->windowWidth, pGame->windowHeight, 100, 0);
+    pGame->pLanguageButtonText = createText(pGame->pRenderer, pGame->pMenuFont, 255, 255, 255, "Language", pGame->windowWidth, pGame->windowHeight, -100, 0);
+    pGame->pReturnButtonText = createText(pGame->pRenderer, pGame->pMenuFont, 255, 255, 255, "Return", pGame->windowWidth, pGame->windowHeight, 200, 0);
+    pGame->pMoveRightButtonText = createText(pGame->pRenderer, pGame->pMenuFont, 255, 255, 255, "Move right:", pGame->windowWidth, pGame->windowHeight, 50, -80);
+    pGame->pMoveLeftButtonText = createText(pGame->pRenderer, pGame->pMenuFont, 255, 255, 255, "Move left:", pGame->windowWidth, pGame->windowHeight, 100, -80);
+    pGame->pGameOverText = createText(pGame->pRenderer, pGame->pMenuFont, 255, 255, 255, "Game Over", pGame->windowWidth, pGame->windowHeight, -200, 0);
+    pGame->pEnglishButtonText = createText(pGame->pRenderer, pGame->pMenuFont, 255, 255, 255, "English", pGame->windowWidth, pGame->windowHeight, -50, 0);
+    pGame->pSwedishButtonText = createText(pGame->pRenderer, pGame->pMenuFont, 255, 255, 255, "Svenska", pGame->windowWidth, pGame->windowHeight, 0, 0);
+    //pGame->pMoveLeft1ButtonText = createText(pGame->pRenderer, pGame->pMenuFont, 255, 255, 255, moveLeft, pGame->windowWidth, pGame->windowHeight, 100, 80);
+    //pGame->pMoveRight1ButtonText = createText(pGame->pRenderer, pGame->pMenuFont, 255, 255, 255, moveRight, pGame->windowWidth, pGame->windowHeight, 100, 80);
+    pGame->pCreateLobbyButtonText = createText(pGame->pRenderer, pGame->pMenuFont, 255, 255, 255, "Create Lobby", pGame->windowWidth, pGame->windowHeight, 0, 0);
+    pGame->pJoinLobbyButtonText = createText(pGame->pRenderer, pGame->pMenuFont, 255, 255, 255, "Join Lobby", pGame->windowWidth, pGame->windowHeight, 50, 0);
+}
+
+/*void initiateLanguage(FILE *fp, Game *pGame){
     readFromFileLang(fp, pGame->language);
     pGame->pStartButtonText = createText(pGame->pRenderer, pGame->pMenuFont, 255, 255, 255, pGame->language[0], pGame->windowWidth, pGame->windowHeight, 0, 0);
     pGame->pSettingsButtonText = createText(pGame->pRenderer, pGame->pMenuFont, 255, 255, 255, pGame->language[1], pGame->windowWidth, pGame->windowHeight, 50, 0);
@@ -135,7 +163,7 @@ void initiateLanguage(FILE *fp, Game *pGame){
     pGame->pSwedishButtonText = createText(pGame->pRenderer, pGame->pMenuFont, 255, 255, 255, "Svenska", pGame->windowWidth, pGame->windowHeight, 0, 0);
     //pGame->pMoveLeft1ButtonText = createText(pGame->pRenderer, pGame->pMenuFont, 255, 255, 255, moveLeft, pGame->windowWidth, pGame->windowHeight, 100, 80);
     //pGame->pMoveRight1ButtonText = createText(pGame->pRenderer, pGame->pMenuFont, 255, 255, 255, moveRight, pGame->windowWidth, pGame->windowHeight, 100, 80);
-}
+}*/
 
 int handleError(Game* pGame, void* pMember, const char* (*GetError)(void)){
     if (!pMember){
@@ -217,9 +245,9 @@ void renderMainMenu(Game* pGame){
     renderButton(pGame->pSettingsButton, pGame->pRenderer);
     renderButton(pGame->pQuitButton, pGame->pRenderer);
 
-    // KRASHCAR MAC renderText(pGame->pStartButtonText);
-    // KRASCHAR MAC renderText(pGame->pSettingsButtonText);
-    // KRASCHAR MAC renderText(pGame->pQuitButtonText);
+    renderText(pGame->pStartButtonText);
+    renderText(pGame->pSettingsButtonText);
+    renderText(pGame->pQuitButtonText);
 }
 
 void handleSettingsMenu(Game* pGame, SDL_Event event, int* pNum){
@@ -256,6 +284,9 @@ void handleSettingsMenu(Game* pGame, SDL_Event event, int* pNum){
             handleLanguageMenu(pGame, event, &showLang);
         }
 
+        if (event.type == SDL_QUIT) {
+            pGame->state = QUIT;
+        }
         if (event.type == SDL_QUIT) {
             pGame->state = QUIT;
         }
@@ -328,13 +359,13 @@ void handleLobbyMenu(Game* pGame, SDL_Event event, int* pTime){
     while (SDL_PollEvent(&event)) {
         handleButton(pGame->pCreateLobbyButton, &buttonPressed);
         if (buttonPressed) {
-            initializeNetcode(pGame->pNetworkData, pGame->pGameplayData, pGame->pClientCommand, true);
+            initializeNetcode(pGame->pNetworkData, true);
             pGame->state = ONGOING;
             buttonPressed = false;
         }
         handleButton(pGame->pJoinLobbyButton, &buttonPressed);
         if (buttonPressed) {
-            joinHost(pGame->pNetworkData);
+            initializeNetcode(pGame->pNetworkData, false);
             pGame->state = ONGOING;
             buttonPressed = false;
         }
@@ -355,9 +386,15 @@ void handleLobbyMenu(Game* pGame, SDL_Event event, int* pTime){
 }
 
 void renderLobbyMenu(Game* pGame){
+    renderMenu(pGame->pRenderer, pGame->pMenuTexture, pGame->windowWidth, pGame->windowHeight);
+
     renderButton(pGame->pCreateLobbyButton, pGame->pRenderer);
     renderButton(pGame->pJoinLobbyButton, pGame->pRenderer);
     renderButton(pGame->pReturnButton, pGame->pRenderer);
+
+    renderText(pGame->pCreateLobbyButtonText);
+    renderText(pGame->pJoinLobbyButtonText);
+    renderText(pGame->pReturnButtonText);
 }
 
 void handleEnterInput(Game* pGame, SDL_Event event, int* pNum){
@@ -388,12 +425,52 @@ void handleOngoing(Game* pGame, SDL_Event event, bool* pIsRunning, int *pTime){
         handleOngoingInput(pGame, &event, pIsRunning, &left, &right);
     }
 
+	////////////////////////////////////////////////////////////////////////////////////////////////////
+	////////////////////////////////////////////////////////////////////////////////////////////////////
+	////////////////////////////////////////////////////////////////////////////////////////////////////
+
+	bool isHost = pGame->pNetworkData->isHost;
+
+	if (isHost) {
+		GameplayData temp;
+		// SERVER
+		// Här ska data hämtas från andra structar och läggas in i varabeln "temp".
+		// Just nu har GameplayData definierats som att bara innehålla en array av Player-objekt.
+		// Ni kan hitta den aktuella definitionen i "network.h".
+		// Koden som flyttar data in i "temp" måste ligga precis här vid dessa kommentarer.
+		*pGame->pGameplayData = temp;
+	}
+
+	runNetcode(pGame->pNetworkData, pGame->pGameplayData, pGame->pClientCommands);
+
+	if (isHost) {
+		// SERVER
+		// Arrayen hos pGame->pClientCommands innehåller nu ett antal (0 är möjligt) kommandon,
+		// där varje kommando förmedlar någon handling som en klient vill utföra. Här ska dessa
+		// handlingar appliceras på vår lokala (serverns) version av spelet. Definitionen av
+		// hur ett kommando ser ut hittas i "network.h".
+		// Rensa hela arrayen när alla kommandon har applicerats:
+		*pGame->pClientCommands = (ClientCommand){0};
+	} else {
+		// KLIENT
+		// Vid den här punkten har pGame->pGameplayData uppdaterats med data från servern.
+		// Denna data, som är tillgänglig via pGame->pGameplayData, ska nu läggas in i
+		// de andra structarna (exempelvis pGame->pPlayers[i]).
+		// Som sagt ser ni vad GameplayData kan innehålla genom att kolla i "network.h".
+		// Koden måste ligga inom klammerparenteserna.
+	}
+
+	////////////////////////////////////////////////////////////////////////////////////////////////////
+	////////////////////////////////////////////////////////////////////////////////////////////////////
+	////////////////////////////////////////////////////////////////////////////////////////////////////
+
     handleBackground(pGame->pBackground, pGame->pRenderer, pGame->pBackgroundTexture, pGame->windowWidth, pGame->windowHeight); //denna måste ligga före allt med player
     handlePlatforms(pGame->pPlatforms, pGame->pRenderer, pGame->pPlatformTexture, pGame->windowWidth, pGame->windowHeight);
-    handleStartPlatform(pGame->pStartPlatform, pGame->pPlatforms[0], pGame->pRenderer, pGame->pStartPlatformTexture, pGame->windowHeight, pTime);
-    handlePlayers(pGame->pPlayers, pGame->nrOfPlayers, &pGame->nrOfPlayersLeft, &left, &right, pGame->windowWidth, pGame->windowHeight, pGame->pStartPlatform, pGame->pJumpSound, &pGame->state, pGame->pRenderer, pGame->pPlayerTextures, pGame->flip, pGame->pPlatforms, pGame->pGameOverText);
+	// bortkommenterad för tillfället när vi testar netcoden
+    // handleStartPlatform(pGame->pStartPlatform, pGame->pPlatforms[0], pGame->pRenderer, pGame->pStartPlatformTexture, pGame->windowHeight, pTime);
+    handlePlayers(pGame->pPlayers, pGame->nrOfPlayers, &pGame->nrOfPlayersLeft, &left, &right, pGame->windowWidth, pGame->windowHeight, pGame->pStartPlatform, pGame->pJumpSound, pGame->pWinSound, &pGame->state, pGame->pRenderer, pGame->pPlayerTextures, pGame->flip, pGame->pPlatforms, pGame->pGameOverText);
 
-    SDL_Delay(1000/60);
+    SDL_Delay(1000/1000);
 }
 
 void handleOngoingInput(Game* pGame, SDL_Event* event, bool* pIsRunning, bool* pLeft, bool* pRight){
@@ -470,8 +547,8 @@ void renderGameMenu(Game* pGame){
     renderButton(pGame->pResumeButton, pGame->pRenderer);
     renderButton(pGame->pMainMenuButton, pGame->pRenderer);
 
-    // Gï¿½R Sï¿½ ATT MAN INTE KAN KOMMA TILL RESUMEMENU renderText(pGame->pMainMenuButtonText);
-    // Gï¿½R Sï¿½ ATT MAN INTE KAN KOMMA TILL RESUMEMENU renderText(pGame->pResumeButtonText);
+    renderText(pGame->pMainMenuButtonText);
+    renderText(pGame->pResumeButtonText);
 }
 
 void handleGameOver(Game* pGame, SDL_Event event){
@@ -508,7 +585,7 @@ void handleGameOver(Game* pGame, SDL_Event event){
 
 void renderGameOver(Game* pGame){
     renderButton(pGame->pMainMenuButton, pGame->pRenderer);
-    // Gï¿½R Sï¿½ ATT MAN INTE KAN KOMMA TILL RESUMEMENU renderText(pGame->pMainMenuButtonText);
+    renderText(pGame->pMainMenuButtonText);
 }
 
 void resetGame(Game* pGame, int* pTime){
@@ -560,6 +637,9 @@ void quitGame(Game* pGame){
     if (pGame->pBackground) {
         destroyBackground(pGame->pBackground);
     }
+    if (pGame->pWinSound) {
+        destroyChunk(pGame->pWinSound);
+    }
     if (pGame->pJumpSound) {
         destroyChunk(pGame->pJumpSound);
     }
@@ -587,7 +667,6 @@ void quitGame(Game* pGame){
     if (pGame->pWindow) {
         SDL_DestroyWindow(pGame->pWindow);
     }
-    //destro playerRenderer?
     Mix_CloseAudio();
     Mix_Quit();
     TTF_Quit();

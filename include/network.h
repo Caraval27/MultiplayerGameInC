@@ -3,62 +3,83 @@
 #include "../include/libraries.h"
 #include "../include/players.h"
 
-#define PORT 3000
-#define PACKET_SIZE 512
+#define PORT 3016
+#define PACKET_SIZE 256
 #define CLIENT_LIMIT 6
 #define SERVER_IP "127.0.0.1"
-
-typedef struct {
-	bool isHost;
-	UDPsocket pSocket;
-	UDPpacket *pPacket;
-	IPaddress clients[CLIENT_LIMIT];
-	IPaddress serverIP;
-} NetworkData;
-
-typedef struct {
-	Player **players;
-	// ...
-} GameplayData;
+#define NETCODE_TICKRATE 1000
+#define COMMAND_BUFFER CLIENT_LIMIT
 
 typedef enum {
 	MOVEMENT,
-	JUMP,
-	LEAVE
+	LEAVE,
 } CommandType;
 
-// \param direction MOVEMENT: True if pointing right, False if pointing left.
-// \param mode MOVEMENT: True if the movement is to be started, False if it is to be stopped.
+// \param direction MOVEMENT: 1 if pointing right, -1 if pointing left, 0 if motionless
 typedef struct {
+	IPaddress ip;
 	CommandType commandType;
-	bool direction;
-	bool mode;
+	int direction;
 } ClientCommand;
+
+typedef struct {
+	IPaddress ip;
+	Uint64 lastSeen;
+} Client;
+
+typedef struct {
+	UDPsocket pSocket;
+	UDPpacket *pPacket;
+	bool isHost;
+	int hasJoined;
+	Client clients[CLIENT_LIMIT];
+	IPaddress server;
+} NetworkData;
+
+typedef struct {
+	Player players[CLIENT_LIMIT];
+} GameplayData;
 
 // Prepare the application to communicate over a network.
 // \param isHost True if the user is hosting a game, otherwise false.
 // \return Return 1 upon success. Return 0 otherwise.
-int initializeNetcode(NetworkData *pNetworkData, GameplayData *pGameplayData, ClientCommand *pClientCommand, bool isHost);
+int initializeNetcode(NetworkData *pNetworkData, bool isHost);
 
-// Gets the IP-address of any incoming packets and, if unique, adds it to the list of clients.
-// The function is non-interrupting and should be ran repeatedly.
-void listenForNewClients(NetworkData *pNetworkData);
+// \param pGameplayData If host, this struct must be filled with data from the current state
+// of the game BEFORE calling the function. If client, this struct will be filled with data from the
+// host AFTER calling the function.
+// \param pClientCommands If host, this pointer must reference an array, which will be filled with
+// client commands AFTER calling the function. If client, the pointer must reference a struct
+// containing a client command BEFORE calling the function.
+void runNetcode(NetworkData *pNetworkData, GameplayData *pGameplayData, ClientCommand *pClientCommands);
 
-// Package the current gameplay state and broadcast it to all connected clients.
-// \param *pGameplayData Struct containing the gameplay state to be sent.
+// Package the current gameplay state and broadcast it to all tracked clients.
+// \param pGameplayData Struct containing the gameplay state to be sent.
 void broadcastToClients(NetworkData *pNetworkData, GameplayData *pGameplayData);
 
-// Gets any incoming packet and, if from a valid client, integrate its command into the game.
-void handleClientCommands(NetworkData *pNetworkData, ClientCommand *pClientCommand, GameplayData *pGameplayData);
+// Get any incoming packets and take appropriate action for each packet.
+// \param pClientCommands If the packet contains a client command to be retrieved,
+// store it in this array.
+void listenForClientCommands(NetworkData *pNetworkData, ClientCommand *pClientCommands);
 
-// Sends empty packet to the host to become acknowledged as a client.
-void joinHost(NetworkData *pNetworkData);
+// Check if the IP of the current packet exists in the list of clients.
+// \return Return true if there was a match. Return false otherwise.
+bool checkExistingClient(NetworkData *pNetworkData);
 
-// Check for any packets from the server and copy the packet data to the local GameplayData.
-// \return Return 1 if a packet was received from the server. Return 0 otherwise.
-// This may be used to check if the server has acknowledged the client.
-int receiveHostBroadcast(NetworkData *pNetworkData, GameplayData *pGameplayData);
+// Store the client command of the current packet.
+// \param pClientCommands Store the client commands in this array.
+void retrieveClientCommand(NetworkData *pNetworkData, ClientCommand *pClientCommands);
 
-// Copy the ClientCommand object to a packet and send it to the server.
-// \param *pClientCommand Object containing the command.
+// Add a new client with the IP address of the current packet.
+void addClient(NetworkData *pNetworkData);
+
+// Remove a client at a given index.
+void removeClient(NetworkData *pNetworkData, int index);
+
+// Send a packet containing a client command to the server.
+// \param pClientCommand Pointer to the client command.
 void sendClientCommand(NetworkData *pNetworkData, ClientCommand *pClientCommand);
+
+// Get any incoming packets from the server and store their gameplay data.
+// \return The number of broadcasts received upon a singular call.
+int listenForHostBroadcast(NetworkData *pNetworkData, GameplayData *pGameplayData);

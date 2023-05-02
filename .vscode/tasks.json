@@ -5,16 +5,13 @@
 			"label": "make",
 			"type": "shell",
 			"command": "make ${input:make-argument}",
-			"problemMatcher": [
-				"$gcc"
-			],
 			"presentation": {
-				"focus": true,
+				"focus": true
 			},
 			"options": {
 				"env": {
 					"MSYSTEM": "MINGW64",
-					"CHERE_INVOKING": "1",
+					"CHERE_INVOKING": "1"
 				},
 				"shell": {
 					"executable": "C:\\msys64\\usr\\bin\\bash.exe",
@@ -29,6 +26,29 @@
 				"kind": "build",
 				"isDefault": true
 			}
+		},
+		{
+			"label": "launch-instance",
+			"type": "shell",
+			"command": "make run",
+			"presentation": {
+				"panel": "dedicated"
+			},
+			"options": {
+				"env": {
+					"MSYSTEM": "MINGW64",
+					"CHERE_INVOKING": "1"
+				},
+				"shell": {
+					"executable": "C:\\msys64\\usr\\bin\\bash.exe",
+					"args": [
+						"--login",
+						"-i",
+						"-c"
+					]
+				}
+			},
+			"problemMatcher": []
 		}
 	],
 	"inputs": [
@@ -39,6 +59,7 @@
 			"options": [
 				"run",
 				"new",
+				"rebuild",
 				"all",
 				"clean",
 				"launch",
