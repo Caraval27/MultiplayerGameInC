@@ -54,7 +54,7 @@ void renderLanguageMenu(Game* pGame);
 void handleLobbyMenu(Game* pGame, SDL_Event event, int* pTime);
 void renderLobbyMenu(Game* pGame);
 void handleEnterInput(Game* pGame, SDL_Event event, int* pNum);
-void handleOngoing(Game* pGame, SDL_Event event, bool* pIsRunning, int* pTime);
+void handleOngoing(Game* pGame, SDL_Event event, bool* pIsRunning, bool *pLeft, bool *pRight, int* pTime);
 void handleOngoingInput(Game* pGame, SDL_Event* event, bool* pIsRunning, bool* pLeft, bool* pRight);
 void handleGameMenu(Game* pGame, SDL_Event event);
 void renderGameMenu(Game* pGame);

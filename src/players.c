@@ -33,7 +33,7 @@ void initPlayers(Player** pPlayers, int* pNrOfPlayers, int* pNrOfPlayersLeft, in
     }
 }
 
-void handlePlayers(Player** pPlayers, int pNrOfPlayers, int *nrOfPlayersLeft, bool *pLeft, bool *pRight, int windowWidth, int windowHeight, Platform* pStartPlatform, Mix_Chunk *pJumpSound, Mix_Chunk* pWinSound, State* pState, SDL_Renderer* pRenderer, SDL_Texture** pPlayerTextures, SDL_RendererFlip flip, Platform** pPlatforms, Text* pGameOverText){
+void handlePlayers(Player** pPlayers, int pNrOfPlayers, int *nrOfPlayersLeft, bool* pLeft, bool* pRight, int windowWidth, int windowHeight, Platform* pStartPlatform, Mix_Chunk *pJumpSound, Mix_Chunk* pWinSound, State* pState, SDL_Renderer* pRenderer, SDL_Texture** pPlayerTextures, SDL_RendererFlip flip, Platform** pPlatforms, Text* pGameOverText){
 
     for (int i = 0; i < pNrOfPlayers; i++) //av n?gon anledning dyker inte player 2 upp, f?rmodligen pga samma bild och position, samt b?da r?r sig med tangenttrycken
     {

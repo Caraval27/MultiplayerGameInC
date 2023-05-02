@@ -175,8 +175,8 @@ int handleError(Game* pGame, void* pMember, const char* (*GetError)(void)){
 }
 
 void runGame(Game* pGame){
-    bool isRunning = true;
     SDL_Event event;
+    bool isRunning = true, left = false, right = false;
     int num, time = 0;
 
     Mix_VolumeMusic(75);
@@ -192,7 +192,7 @@ void runGame(Game* pGame){
                 break;
             case LOBBY_MENU: handleLobbyMenu(pGame, event, &time);
                 break;
-            case ONGOING: handleOngoing(pGame, event, &isRunning, &time);
+            case ONGOING: handleOngoing(pGame, event, &isRunning, &left, &right, &time);
                 break;
             case GAME_MENU: handleGameMenu(pGame, event);
                 break;
@@ -294,6 +294,8 @@ void handleSettingsMenu(Game* pGame, SDL_Event event, int* pNum){
 }
 
 void renderSettingsMenu(Game* pGame){
+    renderMenu(pGame->pRenderer, pGame->pMenuTexture, pGame->windowWidth, pGame->windowHeight);
+
     renderButton(pGame->pLanguageButton, pGame->pRenderer);
     renderButton(pGame->pMoveLeftButton, pGame->pRenderer);
     renderButton(pGame->pMoveRightButton, pGame->pRenderer);
@@ -416,13 +418,13 @@ void handleEnterInput(Game* pGame, SDL_Event event, int* pNum){
     }
 }
 
-void handleOngoing(Game* pGame, SDL_Event event, bool* pIsRunning, int *pTime){
-    bool left = false, right = false;
+void handleOngoing(Game* pGame, SDL_Event event, bool* pIsRunning, bool* pLeft, bool *pRight, int *pTime){
+    //bool left = false, right = false;
 
     Mix_ResumeMusic();
 
     while (SDL_PollEvent(&event)){
-        handleOngoingInput(pGame, &event, pIsRunning, &left, &right);
+        handleOngoingInput(pGame, &event, pIsRunning, pLeft, pRight);
     }
 
 	////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -467,8 +469,8 @@ void handleOngoing(Game* pGame, SDL_Event event, bool* pIsRunning, int *pTime){
     handleBackground(pGame->pBackground, pGame->pRenderer, pGame->pBackgroundTexture, pGame->windowWidth, pGame->windowHeight); //denna måste ligga före allt med player
     handlePlatforms(pGame->pPlatforms, pGame->pRenderer, pGame->pPlatformTexture, pGame->windowWidth, pGame->windowHeight);
 	// bortkommenterad för tillfället när vi testar netcoden
-    // handleStartPlatform(pGame->pStartPlatform, pGame->pPlatforms[0], pGame->pRenderer, pGame->pStartPlatformTexture, pGame->windowHeight, pTime);
-    handlePlayers(pGame->pPlayers, pGame->nrOfPlayers, &pGame->nrOfPlayersLeft, &left, &right, pGame->windowWidth, pGame->windowHeight, pGame->pStartPlatform, pGame->pJumpSound, pGame->pWinSound, &pGame->state, pGame->pRenderer, pGame->pPlayerTextures, pGame->flip, pGame->pPlatforms, pGame->pGameOverText);
+    handleStartPlatform(pGame->pStartPlatform, pGame->pPlatforms[0], pGame->pRenderer, pGame->pStartPlatformTexture, pGame->windowHeight, pTime);
+    handlePlayers(pGame->pPlayers, pGame->nrOfPlayers, &pGame->nrOfPlayersLeft, pLeft, pRight, pGame->windowWidth, pGame->windowHeight, pGame->pStartPlatform, pGame->pJumpSound, pGame->pWinSound, &pGame->state, pGame->pRenderer, pGame->pPlayerTextures, pGame->flip, pGame->pPlatforms, pGame->pGameOverText);
 
     SDL_Delay(1000/1000);
 }
