@@ -628,7 +628,7 @@ void quitGame(Game* pGame){
         destroyButton(pGame->pStartButton);
     }
     if (pGame->pPlayers[0]) {
-        destroyPlayers(&pGame->pPlayers[0]);
+        destroyPlayers(pGame->pPlayers);
     }
     if (pGame->pStartPlatform) {
         destroyPlatform(pGame->pStartPlatform);
