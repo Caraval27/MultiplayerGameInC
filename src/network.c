@@ -41,6 +41,9 @@ void runNetcode(NetworkData *pNetworkData, GameplayData *pGameplayData, ClientCo
 		}
 		printf("--------------------\n");
 	}
+	if (SDL_GetTicks64() % NETCODE_TICKRATE < 17) {
+		timeoutClients(pNetworkData);
+	}
 }
 
 void broadcastToClients(NetworkData *pNetworkData, GameplayData *pGameplayData) {
@@ -122,6 +125,17 @@ void addClient(NetworkData *pNetworkData) {
 		printf("new total clients: %d\n", nClients + 1);
 	} else {
 		printf("client addition rejected: client limit reached\n");
+	}
+}
+
+void timeoutClients(NetworkData *pNetworkData) {
+	Uint64 currentTime = SDL_GetTicks64();
+	for (int i = 0; pNetworkData->clients[i].ip.host && i < CLIENT_LIMIT; i++) {
+		if (currentTime - pNetworkData->clients[i].lastSeen > CLIENT_TIMEOUT) {
+			removeClient(pNetworkData, i);
+			printf("client timed out at index %d\n", i);
+			i = 0;
+		}
 	}
 }
 

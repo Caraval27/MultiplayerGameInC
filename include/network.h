@@ -9,6 +9,7 @@
 #define SERVER_IP "127.0.0.1"
 #define NETCODE_TICKRATE 1000
 #define COMMAND_BUFFER CLIENT_LIMIT
+#define CLIENT_TIMEOUT 3000
 
 typedef enum {
 	MOVEMENT,
@@ -72,6 +73,9 @@ void retrieveClientCommand(NetworkData *pNetworkData, ClientCommand *pClientComm
 
 // Add a new client with the IP address of the current packet.
 void addClient(NetworkData *pNetworkData);
+
+// Iterate through client array and remove any clients that were last seen beyond a threshold.
+void timeoutClients(NetworkData *pNetworkData);
 
 // Remove a client at a given index.
 void removeClient(NetworkData *pNetworkData, int index);
