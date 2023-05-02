@@ -49,19 +49,17 @@ void handleMainMenu(Game* pGame, SDL_Event event);
 void renderMainMenu(Game* pGame);
 void handleSettingsMenu(Game* pGame, SDL_Event event, int* pNum);
 void renderSettingsMenu(Game *pGame);
-void handleLanguageMenu(Game* pGame, bool* pShowLang);
+void handleLanguageMenu(Game* pGame, SDL_Event event, bool* pShowLang);
 void renderLanguageMenu(Game* pGame);
 void handleLobbyMenu(Game* pGame, SDL_Event event, int* pTime);
 void renderLobbyMenu(Game* pGame);
 void handleEnterInput(Game* pGame, SDL_Event event, int* pNum);
-void handleOngoing(Game* pGame, SDL_Event event, bool* pIsRunning, bool* pRight, bool* pLeft, int* pTime);
-void handleOngoingInput(Game* pGame, SDL_Event* event, bool* pIsRunning, bool* pRight, bool* pLeft);
+void handleOngoing(Game* pGame, SDL_Event event, bool* pIsRunning, int* pTime);
+void handleOngoingInput(Game* pGame, SDL_Event* event, bool* pIsRunning, bool* pLeft, bool* pRight);
 void handleGameMenu(Game* pGame, SDL_Event event);
 void renderGameMenu(Game* pGame);
-void handleGameOverMenu(Game* pGame, SDL_Event event);
-void renderGameOverMenu(Game* pGame);
-
-//void handlePlayers(Game* pGame, bool* pLeft, bool* pRight);
+void handleGameOver(Game* pGame, SDL_Event event);
+void renderGameOver(Game* pGame);
 
 void resetGame(Game* pGame, int* pTime);
 

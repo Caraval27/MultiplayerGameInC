@@ -108,8 +108,6 @@ int initiateGame(Game* pGame){
     pGame->pWhoWonText[5] = createText(pGame->pRenderer, pGame->pMenuFont, 255, 255, 255, "Player 5 won", pGame->windowWidth, pGame->windowHeight, -300, 0);
     pGame->pWhoWonText[6] = createText(pGame->pRenderer, pGame->pMenuFont, 255, 255, 255, "You won!", pGame->windowWidth, pGame->windowHeight, -300, 0);
 
-    initPlayers(pGame->pPlayers, &pGame->nrOfPlayers, &pGame->nrOfPlayersLeft, pGame->windowWidth, pGame->pStartPlatform->yPos, pGame->pPlayerTextures, pGame->pWindow, pGame->pRenderer);
-
     FILE *fp;
     readFromFileKey(fp, pGame->keybinds);
     saveToFile(fp, pGame->keybinds);
@@ -149,7 +147,7 @@ int handleError(Game* pGame, void* pMember, const char* (*GetError)(void)){
 }
 
 void runGame(Game* pGame){
-    bool isRunning = true, left = false, right = false;
+    bool isRunning = true;
     SDL_Event event;
     int num, time = 0;
 
@@ -166,11 +164,11 @@ void runGame(Game* pGame){
                 break;
             case LOBBY_MENU: handleLobbyMenu(pGame, event, &time);
                 break;
-            case ONGOING: handleOngoing(pGame, event, &isRunning, &right, &left, &time);
+            case ONGOING: handleOngoing(pGame, event, &isRunning, &time);
                 break;
             case GAME_MENU: handleGameMenu(pGame, event);
                 break;
-            case GAME_OVER: handleGameOverMenu(pGame, event);
+            case GAME_OVER: handleGameOver(pGame, event);
                 break;
             case QUIT: isRunning = false;
                 break;
@@ -255,14 +253,16 @@ void handleSettingsMenu(Game* pGame, SDL_Event event, int* pNum){
         }
 
         if (showLang){
-            handleLanguageMenu(pGame, &showLang);
+            handleLanguageMenu(pGame, event, &showLang);
+        }
+
+        if (event.type == SDL_QUIT) {
+            pGame->state = QUIT;
         }
     }
 }
 
 void renderSettingsMenu(Game* pGame){
-    renderMenu(pGame->pRenderer, pGame->pMenuTexture, pGame->windowWidth, pGame->windowHeight);
-
     renderButton(pGame->pLanguageButton, pGame->pRenderer);
     renderButton(pGame->pMoveLeftButton, pGame->pRenderer);
     renderButton(pGame->pMoveRightButton, pGame->pRenderer);
@@ -279,37 +279,40 @@ void renderSettingsMenu(Game* pGame){
 
 }
 
-void handleLanguageMenu(Game* pGame, bool* pShowLang){
+void handleLanguageMenu(Game* pGame, SDL_Event event, bool* pShowLang){
     bool buttonPressed = false;
     char chosenLang[LANG_LENGTH];
     FILE *fp;
 
     renderLanguageMenu(pGame);
 
-    handleButton(pGame->pEnglishButton, &buttonPressed);
-    if (buttonPressed){
-        strcpy(chosenLang, "english.txt");
-        *pShowLang = false;
-        buttonPressed = false;
-    }
-    handleButton(pGame->pSwedishButton, &buttonPressed);
-    if (buttonPressed){
-        strcpy(chosenLang, "svenska.txt");
-        *pShowLang = false;
-        buttonPressed = false;
-    }
+    while (SDL_PollEvent(&event)) {
+        handleButton(pGame->pEnglishButton, &buttonPressed);
+        if (buttonPressed){
+            strcpy(chosenLang, "english.txt");
+            *pShowLang = false;
+            buttonPressed = false;
+        }
+        handleButton(pGame->pSwedishButton, &buttonPressed);
+        if (buttonPressed){
+            strcpy(chosenLang, "svenska.txt");
+            *pShowLang = false;
+            buttonPressed = false;
+        }
 
-    if (!*pShowLang){
-        changeLanguageInFile(fp, chosenLang);
-        initiateLanguage(fp, pGame);
-    }
+        if (!*pShowLang){
+            changeLanguageInFile(fp, chosenLang);
+            initiateLanguage(fp, pGame);
+        }
 
+        if (event.type == SDL_QUIT) {
+            pGame->state = QUIT;
+        }
+    }
     //char moveLeft[50] = SDL_GetKeyName(pGame->keybinds[1]);
 }
 
 void renderLanguageMenu(Game* pGame){
-    renderMenu(pGame->pRenderer, pGame->pMenuTexture, pGame->windowWidth, pGame->windowHeight);
-
     renderButton(pGame->pEnglishButton, pGame->pRenderer);
     renderButton(pGame->pSwedishButton, pGame->pRenderer);
 
@@ -319,6 +322,8 @@ void renderLanguageMenu(Game* pGame){
 
 void handleLobbyMenu(Game* pGame, SDL_Event event, int* pTime){
     bool buttonPressed = false;
+
+    renderLobbyMenu(pGame);
 
     while (SDL_PollEvent(&event)) {
         handleButton(pGame->pCreateLobbyButton, &buttonPressed);
@@ -339,7 +344,13 @@ void handleLobbyMenu(Game* pGame, SDL_Event event, int* pTime){
             buttonPressed = false;
         }
 
-        resetGame(pGame, pTime);
+        if (pGame->state == ONGOING) {
+            resetGame(pGame, pTime);
+        }
+
+        if (event.type == SDL_QUIT) {
+            pGame->state = QUIT;
+        }
     }
 }
 
@@ -368,23 +379,24 @@ void handleEnterInput(Game* pGame, SDL_Event event, int* pNum){
     }
 }
 
-void handleOngoing(Game* pGame, SDL_Event event, bool* pIsRunning, bool* pRight, bool* pLeft, int *pTime){
+void handleOngoing(Game* pGame, SDL_Event event, bool* pIsRunning, int *pTime){
+    bool left = false, right = false;
+
     Mix_ResumeMusic();
 
     while (SDL_PollEvent(&event)){
-        handleOngoingInput(pGame, &event, pIsRunning, pRight, pLeft);
+        handleOngoingInput(pGame, &event, pIsRunning, &left, &right);
     }
 
     handleBackground(pGame->pBackground, pGame->pRenderer, pGame->pBackgroundTexture, pGame->windowWidth, pGame->windowHeight); //denna måste ligga före allt med player
     handlePlatforms(pGame->pPlatforms, pGame->pRenderer, pGame->pPlatformTexture, pGame->windowWidth, pGame->windowHeight);
     handleStartPlatform(pGame->pStartPlatform, pGame->pPlatforms[0], pGame->pRenderer, pGame->pStartPlatformTexture, pGame->windowHeight, pTime);
-    handlePlayers(pGame->pPlayers, pGame->nrOfPlayers, &pGame->nrOfPlayersLeft, pLeft, pRight, pGame->windowWidth, pGame->windowHeight, pGame->pStartPlatform, pGame->pJumpSound, &pGame->state, pGame->pRenderer, pGame->pPlayerTextures, pGame->flip, pGame->pPlatforms, pGame->pGameOverText);
-
+    handlePlayers(pGame->pPlayers, pGame->nrOfPlayers, &pGame->nrOfPlayersLeft, &left, &right, pGame->windowWidth, pGame->windowHeight, pGame->pStartPlatform, pGame->pJumpSound, &pGame->state, pGame->pRenderer, pGame->pPlayerTextures, pGame->flip, pGame->pPlatforms, pGame->pGameOverText);
 
     SDL_Delay(1000/60);
 }
 
-void handleOngoingInput(Game* pGame, SDL_Event* event, bool* pIsRunning, bool* pRight, bool* pLeft){
+void handleOngoingInput(Game* pGame, SDL_Event* event, bool* pIsRunning, bool* pLeft, bool* pRight){
     switch (event->type){
         case SDL_QUIT: *pIsRunning = false;
             break;
@@ -462,13 +474,13 @@ void renderGameMenu(Game* pGame){
     // Gï¿½R Sï¿½ ATT MAN INTE KAN KOMMA TILL RESUMEMENU renderText(pGame->pResumeButtonText);
 }
 
-void handleGameOverMenu(Game* pGame, SDL_Event event){
-    bool buttonPressed = false;
+void handleGameOver(Game* pGame, SDL_Event event){
     int i;
+    bool buttonPressed = false;
 
     Mix_PauseMusic();
 
-    renderGameOverMenu(pGame);
+    renderGameOver(pGame);
     for(i = 0; i < pGame->nrOfPlayers; i++) {
         if (pGame->pPlayers[i]->alive) {
             break;
@@ -494,18 +506,15 @@ void handleGameOverMenu(Game* pGame, SDL_Event event){
     }
 }
 
-void renderGameOverMenu(Game* pGame){
+void renderGameOver(Game* pGame){
     renderButton(pGame->pMainMenuButton, pGame->pRenderer);
     // Gï¿½R Sï¿½ ATT MAN INTE KAN KOMMA TILL RESUMEMENU renderText(pGame->pMainMenuButtonText);
 }
 
-
 void resetGame(Game* pGame, int* pTime){
-    if (pGame->state == ONGOING) {
-        resetPlatforms(pGame->pPlatforms);
-        resetStartPlatform(pGame->pStartPlatform, pGame->windowHeight, pTime);
-        initPlayers(pGame->pPlayers, &pGame->nrOfPlayers, &pGame->nrOfPlayersLeft, pGame->windowWidth, pGame->pStartPlatform->yPos, pGame->pPlayerTextures, pGame->pWindow, pGame->pRenderer);
-    }
+    resetPlatforms(pGame->pPlatforms);
+    resetStartPlatform(pGame->pStartPlatform, pGame->windowHeight, pTime);
+    initPlayers(pGame->pPlayers, &pGame->nrOfPlayers, &pGame->nrOfPlayersLeft, pGame->windowWidth, pGame->pStartPlatform->yPos, pGame->pPlayerTextures, pGame->pWindow, pGame->pRenderer);
 }
 
 void quitGame(Game* pGame){
