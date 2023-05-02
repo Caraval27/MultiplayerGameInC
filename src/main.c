@@ -176,7 +176,7 @@ int handleError(Game* pGame, void* pMember, const char* (*GetError)(void)){
 
 void runGame(Game* pGame){
     SDL_Event event;
-    bool isRunning = true, left = false, right = false;
+    bool isRunning = true, left = false, right = false, mute = false;
     int num, time = 0;
 
     Mix_VolumeMusic(75);
@@ -184,7 +184,7 @@ void runGame(Game* pGame){
 
     while (isRunning){
         switch (pGame->state) {
-            case MAIN_MENU: handleMainMenu(pGame, event);
+            case MAIN_MENU: handleMainMenu(pGame, event, &mute);
                 break;
             case SETTINGS_MENU: handleSettingsMenu(pGame, event, &num);
                 break;
@@ -192,9 +192,9 @@ void runGame(Game* pGame){
                 break;
             case LOBBY_MENU: handleLobbyMenu(pGame, event, &time);
                 break;
-            case ONGOING: handleOngoing(pGame, event, &isRunning, &left, &right, &time);
+            case ONGOING: handleOngoing(pGame, event, &isRunning, &left, &right, &time, &mute);
                 break;
-            case GAME_MENU: handleGameMenu(pGame, event);
+            case GAME_MENU: handleGameMenu(pGame, event, &mute);
                 break;
             case GAME_OVER: handleGameOver(pGame, event);
                 break;
@@ -208,10 +208,10 @@ void runGame(Game* pGame){
     }
 }
 
-void handleMainMenu(Game* pGame, SDL_Event event){
+void handleMainMenu(Game* pGame, SDL_Event event, bool* pMute){
     bool buttonPressed = false;
 
-    Mix_ResumeMusic();
+    if (!(*pMute)) Mix_ResumeMusic();
 
     renderMainMenu(pGame);
 
@@ -234,6 +234,22 @@ void handleMainMenu(Game* pGame, SDL_Event event){
 
         if (event.type == SDL_QUIT) {
             pGame->state = QUIT;
+        }
+
+        switch (event.type)
+        {
+        case SDL_QUIT: pGame->state = QUIT;
+            break;
+        case SDL_KEYDOWN:
+            if ((event.key.keysym.sym) == SDLK_m && !(*pMute)) {
+                *pMute = true;
+                Mix_PauseMusic();
+            }
+            else if ((event.key.keysym.sym) == SDLK_m && (*pMute)) {
+                *pMute = false;
+                Mix_ResumeMusic();
+            }
+            break;
         }
     }
 }
@@ -418,13 +434,11 @@ void handleEnterInput(Game* pGame, SDL_Event event, int* pNum){
     }
 }
 
-void handleOngoing(Game* pGame, SDL_Event event, bool* pIsRunning, bool* pLeft, bool *pRight, int *pTime){
+void handleOngoing(Game* pGame, SDL_Event event, bool* pIsRunning, bool* pLeft, bool *pRight, int *pTime, bool* pMute){
     //bool left = false, right = false;
 
-    Mix_ResumeMusic();
-
     while (SDL_PollEvent(&event)){
-        handleOngoingInput(pGame, &event, pIsRunning, pLeft, pRight);
+        handleOngoingInput(pGame, &event, pIsRunning, pLeft, pRight, pMute);
     }
 
 	////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -436,10 +450,10 @@ void handleOngoing(Game* pGame, SDL_Event event, bool* pIsRunning, bool* pLeft, 
 	if (isHost) {
 		GameplayData temp;
 		// SERVER
-		// Här ska data hämtas från andra structar och läggas in i varabeln "temp".
-		// Just nu har GameplayData definierats som att bara innehålla en array av Player-objekt.
+		// Hï¿½r ska data hï¿½mtas frï¿½n andra structar och lï¿½ggas in i varabeln "temp".
+		// Just nu har GameplayData definierats som att bara innehï¿½lla en array av Player-objekt.
 		// Ni kan hitta den aktuella definitionen i "network.h".
-		// Koden som flyttar data in i "temp" måste ligga precis här vid dessa kommentarer.
+		// Koden som flyttar data in i "temp" mï¿½ste ligga precis hï¿½r vid dessa kommentarer.
 		*pGame->pGameplayData = temp;
 	}
 
@@ -447,35 +461,35 @@ void handleOngoing(Game* pGame, SDL_Event event, bool* pIsRunning, bool* pLeft, 
 
 	if (isHost) {
 		// SERVER
-		// Arrayen hos pGame->pClientCommands innehåller nu ett antal (0 är möjligt) kommandon,
-		// där varje kommando förmedlar någon handling som en klient vill utföra. Här ska dessa
-		// handlingar appliceras på vår lokala (serverns) version av spelet. Definitionen av
+		// Arrayen hos pGame->pClientCommands innehï¿½ller nu ett antal (0 ï¿½r mï¿½jligt) kommandon,
+		// dï¿½r varje kommando fï¿½rmedlar nï¿½gon handling som en klient vill utfï¿½ra. Hï¿½r ska dessa
+		// handlingar appliceras pï¿½ vï¿½r lokala (serverns) version av spelet. Definitionen av
 		// hur ett kommando ser ut hittas i "network.h".
-		// Rensa hela arrayen när alla kommandon har applicerats:
+		// Rensa hela arrayen nï¿½r alla kommandon har applicerats:
 		*pGame->pClientCommands = (ClientCommand){0};
 	} else {
 		// KLIENT
-		// Vid den här punkten har pGame->pGameplayData uppdaterats med data från servern.
-		// Denna data, som är tillgänglig via pGame->pGameplayData, ska nu läggas in i
+		// Vid den hï¿½r punkten har pGame->pGameplayData uppdaterats med data frï¿½n servern.
+		// Denna data, som ï¿½r tillgï¿½nglig via pGame->pGameplayData, ska nu lï¿½ggas in i
 		// de andra structarna (exempelvis pGame->pPlayers[i]).
-		// Som sagt ser ni vad GameplayData kan innehålla genom att kolla i "network.h".
-		// Koden måste ligga inom klammerparenteserna.
+		// Som sagt ser ni vad GameplayData kan innehï¿½lla genom att kolla i "network.h".
+		// Koden mï¿½ste ligga inom klammerparenteserna.
 	}
 
 	////////////////////////////////////////////////////////////////////////////////////////////////////
 	////////////////////////////////////////////////////////////////////////////////////////////////////
 	////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    handleBackground(pGame->pBackground, pGame->pRenderer, pGame->pBackgroundTexture, pGame->windowWidth, pGame->windowHeight); //denna måste ligga före allt med player
+    handleBackground(pGame->pBackground, pGame->pRenderer, pGame->pBackgroundTexture, pGame->windowWidth, pGame->windowHeight); //denna mï¿½ste ligga fï¿½re allt med player
     handlePlatforms(pGame->pPlatforms, pGame->pRenderer, pGame->pPlatformTexture, pGame->windowWidth, pGame->windowHeight);
-	// bortkommenterad för tillfället när vi testar netcoden
+	// bortkommenterad fï¿½r tillfï¿½llet nï¿½r vi testar netcoden
     handleStartPlatform(pGame->pStartPlatform, pGame->pPlatforms[0], pGame->pRenderer, pGame->pStartPlatformTexture, pGame->windowHeight, pTime);
-    handlePlayers(pGame->pPlayers, pGame->nrOfPlayers, &pGame->nrOfPlayersLeft, pLeft, pRight, pGame->windowWidth, pGame->windowHeight, pGame->pStartPlatform, pGame->pJumpSound, pGame->pWinSound, &pGame->state, pGame->pRenderer, pGame->pPlayerTextures, pGame->flip, pGame->pPlatforms, pGame->pGameOverText);
+    handlePlayers(pGame->pPlayers, pGame->nrOfPlayers, &pGame->nrOfPlayersLeft, pLeft, pRight, pMute, pGame->windowWidth, pGame->windowHeight, pGame->pStartPlatform, pGame->pJumpSound, pGame->pWinSound, &pGame->state, pGame->pRenderer, pGame->pPlayerTextures, pGame->flip, pGame->pPlatforms, pGame->pGameOverText);
 
     SDL_Delay(1000/1000);
 }
 
-void handleOngoingInput(Game* pGame, SDL_Event* event, bool* pIsRunning, bool* pLeft, bool* pRight){
+void handleOngoingInput(Game* pGame, SDL_Event* event, bool* pIsRunning, bool* pLeft, bool* pRight, bool* pMute){
     switch (event->type){
         case SDL_QUIT: *pIsRunning = false;
             break;
@@ -491,6 +505,14 @@ void handleOngoingInput(Game* pGame, SDL_Event* event, bool* pIsRunning, bool* p
                 *pLeft = true;
                 pGame->flip = SDL_FLIP_HORIZONTAL;
 
+            }
+            else if ((event->key.keysym.sym) == SDLK_m && !(*pMute)) {
+                *pMute = true;
+                Mix_PauseMusic();
+            }
+            else if ((event->key.keysym.sym) == SDLK_m && (*pMute)) {
+                *pMute = false;
+                Mix_ResumeMusic();
             }
             // switch (event->key.keysym.sym){
             //     case SDLK_ESCAPE: *pState = GAME_MENU;
@@ -520,7 +542,7 @@ void handleOngoingInput(Game* pGame, SDL_Event* event, bool* pIsRunning, bool* p
     }
 }
 
-void handleGameMenu(Game* pGame, SDL_Event event){
+void handleGameMenu(Game* pGame, SDL_Event event, bool* pMute){
     bool buttonPressed = false;
 
     Mix_PauseMusic();
@@ -532,6 +554,7 @@ void handleGameMenu(Game* pGame, SDL_Event event){
         if (buttonPressed) {
             pGame->state = ONGOING;
             buttonPressed = false;
+            if (!(*pMute)) Mix_ResumeMusic();
         }
         handleButton(pGame->pMainMenuButton, &buttonPressed);
         if (buttonPressed) {
