@@ -508,31 +508,28 @@ void handleOngoing(Game* pGame, SDL_Event event, bool* pIsRunning, bool* pLeft, 
 
 	if (isHost) {
 		GameplayData temp;
-		// SERVER
-		// Hï¿½r ska data hï¿½mtas frï¿½n andra structar och lï¿½ggas in i varabeln "temp".
-		// Just nu har GameplayData definierats som att bara innehï¿½lla en array av Player-objekt.
-		// Ni kan hitta den aktuella definitionen i "network.h".
-		// Koden som flyttar data in i "temp" mï¿½ste ligga precis hï¿½r vid dessa kommentarer.
+
+		// SERVER: HÄR SKA PUNKT (1) UTFÖRAS
+		// Det är bara att lägga in datan direkt i "temp".
+
 		*pGame->pGameplayData = temp;
 	}
 
 	runNetcode(pGame->pNetworkData, pGame->pGameplayData, pGame->pClientCommands);
 
 	if (isHost) {
-		// SERVER
-		// Arrayen hos pGame->pClientCommands innehï¿½ller nu ett antal (0 ï¿½r mï¿½jligt) kommandon,
-		// dï¿½r varje kommando fï¿½rmedlar nï¿½gon handling som en klient vill utfï¿½ra. Hï¿½r ska dessa
-		// handlingar appliceras pï¿½ vï¿½r lokala (serverns) version av spelet. Definitionen av
-		// hur ett kommando ser ut hittas i "network.h".
-		// Rensa hela arrayen nï¿½r alla kommandon har applicerats:
+
+		// SERVER: HÄR SKA PUNKT (4) UTFÖRAS
+		// Alla kommandon finns tillgängliga i en array vid pGame->pClientCommands.
+		// Varje kommando innehåller en IP-adress. Ni kommer behöva leta efter
+		// spelarobjektet som har denna adress genom pGame->pPlayers[i]->ip.
+
 		*pGame->pClientCommands = (ClientCommand){0};
 	} else {
-		// KLIENT
-		// Vid den hï¿½r punkten har pGame->pGameplayData uppdaterats med data frï¿½n servern.
-		// Denna data, som ï¿½r tillgï¿½nglig via pGame->pGameplayData, ska nu lï¿½ggas in i
-		// de andra structarna (exempelvis pGame->pPlayers[i]).
-		// Som sagt ser ni vad GameplayData kan innehï¿½lla genom att kolla i "network.h".
-		// Koden mï¿½ste ligga inom klammerparenteserna.
+
+		// KLIENT: HÄR SKA PUNKT (B) UTFÖRAS
+		// Datan är tillgänglig via pGame->GameplayData.
+
 	}
 
 	////////////////////////////////////////////////////////////////////////////////////////////////////
