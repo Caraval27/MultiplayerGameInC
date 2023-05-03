@@ -11,3 +11,4 @@ You are Dead
 Create Lobby
 Join Lobby
 Press key
+Mute sound:

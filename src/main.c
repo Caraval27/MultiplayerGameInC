@@ -100,7 +100,7 @@ int initiateGame(Game* pGame){
     //pGame->pMoveRight1Button = createButton((pGame->windowWidth - BUTTON_WIDTH) / 2 - 80, (pGame->windowHeight - BUTTON_HEIGHT) / 2 + 50, BUTTON_WIDTH, BUTTON_HEIGHT);
     pGame->pCreateLobbyButton = createButton((pGame->windowWidth - BUTTON_WIDTH) / 2, (pGame->windowHeight - BUTTON_HEIGHT) / 2 + 0, BUTTON_WIDTH, BUTTON_HEIGHT);
     pGame->pJoinLobbyButton = createButton((pGame->windowWidth - BUTTON_WIDTH) / 2, (pGame->windowHeight - BUTTON_HEIGHT) / 2 + 50, BUTTON_WIDTH, BUTTON_HEIGHT);
-
+    pGame->pMuteButton = createButton((pGame->windowWidth - BUTTON_WIDTH) / 2 + 80, (pGame->windowHeight - BUTTON_HEIGHT) / 2 + 150, BUTTON_WIDTH, BUTTON_HEIGHT);
     pGame->pStartPlatform = createPlatform(0, pGame->windowHeight - 100, pGame->windowWidth, 100);
 
     pGame->pYouAreDeadText = createText(pGame->pRenderer, pGame->pMenuFont, 255, 255, 255, "You are dead", pGame->windowWidth, pGame->windowHeight, -200, 0);
@@ -150,18 +150,23 @@ int initiateGame(Game* pGame){
 void readKeybindString(Game *pGame, int input){
     SDL_Keycode moveRight = pGame->keybinds[0];
     SDL_Keycode moveLeft = pGame->keybinds[1];
+    SDL_Keycode mute = pGame->keybinds[2];
 
-    char kbText[2][30];
+    char kbText[3][30];
 
     strcpy(kbText[0], (SDL_GetKeyName(moveRight)));
     strcpy(kbText[1], (SDL_GetKeyName(moveLeft)));
+    strcpy(kbText[2], (SDL_GetKeyName(mute)));
     if (input == 0){
         pGame->pMoveLeft1ButtonText = createText(pGame->pRenderer, pGame->pMenuFont, 255, 255, 255, kbText[0], pGame->windowWidth, pGame->windowHeight, 50, 80);
         pGame->pMoveRight1ButtonText = createText(pGame->pRenderer, pGame->pMenuFont, 255, 255, 255, kbText[1], pGame->windowWidth, pGame->windowHeight, 100, 80);
+        pGame->pMute1ButtonText = createText(pGame->pRenderer, pGame->pMenuFont, 255, 255, 255, kbText[2], pGame->windowWidth, pGame->windowHeight, 150, 80);
     } else if (input == 1){
         pGame->pMoveLeft1ButtonText = createText(pGame->pRenderer, pGame->pMenuFont, 255, 255, 255, pGame->language[12], pGame->windowWidth, pGame->windowHeight, 50, 80);
     } else if (input == 2){
         pGame->pMoveRight1ButtonText = createText(pGame->pRenderer, pGame->pMenuFont, 255, 255, 255, pGame->language[12], pGame->windowWidth, pGame->windowHeight, 100, 80);
+    } else if (input == 3){
+        pGame->pMute1ButtonText = createText(pGame->pRenderer, pGame->pMenuFont, 255, 255, 255, pGame->language[12], pGame->windowWidth, pGame->windowHeight, 150, 80);
     }
 }
 
@@ -188,6 +193,7 @@ void initiateLanguage(FILE *fp, Game *pGame){
     pGame->pSwedishButtonText = createText(pGame->pRenderer, pGame->pMenuFont, 255, 255, 255, "Svenska", pGame->windowWidth, pGame->windowHeight, 0, 0);
     pGame->pCreateLobbyButtonText = createText(pGame->pRenderer, pGame->pMenuFont, 255, 255, 255, pGame->language[10], pGame->windowWidth, pGame->windowHeight, 0, 0);
     pGame->pJoinLobbyButtonText = createText(pGame->pRenderer, pGame->pMenuFont, 255, 255, 255, pGame->language[11], pGame->windowWidth, pGame->windowHeight, 50, 0);
+    pGame->pMuteButtonText = createText(pGame->pRenderer, pGame->pMenuFont, 255, 255, 255, pGame->language[13], pGame->windowWidth, pGame->windowHeight, 150, -80);
 }
 
 int handleError(Game* pGame, void* pMember, const char* (*GetError)(void)){
@@ -266,11 +272,11 @@ void handleMainMenu(Game* pGame, SDL_Event event, bool* pMute){
         case SDL_QUIT: pGame->state = QUIT;
             break;
         case SDL_KEYDOWN:
-            if ((event.key.keysym.sym) == SDLK_m && !(*pMute)) {
+            if ((event.key.keysym.sym) == pGame->keybinds[2] && !(*pMute)) {
                 *pMute = true;
                 Mix_PauseMusic();
             }
-            else if ((event.key.keysym.sym) == SDLK_m && (*pMute)) {
+            else if ((event.key.keysym.sym) == pGame->keybinds[2] && (*pMute)) {
                 *pMute = false;
                 Mix_ResumeMusic();
             }
@@ -303,6 +309,13 @@ void handleSettingsMenu(Game* pGame, SDL_Event event, int* pNum, bool *pShowLang
         handleButton(pGame->pLanguageButton, &buttonPressed);
         if (buttonPressed) {
             (*pShowLang) = true;
+            buttonPressed = false;
+        }
+        handleButton(pGame->pMuteButton, &buttonPressed);
+        if (buttonPressed) {
+            *pNum = 2;
+            readKeybindString(pGame, 3);
+            pGame->state = ENTER_INPUT;
             buttonPressed = false;
         }
         handleButton(pGame->pMoveLeftButton, &buttonPressed);
@@ -346,6 +359,7 @@ void renderSettingsMenu(Game* pGame){
     renderButton(pGame->pMoveLeftButton, pGame->pRenderer);
     renderButton(pGame->pMoveRightButton, pGame->pRenderer);
     renderButton(pGame->pReturnButton, pGame->pRenderer);
+    renderButton(pGame->pMuteButton, pGame->pRenderer);
     //renderButton(pGame->pMoveRight1Button, pGame->pRenderer);
     //renderButton(pGame->pMoveLeft1Button, pGame->pRenderer);
 
@@ -355,6 +369,8 @@ void renderSettingsMenu(Game* pGame){
     renderText(pGame->pReturnButtonText);
     renderText(pGame->pMoveLeft1ButtonText);
     renderText(pGame->pMoveRight1ButtonText);
+    renderText(pGame->pMuteButtonText);
+    renderText(pGame->pMute1ButtonText);
 
 }
 
@@ -562,11 +578,11 @@ void handleOngoingInput(Game* pGame, SDL_Event* event, bool* pIsRunning, bool* p
                 pGame->flip = SDL_FLIP_HORIZONTAL;
 
             }
-            else if ((event->key.keysym.sym) == SDLK_m && !(*pMute)) {
+            else if ((event->key.keysym.sym) == pGame->keybinds[2] && !(*pMute)) {
                 *pMute = true;
                 Mix_PauseMusic();
             }
-            else if ((event->key.keysym.sym) == SDLK_m && (*pMute)) {
+            else if ((event->key.keysym.sym) == pGame->keybinds[2] && (*pMute)) {
                 *pMute = false;
                 Mix_ResumeMusic();
             }
