@@ -23,7 +23,7 @@ typedef struct {
     bool chosenLanguage;
 
     Text *pStartButtonText, *pSettingsButtonText, *pQuitButtonText, *pLanguageButtonText,  *pMoveLeftButtonText, *pMoveRightButtonText, *pReturnButtonText, *pEnglishButtonText,
-    *pSwedishButtonText, *pResumeButtonText, *pMainMenuButtonText, *pMoveLeft1ButtonText, *pMoveRight1ButtonText,*pGameOverText, *pCreateLobbyButtonText, *pJoinLobbyButtonText;
+    *pSwedishButtonText, *pResumeButtonText, *pMainMenuButtonText, *pMoveLeft1ButtonText, *pMoveRight1ButtonText,*pYouAreDeadText, *pCreateLobbyButtonText, *pJoinLobbyButtonText;
     Text* pWhoWonText[MAX_PLAYERS + 1];
     Player* pPlayers[MAX_PLAYERS];
     SDL_Texture* pPlayerTextures[MAX_PLAYERS];

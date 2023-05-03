@@ -108,7 +108,7 @@ void playerCollidePlatform(Player* pPlayer, Platform** pPlatforms, Mix_Chunk* pJ
             pPlayer->yPos + pPlayer->height < pPlatforms[i]->yPos + pPlayer->yVelocity / 60) {
                 pPlayer->yVelocity = JUMP_SPEED;
                 if (!(*pMute)) {
-                    Mix_PlayChannel(-1, pJumpSound, 0); 
+                    Mix_PlayChannel(-1, pJumpSound, 0);
                 }
             }
         }
@@ -161,10 +161,9 @@ void checkIfPlayerDead(Player* pPlayer, int windowHeight, State* pState, int* pN
 
 void handleWin(int nrOfPlayersLeft, State* pState, Mix_Chunk* pWinSound, bool* pMute){
     if (nrOfPlayersLeft <= 1) {
-        if (!(pMute))
-        {
+        *pState = GAME_OVER;
+        if (!(pMute)){
             Mix_PlayChannel(-1, pWinSound, 0);
         }
-        *pState = GAME_OVER;
     }
 }
