@@ -44,7 +44,7 @@ void readFromFileLang(FILE *fp, char language[NR_OF_WORDS][50]){
         fclose(fp);
     } else{
         fp = fopen(target, "w");
-        fprintf(fp, "Start game\nSettings\nQuit\nResume game\nMain menu\nLanguage\nReturn\nMove right:\nMove left:\nYou are Dead\nCreate Lobby\nJoin Lobby\nPress key");
+        fprintf(fp, "Start game\nSettings\nQuit\nResume game\nMain menu\nLanguage\nReturn\nMove right:\nMove left:\nYou are Dead\nCreate Lobby\nJoin Lobby\nPress key\nMute sound:");
         fclose(fp);
 
         fp = fopen(target, "r");
