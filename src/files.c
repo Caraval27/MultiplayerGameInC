@@ -55,6 +55,36 @@ void readFromFileLang(FILE *fp, char language[NR_OF_WORDS][50]){
     }
 }
 
+void readFromFileLangMAC( bool chosenLanguage, char language[NR_OF_WORDS][50]){
+    if (chosenLanguage){
+        strcpy(language[0], "Start game");
+        strcpy(language[1], "Settings");
+        strcpy(language[2], "Quit");
+        strcpy(language[3], "Resume game");
+        strcpy(language[4], "Main menu");
+        strcpy(language[5], "Language");
+        strcpy(language[6], "Return");
+        strcpy(language[7], "Move right:");
+        strcpy(language[8], "Move left:");
+        strcpy(language[9], "You are dead");
+        strcpy(language[10], "Create lobby");
+        strcpy(language[11], "Join lobby");
+    } else{
+        strcpy(language[0], "Starta spelet");
+        strcpy(language[1], "Inställningar");
+        strcpy(language[2], "Avsluta");
+        strcpy(language[3], "Återuppta spelet");
+        strcpy(language[4], "Huvudmeny");
+        strcpy(language[5], "Språk");
+        strcpy(language[6], "Återvända");
+        strcpy(language[7], "Flytta höger:");
+        strcpy(language[8], "Flytta vänster:");
+        strcpy(language[9], "Du är död");
+        strcpy(language[10], "Skapa lobby");
+        strcpy(language[11], "Ansluta till lobby");
+    }
+}
+
 void changeLanguageInFile(FILE *fp, char language[LANG_LENGTH]){
     fp = fopen("../assets/textfiles/settings.txt", "w");
     fprintf(fp, "%s", language);

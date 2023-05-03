@@ -20,6 +20,8 @@ typedef struct {
     Button *pStartButton,  *pSettingsButton, *pQuitButton, *pLanguageButton, *pMoveLeftButton, *pMoveRightButton, *pReturnButton, *pEnglishButton, *pSwedishButton, *pResumeButton, *pMainMenuButton,
     *pMoveLeft1Button, *pMoveRight1Button, *pCreateLobbyButton, *pJoinLobbyButton;
 
+    bool chosenLanguage;
+
     Text *pStartButtonText, *pSettingsButtonText, *pQuitButtonText, *pLanguageButtonText,  *pMoveLeftButtonText, *pMoveRightButtonText, *pReturnButtonText, *pEnglishButtonText,
     *pSwedishButtonText, *pResumeButtonText, *pMainMenuButtonText, *pMoveLeft1ButtonText, *pMoveRight1ButtonText,*pGameOverText, *pCreateLobbyButtonText, *pJoinLobbyButtonText;
     Text* pWhoWonText[MAX_PLAYERS + 1];
@@ -40,6 +42,7 @@ typedef struct {
 } Game;
 
 int initiateGame(Game* pGame);
+void readKeybindString(Game *pGame, int input);
 void initiateLanguage(FILE *fp, Game *pGame);
 int handleError(Game* pGame, void* pMember, const char* (*GetError)(void));
 
@@ -47,7 +50,7 @@ void runGame(Game* pGame);
 
 void handleMainMenu(Game* pGame, SDL_Event event, bool* pMute);
 void renderMainMenu(Game* pGame);
-void handleSettingsMenu(Game* pGame, SDL_Event event, int* pNum);
+void handleSettingsMenu(Game* pGame, SDL_Event event, int* pNum, bool *pShowLang);
 void renderSettingsMenu(Game *pGame);
 void handleLanguageMenu(Game* pGame, SDL_Event event, bool* pShowLang);
 void renderLanguageMenu(Game* pGame);

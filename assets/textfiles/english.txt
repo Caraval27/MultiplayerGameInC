@@ -8,3 +8,6 @@ Return
 Move right:
 Move left:
 You are Dead
+Create Lobby
+Join Lobby
+Press key
