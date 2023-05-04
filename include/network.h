@@ -14,6 +14,7 @@
 typedef enum {
 	MOVEMENT,
 	LEAVE,
+    PAUSE, //Go to Game menu?
 } CommandType;
 
 // \param direction MOVEMENT: 1 if pointing right, -1 if pointing left, 0 if motionless
@@ -57,6 +58,8 @@ void runNetcode(NetworkData *pNetworkData, GameplayData *pGameplayData, ClientCo
 // Package the current gameplay state and broadcast it to all tracked clients.
 // \param pGameplayData Struct containing the gameplay state to be sent.
 void broadcastToClients(NetworkData *pNetworkData, GameplayData *pGameplayData);
+
+void getClientCommand(ClientCommand* pClientCommand, CommandType desiredCommandType, int direction);
 
 // Get any incoming packets and take appropriate action for each packet.
 // \param pClientCommands If the packet contains a client command to be retrieved,

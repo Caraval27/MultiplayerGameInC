@@ -63,6 +63,13 @@ void broadcastToClients(NetworkData *pNetworkData, GameplayData *pGameplayData) 
 	}
 }
 
+void getClientCommand(ClientCommand* pClientCommand, CommandType desiredCommandType, int direction) {
+    pClientCommand->commandType = desiredCommandType;
+    if (desiredCommandType == MOVEMENT) {
+        pClientCommand->direction = direction;
+    }
+}
+
 void listenForClientCommands(NetworkData *pNetworkData, ClientCommand *pClientCommands) {
 	while (SDLNet_UDP_Recv(pNetworkData->pSocket, pNetworkData->pPacket)) {
 		if (checkExistingClient(pNetworkData)) {
