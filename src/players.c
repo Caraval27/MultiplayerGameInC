@@ -20,7 +20,7 @@ Player* createPlayer(float xPos, float yPos, float width, float height, float xV
 }
 
 
-void initPlayers(Player** pPlayers, int* pNrOfPlayers, int* pNrOfPlayersLeft, int windowWidth, float startPlatformYPos, SDL_Texture** pPlayerTextures, SDL_Window* pWindow, SDL_Renderer* pRenderer){
+/*void initPlayers(Player** pPlayers, int* pNrOfPlayers, int* pNrOfPlayersLeft, int windowWidth, float startPlatformYPos, SDL_Texture** pPlayerTextures, SDL_Window* pWindow, SDL_Renderer* pRenderer){
     int startPosition = 1, i;
 
     *pNrOfPlayers = MAX_PLAYERS;
@@ -31,7 +31,28 @@ void initPlayers(Player** pPlayers, int* pNrOfPlayers, int* pNrOfPlayersLeft, in
         pPlayerTextures[i] = createPicture(pWindow, pRenderer, CHARACTER_PICTURE); //g?r en str?ng av detta ist
         startPosition += 1;
     }
+}*/
+
+
+void initPlayers(Player** pPlayers, int* pNrOfPlayers, int* pNrOfPlayersLeft, int windowWidth, float startPlatformYPos, SDL_Texture** pPlayerTextures, SDL_Window* pWindow, SDL_Renderer* pRenderer, int* pStartPosition, int* pSubtractXpos, int* pIncreaseXpos){
+        if(pPlayers[*pNrOfPlayers]==0 && *pNrOfPlayers != MAX_PLAYERS)
+        {
+            if (*pNrOfPlayers % 2 > 0)
+            {
+                pPlayers[*pNrOfPlayers] = createPlayer((windowWidth / *pStartPosition) + (*pSubtractXpos), startPlatformYPos - CHARACTER_HEIGHT, CHARACTER_WIDTH, CHARACTER_HEIGHT, MOVE_SPEED, JUMP_SPEED); //?ndra starterpositions
+                *pSubtractXpos -= 100;
+            }
+            else{
+                pPlayers[*pNrOfPlayers] = createPlayer((windowWidth / *pStartPosition) + (*pIncreaseXpos), startPlatformYPos - CHARACTER_HEIGHT, CHARACTER_WIDTH, CHARACTER_HEIGHT, MOVE_SPEED, JUMP_SPEED); //?ndra starterpositions
+                *pIncreaseXpos += 100;
+            }
+
+            pPlayerTextures[*pNrOfPlayers] = createPicture(pWindow, pRenderer, CHARACTER_PICTURE); //g?r en str?ng av detta ist
+            (*pNrOfPlayersLeft) ++;
+            (*pNrOfPlayers) ++;
+        }
 }
+
 
 void handlePlayers(Player** pPlayers, int pNrOfPlayers, int *nrOfPlayersLeft, bool* pLeft, bool* pRight, bool* pMute, int windowWidth, int windowHeight, Platform* pStartPlatform, Mix_Chunk *pJumpSound, Mix_Chunk* pWinSound, State* pState, SDL_Renderer* pRenderer, SDL_Texture** pPlayerTextures, SDL_RendererFlip flip, Platform** pPlatforms, Text* pGameOverText){
 
