@@ -34,16 +34,16 @@ Player* createPlayer(float xPos, float yPos, float width, float height, float xV
 }*/
 
 
-void initPlayers(Player** pPlayers, int* pNrOfPlayers, int* pNrOfPlayersLeft, int windowWidth, float startPlatformYPos, SDL_Texture** pPlayerTextures, SDL_Window* pWindow, SDL_Renderer* pRenderer, int* pStartPosition, int* pSubtractXpos, int* pIncreaseXpos){
+void initPlayers(Player** pPlayers, int* pNrOfPlayers, int* pNrOfPlayersLeft, int windowWidth, float startPlatformYPos, SDL_Texture** pPlayerTextures, SDL_Window* pWindow, SDL_Renderer* pRenderer, int* pSubtractXpos, int* pIncreaseXpos){
         if(pPlayers[*pNrOfPlayers]==0 && *pNrOfPlayers != MAX_PLAYERS)
         {
             if (*pNrOfPlayers % 2 > 0)
             {
-                pPlayers[*pNrOfPlayers] = createPlayer((windowWidth / *pStartPosition) + (*pSubtractXpos), startPlatformYPos - CHARACTER_HEIGHT, CHARACTER_WIDTH, CHARACTER_HEIGHT, MOVE_SPEED, JUMP_SPEED); //?ndra starterpositions
+                pPlayers[*pNrOfPlayers] = createPlayer((windowWidth / 2) + (*pSubtractXpos), startPlatformYPos - CHARACTER_HEIGHT, CHARACTER_WIDTH, CHARACTER_HEIGHT, MOVE_SPEED, JUMP_SPEED); //?ndra starterpositions
                 *pSubtractXpos -= 100;
             }
             else{
-                pPlayers[*pNrOfPlayers] = createPlayer((windowWidth / *pStartPosition) + (*pIncreaseXpos), startPlatformYPos - CHARACTER_HEIGHT, CHARACTER_WIDTH, CHARACTER_HEIGHT, MOVE_SPEED, JUMP_SPEED); //?ndra starterpositions
+                pPlayers[*pNrOfPlayers] = createPlayer((windowWidth / 2) + (*pIncreaseXpos), startPlatformYPos - CHARACTER_HEIGHT, CHARACTER_WIDTH, CHARACTER_HEIGHT, MOVE_SPEED, JUMP_SPEED); //?ndra starterpositions
                 *pIncreaseXpos += 100;
             }
 
