@@ -69,19 +69,23 @@ void readFromFileLangMAC( bool chosenLanguage, char language[NR_OF_WORDS][50]){
         strcpy(language[9], "You are dead");
         strcpy(language[10], "Create lobby");
         strcpy(language[11], "Join lobby");
+        strcpy(language[12], "Press key");
+        strcpy(language[13], "Mute Sound:");
     } else{
         strcpy(language[0], "Starta spelet");
-        strcpy(language[1], "Inställningar");
+        strcpy(language[1], "Installningar");
         strcpy(language[2], "Avsluta");
-        strcpy(language[3], "Återuppta spelet");
+        strcpy(language[3], "Ateruppta spelet");
         strcpy(language[4], "Huvudmeny");
-        strcpy(language[5], "Språk");
-        strcpy(language[6], "Återvända");
-        strcpy(language[7], "Flytta höger:");
-        strcpy(language[8], "Flytta vänster:");
-        strcpy(language[9], "Du är död");
+        strcpy(language[5], "Sprak");
+        strcpy(language[6], "Atervanda");
+        strcpy(language[7], "Flytta hager:");
+        strcpy(language[8], "Flytta vanster:");
+        strcpy(language[9], "Du ar dad");
         strcpy(language[10], "Skapa lobby");
         strcpy(language[11], "Ansluta till lobby");
+        strcpy(language[12], "Tryck tangenten");
+        strcpy(language[13], "Tystna ljudet:");
     }
 }
 

@@ -129,25 +129,6 @@ int initiateGame(Game* pGame){
     return 1;
 }
 
-// void initiateLanguage(FILE *fp, Game *pGame){
-//     pGame->pStartButtonText = createText(pGame->pRenderer, pGame->pMenuFont, 255, 255, 255, "Start Game", pGame->windowWidth, pGame->windowHeight, 0, 0);
-//     pGame->pSettingsButtonText = createText(pGame->pRenderer, pGame->pMenuFont, 255, 255, 255, "Settings", pGame->windowWidth, pGame->windowHeight, 50, 0);
-//     pGame->pQuitButtonText = createText(pGame->pRenderer, pGame->pMenuFont, 255, 255, 255, "Quit", pGame->windowWidth, pGame->windowHeight, 100, 0);
-//     pGame->pResumeButtonText = createText(pGame->pRenderer, pGame->pMenuFont, 255, 255, 255, "Resume Game", pGame->windowWidth, pGame->windowHeight, 50, 0);
-//     pGame->pMainMenuButtonText = createText(pGame->pRenderer, pGame->pMenuFont, 255, 255, 255, "Main Menu", pGame->windowWidth, pGame->windowHeight, 100, 0);
-//     pGame->pLanguageButtonText = createText(pGame->pRenderer, pGame->pMenuFont, 255, 255, 255, "Language", pGame->windowWidth, pGame->windowHeight, -100, 0);
-//     pGame->pReturnButtonText = createText(pGame->pRenderer, pGame->pMenuFont, 255, 255, 255, "Return", pGame->windowWidth, pGame->windowHeight, 200, 0);
-//     pGame->pMoveRightButtonText = createText(pGame->pRenderer, pGame->pMenuFont, 255, 255, 255, "Move right:", pGame->windowWidth, pGame->windowHeight, 50, -80);
-//     pGame->pMoveLeftButtonText = createText(pGame->pRenderer, pGame->pMenuFont, 255, 255, 255, "Move left:", pGame->windowWidth, pGame->windowHeight, 100, -80);
-//     pGame->pGameOverText = createText(pGame->pRenderer, pGame->pMenuFont, 255, 255, 255, "Game Over", pGame->windowWidth, pGame->windowHeight, -200, 0);
-//     pGame->pEnglishButtonText = createText(pGame->pRenderer, pGame->pMenuFont, 255, 255, 255, "English", pGame->windowWidth, pGame->windowHeight, -50, 0);
-//     pGame->pSwedishButtonText = createText(pGame->pRenderer, pGame->pMenuFont, 255, 255, 255, "Svenska", pGame->windowWidth, pGame->windowHeight, 0, 0);
-//     //pGame->pMoveLeft1ButtonText = createText(pGame->pRenderer, pGame->pMenuFont, 255, 255, 255, moveLeft, pGame->windowWidth, pGame->windowHeight, 100, 80);
-//     //pGame->pMoveRight1ButtonText = createText(pGame->pRenderer, pGame->pMenuFont, 255, 255, 255, moveRight, pGame->windowWidth, pGame->windowHeight, 100, 80);
-//     pGame->pCreateLobbyButtonText = createText(pGame->pRenderer, pGame->pMenuFont, 255, 255, 255, "Create Lobby", pGame->windowWidth, pGame->windowHeight, 0, 0);
-//     pGame->pJoinLobbyButtonText = createText(pGame->pRenderer, pGame->pMenuFont, 255, 255, 255, "Join Lobby", pGame->windowWidth, pGame->windowHeight, 50, 0);
-// }
-
 void readKeybindString(Game *pGame, int input){
     SDL_Keycode moveRight = pGame->keybinds[0];
     SDL_Keycode moveLeft = pGame->keybinds[1];
