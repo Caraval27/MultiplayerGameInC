@@ -675,6 +675,11 @@ void renderGameOver(Game* pGame){
 }
 
 void resetGame(Game* pGame, int* pTime){
+    for (int i = 0; i<MAX_PLAYERS; i++)
+    {
+        if(pGame->pPlayers[i])
+        pGame->pPlayers[i]=0;
+    }
     int startPosition = 2;
     pGame->nrOfPlayers = 0;
     pGame->nrOfPlayersLeft = 0;
