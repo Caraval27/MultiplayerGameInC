@@ -150,16 +150,20 @@ void renderPlayer(Player* pPlayer, SDL_Renderer* pRenderer, SDL_Texture* pTextur
 }
 
 void destroyPlayers(Player** pPlayers) {
-    for (int i = 0; i != MAX_PLAYERS; i++) { //�ndra h�r till nr of players
-        if (pPlayers[i]) {
-            free(pPlayers[i]);
-        }
+    if (pPlayers[0]) {
+        for (int i = 0; i != MAX_PLAYERS; i++) { //�ndra h�r till nr of players
+            if (pPlayers[i]) {
+                free(pPlayers[i]);
+            }
+    }
     }
 }
 
 void destroyPlayerTextures(SDL_Texture** pPlayerTextures) {
-    for (int i = 0; i != MAX_PLAYERS; i++) { //�ndra till nrofplayers
-        destroyTexture(pPlayerTextures[i]);
+    if (pPlayerTextures[0]) {
+        for (int i = 0; i != MAX_PLAYERS; i++) { //�ndra till nrofplayers
+            destroyTexture(pPlayerTextures[i]);
+        }
     }
 }
 
