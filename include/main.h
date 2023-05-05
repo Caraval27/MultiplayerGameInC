@@ -39,7 +39,7 @@ typedef struct {
 
 	NetworkData *pNetworkData;
 	GameplayData *pGameplayData;
-	ClientCommand pClientCommands[COMMAND_BUFFER], *pClientCommand;
+	ClientCommand pClientCommands[COMMAND_BUFFER];
 } Game;
 
 int initiateGame(Game* pGame);

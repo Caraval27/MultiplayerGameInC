@@ -40,7 +40,6 @@ int initiateGame(Game* pGame){
 	*pGame->pNetworkData = (NetworkData){0};
 	*pGame->pGameplayData = (GameplayData){0};
 	*pGame->pClientCommands = (ClientCommand){0};
-    pGame->pClientCommand = malloc(sizeof(ClientCommand)); //???
 
     pGame->windowWidth = displayMode.w;
     pGame->windowHeight = displayMode.h;
@@ -547,23 +546,18 @@ void handleOngoingInput(Game* pGame, SDL_Event* event, bool* pIsRunning, bool* p
     switch (event->type){
         case SDL_QUIT:
             *pIsRunning = false;
-            getClientCommand(pGame->pClientCommand, LEAVE, 0); //???
             break;
         case SDL_KEYDOWN:
             if ((event->key.keysym.sym) == (SDLK_ESCAPE)){
                 pGame->state = GAME_MENU;
-                getClientCommand(pGame->pClientCommand, PAUSE, 0); //???
             }
             else if ((event->key.keysym.sym) == pGame->keybinds[0]) {
                 *pRight = true;
                 pGame->flip = SDL_FLIP_HORIZONTAL;
-                getClientCommand(pGame->pClientCommand, MOVEMENT, 1); //???
             }
             else if ((event->key.keysym.sym) == pGame->keybinds[1]) {
                 *pLeft = true;
                 pGame->flip = SDL_FLIP_HORIZONTAL;
-                getClientCommand(pGame->pClientCommand, MOVEMENT, -1); //???
-
             }
             else if ((event->key.keysym.sym) == pGame->keybinds[2] && !(*pMute)) {
                 *pMute = true;
@@ -586,21 +580,20 @@ void handleOngoingInput(Game* pGame, SDL_Event* event, bool* pIsRunning, bool* p
             if ((event->key.keysym.sym) == pGame->keybinds[0]) {
                 *pRight = false;
                 pGame->flip = SDL_FLIP_NONE;
-                getClientCommand(pGame->pClientCommand, MOVEMENT, 0); //???
             }
             else if ((event->key.keysym.sym) == pGame->keybinds[1]) {
                 *pLeft = false;
                 pGame->flip = SDL_FLIP_NONE;
-                getClientCommand(pGame->pClientCommand, MOVEMENT, 0); //???
             }
             // switch(event->key.keysym.sym){
             //     case SDLK_LEFT: *pLeft = false;
-            //         break;
+            //         break;m
             //     case SDLK_RIGHT: *pRight = false;
             //         break;
             // }
             break;
     }
+    getClientCommand(pGame->pClientCommands, *pIsRunning, *pRight, *pLeft);
 }
 
 void handleGameMenu(Game* pGame, SDL_Event event, bool* pMute){

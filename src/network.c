@@ -63,11 +63,18 @@ void broadcastToClients(NetworkData *pNetworkData, GameplayData *pGameplayData) 
 	}
 }
 
-void getClientCommand(ClientCommand* pClientCommand, CommandType desiredCommandType, int direction) {
-    pClientCommand->commandType = desiredCommandType;
-    if (desiredCommandType == MOVEMENT) {
-        pClientCommand->direction = direction;
-    }
+void getClientCommand(ClientCommand* pClientCommands, bool isRunning, bool right, bool left) {
+    if (!isRunning)
+        pClientCommands[0].commandType = LEAVE;
+    else
+        pClientCommands[0].commandType = MOVEMENT;
+
+    if (right)
+        pClientCommands[0].direction = 1;
+    else if (left)
+        pClientCommands[0].direction = -1;
+    else
+        pClientCommands[0].direction = 0;
 }
 
 void listenForClientCommands(NetworkData *pNetworkData, ClientCommand *pClientCommands) {
