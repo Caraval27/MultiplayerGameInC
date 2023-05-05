@@ -58,8 +58,6 @@ void runNetcode(NetworkData *pNetworkData, GameplayData *pGameplayData, ClientCo
 // \param pGameplayData Struct containing the gameplay state to be sent.
 void broadcastToClients(NetworkData *pNetworkData, GameplayData *pGameplayData);
 
-void getClientCommand(ClientCommand* pClientCommands, bool isRunning, bool right, bool left);
-
 // Get any incoming packets and take appropriate action for each packet.
 // \param pClientCommands If the packet contains a client command to be retrieved,
 // store it in this array.

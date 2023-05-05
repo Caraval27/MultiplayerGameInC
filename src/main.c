@@ -543,9 +543,11 @@ void handleOngoing(Game* pGame, SDL_Event event, bool* pIsRunning, bool* pLeft, 
 }
 
 void handleOngoingInput(Game* pGame, SDL_Event* event, bool* pIsRunning, bool* pLeft, bool* pRight, bool* pMute) {
+    ClientCommand tempClient = {0, MOVEMENT, 0};
     switch (event->type){
         case SDL_QUIT:
             *pIsRunning = false;
+            tempClient.commandType = LEAVE;
             break;
         case SDL_KEYDOWN:
             if ((event->key.keysym.sym) == (SDLK_ESCAPE)){
@@ -554,10 +556,12 @@ void handleOngoingInput(Game* pGame, SDL_Event* event, bool* pIsRunning, bool* p
             else if ((event->key.keysym.sym) == pGame->keybinds[0]) {
                 *pRight = true;
                 pGame->flip = SDL_FLIP_HORIZONTAL;
+                tempClient.direction = 1;
             }
             else if ((event->key.keysym.sym) == pGame->keybinds[1]) {
                 *pLeft = true;
                 pGame->flip = SDL_FLIP_HORIZONTAL;
+                tempClient.direction = -1;
             }
             else if ((event->key.keysym.sym) == pGame->keybinds[2] && !(*pMute)) {
                 *pMute = true;
@@ -580,10 +584,12 @@ void handleOngoingInput(Game* pGame, SDL_Event* event, bool* pIsRunning, bool* p
             if ((event->key.keysym.sym) == pGame->keybinds[0]) {
                 *pRight = false;
                 pGame->flip = SDL_FLIP_NONE;
+                tempClient.direction = 0;
             }
             else if ((event->key.keysym.sym) == pGame->keybinds[1]) {
                 *pLeft = false;
                 pGame->flip = SDL_FLIP_NONE;
+                tempClient.direction = 0;
             }
             // switch(event->key.keysym.sym){
             //     case SDLK_LEFT: *pLeft = false;
@@ -593,7 +599,8 @@ void handleOngoingInput(Game* pGame, SDL_Event* event, bool* pIsRunning, bool* p
             // }
             break;
     }
-    getClientCommand(pGame->pClientCommands, *pIsRunning, *pRight, *pLeft);
+    pGame->pClientCommands[0].commandType = tempClient.commandType;
+    pGame->pClientCommands[0].direction = tempClient.direction;
 }
 
 void handleGameMenu(Game* pGame, SDL_Event event, bool* pMute){
