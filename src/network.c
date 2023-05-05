@@ -39,18 +39,18 @@ void runNetcode(NetworkData *pNetworkData, GameplayData *pGameplayData, ClientCo
 				}
 			}
 		}
-		printf("--------------------\n");
+		printf("----------\n");
 	}
-	if (SDL_GetTicks64() % NETCODE_TICKRATE < 17) {
+	if (SDL_GetTicks64() % TIMEOUT_TICKRATE < 17) {
 		timeoutClients(pNetworkData);
 	}
 }
 
 void broadcastToClients(NetworkData *pNetworkData, GameplayData *pGameplayData) {
+	memcpy(pNetworkData->pPacket->data, pGameplayData, sizeof(GameplayData));
+	pNetworkData->pPacket->len = sizeof(GameplayData);
 	int nBroadcasts = 0;
 	for (int i = 0; pNetworkData->clients[i].ip.host && i < CLIENT_LIMIT; i++) {
-		memcpy(pNetworkData->pPacket->data, pGameplayData, sizeof(GameplayData));
-		pNetworkData->pPacket->len = sizeof(GameplayData);
 		pNetworkData->pPacket->address = pNetworkData->clients[i].ip;
 		if (SDLNet_UDP_Send(pNetworkData->pSocket, -1, pNetworkData->pPacket)) {
 			nBroadcasts++;
@@ -65,31 +65,33 @@ void broadcastToClients(NetworkData *pNetworkData, GameplayData *pGameplayData) 
 
 void listenForClientCommands(NetworkData *pNetworkData, ClientCommand *pClientCommands) {
 	while (SDLNet_UDP_Recv(pNetworkData->pSocket, pNetworkData->pPacket)) {
-		if (checkExistingClient(pNetworkData)) {
-			retrieveClientCommand(pNetworkData, pClientCommands);
+		int cIndex = checkExistingClient(pNetworkData);
+		// if (checkExistingClient(pNetworkData)) {
+		if (cIndex > -1) {
+			retrieveClientCommand(pNetworkData, pClientCommands, cIndex);
 		} else {
 			addClient(pNetworkData);
 		}
 	}
 }
 
-bool checkExistingClient(NetworkData *pNetworkData) {
+int checkExistingClient(NetworkData *pNetworkData) {
 	Uint32 packetHost = pNetworkData->pPacket->address.host;
 	Uint16 packetPort = pNetworkData->pPacket->address.port;
-	printf("incoming packet ip host: %d\n", packetHost);
-	printf("incoming packet ip port: %d\n", packetPort);
-	int nClients = 0;
-	while (pNetworkData->clients[nClients].ip.host && nClients < CLIENT_LIMIT) {
-		if (packetHost == pNetworkData->clients[nClients].ip.host
-			&& packetPort == pNetworkData->clients[nClients].ip.port) {
-			return true;
+	// printf("incoming packet ip host: %d\n", packetHost);
+	// printf("incoming packet ip port: %d\n", packetPort);
+	for (int i = 0; pNetworkData->clients[i].ip.host && i < CLIENT_LIMIT; i++) {
+		if (packetHost == pNetworkData->clients[i].ip.host
+			&& packetPort == pNetworkData->clients[i].ip.port) {
+			// return true;
+			return i;
 		}
-		nClients++;
 	}
-	return false;
+	// return false;
+	return -1;
 }
 
-void retrieveClientCommand(NetworkData *pNetworkData, ClientCommand *pClientCommands) {
+void retrieveClientCommand(NetworkData *pNetworkData, ClientCommand *pClientCommands, int cIndex) {
 	Uint32 packetHost = pNetworkData->pPacket->address.host;
 	Uint16 packetPort = pNetworkData->pPacket->address.port;
 	int iCommands = 0;
@@ -105,19 +107,21 @@ void retrieveClientCommand(NetworkData *pNetworkData, ClientCommand *pClientComm
 		return;
 	}
 	memcpy(&pClientCommands[iCommands], pNetworkData->pPacket->data, sizeof(ClientCommand));
-	printf("client command retrieved at buffer index %d\n", iCommands);
-	int iClients = 0;
-	while (packetHost != pNetworkData->clients[iClients].ip.host
-		|| packetPort != pNetworkData->clients[iClients].ip.port) iClients++;
+	// printf("client command retrieved at buffer index %d\n", iCommands);
+	// int iClients = 0;
+	int iClients = cIndex;
+	// while (packetHost != pNetworkData->clients[iClients].ip.host
+	// 	|| packetPort != pNetworkData->clients[iClients].ip.port) iClients++;
 	pNetworkData->clients[iClients].lastSeen = SDL_GetTicks64();
-	printf("set \"lastSeen\" for client at index %d to %d\n",
-		iClients,
-		(int)pNetworkData->clients[iClients].lastSeen);
+	// printf("set \"lastSeen\" for client at index %d to %d\n",
+	// 	iClients,
+	// 	(int)pNetworkData->clients[iClients].lastSeen);
 }
 
 void addClient(NetworkData *pNetworkData) {
-	int nClients = 0;
-	while (pNetworkData->clients[nClients].ip.host && nClients < CLIENT_LIMIT) nClients++;
+	// int nClients = 0;
+	// while (pNetworkData->clients[nClients].ip.host && nClients < CLIENT_LIMIT) nClients++;
+	int nClients = pNetworkData->nClients;
 	if (nClients < CLIENT_LIMIT) {
 		pNetworkData->clients[nClients].ip = pNetworkData->pPacket->address;
 		pNetworkData->clients[nClients].lastSeen = SDL_GetTicks64();
@@ -126,6 +130,7 @@ void addClient(NetworkData *pNetworkData) {
 	} else {
 		printf("client addition rejected: client limit reached\n");
 	}
+	pNetworkData->nClients++;
 }
 
 void timeoutClients(NetworkData *pNetworkData) {
@@ -147,6 +152,7 @@ void removeClient(NetworkData *pNetworkData, int index) {
 			pNetworkData->clients[i] = pNetworkData->clients[i + 1];
 		}
 	}
+	pNetworkData->nClients--;
 }
 
 void sendClientCommand(NetworkData *pNetworkData, ClientCommand *pClientCommand) {

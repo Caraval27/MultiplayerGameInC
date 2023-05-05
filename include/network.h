@@ -8,8 +8,9 @@
 #define CLIENT_LIMIT 6
 #define SERVER_IP "127.0.0.1"
 #define NETCODE_TICKRATE 1000
-#define COMMAND_BUFFER CLIENT_LIMIT
+#define TIMEOUT_TICKRATE 1000
 #define CLIENT_TIMEOUT 3000
+#define COMMAND_BUFFER CLIENT_LIMIT
 
 typedef enum {
 	MOVEMENT,
@@ -34,6 +35,7 @@ typedef struct {
 	bool isHost;
 	int hasJoined;
 	Client clients[CLIENT_LIMIT];
+	int nClients;
 	IPaddress server;
 } NetworkData;
 
@@ -65,11 +67,11 @@ void listenForClientCommands(NetworkData *pNetworkData, ClientCommand *pClientCo
 
 // Check if the IP of the current packet exists in the list of clients.
 // \return Return true if there was a match. Return false otherwise.
-bool checkExistingClient(NetworkData *pNetworkData);
+int checkExistingClient(NetworkData *pNetworkData);
 
 // Store the client command of the current packet.
 // \param pClientCommands Store the client commands in this array.
-void retrieveClientCommand(NetworkData *pNetworkData, ClientCommand *pClientCommands);
+void retrieveClientCommand(NetworkData *pNetworkData, ClientCommand *pClientCommands, int cIndex);
 
 // Add a new client with the IP address of the current packet.
 void addClient(NetworkData *pNetworkData);
