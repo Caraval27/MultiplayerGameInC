@@ -41,5 +41,7 @@ void renderButton(Button* pButton, SDL_Renderer* pRenderer){
 }
 
 void destroyButton(Button* pButton){
-    free(pButton);
+    if (pButton) {
+        free(pButton);
+    }
 }

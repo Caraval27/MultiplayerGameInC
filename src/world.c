@@ -22,6 +22,12 @@ SDL_Texture* createPicture(SDL_Window* pWindow, SDL_Renderer* pRenderer, char pi
     return pTexture;
 }
 
+void destroyTexture(SDL_Texture* pTexture) {
+    if (pTexture) {
+        SDL_DestroyTexture(pTexture);
+    }
+}
+
 Background* createBackground(int windowHeight){
     Background* pBackground = malloc(sizeof(Background));
 
@@ -76,13 +82,19 @@ void renderBackground(Background* pBackground, SDL_Renderer* pRenderer, SDL_Text
 }
 
 void destroyBackground(Background* pBackground){
-    free(pBackground);
+    if (pBackground) {
+        free(pBackground);
+    }
 }
 
 void destroyMusic(Mix_Music* pMusic){
-    Mix_FreeMusic(pMusic);
+    if (pMusic) {
+        Mix_FreeMusic(pMusic);
+    }
 }
 
 void destroyChunk(Mix_Chunk* pChunk){
-    Mix_FreeChunk(pChunk);
+    if (pChunk) {
+        Mix_FreeChunk(pChunk);
+    }
 }

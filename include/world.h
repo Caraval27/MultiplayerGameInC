@@ -14,6 +14,7 @@ typedef struct{
 
 Background* createBackground(int windowHeight);
 SDL_Texture* createPicture(SDL_Window* pWindow, SDL_Renderer* pRenderer, char picture[]);
+void destroyTexture(SDL_Texture* pTexture);
 void handleBackground(Background* pBackground, SDL_Renderer* pRenderer, SDL_Texture* pTexture, int windowWidth, int windowHeight);
 void renderBackground(Background* pBackground, SDL_Renderer* pRenderer, SDL_Texture* pTexture, int windowWidth);
 void destroyBackground(Background* pBackground);

@@ -79,14 +79,14 @@ void resetStartPlatform(Platform* pStartPlatform, int windowHeight, int* pTime){
 }
 
 void destroyPlatform(Platform* pPlatform){
-    free(pPlatform);
+    if (pPlatform) {
+        free(pPlatform);
+    }
 }
 
 void destroyPlatforms(Platform** pPlatforms){
     for (int i = 0; pPlatforms[i] != 0; i++) {
-        if (pPlatforms[i]) {
-            destroyPlatform(pPlatforms[i]);
-        }
+        destroyPlatform(pPlatforms[i]);
     }
 }
 
