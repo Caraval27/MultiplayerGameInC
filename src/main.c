@@ -710,24 +710,16 @@ void quitGame(Game* pGame){
     destroyButton(pGame->pQuitButton);
     destroyButton(pGame->pStartButton);
 
-    if (pGame->pPlayers[0]) {
-        destroyPlayers(pGame->pPlayers);
-    }
-
+    destroyPlayers(pGame->pPlayers);
     destroyPlatform(pGame->pStartPlatform);
-    if (pGame->pPlatforms[0]) {
-        destroyPlatforms(pGame->pPlatforms);
-    }
-
+    destroyPlatforms(pGame->pPlatforms);
     destroyBackground(pGame->pBackground);
 
     destroyChunk(pGame->pWinSound);
     destroyChunk(pGame->pJumpSound);
     destroyMusic(pGame->pMainSound);
 
-    if (pGame->pPlayerTextures[0]) {
-        destroyPlayerTextures(pGame->pPlayerTextures);
-    }
+    destroyPlayerTextures(pGame->pPlayerTextures);
     destroyTexture(pGame->pStartPlatformTexture);
     destroyTexture(pGame->pPlatformTexture);
     destroyTexture(pGame->pBackgroundTexture);
