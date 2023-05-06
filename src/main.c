@@ -68,6 +68,10 @@ int initiateGame(Game* pGame){
     if (!handleError(pGame, pGame->pBackgroundTexture, SDL_GetError)) {
         return 0;
     }
+    pGame->pButtonTexture = createPicture(pGame->pWindow, pGame->pRenderer, BUTTON_PICTURE);
+    if (!handleError(pGame, pGame->pButtonTexture, SDL_GetError)) {
+        return 0;
+    }
     pGame->pPlatformTexture = createPicture(pGame->pWindow, pGame->pRenderer, PLATFORM_PICTURE);
     if (!handleError(pGame, pGame->pPlatformTexture, SDL_GetError)) {
         return 0;
@@ -178,7 +182,7 @@ void runGame(Game* pGame){
                 break;
             case ENTER_INPUT: handleEnterInput(pGame, event, &num);
                 break;
-            case LOBBY_MENU: handleLobbyMenu(pGame, event, &time);
+            case LOBBY_MENU: handleLobbyMenu(pGame, event, &left, &right, &time);
                 break;
             case ONGOING: handleOngoing(pGame, event, &isRunning, &left, &right, &time, &mute);
                 break;
@@ -220,10 +224,6 @@ void handleMainMenu(Game* pGame, SDL_Event event, bool* pMute){
             buttonPressed = false;
         }
 
-        if (event.type == SDL_QUIT) {
-            pGame->state = QUIT;
-        }
-
         switch (event.type) {
             case SDL_QUIT: pGame->state = QUIT;
                 break;
@@ -244,9 +244,9 @@ void handleMainMenu(Game* pGame, SDL_Event event, bool* pMute){
 void renderMainMenu(Game* pGame){
     renderMenu(pGame->pRenderer, pGame->pMenuTexture, pGame->windowWidth, pGame->windowHeight);
 
-    renderButton(pGame->pStartButton, pGame->pRenderer);
-    renderButton(pGame->pSettingsButton, pGame->pRenderer);
-    renderButton(pGame->pQuitButton, pGame->pRenderer);
+    renderButton(pGame->pStartButton, pGame->pRenderer, pGame->pButtonTexture);
+    renderButton(pGame->pSettingsButton, pGame->pRenderer, pGame->pButtonTexture);
+    renderButton(pGame->pQuitButton, pGame->pRenderer, pGame->pButtonTexture);
 
     renderText(pGame->pStartButtonText, pGame->pRenderer);
     renderText(pGame->pSettingsButtonText, pGame->pRenderer);
@@ -308,11 +308,11 @@ void handleSettingsMenu(Game* pGame, SDL_Event event, int* pNum, bool *pShowLang
 void renderSettingsMenu(Game* pGame){
     renderMenu(pGame->pRenderer, pGame->pMenuTexture, pGame->windowWidth, pGame->windowHeight);
 
-    renderButton(pGame->pLanguageButton, pGame->pRenderer);
-    renderButton(pGame->pMoveLeftButton, pGame->pRenderer);
-    renderButton(pGame->pMoveRightButton, pGame->pRenderer);
-    renderButton(pGame->pReturnButton, pGame->pRenderer);
-    renderButton(pGame->pMuteButton, pGame->pRenderer);
+    renderButton(pGame->pLanguageButton, pGame->pRenderer, pGame->pButtonTexture);
+    renderButton(pGame->pMoveLeftButton, pGame->pRenderer, pGame->pButtonTexture);
+    renderButton(pGame->pMoveRightButton, pGame->pRenderer, pGame->pButtonTexture);
+    renderButton(pGame->pReturnButton, pGame->pRenderer, pGame->pButtonTexture);
+    renderButton(pGame->pMuteButton, pGame->pRenderer, pGame->pButtonTexture);
 
     renderText(pGame->pLanguageButtonText, pGame->pRenderer);
     renderText(pGame->pMoveLeftButton1Text, pGame->pRenderer);
@@ -355,8 +355,8 @@ void handleLanguageMenu(Game* pGame, SDL_Event event, bool* pShowLang){
 }
 
 void renderLanguageMenu(Game* pGame){
-    renderButton(pGame->pEnglishButton, pGame->pRenderer);
-    renderButton(pGame->pSwedishButton, pGame->pRenderer);
+    renderButton(pGame->pEnglishButton, pGame->pRenderer, pGame->pButtonTexture);
+    renderButton(pGame->pSwedishButton, pGame->pRenderer, pGame->pButtonTexture);
 
     renderText(pGame->pEnglishButtonText, pGame->pRenderer);
     renderText(pGame->pSwedishButtonText, pGame->pRenderer);
@@ -408,7 +408,7 @@ void handleEnterInput(Game* pGame, SDL_Event event, int* pNum){
     }
 }
 
-void handleLobbyMenu(Game* pGame, SDL_Event event, int* pTime){
+void handleLobbyMenu(Game* pGame, SDL_Event event, bool* pLeft, bool* pRight, int* pTime){
     bool buttonPressed = false;
 
     renderLobbyMenu(pGame);
@@ -433,7 +433,7 @@ void handleLobbyMenu(Game* pGame, SDL_Event event, int* pTime){
         }
 
         if (pGame->state == ONGOING) {
-            resetGame(pGame, pTime);
+            resetGame(pGame, pLeft, pRight, pTime);
         }
 
         if (event.type == SDL_QUIT) {
@@ -445,9 +445,9 @@ void handleLobbyMenu(Game* pGame, SDL_Event event, int* pTime){
 void renderLobbyMenu(Game* pGame){
     renderMenu(pGame->pRenderer, pGame->pMenuTexture, pGame->windowWidth, pGame->windowHeight);
 
-    renderButton(pGame->pCreateLobbyButton, pGame->pRenderer);
-    renderButton(pGame->pJoinLobbyButton, pGame->pRenderer);
-    renderButton(pGame->pReturnButton, pGame->pRenderer);
+    renderButton(pGame->pCreateLobbyButton, pGame->pRenderer, pGame->pButtonTexture);
+    renderButton(pGame->pJoinLobbyButton, pGame->pRenderer, pGame->pButtonTexture);
+    renderButton(pGame->pReturnButton, pGame->pRenderer, pGame->pButtonTexture);
 
     renderText(pGame->pCreateLobbyButtonText, pGame->pRenderer);
     renderText(pGame->pJoinLobbyButtonText, pGame->pRenderer);
@@ -455,8 +455,6 @@ void renderLobbyMenu(Game* pGame){
 }
 
 void handleOngoing(Game* pGame, SDL_Event event, bool* pIsRunning, bool* pLeft, bool *pRight, int *pTime, bool* pMute){
-    //bool left = false, right = false;
-
     while (SDL_PollEvent(&event)){
         handleOngoingInput(pGame, &event, pIsRunning, pLeft, pRight, pMute);
     }
@@ -508,6 +506,7 @@ void handleOngoing(Game* pGame, SDL_Event event, bool* pIsRunning, bool* pLeft, 
 
 void handleOngoingInput(Game* pGame, SDL_Event* event, bool* pIsRunning, bool* pLeft, bool* pRight, bool* pMute) {
     ClientCommand tempClient = {0, MOVEMENT, 0};
+
     switch (event->type){
         case SDL_QUIT:
             *pIsRunning = false;
@@ -594,8 +593,8 @@ void handleGameMenu(Game* pGame, SDL_Event event, bool* pMute){
 }
 
 void renderGameMenu(Game* pGame){
-    renderButton(pGame->pResumeButton, pGame->pRenderer);
-    renderButton(pGame->pMainMenuButton, pGame->pRenderer);
+    renderButton(pGame->pResumeButton, pGame->pRenderer, pGame->pButtonTexture);
+    renderButton(pGame->pMainMenuButton, pGame->pRenderer, pGame->pButtonTexture);
 
     renderText(pGame->pMainMenuButtonText, pGame->pRenderer);
     renderText(pGame->pResumeButtonText, pGame->pRenderer);
@@ -634,31 +633,26 @@ void handleGameOver(Game* pGame, SDL_Event event){
 }
 
 void renderGameOver(Game* pGame){
-    renderButton(pGame->pMainMenuButton, pGame->pRenderer);
+    renderButton(pGame->pMainMenuButton, pGame->pRenderer, pGame->pButtonTexture);
+
     renderText(pGame->pMainMenuButtonText, pGame->pRenderer);
 }
 
-void resetGame(Game* pGame, int* pTime){
-    for (int i = 0; i<MAX_PLAYERS; i++)
-    {
-        if(pGame->pPlayers[i])
-        pGame->pPlayers[i] = 0;
-    }
-    pGame->nrOfPlayers = 0;
-    pGame->nrOfPlayersLeft = 0;
-    int subtractXpos = -100;
-    int increaseXpos = 0;
+void resetGame(Game* pGame, bool* pLeft, bool* pRight, int* pTime){
+    int subtractXPos = -100;
+    int increaseXPos = 0;
 
     resetPlatforms(pGame->pPlatforms);
     resetStartPlatform(pGame->pStartPlatform, pGame->windowHeight, pTime);
+    resetPlayers(pGame->pPlayers, &pGame->nrOfPlayers, &pGame->nrOfPlayersLeft, pLeft, pRight);
 
-    initPlayers(pGame->pPlayers, &pGame->nrOfPlayers, &pGame->nrOfPlayersLeft, pGame->windowWidth, pGame->pStartPlatform->yPos, pGame->pPlayerTextures, pGame->pWindow, pGame->pRenderer, &subtractXpos, &increaseXpos);
-    initPlayers(pGame->pPlayers, &pGame->nrOfPlayers, &pGame->nrOfPlayersLeft, pGame->windowWidth, pGame->pStartPlatform->yPos, pGame->pPlayerTextures, pGame->pWindow, pGame->pRenderer, &subtractXpos, &increaseXpos);
-    initPlayers(pGame->pPlayers, &pGame->nrOfPlayers, &pGame->nrOfPlayersLeft, pGame->windowWidth, pGame->pStartPlatform->yPos, pGame->pPlayerTextures, pGame->pWindow, pGame->pRenderer, &subtractXpos, &increaseXpos);
-    initPlayers(pGame->pPlayers, &pGame->nrOfPlayers, &pGame->nrOfPlayersLeft, pGame->windowWidth, pGame->pStartPlatform->yPos, pGame->pPlayerTextures, pGame->pWindow, pGame->pRenderer, &subtractXpos, &increaseXpos);
-    initPlayers(pGame->pPlayers, &pGame->nrOfPlayers, &pGame->nrOfPlayersLeft, pGame->windowWidth, pGame->pStartPlatform->yPos, pGame->pPlayerTextures, pGame->pWindow, pGame->pRenderer, &subtractXpos, &increaseXpos);
-    initPlayers(pGame->pPlayers, &pGame->nrOfPlayers, &pGame->nrOfPlayersLeft, pGame->windowWidth, pGame->pStartPlatform->yPos, pGame->pPlayerTextures, pGame->pWindow, pGame->pRenderer, &subtractXpos, &increaseXpos);
-    initPlayers(pGame->pPlayers, &pGame->nrOfPlayers, &pGame->nrOfPlayersLeft, pGame->windowWidth, pGame->pStartPlatform->yPos, pGame->pPlayerTextures, pGame->pWindow, pGame->pRenderer, &subtractXpos, &increaseXpos);
+    initPlayers(pGame->pPlayers, &pGame->nrOfPlayers, &pGame->nrOfPlayersLeft, pGame->windowWidth, pGame->pStartPlatform->yPos, pGame->pPlayerTextures, pGame->pWindow, pGame->pRenderer, &subtractXPos, &increaseXPos);
+    initPlayers(pGame->pPlayers, &pGame->nrOfPlayers, &pGame->nrOfPlayersLeft, pGame->windowWidth, pGame->pStartPlatform->yPos, pGame->pPlayerTextures, pGame->pWindow, pGame->pRenderer, &subtractXPos, &increaseXPos);
+    initPlayers(pGame->pPlayers, &pGame->nrOfPlayers, &pGame->nrOfPlayersLeft, pGame->windowWidth, pGame->pStartPlatform->yPos, pGame->pPlayerTextures, pGame->pWindow, pGame->pRenderer, &subtractXPos, &increaseXPos);
+    initPlayers(pGame->pPlayers, &pGame->nrOfPlayers, &pGame->nrOfPlayersLeft, pGame->windowWidth, pGame->pStartPlatform->yPos, pGame->pPlayerTextures, pGame->pWindow, pGame->pRenderer, &subtractXPos, &increaseXPos);
+    initPlayers(pGame->pPlayers, &pGame->nrOfPlayers, &pGame->nrOfPlayersLeft, pGame->windowWidth, pGame->pStartPlatform->yPos, pGame->pPlayerTextures, pGame->pWindow, pGame->pRenderer, &subtractXPos, &increaseXPos);
+    initPlayers(pGame->pPlayers, &pGame->nrOfPlayers, &pGame->nrOfPlayersLeft, pGame->windowWidth, pGame->pStartPlatform->yPos, pGame->pPlayerTextures, pGame->pWindow, pGame->pRenderer, &subtractXPos, &increaseXPos);
+    initPlayers(pGame->pPlayers, &pGame->nrOfPlayers, &pGame->nrOfPlayersLeft, pGame->windowWidth, pGame->pStartPlatform->yPos, pGame->pPlayerTextures, pGame->pWindow, pGame->pRenderer, &subtractXPos, &increaseXPos);
 }
 
 void quitGame(Game* pGame){

@@ -15,6 +15,27 @@ void scrollPlatform(Platform* pPlatform) {
 	pPlatform->yPos += PLATFORM_SPEED;
 }
 
+void cleanupPlatforms(Platform **pPlatforms, int windowHeight) {
+	int limit = 20;
+	int nPlatforms = 0;
+	while (pPlatforms[nPlatforms] != NULL) nPlatforms++;
+	int overflow = nPlatforms - limit;
+
+	if (overflow <= 0) return;
+
+	for (int i = 0; i < nPlatforms; i++) {
+		if (i < overflow) {
+			free(pPlatforms[i]);
+		}
+		if (i < limit) {
+			pPlatforms[i] = pPlatforms[i + overflow];
+		}
+		if (limit <= i && i < nPlatforms) {
+			pPlatforms[i] = NULL;
+		}
+	}
+}
+
 void renderPlatform(Platform* pPlatform, SDL_Renderer* pRenderer, SDL_Texture* pTexture) {
 	SDL_Rect rect = {pPlatform->xPos, pPlatform->yPos, pPlatform->width, pPlatform->height};
 
@@ -90,25 +111,4 @@ void destroyPlatforms(Platform** pPlatforms){
     for (i = 0; pPlatforms[i] != 0; i++) {
         destroyPlatform(pPlatforms[i]);
     }
-}
-
-void cleanupPlatforms(Platform **pPlatforms, int windowHeight) {
-	int limit = 20;
-	int nPlatforms = 0;
-	while (pPlatforms[nPlatforms] != NULL) nPlatforms++;
-	int overflow = nPlatforms - limit;
-
-	if (overflow <= 0) return;
-
-	for (int i = 0; i < nPlatforms; i++) {
-		if (i < overflow) {
-			free(pPlatforms[i]);
-		}
-		if (i < limit) {
-			pPlatforms[i] = pPlatforms[i + overflow];
-		}
-		if (limit <= i && i < nPlatforms) {
-			pPlatforms[i] = NULL;
-		}
-	}
 }

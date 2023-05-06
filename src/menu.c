@@ -33,11 +33,10 @@ void handleButton(Button* pButton, bool* pPressed){
     }
 }
 
-void renderButton(Button* pButton, SDL_Renderer* pRenderer){
+void renderButton(Button* pButton, SDL_Renderer* pRenderer, SDL_Texture* pTexture){
     SDL_Rect rect = {pButton->xPos, pButton->yPos, pButton->width, pButton->height};
 
-    SDL_SetRenderDrawColor(pRenderer, 138, 43, 226, SDL_ALPHA_OPAQUE);
-    SDL_RenderFillRect(pRenderer, &rect);
+    SDL_RenderCopy(pRenderer, pTexture, NULL, &rect);
 }
 
 void destroyButton(Button* pButton){

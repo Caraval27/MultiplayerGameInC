@@ -2,7 +2,6 @@
 
 Player* createPlayer(float xPos, float yPos, float width, float height, float xVelocity, float yVelocity){
     Player* pPlayer = malloc(sizeof(Player));
-
 	// ers�tt den h�r variabeln med ett argument fr�n funktionsanropet
 	// det ska inte vara en pointer
 	IPaddress ip;
@@ -34,50 +33,22 @@ Player* createPlayer(float xPos, float yPos, float width, float height, float xV
 }*/
 
 
-void initPlayers(Player** pPlayers, int* pNrOfPlayers, int* pNrOfPlayersLeft, int windowWidth, float startPlatformYPos, SDL_Texture** pPlayerTextures, SDL_Window* pWindow, SDL_Renderer* pRenderer, int* pSubtractXpos, int* pIncreaseXpos){
-        if(pPlayers[*pNrOfPlayers]==0 && *pNrOfPlayers != MAX_PLAYERS)
-        {
-            if (*pNrOfPlayers % 2 > 0)
-            {
-                pPlayers[*pNrOfPlayers] = createPlayer((windowWidth / 2) + (*pSubtractXpos), startPlatformYPos - CHARACTER_HEIGHT, CHARACTER_WIDTH, CHARACTER_HEIGHT, MOVE_SPEED, JUMP_SPEED); //?ndra starterpositions
-                *pSubtractXpos -= 100;
-            }
-            else{
-                pPlayers[*pNrOfPlayers] = createPlayer((windowWidth / 2) + (*pIncreaseXpos), startPlatformYPos - CHARACTER_HEIGHT, CHARACTER_WIDTH, CHARACTER_HEIGHT, MOVE_SPEED, JUMP_SPEED); //?ndra starterpositions
-                *pIncreaseXpos += 100;
-            }
-
+void initPlayers(Player** pPlayers, int* pNrOfPlayers, int* pNrOfPlayersLeft, int windowWidth, float startPlatformYPos, SDL_Texture** pPlayerTextures, SDL_Window* pWindow, SDL_Renderer* pRenderer, int* pSubtractXPos, int* pIncreaseXPos){
+        if (*pNrOfPlayers != MAX_PLAYERS) {
             pPlayerTextures[*pNrOfPlayers] = createPicture(pWindow, pRenderer, CHARACTER_PICTURE); //g?r en str?ng av detta ist
-            (*pNrOfPlayersLeft) ++;
-            (*pNrOfPlayers) ++;
-        }
-}
-
-
-void handlePlayers(Player** pPlayers, int pNrOfPlayers, int *nrOfPlayersLeft, bool* pLeft, bool* pRight, bool* pMute, int windowWidth, int windowHeight, Platform* pStartPlatform, Mix_Chunk *pJumpSound, Mix_Chunk* pWinSound, State* pState, SDL_Renderer* pRenderer, SDL_Texture** pPlayerTextures, SDL_RendererFlip flip, Platform** pPlatforms, Text* pGameOverText){
-
-    for (int i = 0; i < pNrOfPlayers; i++) //av n?gon anledning dyker inte player 2 upp, f?rmodligen pga samma bild och position, samt b?da r?r sig med tangenttrycken
-    {
-        if (i == 0) { //bara f?r att prova om spelare 2 dyker upp i loopen
-            movePlayer(pPlayers[i], *pLeft, *pRight, windowWidth);
-            jumpPlayer(pPlayers[i], pStartPlatform->yPos, pJumpSound, pMute);
-            playerCollidePlatform(pPlayers[i], pPlatforms, pJumpSound, pMute);
-            checkIfPlayerDead(pPlayers[i], windowHeight, pState, nrOfPlayersLeft);
-            renderPlayer(pPlayers[i], pRenderer, pPlayerTextures[i], flip);
-            if (!pPlayers[i]->alive) {
-                renderText(pGameOverText, pRenderer);
+            if (*pNrOfPlayers % 2 == 1) {
+                pPlayers[*pNrOfPlayers] = createPlayer((windowWidth / 2) + (*pSubtractXPos), startPlatformYPos - CHARACTER_HEIGHT, CHARACTER_WIDTH, CHARACTER_HEIGHT, MOVE_SPEED, JUMP_SPEED); //?ndra starterpositions
+                *pSubtractXPos -= 100;
             }
-        }
-        else {
-            jumpPlayer(pPlayers[i], pStartPlatform->yPos, pJumpSound, pMute);
-            playerCollidePlatform(pPlayers[i], pPlatforms, pJumpSound, pMute);
-            checkIfPlayerDead(pPlayers[i], windowHeight, pState, nrOfPlayersLeft);
-            renderPlayer(pPlayers[i], pRenderer, pPlayerTextures[i], SDL_FLIP_NONE);
-        }
-    }
-    handleWin(*nrOfPlayersLeft, pState, pWinSound, pMute);
-}
+            else {
+                pPlayers[*pNrOfPlayers] = createPlayer((windowWidth / 2) + (*pIncreaseXPos), startPlatformYPos - CHARACTER_HEIGHT, CHARACTER_WIDTH, CHARACTER_HEIGHT, MOVE_SPEED, JUMP_SPEED); //?ndra starterpositions
+                *pIncreaseXPos += 100;
+            }
 
+            (*pNrOfPlayers)++;
+            (*pNrOfPlayersLeft)++;
+        }
+}
 
 void movePlayer(Player* pPlayer, bool left, bool right, int windowWidth){
     if (pPlayer->alive) {
@@ -141,12 +112,75 @@ void playerCollidePlatform(Player* pPlayer, Platform** pPlatforms, Mix_Chunk* pJ
 
 }*/
 
+int playerIsDead(Player* pPlayer, int windowHeight){
+    if (pPlayer->alive && pPlayer->yPos + pPlayer->height >= windowHeight) {
+        return 1;
+    }
+    return 0;
+}
+
+void checkIfPlayerDead(Player* pPlayer, int windowHeight, State* pState, int* pNrOfPlayersLeft){
+    if (playerIsDead(pPlayer, windowHeight)) {
+        pPlayer->alive = false;
+        (*pNrOfPlayersLeft)--;
+    }
+}
+
+void handleWin(int nrOfPlayersLeft, State* pState, Mix_Chunk* pWinSound, bool* pMute){
+    if (nrOfPlayersLeft <= 1) {
+        if (!(pMute)){
+            Mix_PlayChannel(-1, pWinSound, 0);
+        }
+        *pState = GAME_OVER;
+    }
+}
+
 void renderPlayer(Player* pPlayer, SDL_Renderer* pRenderer, SDL_Texture* pTexture, SDL_RendererFlip flip){
     if (pPlayer->alive) {
         SDL_Rect rect = {pPlayer->xPos, pPlayer->yPos, pPlayer->width, pPlayer->height};
 
         SDL_RenderCopyEx(pRenderer, pTexture, NULL, &rect, 0.0, NULL, flip);
     }
+}
+
+void handlePlayers(Player** pPlayers, int pNrOfPlayers, int *nrOfPlayersLeft, bool* pLeft, bool* pRight, bool* pMute, int windowWidth, int windowHeight, Platform* pStartPlatform, Mix_Chunk *pJumpSound, Mix_Chunk* pWinSound, State* pState, SDL_Renderer* pRenderer, SDL_Texture** pPlayerTextures, SDL_RendererFlip flip, Platform** pPlatforms, Text* pGameOverText){
+    for (int i = 0; i < pNrOfPlayers; i++) //av n?gon anledning dyker inte player 2 upp, f?rmodligen pga samma bild och position, samt b?da r?r sig med tangenttrycken
+    {
+        if (i == 0) { //bara f?r att prova om spelare 2 dyker upp i loopen
+            movePlayer(pPlayers[i], *pLeft, *pRight, windowWidth);
+            jumpPlayer(pPlayers[i], pStartPlatform->yPos, pJumpSound, pMute);
+            playerCollidePlatform(pPlayers[i], pPlatforms, pJumpSound, pMute);
+            checkIfPlayerDead(pPlayers[i], windowHeight, pState, nrOfPlayersLeft);
+            if (!pPlayers[i]->alive) {
+                renderText(pGameOverText, pRenderer);
+            }
+            renderPlayer(pPlayers[i], pRenderer, pPlayerTextures[i], flip);
+        }
+        else {
+            jumpPlayer(pPlayers[i], pStartPlatform->yPos, pJumpSound, pMute);
+            playerCollidePlatform(pPlayers[i], pPlatforms, pJumpSound, pMute);
+            checkIfPlayerDead(pPlayers[i], windowHeight, pState, nrOfPlayersLeft);
+            renderPlayer(pPlayers[i], pRenderer, pPlayerTextures[i], SDL_FLIP_NONE);
+        }
+    }
+
+    handleWin(*nrOfPlayersLeft, pState, pWinSound, pMute);
+}
+
+void resetPlayers(Player** pPlayers, int* pNrOfPlayers, int* pNrOfPlayersLeft, bool* pLeft, bool* pRight){
+    int i;
+
+    for (i = 0; i < MAX_PLAYERS; i++) {
+        if (pPlayers[i]) {
+            pPlayers[i] = 0;
+        }
+    }
+
+    *pNrOfPlayers = 0;
+    *pNrOfPlayersLeft = 0;
+
+    *pLeft = false;
+    *pRight = false;
 }
 
 void destroyPlayers(Player** pPlayers) {
@@ -158,33 +192,8 @@ void destroyPlayers(Player** pPlayers) {
 }
 
 void destroyPlayerTextures(SDL_Texture** pPlayerTextures) {
-    if (pPlayerTextures[0]) {
-        for (int i = 0; i < MAX_PLAYERS; i++) { //�ndra till nrofplayers
-            if(pPlayerTextures[i])
+    for (int i = 0; i < MAX_PLAYERS; i++) { //�ndra till nrofplayers
+        if(pPlayerTextures[i])
             destroyTexture(pPlayerTextures[i]);
-        }
-    }
-}
-
-int playerIsDead(Player* pPlayer, int windowHeight){
-    if(pPlayer->alive && pPlayer->yPos + pPlayer->height >= windowHeight) {
-        return 1;
-    }
-    return 0;
-}
-
-void checkIfPlayerDead(Player* pPlayer, int windowHeight, State* pState, int* pNrOfPlayersLeft){
-    if(playerIsDead(pPlayer, windowHeight)) {
-        pPlayer->alive = false;
-        (*pNrOfPlayersLeft)--;
-    }
-}
-
-void handleWin(int nrOfPlayersLeft, State* pState, Mix_Chunk* pWinSound, bool* pMute){
-    if (nrOfPlayersLeft <= 1) {
-        *pState = GAME_OVER;
-        if (!(pMute)){
-            Mix_PlayChannel(-1, pWinSound, 0);
-        }
     }
 }

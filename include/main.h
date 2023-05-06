@@ -14,7 +14,7 @@ typedef struct {
     SDL_Window *pWindow;
     int windowWidth, windowHeight;
     SDL_Renderer *pRenderer;
-    SDL_Texture *pBackgroundTexture, *pMenuTexture, *pStartPlatformTexture, *pPlatformTexture;
+    SDL_Texture *pMenuTexture, *pBackgroundTexture, *pButtonTexture, *pPlatformTexture, *pStartPlatformTexture;
     TTF_Font *pMenuFont;
     Background* pBackground;
     Button *pStartButton,  *pSettingsButton, *pQuitButton, *pLanguageButton, *pMoveLeftButton, *pMoveRightButton, *pReturnButton, *pEnglishButton, *pSwedishButton, *pResumeButton,
@@ -43,7 +43,6 @@ typedef struct {
 } Game;
 
 int initiateGame(Game* pGame);
-void readKeybindString(Game *pGame, int input);
 void initiateLanguage(FILE *fp, Game *pGame);
 int handleError(Game* pGame, void* pMember, const char* (*GetError)(void));
 
@@ -55,9 +54,10 @@ void handleSettingsMenu(Game* pGame, SDL_Event event, int* pNum, bool *pShowLang
 void renderSettingsMenu(Game *pGame);
 void handleLanguageMenu(Game* pGame, SDL_Event event, bool* pShowLang);
 void renderLanguageMenu(Game* pGame);
-void handleLobbyMenu(Game* pGame, SDL_Event event, int* pTime);
-void renderLobbyMenu(Game* pGame);
+void readKeybindString(Game *pGame, int input);
 void handleEnterInput(Game* pGame, SDL_Event event, int* pNum);
+void handleLobbyMenu(Game* pGame, SDL_Event event, bool* pLeft, bool* pRight, int* pTime);
+void renderLobbyMenu(Game* pGame);
 void handleOngoing(Game* pGame, SDL_Event event, bool* pIsRunning, bool *pLeft, bool *pRight, int* pTime, bool* pMute);
 void handleOngoingInput(Game* pGame, SDL_Event* event, bool* pIsRunning, bool* pLeft, bool* pRight, bool* pMute);
 void handleGameMenu(Game* pGame, SDL_Event event, bool* pMute);
@@ -65,6 +65,6 @@ void renderGameMenu(Game* pGame);
 void handleGameOver(Game* pGame, SDL_Event event);
 void renderGameOver(Game* pGame);
 
-void resetGame(Game* pGame, int* pTime);
+void resetGame(Game* pGame, bool* pLeft, bool* pRight, int* pTime);
 
 void quitGame(Game* pGame);
