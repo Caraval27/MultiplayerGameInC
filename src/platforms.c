@@ -85,10 +85,10 @@ void destroyPlatform(Platform* pPlatform){
 }
 
 void destroyPlatforms(Platform** pPlatforms){
-    if (pPlatforms[0]) {
-        for (int i = 0; pPlatforms[i] != 0; i++) {
-            destroyPlatform(pPlatforms[i]);
-        }
+    int i;
+
+    for (i = 0; pPlatforms[i] != 0; i++) {
+        destroyPlatform(pPlatforms[i]);
     }
 }
 
@@ -97,6 +97,7 @@ void cleanupPlatforms(Platform **pPlatforms, int windowHeight) {
 	int nPlatforms = 0;
 	while (pPlatforms[nPlatforms] != NULL) nPlatforms++;
 	int overflow = nPlatforms - limit;
+
 	if (overflow <= 0) return;
 
 	for (int i = 0; i < nPlatforms; i++) {

@@ -1,11 +1,11 @@
 #pragma once
 
 typedef struct {
-    SDL_Rect textRect;
     SDL_Texture* pTexture;
-    SDL_Renderer* pRenderer;
+    SDL_Rect rect;
 } Text;
 
-Text* createText(SDL_Renderer* pRenderer, TTF_Font* pFont, int r, int g, int b, char* pString, int windowWidth, int windowHeight, int addY, int addX);
-void renderText(Text* pText);
+Text* createText(SDL_Renderer* pRenderer, TTF_Font* pFont, char* pString, int red, int green, int blue, int windowWidth, int windowHeight, int xOffset, int yOffset);
+void renderText(Text* pText, SDL_Renderer* pRenderer);
 void destroyText(Text* pText);
+void destroyTexts(Text** pTexts);

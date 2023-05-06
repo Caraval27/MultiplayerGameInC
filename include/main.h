@@ -18,14 +18,14 @@ typedef struct {
     TTF_Font *pMenuFont;
     Background* pBackground;
     Button *pStartButton,  *pSettingsButton, *pQuitButton, *pLanguageButton, *pMoveLeftButton, *pMoveRightButton, *pReturnButton, *pEnglishButton, *pSwedishButton, *pResumeButton,
-    *pMainMenuButton, *pMoveLeft1Button, *pMoveRight1Button, *pCreateLobbyButton, *pJoinLobbyButton, *pMuteButton, *pMute1Button;
+    *pMainMenuButton, *pCreateLobbyButton, *pJoinLobbyButton, *pMuteButton;
 
     bool chosenLanguage;
 
-    Text *pStartButtonText, *pSettingsButtonText, *pQuitButtonText, *pLanguageButtonText,  *pMoveLeftButtonText, *pMoveRightButtonText, *pReturnButtonText, *pEnglishButtonText,
-    *pSwedishButtonText, *pResumeButtonText, *pMainMenuButtonText, *pMoveLeft1ButtonText, *pMoveRight1ButtonText,*pYouAreDeadText, *pCreateLobbyButtonText, *pJoinLobbyButtonText,
-    *pMuteButtonText, *pMute1ButtonText;
-    Text* pWhoWonText[MAX_PLAYERS + 1];
+    Text *pStartButtonText, *pSettingsButtonText, *pQuitButtonText, *pLanguageButtonText,  *pMoveLeftButton1Text, *pMoveRightButton1Text, *pReturnButtonText, *pEnglishButtonText,
+    *pSwedishButtonText, *pResumeButtonText, *pMainMenuButtonText, *pMoveLeftButton2Text, *pMoveRightButton2Text,*pYouAreDeadText, *pCreateLobbyButtonText, *pJoinLobbyButtonText,
+    *pMuteButton1Text, *pMuteButton2Text;
+    Text* pWhoWonTexts[MAX_PLAYERS + 1];
     Player* pPlayers[MAX_PLAYERS];
     SDL_Texture* pPlayerTextures[MAX_PLAYERS];
     int nrOfPlayers, nrOfPlayersLeft;

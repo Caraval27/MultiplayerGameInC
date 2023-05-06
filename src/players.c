@@ -65,7 +65,7 @@ void handlePlayers(Player** pPlayers, int pNrOfPlayers, int *nrOfPlayersLeft, bo
             checkIfPlayerDead(pPlayers[i], windowHeight, pState, nrOfPlayersLeft);
             renderPlayer(pPlayers[i], pRenderer, pPlayerTextures[i], flip);
             if (!pPlayers[i]->alive) {
-                renderText(pGameOverText);
+                renderText(pGameOverText, pRenderer);
             }
         }
         else {
@@ -150,18 +150,17 @@ void renderPlayer(Player* pPlayer, SDL_Renderer* pRenderer, SDL_Texture* pTextur
 }
 
 void destroyPlayers(Player** pPlayers) {
-    if (pPlayers[0]) {
-        for (int i = 0; i != MAX_PLAYERS; i++) { //�ndra h�r till nr of players
-            if (pPlayers[i]) {
-                free(pPlayers[i]);
-            }
-    }
+    for (int i = 0; i < MAX_PLAYERS; i++) { //�ndra h�r till nr of players
+        if (pPlayers[i]) {
+            free(pPlayers[i]);
+        }
     }
 }
 
 void destroyPlayerTextures(SDL_Texture** pPlayerTextures) {
     if (pPlayerTextures[0]) {
-        for (int i = 0; i != MAX_PLAYERS; i++) { //�ndra till nrofplayers
+        for (int i = 0; i < MAX_PLAYERS; i++) { //�ndra till nrofplayers
+            if(pPlayerTextures[i])
             destroyTexture(pPlayerTextures[i]);
         }
     }

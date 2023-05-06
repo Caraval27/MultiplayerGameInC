@@ -17,7 +17,7 @@ int initializeNetcode(NetworkData *pNetworkData, bool isHost) {
 			return 0;
 		}
 	}
-	printf("netcode initialization complete. isHost = %d\n", isHost);
+	printf("Netcode initialization complete. isHost = %d\n", isHost);
 	return 1;
 }
 

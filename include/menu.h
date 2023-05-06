@@ -1,7 +1,7 @@
 #pragma once
 
 #define MAIN_MENU_PICTURE "../assets/mainMenuBackground.png"
-#define BUTTON_WIDTH 150
+#define BUTTON_WIDTH 220
 #define BUTTON_HEIGHT 40
 
 typedef enum {

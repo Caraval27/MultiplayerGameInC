@@ -1,33 +1,42 @@
 #include "../include/main.h"
 
-Text* createText(SDL_Renderer* pRenderer, TTF_Font* pFont, int r, int g, int b, char* pString, int windowWidth, int windowHeight, int addY, int addX) {
+Text* createText(SDL_Renderer* pRenderer, TTF_Font* pFont, char* pString, int red, int green, int blue, int windowWidth, int windowHeight, int xOffset, int yOffset) {
     Text* pText = malloc(sizeof(Text));
 
-    pText->pRenderer = pRenderer;
-    SDL_Color textColor = {r, g, b};
-    SDL_Surface* pSurface = TTF_RenderText_Solid(pFont, pString, textColor);
+    SDL_Color color = {red, green, blue};
+    SDL_Surface* pSurface = TTF_RenderText_Solid(pFont, pString, color);
     if (!pSurface) {
         printf("Error: %s\n",SDL_GetError());
         exit(1);
     }
     pText->pTexture = SDL_CreateTextureFromSurface(pRenderer, pSurface);
-    SDL_FreeSurface(pSurface);
     if (!pText->pTexture) {
         printf("Error: %s\n",SDL_GetError());
         exit(1);
     }
-    SDL_QueryTexture(pText->pTexture, NULL, NULL, &pText->textRect.w, &pText->textRect.h);
-    pText->textRect.x = (windowWidth - pText->textRect.w)/2 + addX;
-    pText->textRect.y = (windowHeight - pText->textRect.h)/2 + addY;
+    SDL_FreeSurface(pSurface);
+    SDL_QueryTexture(pText->pTexture, NULL, NULL, &pText->rect.w, &pText->rect.h);
+    pText->rect.x = (windowWidth - pText->rect.w) / 2 + xOffset;
+    pText->rect.y = (windowHeight - pText->rect.h) / 2 + yOffset;
 
     return pText;
 }
 
-void renderText(Text* pText) {
-    SDL_RenderCopy(pText->pRenderer, pText->pTexture, NULL, &pText->textRect);
+void renderText(Text* pText, SDL_Renderer* pRenderer) {
+    SDL_RenderCopy(pRenderer, pText->pTexture, NULL, &pText->rect);
 }
 
 void destroyText(Text* pText) {
-    SDL_DestroyTexture(pText->pTexture);
-    free(pText);
+    if (pText) {
+        SDL_DestroyTexture(pText->pTexture);
+        free(pText);
+    }
+}
+
+void destroyTexts(Text** pTexts){
+    int i;
+
+    for(i = 0; i < MAX_PLAYERS + 1; i++) {
+        destroyText(pTexts[i]);
+    }
 }

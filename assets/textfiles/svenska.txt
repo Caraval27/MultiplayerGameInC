@@ -11,4 +11,4 @@ Du är död
 Skapa lobby
 Ansluta till lobby
 Tryck tangenten
-Tystna ljudet:
+Tysta ljudet:
