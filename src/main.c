@@ -400,9 +400,9 @@ void handleEnterInput(Game* pGame, SDL_Event event, int* pNum){
                 else {
                     pGame->keybinds[*pNum] = (event.key.keysym.sym);
                     saveToFile(fp, pGame->keybinds);
-                    readKeybindString(pGame, 0);
                     pGame->state = SETTINGS_MENU;
                 }
+                readKeybindString(pGame, 0);
                 break;
         }
     }
@@ -471,7 +471,7 @@ void handleOngoing(Game* pGame, SDL_Event event, bool* pIsRunning, bool* pLeft, 
         for(int i = 0; i < pGame->nrOfPlayers; i++){
             temp.players[i] = *pGame->pPlayers[i];
         }
-        
+
         temp.gameState = pGame->state;
 		// SERVER: HÄR SKA PUNKT (1) UTFÖRAS
 		// Det är bara att lägga in datan direkt i "temp".
