@@ -27,6 +27,9 @@ void runNetcode(NetworkData *pNetworkData, GameplayData *pGameplayData, ClientCo
 			// SERVER
 			broadcastToClients(pNetworkData, pGameplayData);
 			listenForClientCommands(pNetworkData, pClientCommands);
+
+			// call on an interval of TIMEOUT_TICKRATE instead
+			timeoutClients(pNetworkData);
 		} else {
 			// CLIENT
 			sendClientCommand(pNetworkData, &pClientCommands[0]);
@@ -40,9 +43,6 @@ void runNetcode(NetworkData *pNetworkData, GameplayData *pGameplayData, ClientCo
 			}
 		}
 		printf("----------\n");
-	}
-	if (SDL_GetTicks64() % TIMEOUT_TICKRATE < 17) {
-		timeoutClients(pNetworkData);
 	}
 }
 
@@ -119,18 +119,21 @@ void retrieveClientCommand(NetworkData *pNetworkData, ClientCommand *pClientComm
 }
 
 void addClient(NetworkData *pNetworkData) {
-	// int nClients = 0;
-	// while (pNetworkData->clients[nClients].ip.host && nClients < CLIENT_LIMIT) nClients++;
 	int nClients = pNetworkData->nClients;
-	if (nClients < CLIENT_LIMIT) {
-		pNetworkData->clients[nClients].ip = pNetworkData->pPacket->address;
-		pNetworkData->clients[nClients].lastSeen = SDL_GetTicks64();
-		printf("client added to list. lastSeen = %d\n", (int)pNetworkData->clients[nClients].lastSeen);
-		printf("new total clients: %d\n", nClients + 1);
-	} else {
+	if (nClients >= CLIENT_LIMIT) {
 		printf("client addition rejected: client limit reached\n");
+		return;
+	}
+	pNetworkData->clients[nClients].ip = pNetworkData->pPacket->address;
+	pNetworkData->clients[nClients].lastSeen = SDL_GetTicks64();
+	{
+		int i = 1;
+		while (pNetworkData->pPlayers[i]->ip.host) i++;
+		pNetworkData->pPlayers[i]->ip = pNetworkData->clients[nClients].ip;
 	}
 	pNetworkData->nClients++;
+	printf("client added to list. lastSeen = %d\n", (int)pNetworkData->clients[nClients].lastSeen);
+	printf("new total clients: %d\n", pNetworkData->nClients);
 }
 
 void timeoutClients(NetworkData *pNetworkData) {
@@ -145,6 +148,12 @@ void timeoutClients(NetworkData *pNetworkData) {
 }
 
 void removeClient(NetworkData *pNetworkData, int index) {
+	{
+		int i = 1;
+		while (pNetworkData->pPlayers[i]->ip.host != pNetworkData->clients[index].ip.host
+				|| pNetworkData->pPlayers[i]->ip.port != pNetworkData->clients[index].ip.port) i++;
+		pNetworkData->pPlayers[i]->ip = (IPaddress){0};
+	}
 	for (int i = index; pNetworkData->clients[i].ip.host && i < CLIENT_LIMIT; i++) {
 		if (i == CLIENT_LIMIT - 1) {
 			pNetworkData->clients[i] = (Client){0};

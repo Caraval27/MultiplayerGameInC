@@ -3,10 +3,6 @@
 Player* createPlayer(float xPos, float yPos, float width, float height, float xVelocity, float yVelocity){
     Player* pPlayer = malloc(sizeof(Player));
 
-	// ers�tt den h�r variabeln med ett argument fr�n funktionsanropet
-	// det ska inte vara en pointer
-	IPaddress ip;
-
     pPlayer->xPos = xPos;
     pPlayer->yPos = yPos;
     pPlayer->width = width;
@@ -14,7 +10,7 @@ Player* createPlayer(float xPos, float yPos, float width, float height, float xV
     pPlayer->xVelocity = xVelocity;
     pPlayer->yVelocity = yVelocity;
     pPlayer->alive = true;
-	pPlayer->ip = ip;
+	pPlayer->ip = (IPaddress){0};
 
     return pPlayer;
 }

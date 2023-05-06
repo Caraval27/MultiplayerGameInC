@@ -40,6 +40,7 @@ int initiateGame(Game* pGame){
 	*pGame->pNetworkData = (NetworkData){0};
 	*pGame->pGameplayData = (GameplayData){0};
 	*pGame->pClientCommands = (ClientCommand){0};
+	pGame->pNetworkData->pPlayers = pGame->pPlayers;
 
     pGame->windowWidth = displayMode.w;
     pGame->windowHeight = displayMode.h;
@@ -509,7 +510,7 @@ void handleOngoing(Game* pGame, SDL_Event event, bool* pIsRunning, bool* pLeft, 
         for(int i = 0; i < pGame->nrOfPlayers; i++){
             temp.players[i] = *pGame->pPlayers[i];
         }
-        
+
         temp.gameState = pGame->state;
 		// SERVER: HÄR SKA PUNKT (1) UTFÖRAS
 		// Det är bara att lägga in datan direkt i "temp".
@@ -540,7 +541,6 @@ void handleOngoing(Game* pGame, SDL_Event event, bool* pIsRunning, bool* pLeft, 
 
     handleBackground(pGame->pBackground, pGame->pRenderer, pGame->pBackgroundTexture, pGame->windowWidth, pGame->windowHeight); //denna mï¿½ste ligga fï¿½re allt med player
     handlePlatforms(pGame->pPlatforms, pGame->pRenderer, pGame->pPlatformTexture, pGame->windowWidth, pGame->windowHeight);
-	// bortkommenterad fï¿½r tillfï¿½llet nï¿½r vi testar netcoden
     handleStartPlatform(pGame->pStartPlatform, pGame->pPlatforms[0], pGame->pRenderer, pGame->pStartPlatformTexture, pGame->windowHeight, pTime);
     handlePlayers(pGame->pPlayers, pGame->nrOfPlayers, &pGame->nrOfPlayersLeft, pLeft, pRight, pMute, pGame->windowWidth, pGame->windowHeight, pGame->pStartPlatform, pGame->pJumpSound, pGame->pWinSound, &pGame->state, pGame->pRenderer, pGame->pPlayerTextures, pGame->flip, pGame->pPlatforms, pGame->pYouAreDeadText);
 
@@ -693,13 +693,9 @@ void resetGame(Game* pGame, int* pTime){
     resetPlatforms(pGame->pPlatforms);
     resetStartPlatform(pGame->pStartPlatform, pGame->windowHeight, pTime);
 
-    initPlayers(pGame->pPlayers, &pGame->nrOfPlayers, &pGame->nrOfPlayersLeft, pGame->windowWidth, pGame->pStartPlatform->yPos, pGame->pPlayerTextures, pGame->pWindow, pGame->pRenderer, &subtractXpos, &increaseXpos);
-    initPlayers(pGame->pPlayers, &pGame->nrOfPlayers, &pGame->nrOfPlayersLeft, pGame->windowWidth, pGame->pStartPlatform->yPos, pGame->pPlayerTextures, pGame->pWindow, pGame->pRenderer, &subtractXpos, &increaseXpos);
-    initPlayers(pGame->pPlayers, &pGame->nrOfPlayers, &pGame->nrOfPlayersLeft, pGame->windowWidth, pGame->pStartPlatform->yPos, pGame->pPlayerTextures, pGame->pWindow, pGame->pRenderer, &subtractXpos, &increaseXpos);
-    initPlayers(pGame->pPlayers, &pGame->nrOfPlayers, &pGame->nrOfPlayersLeft, pGame->windowWidth, pGame->pStartPlatform->yPos, pGame->pPlayerTextures, pGame->pWindow, pGame->pRenderer, &subtractXpos, &increaseXpos);
-    initPlayers(pGame->pPlayers, &pGame->nrOfPlayers, &pGame->nrOfPlayersLeft, pGame->windowWidth, pGame->pStartPlatform->yPos, pGame->pPlayerTextures, pGame->pWindow, pGame->pRenderer, &subtractXpos, &increaseXpos);
-    initPlayers(pGame->pPlayers, &pGame->nrOfPlayers, &pGame->nrOfPlayersLeft, pGame->windowWidth, pGame->pStartPlatform->yPos, pGame->pPlayerTextures, pGame->pWindow, pGame->pRenderer, &subtractXpos, &increaseXpos);
-    initPlayers(pGame->pPlayers, &pGame->nrOfPlayers, &pGame->nrOfPlayersLeft, pGame->windowWidth, pGame->pStartPlatform->yPos, pGame->pPlayerTextures, pGame->pWindow, pGame->pRenderer, &subtractXpos, &increaseXpos);
+	for (int i = 0; i < MAX_PLAYERS; i++) {
+		initPlayers(pGame->pPlayers, &pGame->nrOfPlayers, &pGame->nrOfPlayersLeft, pGame->windowWidth, pGame->pStartPlatform->yPos, pGame->pPlayerTextures, pGame->pWindow, pGame->pRenderer, &subtractXpos, &increaseXpos);
+	}
 }
 
 

@@ -4,7 +4,7 @@
 #include "../include/text.h"
 #include "../include/platforms.h"
 
-#define MAX_PLAYERS 10
+#define MAX_PLAYERS 6
 #define CHARACTER_PICTURE "../assets/musse.png"
 #define CHARACTER_WIDTH 60
 #define CHARACTER_HEIGHT 60
