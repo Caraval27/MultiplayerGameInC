@@ -41,6 +41,7 @@ typedef struct {
 
 typedef struct {
 	Player players[CLIENT_LIMIT];
+	State gameState;
 } GameplayData;
 
 // Prepare the application to communicate over a network.

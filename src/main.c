@@ -468,6 +468,11 @@ void handleOngoing(Game* pGame, SDL_Event event, bool* pIsRunning, bool* pLeft, 
 	if (isHost) {
 		GameplayData temp;
 
+        for(int i = 0; i < pGame->nrOfPlayers; i++){
+            temp.players[i] = *pGame->pPlayers[i];
+        }
+        
+        temp.gameState = pGame->state;
 		// SERVER: HÄR SKA PUNKT (1) UTFÖRAS
 		// Det är bara att lägga in datan direkt i "temp".
 
@@ -501,7 +506,7 @@ void handleOngoing(Game* pGame, SDL_Event event, bool* pIsRunning, bool* pLeft, 
     handleStartPlatform(pGame->pStartPlatform, pGame->pPlatforms[0], pGame->pRenderer, pGame->pStartPlatformTexture, pGame->windowHeight, pTime);
     handlePlayers(pGame->pPlayers, pGame->nrOfPlayers, &pGame->nrOfPlayersLeft, pLeft, pRight, pMute, pGame->windowWidth, pGame->windowHeight, pGame->pStartPlatform, pGame->pJumpSound, pGame->pWinSound, &pGame->state, pGame->pRenderer, pGame->pPlayerTextures, pGame->flip, pGame->pPlatforms, pGame->pYouAreDeadText);
 
-    SDL_Delay(1);
+    SDL_Delay(3);
 }
 
 void handleOngoingInput(Game* pGame, SDL_Event* event, bool* pIsRunning, bool* pLeft, bool* pRight, bool* pMute) {
