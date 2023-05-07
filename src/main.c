@@ -544,7 +544,7 @@ void handleOngoing(Game* pGame, SDL_Event event, bool* pIsRunning, bool* pLeft, 
     handleBackground(pGame->pBackground, pGame->pRenderer, pGame->pBackgroundTexture, pGame->windowWidth, pGame->windowHeight); //denna m�ste ligga f�re allt med player
     handlePlatforms(pGame->pPlatforms, pGame->pRenderer, pGame->pPlatformTexture, pGame->windowWidth, pGame->windowHeight);
     handleStartPlatform(pGame->pStartPlatform, pGame->pPlatforms[0], pGame->pRenderer, pGame->pStartPlatformTexture, pGame->windowHeight, pTime);
-    handlePlayers(pGame->pPlayers, pGame->nrOfPlayers, &pGame->nrOfPlayersLeft, pLeft, pRight, pMute, pGame->windowWidth, pGame->windowHeight, pGame->pStartPlatform, pGame->pJumpSound, pGame->pWinSound, &pGame->state, pGame->pRenderer, pGame->pPlayerTextures, pGame->flip, pGame->pPlatforms, pGame->pYouAreDeadText);
+    handlePlayers(pGame->pPlayers, pGame->nrOfPlayers, &pGame->nrOfPlayersLeft, pLeft, pRight, pMute, pGame->windowWidth, pGame->windowHeight, pGame->pStartPlatform, pGame->pJumpSound, pGame->pWinSound, &pGame->state, pGame->pRenderer, pGame->pPlayerTextures, pGame->flip, pGame->pPlatforms, pGame->pYouAreDeadText, &pGame->pNetworkData->isHost);
 
     SDL_Delay(3);
 }
@@ -561,14 +561,20 @@ void handleOngoingInput(Game* pGame, SDL_Event* event, bool* pIsRunning, bool* p
                 pGame->state = GAME_MENU;
             }
             else if ((event->key.keysym.sym) == pGame->keybinds[0]) {
-                *pRight = true;
-                pGame->flip = SDL_FLIP_HORIZONTAL;
-                tempClient.direction = 1;
+                if (pGame->pNetworkData->isHost) {
+					pGame->pPlayers[0]->mvRight = true;
+					pGame->pPlayers[0]->flip = SDL_FLIP_NONE;
+				} else {
+					tempClient.direction = 1;
+				}
             }
             else if ((event->key.keysym.sym) == pGame->keybinds[1]) {
-                *pLeft = true;
-                pGame->flip = SDL_FLIP_HORIZONTAL;
-                tempClient.direction = -1;
+                if (pGame->pNetworkData->isHost) {
+					pGame->pPlayers[0]->mvLeft = true;
+					pGame->pPlayers[0]->flip = SDL_FLIP_HORIZONTAL;
+				} else {
+					tempClient.direction = -1;
+				}
             }
             else if ((event->key.keysym.sym) == pGame->keybinds[2] && !(*pMute)) {
                 *pMute = true;
@@ -589,14 +595,18 @@ void handleOngoingInput(Game* pGame, SDL_Event* event, bool* pIsRunning, bool* p
             break;
         case SDL_KEYUP:
             if ((event->key.keysym.sym) == pGame->keybinds[0]) {
-                *pRight = false;
-                pGame->flip = SDL_FLIP_NONE;
-                tempClient.direction = 0;
+                if (pGame->pNetworkData->isHost) {
+					pGame->pPlayers[0]->mvRight = false;
+				} else {
+					tempClient.direction = 0;
+				}
             }
             else if ((event->key.keysym.sym) == pGame->keybinds[1]) {
-                *pLeft = false;
-                pGame->flip = SDL_FLIP_NONE;
-                tempClient.direction = 0;
+                if (pGame->pNetworkData->isHost) {
+					pGame->pPlayers[0]->mvLeft = false;
+				} else {
+					tempClient.direction = 0;
+				}
             }
             // switch(event->key.keysym.sym){
             //     case SDLK_LEFT: *pLeft = false;

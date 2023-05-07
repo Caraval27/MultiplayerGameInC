@@ -3,13 +3,16 @@
 Player* createPlayer(float xPos, float yPos, float width, float height, float xVelocity, float yVelocity){
     Player* pPlayer = malloc(sizeof(Player));
 
+    pPlayer->alive = true;
     pPlayer->xPos = xPos;
     pPlayer->yPos = yPos;
     pPlayer->width = width;
     pPlayer->height = height;
     pPlayer->xVelocity = xVelocity;
     pPlayer->yVelocity = yVelocity;
-    pPlayer->alive = true;
+	pPlayer->mvLeft = false;
+	pPlayer->mvRight = false;
+	pPlayer->flip = SDL_FLIP_NONE;
 	pPlayer->ip = (IPaddress){0};
 
     return pPlayer;
@@ -50,27 +53,19 @@ void initPlayers(Player** pPlayers, int* pNrOfPlayers, int* pNrOfPlayersLeft, in
 }
 
 
-void handlePlayers(Player** pPlayers, int pNrOfPlayers, int *nrOfPlayersLeft, bool* pLeft, bool* pRight, bool* pMute, int windowWidth, int windowHeight, Platform* pStartPlatform, Mix_Chunk *pJumpSound, Mix_Chunk* pWinSound, State* pState, SDL_Renderer* pRenderer, SDL_Texture** pPlayerTextures, SDL_RendererFlip flip, Platform** pPlatforms, Text* pGameOverText){
-
-    for (int i = 0; i < pNrOfPlayers; i++) //av n?gon anledning dyker inte player 2 upp, f?rmodligen pga samma bild och position, samt b?da r?r sig med tangenttrycken
-    {
-        if (i == 0) { //bara f?r att prova om spelare 2 dyker upp i loopen
-            movePlayer(pPlayers[i], *pLeft, *pRight, windowWidth);
-            jumpPlayer(pPlayers[i], pStartPlatform->yPos, pJumpSound, pMute);
-            playerCollidePlatform(pPlayers[i], pPlatforms, pJumpSound, pMute);
-            checkIfPlayerDead(pPlayers[i], windowHeight, pState, nrOfPlayersLeft);
-            renderPlayer(pPlayers[i], pRenderer, pPlayerTextures[i], flip);
-            if (!pPlayers[i]->alive) {
-                renderText(pGameOverText);
-            }
-        }
-        else {
-            jumpPlayer(pPlayers[i], pStartPlatform->yPos, pJumpSound, pMute);
-            playerCollidePlatform(pPlayers[i], pPlatforms, pJumpSound, pMute);
-            checkIfPlayerDead(pPlayers[i], windowHeight, pState, nrOfPlayersLeft);
-            renderPlayer(pPlayers[i], pRenderer, pPlayerTextures[i], SDL_FLIP_NONE);
-        }
+void handlePlayers(Player** pPlayers, int pNrOfPlayers, int *nrOfPlayersLeft, bool* pLeft, bool* pRight, bool* pMute, int windowWidth, int windowHeight, Platform* pStartPlatform, Mix_Chunk *pJumpSound, Mix_Chunk* pWinSound, State* pState, SDL_Renderer* pRenderer, SDL_Texture** pPlayerTextures, SDL_RendererFlip flip, Platform** pPlatforms, Text* pGameOverText, bool* isHost) {
+    for (int i = 0; i < pNrOfPlayers; i++) {
+		if (isHost) {
+			movePlayer(pPlayers[i], pPlayers[i]->mvLeft, pPlayers[i]->mvRight, windowWidth);
+			jumpPlayer(pPlayers[i], pStartPlatform->yPos, pJumpSound, pMute);
+			playerCollidePlatform(pPlayers[i], pPlatforms, pJumpSound, pMute);
+			checkIfPlayerDead(pPlayers[i], windowHeight, pState, nrOfPlayersLeft);
+		}
+		renderPlayer(pPlayers[i], pRenderer, pPlayerTextures[i], pPlayers[i]->flip);
     }
+	if (!pPlayers[0]->alive) {
+		renderText(pGameOverText);
+	}
     handleWin(*nrOfPlayersLeft, pState, pWinSound, pMute);
 }
 
