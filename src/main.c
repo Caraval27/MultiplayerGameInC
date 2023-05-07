@@ -15,11 +15,11 @@ int main(int argv, char** args){
 int initiateGame(Game* pGame){
     srand(time(NULL));
 
-    if (SDL_Init(SDL_INIT_EVERYTHING) != 0){
+    if (SDL_Init(SDL_INIT_EVERYTHING)){
         printf("Error: %s\n", SDL_GetError());
         return 0;
     }
-    if (TTF_Init() != 0){
+    if (TTF_Init()){
         printf("Error: %s\n", TTF_GetError());
         return 0;
     }
@@ -33,7 +33,7 @@ int initiateGame(Game* pGame){
 	}
 
     SDL_DisplayMode displayMode;
-    if (SDL_GetDesktopDisplayMode(0, &displayMode) != 0){
+    if (SDL_GetDesktopDisplayMode(0, &displayMode)){
         printf("Error: %s\n", SDL_GetError());
         quitGame(pGame);
         return 0;
@@ -46,6 +46,7 @@ int initiateGame(Game* pGame){
 	*pGame->pNetworkData = (NetworkData){0};
 	*pGame->pGameplayData = (GameplayData){0};
 	*pGame->pClientCommands = (ClientCommand){0};
+	pGame->pNetworkData->pPlayers = pGame->pPlayers;
 
     pGame->pWindow = SDL_CreateWindow("Mental breakdown", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, pGame->windowWidth, pGame->windowHeight, 0);
     if (!handleError(pGame, pGame->pWindow, SDL_GetError)) return 0;
@@ -58,7 +59,7 @@ int initiateGame(Game* pGame){
     if (!handleError(pGame, pGame->pRenderer, SDL_GetError)) return 0;
 
     pGame->pMenuFont = TTF_OpenFont("../assets/Ticketing.ttf", 25);
-    if (!handleError(pGame, pGame->pWindow, TTF_GetError)) return 0;
+    if (!handleError(pGame, pGame->pMenuFont, TTF_GetError)) return 0;
 
     pGame->pMenuTexture = createPicture(pGame->pWindow, pGame->pRenderer, MAIN_MENU_PICTURE);
     if (!handleError(pGame, pGame->pMenuTexture, SDL_GetError)) {
@@ -114,11 +115,11 @@ int initiateGame(Game* pGame){
     pGame->pWhoWonTexts[10] = createText(pGame->pRenderer, pGame->pMenuFont, "You won!", 255, 255, 255, pGame->windowWidth, pGame->windowHeight, 0, -300);
 
     pGame->pMainSound = Mix_LoadMUS("../assets/MainThemeSoundtrack.mp3");
-    if (!handleError(pGame, pGame->pWindow, Mix_GetError)) return 0;
+    if (!handleError(pGame, pGame->pMainSound, Mix_GetError)) return 0;
     pGame->pJumpSound = Mix_LoadWAV("../assets/JumpEffect.wav");
-    if (!handleError(pGame, pGame->pWindow, Mix_GetError)) return 0;
+    if (!handleError(pGame, pGame->pJumpSound, Mix_GetError)) return 0;
     pGame->pWinSound = Mix_LoadWAV("../assets/tempWinSound.wav");
-    if (!handleError(pGame, pGame->pWindow, Mix_GetError)) return 0;
+    if (!handleError(pGame, pGame->pWinSound, Mix_GetError)) return 0;
 
     FILE *fp;
     readFromFileKey(fp, pGame->keybinds);
@@ -502,7 +503,6 @@ void handleOngoing(Game* pGame, SDL_Event event, bool* pIsRunning, bool* pLeft, 
 
     handleBackground(pGame->pBackground, pGame->pRenderer, pGame->pBackgroundTexture, pGame->windowWidth, pGame->windowHeight); //denna m�ste ligga f�re allt med player
     handlePlatforms(pGame->pPlatforms, pGame->pRenderer, pGame->pPlatformTexture, pGame->windowWidth, pGame->windowHeight);
-	// bortkommenterad f�r tillf�llet n�r vi testar netcoden
     handleStartPlatform(pGame->pStartPlatform, pGame->pPlatforms[0], pGame->pRenderer, pGame->pStartPlatformTexture, pGame->windowHeight, pTime);
     handlePlayers(pGame->pPlayers, pGame->nrOfPlayers, &pGame->nrOfPlayersLeft, pLeft, pRight, pMute, pGame->windowWidth, pGame->windowHeight, pGame->pStartPlatform, pGame->pJumpSound, pGame->pWinSound, &pGame->state, pGame->pRenderer, pGame->pPlayerTextures, pGame->flip, pGame->pPlatforms, pGame->pYouAreDeadText);
 
@@ -606,23 +606,11 @@ void renderGameMenu(Game* pGame){
 }
 
 void handleGameOver(Game* pGame, SDL_Event event){
-    int i;
     bool buttonPressed = false;
 
     Mix_PauseMusic();
 
     renderGameOver(pGame);
-    for(i = 0; i < pGame->nrOfPlayers; i++) {
-        if (pGame->pPlayers[i]->alive) {
-            break;
-        }
-    }
-    if (i <= pGame->nrOfPlayers - 1) {
-        renderText(pGame->pWhoWonTexts[i], pGame->pRenderer);
-    }
-    else {
-        renderText(pGame->pWhoWonTexts[MAX_PLAYERS], pGame->pRenderer);
-    }
 
     while (SDL_PollEvent(&event)) {
         handleButton(pGame->pMainMenuButton, &buttonPressed);
@@ -638,9 +626,22 @@ void handleGameOver(Game* pGame, SDL_Event event){
 }
 
 void renderGameOver(Game* pGame){
+    int i;
+
     renderButton(pGame->pMainMenuButton, pGame->pRenderer, pGame->pButtonTexture);
 
     renderText(pGame->pMainMenuButtonText, pGame->pRenderer);
+    for(i = 0; i < pGame->nrOfPlayers; i++) {
+        if (pGame->pPlayers[i]->alive) {
+            break;
+        }
+    }
+    if (i <= pGame->nrOfPlayers - 1) {
+        renderText(pGame->pWhoWonTexts[i], pGame->pRenderer);
+    }
+    else {
+        renderText(pGame->pWhoWonTexts[MAX_PLAYERS], pGame->pRenderer);
+    }
 }
 
 void resetGame(Game* pGame, bool* pLeft, bool* pRight, int* pTime){
@@ -651,13 +652,9 @@ void resetGame(Game* pGame, bool* pLeft, bool* pRight, int* pTime){
     resetStartPlatform(pGame->pStartPlatform, pGame->windowHeight, pTime);
     resetPlayers(pGame->pPlayers, &pGame->nrOfPlayers, &pGame->nrOfPlayersLeft, pLeft, pRight);
 
-    initPlayers(pGame->pPlayers, &pGame->nrOfPlayers, &pGame->nrOfPlayersLeft, pGame->windowWidth, pGame->pStartPlatform->yPos, pGame->pPlayerTextures, pGame->pWindow, pGame->pRenderer, &subtractXPos, &increaseXPos);
-    initPlayers(pGame->pPlayers, &pGame->nrOfPlayers, &pGame->nrOfPlayersLeft, pGame->windowWidth, pGame->pStartPlatform->yPos, pGame->pPlayerTextures, pGame->pWindow, pGame->pRenderer, &subtractXPos, &increaseXPos);
-    initPlayers(pGame->pPlayers, &pGame->nrOfPlayers, &pGame->nrOfPlayersLeft, pGame->windowWidth, pGame->pStartPlatform->yPos, pGame->pPlayerTextures, pGame->pWindow, pGame->pRenderer, &subtractXPos, &increaseXPos);
-    initPlayers(pGame->pPlayers, &pGame->nrOfPlayers, &pGame->nrOfPlayersLeft, pGame->windowWidth, pGame->pStartPlatform->yPos, pGame->pPlayerTextures, pGame->pWindow, pGame->pRenderer, &subtractXPos, &increaseXPos);
-    initPlayers(pGame->pPlayers, &pGame->nrOfPlayers, &pGame->nrOfPlayersLeft, pGame->windowWidth, pGame->pStartPlatform->yPos, pGame->pPlayerTextures, pGame->pWindow, pGame->pRenderer, &subtractXPos, &increaseXPos);
-    initPlayers(pGame->pPlayers, &pGame->nrOfPlayers, &pGame->nrOfPlayersLeft, pGame->windowWidth, pGame->pStartPlatform->yPos, pGame->pPlayerTextures, pGame->pWindow, pGame->pRenderer, &subtractXPos, &increaseXPos);
-    initPlayers(pGame->pPlayers, &pGame->nrOfPlayers, &pGame->nrOfPlayersLeft, pGame->windowWidth, pGame->pStartPlatform->yPos, pGame->pPlayerTextures, pGame->pWindow, pGame->pRenderer, &subtractXPos, &increaseXPos);
+	for (int i = 0; i < MAX_PLAYERS; i++) {
+		initPlayers(pGame->pPlayers, &pGame->nrOfPlayers, &pGame->nrOfPlayersLeft, pGame->windowWidth, pGame->pStartPlatform->yPos, pGame->pPlayerTextures, pGame->pWindow, pGame->pRenderer, &subtractXPos, &increaseXPos);
+	}
 }
 
 void quitGame(Game* pGame){

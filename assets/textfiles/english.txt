@@ -7,7 +7,7 @@ Language
 Return
 Move right:
 Move left:
-You are Dead
+You are dead
 Create Lobby
 Join Lobby
 Press key

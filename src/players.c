@@ -2,9 +2,6 @@
 
 Player* createPlayer(float xPos, float yPos, float width, float height, float xVelocity, float yVelocity){
     Player* pPlayer = malloc(sizeof(Player));
-	// ers�tt den h�r variabeln med ett argument fr�n funktionsanropet
-	// det ska inte vara en pointer
-	IPaddress ip;
 
     pPlayer->xPos = xPos;
     pPlayer->yPos = yPos;
@@ -13,7 +10,7 @@ Player* createPlayer(float xPos, float yPos, float width, float height, float xV
     pPlayer->xVelocity = xVelocity;
     pPlayer->yVelocity = yVelocity;
     pPlayer->alive = true;
-	pPlayer->ip = ip;
+	pPlayer->ip = (IPaddress){0};
 
     return pPlayer;
 }
@@ -128,7 +125,8 @@ void checkIfPlayerDead(Player* pPlayer, int windowHeight, State* pState, int* pN
 
 void handleWin(int nrOfPlayersLeft, State* pState, Mix_Chunk* pWinSound, bool* pMute){
     if (nrOfPlayersLeft <= 1) {
-        if (!(pMute)){
+        printf("Test");
+        if (!(pMute)) {
             Mix_PlayChannel(-1, pWinSound, 0);
         }
         *pState = GAME_OVER;
@@ -193,7 +191,8 @@ void destroyPlayers(Player** pPlayers) {
 
 void destroyPlayerTextures(SDL_Texture** pPlayerTextures) {
     for (int i = 0; i < MAX_PLAYERS; i++) { //�ndra till nrofplayers
-        if(pPlayerTextures[i])
+        if(pPlayerTextures[i]) {
             destroyTexture(pPlayerTextures[i]);
+        }
     }
 }

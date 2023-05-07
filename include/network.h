@@ -3,14 +3,14 @@
 #include "../include/libraries.h"
 #include "../include/players.h"
 
+#define SERVER_IP "127.0.0.1"
 #define PORT 3016
 #define PACKET_SIZE 256
-#define CLIENT_LIMIT 6
-#define SERVER_IP "127.0.0.1"
+#define CLIENT_LIMIT MAX_PLAYERS - 1
+#define COMMAND_BUFFER CLIENT_LIMIT
 #define NETCODE_TICKRATE 1000
 #define TIMEOUT_TICKRATE 1000
 #define CLIENT_TIMEOUT 3000
-#define COMMAND_BUFFER CLIENT_LIMIT
 
 typedef enum {
 	MOVEMENT,
@@ -37,6 +37,7 @@ typedef struct {
 	Client clients[CLIENT_LIMIT];
 	int nClients;
 	IPaddress server;
+	Player **pPlayers;
 } NetworkData;
 
 typedef struct {
