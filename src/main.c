@@ -481,7 +481,7 @@ void handleEnterInput(Game* pGame, SDL_Event event, int* pNum){
 void handleOngoing(Game* pGame, SDL_Event event, bool* pIsRunning, bool* pLeft, bool *pRight, int *pTime, bool* pMute){
     //bool left = false, right = false;
 
-    while (SDL_PollEvent(&event)){
+    if (SDL_PollEvent(&event)){
         handleOngoingInput(pGame, &event, pIsRunning, pLeft, pRight, pMute);
     }
 
@@ -508,13 +508,33 @@ void handleOngoing(Game* pGame, SDL_Event event, bool* pIsRunning, bool* pLeft, 
 	runNetcode(pGame->pNetworkData, pGame->pGameplayData, pGame->pClientCommands);
 
 	if (isHost) {
-
-		// SERVER: HÄR SKA PUNKT (4) UTFÖRAS
-		// Alla kommandon finns tillgängliga i en array vid pGame->pClientCommands.
-		// Varje kommando innehåller en IP-adress. Ni kommer behöva leta efter
-		// spelarobjektet som har denna adress genom pGame->pPlayers[i]->ip.
-
-		*pGame->pClientCommands = (ClientCommand){0};
+		// SERVER (4)
+		for (int i = 0; pGame->pClientCommands[i].ip.host && i < COMMAND_BUFFER; i++) {
+			// printf("looking at command at index %d\n", i);
+			// printf("looking for host %d\n", pGame->pClientCommands[i].ip.host);
+			// printf("looking for port %d\n", pGame->pClientCommands[i].ip.port);
+			int iPlayer = 1;
+			while ((pGame->pClientCommands[i].ip.host != pGame->pPlayers[iPlayer]->ip.host
+					|| pGame->pClientCommands[i].ip.port != pGame->pPlayers[iPlayer]->ip.port)
+					&& iPlayer < COMMAND_BUFFER) {
+				// printf("comparing to index %d...\n", iPlayer);
+				// printf("comparing to host %d\n", pGame->pPlayers[iPlayer]->ip.host);
+				// printf("comparing to port %d\n", pGame->pPlayers[iPlayer]->ip.port);
+				iPlayer++;
+			}
+			// printf("found player object associated with client command at index %d\n", iPlayer);
+			ClientCommand tempCC = pGame->pClientCommands[i];
+			Player *tempP = pGame->pPlayers[iPlayer];
+			switch (tempCC.commandType) {
+				case MOVEMENT: {
+					// printf("movement direction: %d\n", tempCC.direction);
+					tempP->mvLeft = (tempCC.direction == -1);
+					tempP->mvRight = (tempCC.direction == 1);
+					break;
+				}
+			}
+			pGame->pClientCommands[i] = (ClientCommand){0};
+		}
 	} else {
         /*for(int i = 0; i < pGame->nrOfPlayers; i++){
             *pGame->pPlayers[i] = pGame->pGameplayData->players[i];
@@ -550,11 +570,15 @@ void handleOngoing(Game* pGame, SDL_Event event, bool* pIsRunning, bool* pLeft, 
 }
 
 void handleOngoingInput(Game* pGame, SDL_Event* event, bool* pIsRunning, bool* pLeft, bool* pRight, bool* pMute) {
-    ClientCommand tempClient = {0, MOVEMENT, 0};
+
+	// Det visade sig att de events vi använder för att läsa input var lite mer komplicerat än vad jag
+	// först trodde, så jag var tvungen att modifiera pClientCommands[0] direkt via dess pointer istället.
+
+	if (!pGame->pNetworkData->isHost) pGame->pClientCommands[0].commandType = MOVEMENT;
     switch (event->type){
         case SDL_QUIT:
             *pIsRunning = false;
-            tempClient.commandType = LEAVE;
+            pGame->pClientCommands[0].commandType = LEAVE;
             break;
         case SDL_KEYDOWN:
             if ((event->key.keysym.sym) == (SDLK_ESCAPE)){
@@ -565,7 +589,7 @@ void handleOngoingInput(Game* pGame, SDL_Event* event, bool* pIsRunning, bool* p
 					pGame->pPlayers[0]->mvRight = true;
 					pGame->pPlayers[0]->flip = SDL_FLIP_NONE;
 				} else {
-					tempClient.direction = 1;
+					pGame->pClientCommands[0].direction = 1;
 				}
             }
             else if ((event->key.keysym.sym) == pGame->keybinds[1]) {
@@ -573,7 +597,7 @@ void handleOngoingInput(Game* pGame, SDL_Event* event, bool* pIsRunning, bool* p
 					pGame->pPlayers[0]->mvLeft = true;
 					pGame->pPlayers[0]->flip = SDL_FLIP_HORIZONTAL;
 				} else {
-					tempClient.direction = -1;
+					pGame->pClientCommands[0].direction = -1;
 				}
             }
             else if ((event->key.keysym.sym) == pGame->keybinds[2] && !(*pMute)) {
@@ -598,14 +622,14 @@ void handleOngoingInput(Game* pGame, SDL_Event* event, bool* pIsRunning, bool* p
                 if (pGame->pNetworkData->isHost) {
 					pGame->pPlayers[0]->mvRight = false;
 				} else {
-					tempClient.direction = 0;
+					pGame->pClientCommands[0].direction = 0;
 				}
             }
             else if ((event->key.keysym.sym) == pGame->keybinds[1]) {
                 if (pGame->pNetworkData->isHost) {
 					pGame->pPlayers[0]->mvLeft = false;
 				} else {
-					tempClient.direction = 0;
+					pGame->pClientCommands[0].direction = 0;
 				}
             }
             // switch(event->key.keysym.sym){
@@ -616,8 +640,6 @@ void handleOngoingInput(Game* pGame, SDL_Event* event, bool* pIsRunning, bool* p
             // }
             break;
     }
-    pGame->pClientCommands[0].commandType = tempClient.commandType;
-    pGame->pClientCommands[0].direction = tempClient.direction;
 }
 
 void handleGameMenu(Game* pGame, SDL_Event event, bool* pMute){
