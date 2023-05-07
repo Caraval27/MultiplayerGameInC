@@ -24,8 +24,7 @@ typedef struct {
 
     Text *pStartButtonText, *pSettingsButtonText, *pQuitButtonText, *pLanguageButtonText,  *pMoveLeftButtonText, *pMoveRightButtonText, *pReturnButtonText, *pEnglishButtonText,
     *pSwedishButtonText, *pResumeButtonText, *pMainMenuButtonText, *pMoveLeft1ButtonText, *pMoveRight1ButtonText,*pYouAreDeadText, *pCreateLobbyButtonText, *pJoinLobbyButtonText,
-    *pMuteButtonText, *pMute1ButtonText;
-    Text* pWhoWonText[MAX_PLAYERS + 1];
+    *pMuteButtonText, *pMute1ButtonText, *pWhoWonText;
     Player* pPlayers[MAX_PLAYERS];
     SDL_Texture* pPlayerTextures[MAX_PLAYERS];
     int nrOfPlayers, nrOfPlayersLeft;

@@ -104,19 +104,6 @@ int initiateGame(Game* pGame){
     pGame->pMuteButton = createButton((pGame->windowWidth - BUTTON_WIDTH) / 2 + 80, (pGame->windowHeight - BUTTON_HEIGHT) / 2 + 150, BUTTON_WIDTH, BUTTON_HEIGHT);
     pGame->pStartPlatform = createPlatform(0, pGame->windowHeight - 100, pGame->windowWidth, 100);
 
-    pGame->pYouAreDeadText = createText(pGame->pRenderer, pGame->pMenuFont, 255, 255, 255, "You are dead", pGame->windowWidth, pGame->windowHeight, -200, 0);
-    pGame->pWhoWonText[0] = createText(pGame->pRenderer, pGame->pMenuFont, 255, 255, 255, "Player 0 won", pGame->windowWidth, pGame->windowHeight, -300, 0);
-    pGame->pWhoWonText[1] = createText(pGame->pRenderer, pGame->pMenuFont, 255, 255, 255, "Player 1 won", pGame->windowWidth, pGame->windowHeight, -300, 0);
-    pGame->pWhoWonText[2] = createText(pGame->pRenderer, pGame->pMenuFont, 255, 255, 255, "Player 2 won", pGame->windowWidth, pGame->windowHeight, -300, 0);
-    pGame->pWhoWonText[3] = createText(pGame->pRenderer, pGame->pMenuFont, 255, 255, 255, "Player 3 won", pGame->windowWidth, pGame->windowHeight, -300, 0);
-    pGame->pWhoWonText[4] = createText(pGame->pRenderer, pGame->pMenuFont, 255, 255, 255, "Player 4 won", pGame->windowWidth, pGame->windowHeight, -300, 0);
-    pGame->pWhoWonText[5] = createText(pGame->pRenderer, pGame->pMenuFont, 255, 255, 255, "Player 5 won", pGame->windowWidth, pGame->windowHeight, -300, 0);
-    pGame->pWhoWonText[6] = createText(pGame->pRenderer, pGame->pMenuFont, 255, 255, 255, "Player 6 won", pGame->windowWidth, pGame->windowHeight, -300, 0);
-    pGame->pWhoWonText[7] = createText(pGame->pRenderer, pGame->pMenuFont, 255, 255, 255, "Player 7 won", pGame->windowWidth, pGame->windowHeight, -300, 0);
-    pGame->pWhoWonText[8] = createText(pGame->pRenderer, pGame->pMenuFont, 255, 255, 255, "Player 8 won", pGame->windowWidth, pGame->windowHeight, -300, 0);
-    pGame->pWhoWonText[9] = createText(pGame->pRenderer, pGame->pMenuFont, 255, 255, 255, "Player 9 won", pGame->windowWidth, pGame->windowHeight, -300, 0);
-    pGame->pWhoWonText[10] = createText(pGame->pRenderer, pGame->pMenuFont, 255, 255, 255, "You won!", pGame->windowWidth, pGame->windowHeight, -300, 0);
-
     FILE *fp;
     readFromFileKey(fp, pGame->keybinds);
     saveToFile(fp, pGame->keybinds);
@@ -529,7 +516,12 @@ void handleOngoing(Game* pGame, SDL_Event event, bool* pIsRunning, bool* pLeft, 
 
 		*pGame->pClientCommands = (ClientCommand){0};
 	} else {
-
+        /*for(int i = 0; i < pGame->nrOfPlayers; i++){
+            *pGame->pPlayers[i] = pGame->pGameplayData->players[i];
+        }
+        if(pGame->pGameplayData->gameState == GAME_OVER){
+            pGame->state = GAME_OVER;
+        }*/
 		// KLIENT: HÄR SKA PUNKT (B) UTFÖRAS
 		// Datan är tillgänglig via pGame->GameplayData.
 
@@ -645,26 +637,29 @@ void renderGameMenu(Game* pGame){
 void handleGameOver(Game* pGame, SDL_Event event){
     int i;
     bool buttonPressed = false;
+    static bool winTextCreated = false;
+    char whoWonString[50];
 
     Mix_PauseMusic();
 
-    renderGameOver(pGame);
     for(i = 0; i < pGame->nrOfPlayers; i++) {
         if (pGame->pPlayers[i]->alive) {
             break;
         }
     }
-    if (i <= pGame->nrOfPlayers - 1) {
-        renderText(pGame->pWhoWonText[i]);
+    if(!winTextCreated){
+        sprintf(whoWonString, "Player %d won", i+1);
+        pGame->pWhoWonText = createText(pGame->pRenderer, pGame->pMenuFont, 255, 255, 255, whoWonString, pGame->windowWidth, pGame->windowHeight, -300, 0);
+        winTextCreated = true;
     }
-    else {
-        renderText(pGame->pWhoWonText[MAX_PLAYERS]);
-    }
+        renderGameOver(pGame);
 
     while (SDL_PollEvent(&event)) {
         handleButton(pGame->pMainMenuButton, &buttonPressed);
         if (buttonPressed) {
             pGame->state = MAIN_MENU;
+            free(pGame->pWhoWonText);
+            winTextCreated = false;
             buttonPressed = false;
         }
 
@@ -677,6 +672,7 @@ void handleGameOver(Game* pGame, SDL_Event event){
 void renderGameOver(Game* pGame){
     renderButton(pGame->pMainMenuButton, pGame->pRenderer);
     renderText(pGame->pMainMenuButtonText);
+    renderText(pGame->pWhoWonText);
 }
 
 void resetGame(Game* pGame, int* pTime){
