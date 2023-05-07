@@ -525,6 +525,16 @@ void handleOngoing(Game* pGame, SDL_Event event, bool* pIsRunning, bool* pLeft, 
 		// KLIENT: HÄR SKA PUNKT (B) UTFÖRAS
 		// Datan är tillgänglig via pGame->GameplayData.
 
+        /*
+        Läggs in när matning av GameplayData (Punkt 1) är klar !!!
+
+        *pGame->pPlayers = pGame->pGameplayData->players;
+        pGame->nrOfPlayers = pGame->pGameplayData->nrOfPlayers;
+        pGame->nrOfPlayersLeft = pGame->pGameplayData->nrOfPlayersLeft;
+        pGame->windowWidth = pGame->pGameplayData->players->width;
+        pGame->windowHeight = pGame->pGameplayData->players->height;
+        */
+
 	}
 
 	////////////////////////////////////////////////////////////////////////////////////////////////////
