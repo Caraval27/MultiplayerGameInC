@@ -42,7 +42,7 @@ void runNetcode(NetworkData *pNetworkData, GameplayData *pGameplayData, ClientCo
 				}
 			}
 		}
-		printf("----------\n");
+		// printf("----------\n");
 	}
 }
 
@@ -59,7 +59,7 @@ void broadcastToClients(NetworkData *pNetworkData, GameplayData *pGameplayData) 
 		}
 	}
 	if (nBroadcasts > 0) {
-		printf("broadcast sent to %d client(s)\n", nBroadcasts);
+		// printf("broadcast sent to %d client(s)\n", nBroadcasts);
 	}
 }
 
@@ -107,6 +107,7 @@ void retrieveClientCommand(NetworkData *pNetworkData, ClientCommand *pClientComm
 		return;
 	}
 	memcpy(&pClientCommands[iCommands], pNetworkData->pPacket->data, sizeof(ClientCommand));
+	pClientCommands[iCommands].ip = pNetworkData->pPacket->address;
 	// printf("client command retrieved at buffer index %d\n", iCommands);
 	// int iClients = 0;
 	int iClients = cIndex;
@@ -169,7 +170,8 @@ void sendClientCommand(NetworkData *pNetworkData, ClientCommand *pClientCommand)
 	pNetworkData->pPacket->len = sizeof(ClientCommand);
 	pNetworkData->pPacket->address = pNetworkData->server;
 	if (SDLNet_UDP_Send(pNetworkData->pSocket, -1, pNetworkData->pPacket)) {
-		printf("command sent\n");
+		// printf("command sent\n");
+		// printf("direction sent: %d\n", pClientCommand->direction);
 	} else {
 		printf("failed to send command: %s\n", SDLNet_GetError());
 	}
@@ -182,7 +184,7 @@ int listenForHostBroadcast(NetworkData *pNetworkData, GameplayData *pGameplayDat
 			|| pNetworkData->pPacket->address.port != pNetworkData->server.port) continue;
 		memcpy(pGameplayData, pNetworkData->pPacket->data, sizeof(GameplayData));
 		nBroadcasts++;
-		printf("broadcast received\n");
+		// printf("broadcast received\n");
 	}
 	return nBroadcasts;
 }

@@ -13,10 +13,12 @@
 #define GRAVITY 1200
 
 typedef struct {
+    bool alive;
     float xPos, yPos;
     float width, height;
     float xVelocity, yVelocity;
-    bool alive;
+	bool mvLeft, mvRight;
+	SDL_RendererFlip flip;
 	IPaddress ip;
 } Player;
 
