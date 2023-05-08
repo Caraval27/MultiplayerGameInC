@@ -8,6 +8,7 @@
 typedef enum {
     MAIN_MENU,
 	LOBBY_MENU,
+    LOBBY,
 	SETTINGS_MENU,
 	ENTER_INPUT,
 	ONGOING,

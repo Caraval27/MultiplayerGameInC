@@ -173,6 +173,8 @@ void runGame(Game* pGame){
                 break;
             case LOBBY_MENU: handleLobbyMenu(pGame, event, &left, &right, &time);
                 break;
+            case LOBBY:
+                break;
             case ONGOING: handleOngoing(pGame, event, &isRunning, &left, &right, &time, &mute);
                 break;
             case GAME_MENU: handleGameMenu(pGame, event, &mute);
