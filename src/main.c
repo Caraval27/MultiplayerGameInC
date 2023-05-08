@@ -531,6 +531,8 @@ void handleOngoing(Game* pGame, SDL_Event event, bool* pIsRunning, bool* pLeft, 
 					tempP->mvLeft = (tempCC.direction == -1);
 					tempP->mvRight = (tempCC.direction == 1);
 					break;
+                default:
+                    break;
 				}
 			}
 			pGame->pClientCommands[i] = (ClientCommand){0};
