@@ -3,14 +3,16 @@
 Player* createPlayer(float xPos, float yPos, float width, float height, float xVelocity, float yVelocity){
     Player* pPlayer = malloc(sizeof(Player));
 
+    pPlayer->ip = (IPaddress){0};
+    pPlayer->alive = true;
     pPlayer->xPos = xPos;
     pPlayer->yPos = yPos;
     pPlayer->width = width;
     pPlayer->height = height;
     pPlayer->xVelocity = xVelocity;
     pPlayer->yVelocity = yVelocity;
-    pPlayer->alive = true;
-	pPlayer->ip = (IPaddress){0};
+    pPlayer->moveLeft = false;
+    pPlayer->moveRight = false;
 
     return pPlayer;
 }
@@ -30,7 +32,7 @@ Player* createPlayer(float xPos, float yPos, float width, float height, float xV
 }*/
 
 
-void initPlayers(Player** pPlayers, int* pNrOfPlayers, int* pNrOfPlayersLeft, int windowWidth, float startPlatformYPos, SDL_Texture** pPlayerTextures, SDL_Window* pWindow, SDL_Renderer* pRenderer, int* pSubtractXPos, int* pIncreaseXPos){
+void initPlayer(Player** pPlayers, int* pNrOfPlayers, int* pNrOfPlayersLeft, int windowWidth, float startPlatformYPos, SDL_Texture** pPlayerTextures, SDL_Window* pWindow, SDL_Renderer* pRenderer, int* pSubtractXPos, int* pIncreaseXPos){
         if (*pNrOfPlayers != MAX_PLAYERS) {
             pPlayerTextures[*pNrOfPlayers] = createPicture(pWindow, pRenderer, CHARACTER_PICTURE); //g?r en str?ng av detta ist
             if (*pNrOfPlayers % 2 == 1) {
@@ -140,44 +142,26 @@ void renderPlayer(Player* pPlayer, SDL_Renderer* pRenderer, SDL_Texture* pTextur
     }
 }
 
-void handlePlayers(Player** pPlayers, int pNrOfPlayers, int *nrOfPlayersLeft, bool* pLeft, bool* pRight, bool* pMute, int windowWidth, int windowHeight, Platform* pStartPlatform, Mix_Chunk *pJumpSound, Mix_Chunk* pWinSound, State* pState, SDL_Renderer* pRenderer, SDL_Texture** pPlayerTextures, SDL_RendererFlip flip, Platform** pPlatforms, Text* pGameOverText){
-    for (int i = 0; i < pNrOfPlayers; i++) //av n?gon anledning dyker inte player 2 upp, f?rmodligen pga samma bild och position, samt b?da r?r sig med tangenttrycken
-    {
-        if (i == 0) { //bara f?r att prova om spelare 2 dyker upp i loopen
-            movePlayer(pPlayers[i], *pLeft, *pRight, windowWidth);
+void handlePlayers(Player** pPlayers, int pNrOfPlayers, int *nrOfPlayersLeft, bool *pLeft, bool *pRight, bool* pMute, int windowWidth, int windowHeight, Platform* pStartPlatform, Mix_Chunk *pJumpSound, Mix_Chunk* pWinSound, State* pState, SDL_Renderer* pRenderer, SDL_Texture** pPlayerTextures, SDL_RendererFlip flip, Platform** pPlatforms, Text* pGameOverText, bool* isHost){
+    for (int i = 0; i < pNrOfPlayers; i++) {
+        if (isHost) {
+            movePlayer(pPlayers[i], pPlayers[i]->moveLeft, pPlayers[i]->moveRight, windowWidth);
             jumpPlayer(pPlayers[i], pStartPlatform->yPos, pJumpSound, pMute);
             playerCollidePlatform(pPlayers[i], pPlatforms, pJumpSound, pMute);
             checkIfPlayerDead(pPlayers[i], windowHeight, pState, nrOfPlayersLeft);
-            if (!pPlayers[i]->alive) {
-                renderText(pGameOverText, pRenderer);
-            }
+        }
             renderPlayer(pPlayers[i], pRenderer, pPlayerTextures[i], flip);
-        }
-        else {
-            jumpPlayer(pPlayers[i], pStartPlatform->yPos, pJumpSound, pMute);
-            playerCollidePlatform(pPlayers[i], pPlatforms, pJumpSound, pMute);
-            checkIfPlayerDead(pPlayers[i], windowHeight, pState, nrOfPlayersLeft);
-            renderPlayer(pPlayers[i], pRenderer, pPlayerTextures[i], SDL_FLIP_NONE);
-        }
     }
 
+    if (!pPlayers[0]->alive) {
+        renderText(pGameOverText, pRenderer);
+    }
     handleWin(*nrOfPlayersLeft, pState, pWinSound, pMute);
 }
 
-void resetPlayers(Player** pPlayers, int* pNrOfPlayers, int* pNrOfPlayersLeft, bool* pLeft, bool* pRight){
-    int i;
-
-    for (i = 0; i < MAX_PLAYERS; i++) {
-        if (pPlayers[i]) {
-            pPlayers[i] = 0;
-        }
-    }
-
+void resetPlayers(Player** pPlayers, int* pNrOfPlayers, int* pNrOfPlayersLeft){
     *pNrOfPlayers = 0;
     *pNrOfPlayersLeft = 0;
-
-    *pLeft = false;
-    *pRight = false;
 }
 
 void destroyPlayers(Player** pPlayers) {

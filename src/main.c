@@ -196,7 +196,7 @@ void handleMainMenu(Game* pGame, SDL_Event event, bool* pMute){
 
     renderMainMenu(pGame);
 
-    if (SDL_PollEvent(&event)) {
+    while (SDL_PollEvent(&event)) {
         handleButton(pGame->pStartButton, &buttonPressed);
         if (buttonPressed) {
             pGame->state = LOBBY_MENU;
@@ -250,7 +250,7 @@ void handleSettingsMenu(Game* pGame, SDL_Event event, int* pNum, bool *pShowLang
         renderLanguageMenu(pGame);
     }
 
-    if (SDL_PollEvent(&event)){
+    while (SDL_PollEvent(&event)){
         handleButton(pGame->pLanguageButton, &buttonPressed);
         if (buttonPressed) {
             (*pShowLang) = true;
@@ -380,7 +380,7 @@ void handleEnterInput(Game* pGame, SDL_Event event, int* pNum){
 
     renderSettingsMenu(pGame);
 
-    if (SDL_PollEvent(&event)){
+    while (SDL_PollEvent(&event)){
         switch (event.type){
             case SDL_KEYDOWN:
                 if (event.key.keysym.sym == SDLK_ESCAPE) {
@@ -402,7 +402,7 @@ void handleLobbyMenu(Game* pGame, SDL_Event event, bool* pLeft, bool* pRight, in
 
     renderLobbyMenu(pGame);
 
-    if (SDL_PollEvent(&event)) {
+    while (SDL_PollEvent(&event)) {
         handleButton(pGame->pCreateLobbyButton, &buttonPressed);
         if (buttonPressed) {
             initializeNetcode(pGame->pNetworkData, true);
@@ -444,7 +444,7 @@ void renderLobbyMenu(Game* pGame){
 }
 
 void handleOngoing(Game* pGame, SDL_Event event, bool* pIsRunning, bool* pLeft, bool *pRight, int *pTime, bool* pMute){
-    if (SDL_PollEvent(&event)){
+    while (SDL_PollEvent(&event)){
         handleOngoingInput(pGame, &event, pIsRunning, pLeft, pRight, pMute);
     }
 
@@ -491,8 +491,8 @@ void handleOngoing(Game* pGame, SDL_Event event, bool* pIsRunning, bool* pLeft, 
 			switch (tempCC.commandType) {
 				case MOVEMENT: {
 					// printf("movement direction: %d\n", tempCC.direction);
-					tempP->mvLeft = (tempCC.direction == -1);
-					tempP->mvRight = (tempCC.direction == 1);
+					tempP->moveLeft = (tempCC.direction == -1);
+					tempP->moveRight = (tempCC.direction == 1);
 					break;
                 default:
                     break;
@@ -552,7 +552,7 @@ void handleOngoingInput(Game* pGame, SDL_Event* event, bool* pIsRunning, bool* p
             }
             else if ((event->key.keysym.sym) == pGame->keybinds[0]) {
                 if (pGame->pNetworkData->isHost) {
-					pGame->pPlayers[0]->mvRight = true;
+					pGame->pPlayers[0]->moveRight = true;
 					pGame->pPlayers[0]->flip = SDL_FLIP_NONE;
 				} else {
 					pGame->pClientCommands[0].direction = 1;
@@ -560,7 +560,7 @@ void handleOngoingInput(Game* pGame, SDL_Event* event, bool* pIsRunning, bool* p
             }
             else if ((event->key.keysym.sym) == pGame->keybinds[1]) {
                 if (pGame->pNetworkData->isHost) {
-					pGame->pPlayers[0]->mvLeft = true;
+					pGame->pPlayers[0]->moveLeft = true;
 					pGame->pPlayers[0]->flip = SDL_FLIP_HORIZONTAL;
 				} else {
 					pGame->pClientCommands[0].direction = -1;
@@ -586,14 +586,14 @@ void handleOngoingInput(Game* pGame, SDL_Event* event, bool* pIsRunning, bool* p
         case SDL_KEYUP:
             if ((event->key.keysym.sym) == pGame->keybinds[0]) {
                 if (pGame->pNetworkData->isHost) {
-					pGame->pPlayers[0]->mvRight = false;
+					pGame->pPlayers[0]->moveRight = false;
 				} else {
 					pGame->pClientCommands[0].direction = 0;
 				}
             }
             else if ((event->key.keysym.sym) == pGame->keybinds[1]) {
                 if (pGame->pNetworkData->isHost) {
-					pGame->pPlayers[0]->mvLeft = false;
+					pGame->pPlayers[0]->moveLeft = false;
 				} else {
 					pGame->pClientCommands[0].direction = 0;
 				}
@@ -615,7 +615,7 @@ void handleGameMenu(Game* pGame, SDL_Event event, bool* pMute){
 
     renderGameMenu(pGame);
 
-    if (SDL_PollEvent(&event)) {
+    while (SDL_PollEvent(&event)) {
         handleButton(pGame->pResumeButton, &buttonPressed);
         if (buttonPressed) {
             pGame->state = ONGOING;
@@ -656,14 +656,14 @@ void handleGameOver(Game* pGame, SDL_Event event){
         }
     }
     if(!whoWonTextCreated) {
-        sprintf(whoWonString, "Player %d won", i + 1);
+        sprintf(whoWonString, "%s %d %s", pGame->language[14], i + 1, pGame->language[15]);
         pGame->pWhoWonText = createText(pGame->pRenderer, pGame->pMenuFont, whoWonString, 255, 255, 255, pGame->windowWidth, pGame->windowHeight, 0, -300);
         whoWonTextCreated = true;
     }
 
     renderGameOver(pGame);
 
-    if (SDL_PollEvent(&event)) {
+    while (SDL_PollEvent(&event)) {
         handleButton(pGame->pMainMenuButton, &buttonPressed);
         if (buttonPressed) {
             destroyText(pGame->pWhoWonText);
@@ -691,10 +691,10 @@ void resetGame(Game* pGame, bool* pLeft, bool* pRight, int* pTime){
 
     resetPlatforms(pGame->pPlatforms);
     resetStartPlatform(pGame->pStartPlatform, pGame->windowHeight, pTime);
-    resetPlayers(pGame->pPlayers, &pGame->nrOfPlayers, &pGame->nrOfPlayersLeft, pLeft, pRight);
+    resetPlayers(pGame->pPlayers, &pGame->nrOfPlayers, &pGame->nrOfPlayersLeft);
 
 	for (int i = 0; i < MAX_PLAYERS; i++) {
-		initPlayers(pGame->pPlayers, &pGame->nrOfPlayers, &pGame->nrOfPlayersLeft, pGame->windowWidth, pGame->pStartPlatform->yPos, pGame->pPlayerTextures, pGame->pWindow, pGame->pRenderer, &subtractXPos, &increaseXPos);
+		initPlayer(pGame->pPlayers, &pGame->nrOfPlayers, &pGame->nrOfPlayersLeft, pGame->windowWidth, pGame->pStartPlatform->yPos, pGame->pPlayerTextures, pGame->pWindow, pGame->pRenderer, &subtractXPos, &increaseXPos);
 	}
 }
 

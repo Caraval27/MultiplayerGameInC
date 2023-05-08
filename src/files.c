@@ -44,7 +44,7 @@ void readFromFileLang(FILE *fp, char language[NR_OF_WORDS][50]){
         fclose(fp);
     } else{
         fp = fopen(target, "w");
-        fprintf(fp, "Start game\nSettings\nQuit\nResume game\nMain menu\nLanguage\nReturn\nMove right:\nMove left:\nYou are Dead\nCreate Lobby\nJoin Lobby\nPress key\nMute sound:");
+        fprintf(fp, "Start game\nSettings\nQuit\nResume game\nMain menu\nLanguage\nReturn\nMove right:\nMove left:\nYou are Dead\nCreate Lobby\nJoin Lobby\nPress key\nMute sound:\nPlayer\nwon");
         fclose(fp);
 
         fp = fopen(target, "r");
@@ -71,6 +71,8 @@ void readFromFileLangMAC( bool chosenLanguage, char language[NR_OF_WORDS][50]){
         strcpy(language[11], "Join lobby");
         strcpy(language[12], "Press key");
         strcpy(language[13], "Mute Sound:");
+        strcpy(language[14], "Player");
+        strcpy(language[15], "won");
     } else{
         strcpy(language[0], "Starta spelet");
         strcpy(language[1], "Installningar");
@@ -86,6 +88,8 @@ void readFromFileLangMAC( bool chosenLanguage, char language[NR_OF_WORDS][50]){
         strcpy(language[11], "Ansluta till lobby");
         strcpy(language[12], "Tryck tangenten");
         strcpy(language[13], "Tystna ljudet:");
+        strcpy(language[14], "Spelare");
+        strcpy(language[15], "vann");
     }
 }
 
