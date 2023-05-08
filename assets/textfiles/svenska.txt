@@ -12,3 +12,5 @@ Skapa lobby
 Ansluta till lobby
 Tryck tangenten
 Tystna ljudet:
+Spelare
+vann

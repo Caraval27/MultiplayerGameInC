@@ -12,3 +12,5 @@ Create Lobby
 Join Lobby
 Press key
 Mute sound:
+Player
+won

@@ -690,7 +690,7 @@ void handleGameOver(Game* pGame, SDL_Event event){
         }
     }
     if(!winTextCreated){
-        sprintf(whoWonString, "Player %d won", i+1);
+        sprintf(whoWonString, "%s %d %s", pGame->language[14], i+1, pGame->language[15]);
         pGame->pWhoWonText = createText(pGame->pRenderer, pGame->pMenuFont, 255, 255, 255, whoWonString, pGame->windowWidth, pGame->windowHeight, -300, 0);
         winTextCreated = true;
     }
