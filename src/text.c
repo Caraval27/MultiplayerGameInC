@@ -32,11 +32,3 @@ void destroyText(Text* pText) {
         free(pText);
     }
 }
-
-void destroyTexts(Text** pTexts){
-    int i;
-
-    for(i = 0; i < MAX_PLAYERS + 1; i++) {
-        destroyText(pTexts[i]);
-    }
-}

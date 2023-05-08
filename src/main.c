@@ -102,18 +102,6 @@ int initiateGame(Game* pGame){
     pGame->pStartPlatform = createPlatform(0, pGame->windowHeight - 100, pGame->windowWidth, 100);
     pGame->flip = SDL_FLIP_NONE;
 
-    pGame->pYouAreDeadText = createText(pGame->pRenderer, pGame->pMenuFont, "You are dead", 255, 255, 255, pGame->windowWidth, pGame->windowHeight, 0, -200);
-    pGame->pWhoWonTexts[0] = createText(pGame->pRenderer, pGame->pMenuFont, "Player 0 won", 255, 255, 255, pGame->windowWidth, pGame->windowHeight, 0, -300);
-    pGame->pWhoWonTexts[1] = createText(pGame->pRenderer, pGame->pMenuFont, "Player 1 won", 255, 255, 255, pGame->windowWidth, pGame->windowHeight, 0, -300);
-    pGame->pWhoWonTexts[2] = createText(pGame->pRenderer, pGame->pMenuFont, "Player 2 won", 255, 255, 255, pGame->windowWidth, pGame->windowHeight, 0, -300);
-    pGame->pWhoWonTexts[3] = createText(pGame->pRenderer, pGame->pMenuFont, "Player 3 won", 255, 255, 255, pGame->windowWidth, pGame->windowHeight, 0, -300);
-    pGame->pWhoWonTexts[4] = createText(pGame->pRenderer, pGame->pMenuFont, "Player 4 won", 255, 255, 255, pGame->windowWidth, pGame->windowHeight, 0, -300);
-    pGame->pWhoWonTexts[6] = createText(pGame->pRenderer, pGame->pMenuFont, "Player 6 won", 255, 255, 255, pGame->windowWidth, pGame->windowHeight, 0, -300);
-    pGame->pWhoWonTexts[7] = createText(pGame->pRenderer, pGame->pMenuFont, "Player 7 won", 255, 255, 255, pGame->windowWidth, pGame->windowHeight, 0, -300);
-    pGame->pWhoWonTexts[8] = createText(pGame->pRenderer, pGame->pMenuFont, "Player 8 won", 255, 255, 255, pGame->windowWidth, pGame->windowHeight, 0, -300);
-    pGame->pWhoWonTexts[9] = createText(pGame->pRenderer, pGame->pMenuFont, "Player 9 won", 255, 255, 255, pGame->windowWidth, pGame->windowHeight, 0, -300);
-    pGame->pWhoWonTexts[10] = createText(pGame->pRenderer, pGame->pMenuFont, "You won!", 255, 255, 255, pGame->windowWidth, pGame->windowHeight, 0, -300);
-
     pGame->pMainSound = Mix_LoadMUS("../assets/MainThemeSoundtrack.mp3");
     if (!handleError(pGame, pGame->pMainSound, Mix_GetError)) return 0;
     pGame->pJumpSound = Mix_LoadWAV("../assets/JumpEffect.wav");
@@ -491,9 +479,24 @@ void handleOngoing(Game* pGame, SDL_Event event, bool* pIsRunning, bool* pLeft, 
 
 		*pGame->pClientCommands = (ClientCommand){0};
 	} else {
-
+        /*for(int i = 0; i < pGame->nrOfPlayers; i++){
+            *pGame->pPlayers[i] = pGame->pGameplayData->players[i];
+        }
+        if(pGame->pGameplayData->gameState == GAME_OVER){
+            pGame->state = GAME_OVER;
+        }*/
 		// KLIENT: HÄR SKA PUNKT (B) UTFÖRAS
 		// Datan är tillgänglig via pGame->GameplayData.
+
+        /*
+        Läggs in när matning av GameplayData (Punkt 1) är klar !!!
+
+        *pGame->pPlayers = pGame->pGameplayData->players;
+        pGame->nrOfPlayers = pGame->pGameplayData->nrOfPlayers;
+        pGame->nrOfPlayersLeft = pGame->pGameplayData->nrOfPlayersLeft;
+        pGame->windowWidth = pGame->pGameplayData->players->width;
+        pGame->windowHeight = pGame->pGameplayData->players->height;
+        */
 
 	}
 
@@ -606,15 +609,31 @@ void renderGameMenu(Game* pGame){
 }
 
 void handleGameOver(Game* pGame, SDL_Event event){
+    int i;
+    static bool whoWonTextCreated = false;
+    char whoWonString[50];
     bool buttonPressed = false;
 
     Mix_PauseMusic();
+
+    for(i = 0; i < pGame->nrOfPlayers; i++) {
+        if (pGame->pPlayers[i]->alive) {
+            break;
+        }
+    }
+    if(!whoWonTextCreated) {
+        sprintf(whoWonString, "Player %d won", i + 1);
+        pGame->pWhoWonText = createText(pGame->pRenderer, pGame->pMenuFont, whoWonString, 255, 255, 255, pGame->windowWidth, pGame->windowHeight, 0, -300);
+        whoWonTextCreated = true;
+    }
 
     renderGameOver(pGame);
 
     while (SDL_PollEvent(&event)) {
         handleButton(pGame->pMainMenuButton, &buttonPressed);
         if (buttonPressed) {
+            destroyText(pGame->pWhoWonText);
+            whoWonTextCreated = false;
             pGame->state = MAIN_MENU;
             buttonPressed = false;
         }
@@ -626,22 +645,10 @@ void handleGameOver(Game* pGame, SDL_Event event){
 }
 
 void renderGameOver(Game* pGame){
-    int i;
-
     renderButton(pGame->pMainMenuButton, pGame->pRenderer, pGame->pButtonTexture);
 
     renderText(pGame->pMainMenuButtonText, pGame->pRenderer);
-    for(i = 0; i < pGame->nrOfPlayers; i++) {
-        if (pGame->pPlayers[i]->alive) {
-            break;
-        }
-    }
-    if (i <= pGame->nrOfPlayers - 1) {
-        renderText(pGame->pWhoWonTexts[i], pGame->pRenderer);
-    }
-    else {
-        renderText(pGame->pWhoWonTexts[MAX_PLAYERS], pGame->pRenderer);
-    }
+    renderText(pGame->pWhoWonText, pGame->pRenderer);
 }
 
 void resetGame(Game* pGame, bool* pLeft, bool* pRight, int* pTime){
@@ -669,7 +676,6 @@ void quitGame(Game* pGame){
     destroyChunk(pGame->pJumpSound);
     destroyMusic(pGame->pMainSound);
 
-    destroyTexts(pGame->pWhoWonTexts);
     destroyText(pGame->pYouAreDeadText);
     destroyText(pGame->pMainMenuButtonText);
     destroyText(pGame->pResumeButtonText);

@@ -125,7 +125,6 @@ void checkIfPlayerDead(Player* pPlayer, int windowHeight, State* pState, int* pN
 
 void handleWin(int nrOfPlayersLeft, State* pState, Mix_Chunk* pWinSound, bool* pMute){
     if (nrOfPlayersLeft <= 1) {
-        printf("Test");
         if (!(pMute)) {
             Mix_PlayChannel(-1, pWinSound, 0);
         }
