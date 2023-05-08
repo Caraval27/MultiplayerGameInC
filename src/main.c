@@ -457,9 +457,12 @@ void handleOngoing(Game* pGame, SDL_Event event, bool* pIsRunning, bool* pLeft, 
 	if (isHost) {
 		GameplayData temp;
 
-        for(int i = 0; i < pGame->nrOfPlayers; i++){
+        for(int i = 0; i < 6; i++){
             temp.players[i] = *pGame->pPlayers[i];
         }
+
+		temp.nrOfPlayers = pGame->nrOfPlayers;
+		temp.nrOfPlayersLeft = pGame->nrOfPlayersLeft;
 
         temp.gameState = pGame->state;
 		// SERVER: HÄR SKA PUNKT (1) UTFÖRAS
@@ -501,6 +504,11 @@ void handleOngoing(Game* pGame, SDL_Event event, bool* pIsRunning, bool* pLeft, 
 			pGame->pClientCommands[i] = (ClientCommand){0};
 		}
 	} else {
+		for (int i = 0; i < 6; i++) {
+			*pGame->pPlayers[i] = pGame->pGameplayData->players[i];
+		}
+		pGame->nrOfPlayers = pGame->pGameplayData->nrOfPlayers;
+		pGame->nrOfPlayersLeft = pGame->pGameplayData->nrOfPlayersLeft;
         /*for(int i = 0; i < pGame->nrOfPlayers; i++){
             *pGame->pPlayers[i] = pGame->pGameplayData->players[i];
         }
@@ -527,7 +535,10 @@ void handleOngoing(Game* pGame, SDL_Event event, bool* pIsRunning, bool* pLeft, 
 	////////////////////////////////////////////////////////////////////////////////////////////////////
 
     handleBackground(pGame->pBackground, pGame->pRenderer, pGame->pBackgroundTexture, pGame->windowWidth, pGame->windowHeight); //denna mï¿½ste ligga fï¿½re allt med player
-    handlePlatforms(pGame->pPlatforms, pGame->pRenderer, pGame->pPlatformTexture, pGame->windowWidth, pGame->windowHeight);
+
+	// KEEP THIS COMMENTED FOR NOW
+    // handlePlatforms(pGame->pPlatforms, pGame->pRenderer, pGame->pPlatformTexture, pGame->windowWidth, pGame->windowHeight);
+
     handleStartPlatform(pGame->pStartPlatform, pGame->pPlatforms[0], pGame->pRenderer, pGame->pStartPlatformTexture, pGame->windowHeight, pTime);
     handlePlayers(pGame->pPlayers, pGame->nrOfPlayers, &pGame->nrOfPlayersLeft, pLeft, pRight, pMute, pGame->windowWidth, pGame->windowHeight, pGame->pStartPlatform, pGame->pJumpSound, pGame->pWinSound, &pGame->state, pGame->pRenderer, pGame->pPlayerTextures, pGame->flip, pGame->pPlatforms, pGame->pYouAreDeadText, &pGame->pNetworkData->isHost);
 

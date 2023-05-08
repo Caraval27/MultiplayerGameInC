@@ -144,19 +144,20 @@ void renderPlayer(Player* pPlayer, SDL_Renderer* pRenderer, SDL_Texture* pTextur
 
 void handlePlayers(Player** pPlayers, int pNrOfPlayers, int *nrOfPlayersLeft, bool *pLeft, bool *pRight, bool* pMute, int windowWidth, int windowHeight, Platform* pStartPlatform, Mix_Chunk *pJumpSound, Mix_Chunk* pWinSound, State* pState, SDL_Renderer* pRenderer, SDL_Texture** pPlayerTextures, SDL_RendererFlip flip, Platform** pPlatforms, Text* pGameOverText, bool* isHost){
     for (int i = 0; i < pNrOfPlayers; i++) {
-        if (isHost) {
+        if (*isHost) {
             movePlayer(pPlayers[i], pPlayers[i]->moveLeft, pPlayers[i]->moveRight, windowWidth);
             jumpPlayer(pPlayers[i], pStartPlatform->yPos, pJumpSound, pMute);
             playerCollidePlatform(pPlayers[i], pPlatforms, pJumpSound, pMute);
             checkIfPlayerDead(pPlayers[i], windowHeight, pState, nrOfPlayersLeft);
         }
-            renderPlayer(pPlayers[i], pRenderer, pPlayerTextures[i], flip);
+        renderPlayer(pPlayers[i], pRenderer, pPlayerTextures[i], flip);
     }
 
-    if (!pPlayers[0]->alive) {
-        renderText(pGameOverText, pRenderer);
-    }
-    handleWin(*nrOfPlayersLeft, pState, pWinSound, pMute);
+	// KEEP THIS COMMENTED FOR NOW
+    // if (!pPlayers[0]->alive) {
+    //     renderText(pGameOverText, pRenderer);
+    // }
+    // handleWin(*nrOfPlayersLeft, pState, pWinSound, pMute);
 }
 
 void resetPlayers(Player** pPlayers, int* pNrOfPlayers, int* pNrOfPlayersLeft){

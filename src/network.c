@@ -34,7 +34,9 @@ void runNetcode(NetworkData *pNetworkData, GameplayData *pGameplayData, ClientCo
 			// CLIENT
 			sendClientCommand(pNetworkData, &pClientCommands[0]);
 			if (pNetworkData->hasJoined) {
-				listenForHostBroadcast(pNetworkData, pGameplayData);
+				int test = listenForHostBroadcast(pNetworkData, pGameplayData);
+				// if (test == 0) printf("ran a tick without inc broadcast\n");
+				// else if (test > 0) printf("ran a tick WITH inc broadcast\n");
 			} else {
 				if (listenForHostBroadcast(pNetworkData, pGameplayData)) {
 					pNetworkData->hasJoined = true;
@@ -179,9 +181,9 @@ void sendClientCommand(NetworkData *pNetworkData, ClientCommand *pClientCommand)
 
 int listenForHostBroadcast(NetworkData *pNetworkData, GameplayData *pGameplayData) {
 	int nBroadcasts = 0;
-	while (SDLNet_UDP_Recv(pNetworkData->pSocket, pNetworkData->pPacket)) {
+	if (SDLNet_UDP_Recv(pNetworkData->pSocket, pNetworkData->pPacket)) {
 		if (pNetworkData->pPacket->address.host != pNetworkData->server.host
-			|| pNetworkData->pPacket->address.port != pNetworkData->server.port) continue;
+			|| pNetworkData->pPacket->address.port != pNetworkData->server.port) return nBroadcasts; // continue;
 		memcpy(pGameplayData, pNetworkData->pPacket->data, sizeof(GameplayData));
 		nBroadcasts++;
 		// printf("broadcast received\n");
