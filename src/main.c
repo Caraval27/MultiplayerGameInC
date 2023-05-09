@@ -432,6 +432,7 @@ void handleLobbyMenu(Game* pGame, SDL_Event event, bool* pLeft, bool* pRight, in
         }
     }
 }
+//test
 
 void renderLobbyMenu(Game* pGame){
     renderMenu(pGame->pRenderer, pGame->pMenuTexture, pGame->windowWidth, pGame->windowHeight);
