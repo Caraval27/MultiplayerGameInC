@@ -480,14 +480,18 @@ void handleLobby(Game* pGame, SDL_Event event, bool* pJoined, int* pIndex) {
                         //skriv in ip adressen
                         *pJoined = true;
                     }
-                    if (*pIndex < 15) {
+                    else if ((event.key.keysym.sym) == (SDLK_BACKSPACE) && (*pIndex) > 0) {
+                        (*pIndex)--;
+                        pGame->inputIP[*pIndex] = '\0';
+                    }
+                    else if ((*pIndex) < 15) {
                         pGame->inputIP[*pIndex] = (event.key.keysym.sym);
                         (*pIndex)++;
                     }
                 break;
             }
         }
-        if (*pIndex > 0) {
+        if ((*pIndex) > 0) {
             pGame->pInputIPText = createText(pGame->pRenderer, pGame->pMenuFont, pGame->inputIP, 255, 255, 255, pGame->windowWidth, pGame->windowHeight, 70, 50);
             renderText(pGame->pInputIPText, pGame->pRenderer);
         }
