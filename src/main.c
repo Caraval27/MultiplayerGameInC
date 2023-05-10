@@ -452,6 +452,7 @@ void renderLobbyMenu(Game* pGame){
 void handleLobby(Game* pGame, SDL_Event event, bool* pJoined, int* pIndex) {
     bool buttonPressed = false;
     bool isHost = pGame->pNetworkData->isHost;
+    char nrOfClients[2];
 
     renderMenu(pGame->pRenderer, pGame->pMenuTexture, pGame->windowWidth, pGame->windowHeight);
 
@@ -460,7 +461,6 @@ void handleLobby(Game* pGame, SDL_Event event, bool* pJoined, int* pIndex) {
     if (isHost) { // SERVER
         renderButton(pGame->pStartButton, pGame->pRenderer, pGame->pButtonTexture); //knapp
         renderText(pGame->pStartButtonText, pGame->pRenderer);
-
         while (SDL_PollEvent(&event)) {
             handleButton(pGame->pStartButton, &buttonPressed); //if button pressed
             if (buttonPressed) {
@@ -472,6 +472,9 @@ void handleLobby(Game* pGame, SDL_Event event, bool* pJoined, int* pIndex) {
                 pGame->state = QUIT;
             }
         }
+        sprintf(nrOfClients, "%d", pGame->pNetworkData->nClients);
+        pGame->pNrClientsText = createText(pGame->pRenderer, pGame->pMenuFont, nrOfClients, 255, 255, 255, pGame->windowWidth, pGame->windowHeight, 0, 70);
+        renderText(pGame->pNrClientsText, pGame->pRenderer);
     } else { // CLIENT
         while (SDL_PollEvent(&event)) {
             switch (event.type) {
