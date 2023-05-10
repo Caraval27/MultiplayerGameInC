@@ -14,7 +14,7 @@ typedef struct {
     SDL_Window *pWindow;
     int windowWidth, windowHeight;
     SDL_Renderer *pRenderer;
-    SDL_Texture *pMenuTexture, *pBackgroundTexture, *pButtonTexture, *pPlatformTexture, *pStartPlatformTexture;
+    SDL_Texture *pMenuTexture, *pBackgroundTexture, *pButtonTexture, *pButtonExitTexture, *pPlatformTexture, *pStartPlatformTexture;
     TTF_Font *pMenuFont;
     Background* pBackground;
     Button *pStartButton,  *pSettingsButton, *pQuitButton, *pLanguageButton, *pMoveLeftButton, *pMoveRightButton, *pReturnButton, *pEnglishButton, *pSwedishButton, *pResumeButton,

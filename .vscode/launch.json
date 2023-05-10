@@ -1,0 +1,12 @@
+{
+	"version": "0.2.0",
+	"configurations": [
+		{
+			"name": "game",
+			"type": "cppdbg",
+			"request": "launch",
+			"program": "${workspaceFolder}/build/game.exe",
+			"cwd": "${workspaceFolder}/build",
+		}
+	]
+}
