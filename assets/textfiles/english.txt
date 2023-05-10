@@ -14,3 +14,5 @@ Press key
 Mute sound:
 Player
 won
+Waiting for more players...
+Enter server IP:

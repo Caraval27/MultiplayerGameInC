@@ -144,6 +144,9 @@ void initiateLanguage(FILE *fp, Game *pGame){
     pGame->pCreateLobbyButtonText = createText(pGame->pRenderer, pGame->pMenuFont, pGame->language[10], 255, 255, 255, pGame->windowWidth, pGame->windowHeight, 0, 0);
     pGame->pJoinLobbyButtonText = createText(pGame->pRenderer, pGame->pMenuFont, pGame->language[11], 255, 255, 255, pGame->windowWidth, pGame->windowHeight, 0, 50);
     pGame->pMuteButton1Text = createText(pGame->pRenderer, pGame->pMenuFont, pGame->language[13], 255, 255, 255, pGame->windowWidth, pGame->windowHeight, -80, 150);
+
+    pGame->pWaitingText = createText(pGame->pRenderer, pGame->pMenuFont, pGame->language[16], 255, 255, 255, pGame->windowWidth, pGame->windowHeight, 0, 50);
+    pGame->pEnterIPText = createText(pGame->pRenderer, pGame->pMenuFont, pGame->language[17], 255, 255, 255, pGame->windowWidth, pGame->windowHeight, -130, 50);
 }
 
 int handleError(Game* pGame, void* pMember, const char* (*GetError)(void)){
@@ -157,8 +160,8 @@ int handleError(Game* pGame, void* pMember, const char* (*GetError)(void)){
 
 void runGame(Game* pGame){
     SDL_Event event;
-    bool isRunning = true, left = false, right = false, mute = false, showLang = false;
-    int num, time = 0;
+    bool isRunning = true, left = false, right = false, mute = false, showLang = false, joined = false;
+    int num, time = 0, inputIPIndex = 0;
 
     Mix_VolumeMusic(75);
     Mix_PlayMusic(pGame->pMainSound, -1);
@@ -173,7 +176,7 @@ void runGame(Game* pGame){
                 break;
             case LOBBY_MENU: handleLobbyMenu(pGame, event, &left, &right, &time);
                 break;
-            case LOBBY:
+            case LOBBY: handleLobby(pGame, event, &joined, &inputIPIndex);
                 break;
             case ONGOING: handleOngoing(pGame, event, &isRunning, &left, &right, &time, &mute);
                 break;
@@ -408,13 +411,13 @@ void handleLobbyMenu(Game* pGame, SDL_Event event, bool* pLeft, bool* pRight, in
         handleButton(pGame->pCreateLobbyButton, &buttonPressed);
         if (buttonPressed) {
             initializeNetcode(pGame->pNetworkData, true);
-            pGame->state = ONGOING;
+            pGame->state = LOBBY;
             buttonPressed = false;
         }
         handleButton(pGame->pJoinLobbyButton, &buttonPressed);
         if (buttonPressed) {
             initializeNetcode(pGame->pNetworkData, false);
-            pGame->state = ONGOING;
+            pGame->state = LOBBY;
             buttonPressed = false;
         }
         handleButton(pGame->pReturnButton, &buttonPressed);
@@ -423,7 +426,7 @@ void handleLobbyMenu(Game* pGame, SDL_Event event, bool* pLeft, bool* pRight, in
             buttonPressed = false;
         }
 
-        if (pGame->state == ONGOING) {
+        if (pGame->state == LOBBY) {
             resetGame(pGame, pLeft, pRight, pTime);
         }
 
@@ -443,6 +446,60 @@ void renderLobbyMenu(Game* pGame){
     renderText(pGame->pCreateLobbyButtonText, pGame->pRenderer);
     renderText(pGame->pJoinLobbyButtonText, pGame->pRenderer);
     renderText(pGame->pReturnButtonText, pGame->pRenderer);
+}
+
+void handleLobby(Game* pGame, SDL_Event event, bool* pJoined, int* pIndex) {
+    bool buttonPressed = false;
+    bool isHost = pGame->pNetworkData->isHost;
+
+    renderMenu(pGame->pRenderer, pGame->pMenuTexture, pGame->windowWidth, pGame->windowHeight);
+
+    runNetcode(pGame->pNetworkData, pGame->pGameplayData, pGame->pClientCommands);
+
+    if (isHost) { // SERVER
+        renderButton(pGame->pStartButton, pGame->pRenderer, pGame->pButtonTexture); //knapp
+        renderText(pGame->pStartButtonText, pGame->pRenderer);
+
+        while (SDL_PollEvent(&event)) {
+            handleButton(pGame->pStartButton, &buttonPressed); //if button pressed
+            if (buttonPressed) {
+                pGame->state = ONGOING;
+                buttonPressed = false;
+                pGame->pGameplayData->start = true;
+            }
+            if (event.type == SDL_QUIT) {
+                pGame->state = QUIT;
+            }
+        }
+    } else { // CLIENT
+        while (SDL_PollEvent(&event)) {
+            switch (event.type) {
+                case SDL_KEYDOWN:
+                    if ((event.key.keysym.sym) == (SDLK_RETURN)) { // kolla sen om det är rätt adress jämför med networkdata.server
+                        //skriv in ip adressen
+                        *pJoined = true;
+                    }
+                    if (*pIndex < 15) {
+                        pGame->inputIP[*pIndex] = (event.key.keysym.sym);
+                        (*pIndex)++;
+                    }
+                break;
+            }
+        }
+        if (*pIndex > 0) {
+            pGame->pInputIPText = createText(pGame->pRenderer, pGame->pMenuFont, pGame->inputIP, 255, 255, 255, pGame->windowWidth, pGame->windowHeight, 70, 50);
+            renderText(pGame->pInputIPText, pGame->pRenderer);
+        }
+        if (*pJoined) {
+            renderMenu(pGame->pRenderer, pGame->pMenuTexture, pGame->windowWidth, pGame->windowHeight);
+            renderText(pGame->pWaitingText, pGame->pRenderer);
+        } else {
+            renderText(pGame->pEnterIPText, pGame->pRenderer);
+        }
+        if (pGame->pGameplayData->start) {
+            pGame->state = ONGOING;
+        }
+    }
 }
 
 void handleOngoing(Game* pGame, SDL_Event event, bool* pIsRunning, bool* pLeft, bool *pRight, int *pTime, bool* pMute){

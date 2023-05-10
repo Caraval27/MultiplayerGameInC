@@ -24,13 +24,14 @@ typedef struct {
 
     Text *pStartButtonText, *pSettingsButtonText, *pQuitButtonText, *pLanguageButtonText,  *pMoveLeftButton1Text, *pMoveRightButton1Text, *pReturnButtonText, *pEnglishButtonText,
     *pSwedishButtonText, *pResumeButtonText, *pMainMenuButtonText, *pMoveLeftButton2Text, *pMoveRightButton2Text,*pYouAreDeadText, *pCreateLobbyButtonText, *pJoinLobbyButtonText,
-    *pMuteButton1Text, *pMuteButton2Text, *pWhoWonText;
+    *pMuteButton1Text, *pMuteButton2Text, *pWhoWonText, *pWaitingText, *pInputIPText, *pEnterIPText;
     Player* pPlayers[MAX_PLAYERS];
     SDL_Texture* pPlayerTextures[MAX_PLAYERS];
     int nrOfPlayers, nrOfPlayersLeft;
     SDL_RendererFlip flip;
     Platform *pPlatforms[100], *pStartPlatform;
 
+    char inputIP[15];
     int keybinds[NR_OF_KEYBINDS];
     char language[NR_OF_WORDS][50];
     Mix_Chunk *pJumpSound, *pWinSound;
@@ -57,6 +58,7 @@ void readKeybindString(Game *pGame, int input);
 void handleEnterInput(Game* pGame, SDL_Event event, int* pNum);
 void handleLobbyMenu(Game* pGame, SDL_Event event, bool* pLeft, bool* pRight, int* pTime);
 void renderLobbyMenu(Game* pGame);
+void handleLobby(Game* pGame, SDL_Event event, bool* pJoined, int* pIndex);
 void handleOngoing(Game* pGame, SDL_Event event, bool* pIsRunning, bool *pLeft, bool *pRight, int* pTime, bool* pMute);
 void handleOngoingInput(Game* pGame, SDL_Event* event, bool* pIsRunning, bool* pLeft, bool* pRight, bool* pMute);
 void handleGameMenu(Game* pGame, SDL_Event event, bool* pMute);
