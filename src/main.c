@@ -145,7 +145,6 @@ void initiateLanguage(FILE *fp, Game *pGame){
     pGame->pCreateLobbyButtonText = createText(pGame->pRenderer, pGame->pMenuFont, pGame->language[10], 255, 255, 255, pGame->windowWidth, pGame->windowHeight, 0, 0);
     pGame->pJoinLobbyButtonText = createText(pGame->pRenderer, pGame->pMenuFont, pGame->language[11], 255, 255, 255, pGame->windowWidth, pGame->windowHeight, 0, 50);
     pGame->pMuteButton1Text = createText(pGame->pRenderer, pGame->pMenuFont, pGame->language[13], 255, 255, 255, pGame->windowWidth, pGame->windowHeight, -80, 150);
-
     pGame->pWaitingText = createText(pGame->pRenderer, pGame->pMenuFont, pGame->language[16], 255, 255, 255, pGame->windowWidth, pGame->windowHeight, 0, 50);
     pGame->pEnterIPText = createText(pGame->pRenderer, pGame->pMenuFont, pGame->language[17], 255, 255, 255, pGame->windowWidth, pGame->windowHeight, -130, 50);
 }
@@ -481,7 +480,7 @@ void handleLobby(Game* pGame, SDL_Event event, bool* pJoined, int* pIndex) {
             switch (event.type) {
                 case SDL_KEYDOWN:
                     if ((event.key.keysym.sym) == (SDLK_RETURN)) { // kolla sen om det är rätt adress jämför med networkdata.server
-                        //skriv in ip adressen
+                        setConnection(pGame->pNetworkData, pGame->inputIP);
                         *pJoined = true;
                     }
                     else if ((event.key.keysym.sym) == (SDLK_BACKSPACE) && (*pIndex) > 0) {
