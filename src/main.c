@@ -47,6 +47,7 @@ int initiateGame(Game* pGame){
 	*pGame->pGameplayData = (GameplayData){0};
 	*pGame->pClientCommands = (ClientCommand){0};
 	pGame->pNetworkData->pPlayers = pGame->pPlayers;
+	initializeNetcode(pGame->pNetworkData);
 
     pGame->pWindow = SDL_CreateWindow("Mental breakdown", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, pGame->windowWidth, pGame->windowHeight, 0);
     if (!handleError(pGame, pGame->pWindow, SDL_GetError)) return 0;
@@ -410,13 +411,13 @@ void handleLobbyMenu(Game* pGame, SDL_Event event, bool* pLeft, bool* pRight, in
     while (SDL_PollEvent(&event)) {
         handleButton(pGame->pCreateLobbyButton, &buttonPressed);
         if (buttonPressed) {
-            initializeNetcode(pGame->pNetworkData, true);
+			setConnection(pGame->pNetworkData, NULL);
             pGame->state = LOBBY;
             buttonPressed = false;
         }
         handleButton(pGame->pJoinLobbyButton, &buttonPressed);
         if (buttonPressed) {
-            initializeNetcode(pGame->pNetworkData, false);
+			setConnection(pGame->pNetworkData, "127.0.0.1");
             pGame->state = LOBBY;
             buttonPressed = false;
         }

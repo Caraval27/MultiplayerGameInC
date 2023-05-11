@@ -1,23 +1,45 @@
 #include "../include/network.h"
 
-int initializeNetcode(NetworkData *pNetworkData, bool isHost) {
-	pNetworkData->isHost = isHost;
+int initializeNetcode(NetworkData *pNetworkData) {
 	if (!(pNetworkData->pPacket = SDLNet_AllocPacket(PACKET_SIZE))) {
 		printf("failed to allocate packet: %s\n", SDLNet_GetError());
 		return 0;
 	}
-	if (!(pNetworkData->pSocket = SDLNet_UDP_Open(isHost ? PORT : 0))) {
-		printf("failed to open socket: %s\n", SDLNet_GetError());
+
+	if (pNetworkData->pSocketServer = SDLNet_UDP_Open(PORT_SERVER)) {
+		printf("server socket opened\n");
+	} else {
+		printf("failed to open server socket: %s\n", SDLNet_GetError());
+	}
+
+	if (pNetworkData->pSocketClient = SDLNet_UDP_Open(PORT_CLIENT)) {
+		printf("client socket opened\n");
+	} else {
+		printf("failed to open client socket: %s\n", SDLNet_GetError());
+	}
+
+	pNetworkData->hasJoined = false; // support leaving game
+
+	printf("netcode initialization complete\n");
+	return 1;
+}
+
+void setConnection(NetworkData *pNetworkData, char *host) {
+	if (host == NULL) {
+		pNetworkData->isHost = true;
+	} else {
+		pNetworkData->isHost = false;
+		resolveNewHost(pNetworkData, host);
+	}
+}
+
+int resolveNewHost(NetworkData *pNetworkData, char *host) {
+	if (!SDLNet_ResolveHost(&pNetworkData->server, host, PORT_SERVER)) {
+		printf("host resolved\n");
+	} else {
+		printf("failed to resolve host: %s\n", SDLNet_GetError());
 		return 0;
 	}
-	if (!isHost) {
-		pNetworkData->hasJoined = false;
-		if (SDLNet_ResolveHost(&pNetworkData->server, SERVER_IP, PORT) == -1) {
-			printf("failed to resolve host: %s\n", SDLNet_GetError());
-			return 0;
-		}
-	}
-	printf("Netcode initialization complete. isHost = %d\n", isHost);
 	return 1;
 }
 
@@ -54,19 +76,19 @@ void broadcastToClients(NetworkData *pNetworkData, GameplayData *pGameplayData) 
 	int nBroadcasts = 0;
 	for (int i = 0; pNetworkData->clients[i].ip.host && i < CLIENT_LIMIT; i++) {
 		pNetworkData->pPacket->address = pNetworkData->clients[i].ip;
-		if (SDLNet_UDP_Send(pNetworkData->pSocket, -1, pNetworkData->pPacket)) {
+		if (SDLNet_UDP_Send(pNetworkData->pSocketServer, -1, pNetworkData->pPacket)) {
 			nBroadcasts++;
 		} else {
 			printf("failed to send broadcast to client at index %d\n", i);
 		}
 	}
 	if (nBroadcasts > 0) {
-		// printf("broadcast sent to %d client(s)\n", nBroadcasts);
+		printf("broadcast sent to %d client(s)\n", nBroadcasts);
 	}
 }
 
 void listenForClientCommands(NetworkData *pNetworkData, ClientCommand *pClientCommands) {
-	while (SDLNet_UDP_Recv(pNetworkData->pSocket, pNetworkData->pPacket)) {
+	while (SDLNet_UDP_Recv(pNetworkData->pSocketServer, pNetworkData->pPacket)) {
 		int cIndex = checkExistingClient(pNetworkData);
 		// if (checkExistingClient(pNetworkData)) {
 		if (cIndex > -1) {
@@ -110,7 +132,7 @@ void retrieveClientCommand(NetworkData *pNetworkData, ClientCommand *pClientComm
 	}
 	memcpy(&pClientCommands[iCommands], pNetworkData->pPacket->data, sizeof(ClientCommand));
 	pClientCommands[iCommands].ip = pNetworkData->pPacket->address;
-	// printf("client command retrieved at buffer index %d\n", iCommands);
+	printf("client command retrieved at buffer index %d\n", iCommands);
 	// int iClients = 0;
 	int iClients = cIndex;
 	// while (packetHost != pNetworkData->clients[iClients].ip.host
@@ -171,8 +193,8 @@ void sendClientCommand(NetworkData *pNetworkData, ClientCommand *pClientCommand)
 	memcpy(pNetworkData->pPacket->data, pClientCommand, sizeof(ClientCommand));
 	pNetworkData->pPacket->len = sizeof(ClientCommand);
 	pNetworkData->pPacket->address = pNetworkData->server;
-	if (SDLNet_UDP_Send(pNetworkData->pSocket, -1, pNetworkData->pPacket)) {
-		// printf("command sent\n");
+	if (SDLNet_UDP_Send(pNetworkData->pSocketClient, -1, pNetworkData->pPacket)) {
+		printf("command sent\n");
 		// printf("direction sent: %d\n", pClientCommand->direction);
 	} else {
 		printf("failed to send command: %s\n", SDLNet_GetError());
@@ -181,12 +203,12 @@ void sendClientCommand(NetworkData *pNetworkData, ClientCommand *pClientCommand)
 
 int listenForHostBroadcast(NetworkData *pNetworkData, GameplayData *pGameplayData) {
 	int nBroadcasts = 0;
-	if (SDLNet_UDP_Recv(pNetworkData->pSocket, pNetworkData->pPacket)) {
+	if (SDLNet_UDP_Recv(pNetworkData->pSocketClient, pNetworkData->pPacket)) {
 		if (pNetworkData->pPacket->address.host != pNetworkData->server.host
 			|| pNetworkData->pPacket->address.port != pNetworkData->server.port) return nBroadcasts; // continue;
 		memcpy(pGameplayData, pNetworkData->pPacket->data, sizeof(GameplayData));
 		nBroadcasts++;
-		// printf("broadcast received\n");
+		printf("broadcast received\n");
 	}
 	return nBroadcasts;
 }

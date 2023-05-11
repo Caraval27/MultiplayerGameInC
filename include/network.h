@@ -3,8 +3,8 @@
 #include "../include/libraries.h"
 #include "../include/players.h"
 
-#define SERVER_IP "127.0.0.1"
-#define PORT 3016
+#define PORT_SERVER 3016
+#define PORT_CLIENT 0
 #define PACKET_SIZE 512
 #define CLIENT_LIMIT MAX_PLAYERS - 1
 #define COMMAND_BUFFER CLIENT_LIMIT
@@ -30,7 +30,8 @@ typedef struct {
 } Client;
 
 typedef struct {
-	UDPsocket pSocket;
+	UDPsocket pSocketServer;
+	UDPsocket pSocketClient;
 	UDPpacket *pPacket;
 	bool isHost;
 	int hasJoined;
@@ -50,7 +51,16 @@ typedef struct {
 // Prepare the application to communicate over a network.
 // \param isHost True if the user is hosting a game, otherwise false.
 // \return Return 1 upon success. Return 0 otherwise.
-int initializeNetcode(NetworkData *pNetworkData, bool isHost);
+int initializeNetcode(NetworkData *pNetworkData);
+
+// Prepare the application to communicate with either a remote server or incoming clients.
+// \param host The server's IP address host, such as "127.0.0.1". If NULL, prepare communication
+// with incoming clients instead.
+void setConnection(NetworkData *pNetworkData, char *host);
+
+// Resolve a given host.
+// \return Return 1 upon success. Return 0 otherwise.
+int resolveNewHost(NetworkData *pNetworkData, char *host);
 
 // \param pGameplayData If host, this struct must be filled with data from the current state
 // of the game BEFORE calling the function. If client, this struct will be filled with data from the
