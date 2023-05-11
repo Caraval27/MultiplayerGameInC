@@ -11,6 +11,7 @@
 #define NETCODE_TICKRATE 1
 #define TIMEOUT_TICKRATE 1000
 #define CLIENT_TIMEOUT 3000
+#define INPUT_IP_LEN 15
 
 typedef enum {
 	MOVEMENT,

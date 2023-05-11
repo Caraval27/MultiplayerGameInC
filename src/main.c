@@ -491,23 +491,23 @@ void handleLobby(Game* pGame, SDL_Event event, bool* pJoined, int* pIndex, bool*
                         (*pIndex)--;
                         pGame->inputIP[*pIndex] = '\0';
                     }
-                    else if ((*pIndex) < 15) {
+                    else if ((*pIndex) < INPUT_IP_LEN) {
                         pGame->inputIP[*pIndex] = (event.key.keysym.sym);
                         (*pIndex)++;
                     }
                 break;
             }
-            /* handleButton(pGame->pMainMenuButton, &buttonPressed);
+            handleButton(pGame->pMainMenuButton, &buttonPressed);
             if (buttonPressed) {
                 pGame->state = MAIN_MENU;
                 buttonPressed = false;
                 (*pJoined) = false;
-                fillZero(pGame);
+                fillZero(pGame, INPUT_IP_LEN);
                 (*pIndex) = 0;
             }
             if (event.type == SDL_QUIT) {
                 pGame->state = QUIT;
-            } */
+            }
         }
         if ((*pIndex) > 0) {
             pGame->pInputIPText = createText(pGame->pRenderer, pGame->pMenuFont, pGame->inputIP, 255, 255, 255, pGame->windowWidth, pGame->windowHeight, 70, 50);
@@ -516,8 +516,8 @@ void handleLobby(Game* pGame, SDL_Event event, bool* pJoined, int* pIndex, bool*
         if (*pJoined) {
             renderMenu(pGame->pRenderer, pGame->pMenuTexture, pGame->windowWidth, pGame->windowHeight);
             renderText(pGame->pWaitingText, pGame->pRenderer);
-            // renderButton(pGame->pMainMenuButton, pGame->pRenderer, pGame->pButtonTexture);
-            // renderText(pGame->pMainMenuButtonText, pGame->pRenderer);
+            renderButton(pGame->pMainMenuButton, pGame->pRenderer, pGame->pButtonTexture);
+            renderText(pGame->pMainMenuButtonText, pGame->pRenderer);
         } else {
             renderText(pGame->pEnterIPText, pGame->pRenderer);
         }
@@ -527,12 +527,12 @@ void handleLobby(Game* pGame, SDL_Event event, bool* pJoined, int* pIndex, bool*
     }
 }
 
-/* void fillZero(Game* pGame) {
-    for (int i = 0; i < strlen(pGame->inputIP); i++)
+void fillZero(Game* pGame, int max) {
+    for (int i = 0; i < max; i++)
     {
         pGame->inputIP[i] = '\0';
     }
-} */
+}
 
 void handleOngoing(Game* pGame, SDL_Event event, bool* pIsRunning, bool* pLeft, bool *pRight, int *pTime, bool* pMute){
     while (SDL_PollEvent(&event)){

@@ -31,7 +31,7 @@ typedef struct {
     SDL_RendererFlip flip;
     Platform *pPlatforms[100], *pStartPlatform;
 
-    char inputIP[15];
+    char inputIP[INPUT_IP_LEN];
     int keybinds[NR_OF_KEYBINDS];
     char language[NR_OF_WORDS][50];
     Mix_Chunk *pJumpSound, *pWinSound;
@@ -59,7 +59,7 @@ void handleEnterInput(Game* pGame, SDL_Event event, int* pNum);
 void handleLobbyMenu(Game* pGame, SDL_Event event, bool* pLeft, bool* pRight, int* pTime, bool* pCreateLobbyPressed);
 void renderLobbyMenu(Game* pGame);
 void handleLobby(Game* pGame, SDL_Event event, bool* pJoined, int* pIndex, bool* pCreateLobbyPressed);
-// void fillZero(Game* pGame);
+void fillZero(Game* pGame, int max);
 void handleOngoing(Game* pGame, SDL_Event event, bool* pIsRunning, bool *pLeft, bool *pRight, int* pTime, bool* pMute);
 void handleOngoingInput(Game* pGame, SDL_Event* event, bool* pIsRunning, bool* pLeft, bool* pRight, bool* pMute);
 void handleGameMenu(Game* pGame, SDL_Event event, bool* pMute);
