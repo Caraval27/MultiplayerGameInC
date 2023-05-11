@@ -160,7 +160,7 @@ int handleError(Game* pGame, void* pMember, const char* (*GetError)(void)){
 
 void runGame(Game* pGame){
     SDL_Event event;
-    bool isRunning = true, left = false, right = false, mute = false, showLang = false, joined = false;
+    bool isRunning = true, left = false, right = false, mute = false, showLang = false, joined = false, createLobbyPressed = false;
     int num, time = 0, inputIPIndex = 0;
 
     Mix_VolumeMusic(75);
@@ -174,9 +174,9 @@ void runGame(Game* pGame){
                 break;
             case ENTER_INPUT: handleEnterInput(pGame, event, &num);
                 break;
-            case LOBBY_MENU: handleLobbyMenu(pGame, event, &left, &right, &time);
+            case LOBBY_MENU: handleLobbyMenu(pGame, event, &left, &right, &time, &createLobbyPressed);
                 break;
-            case LOBBY: handleLobby(pGame, event, &joined, &inputIPIndex);
+            case LOBBY: handleLobby(pGame, event, &joined, &inputIPIndex, &createLobbyPressed);
                 break;
             case ONGOING: handleOngoing(pGame, event, &isRunning, &left, &right, &time, &mute);
                 break;
@@ -402,7 +402,7 @@ void handleEnterInput(Game* pGame, SDL_Event event, int* pNum){
     }
 }
 
-void handleLobbyMenu(Game* pGame, SDL_Event event, bool* pLeft, bool* pRight, int* pTime){
+void handleLobbyMenu(Game* pGame, SDL_Event event, bool* pLeft, bool* pRight, int* pTime, bool* pCreateLobbyPressed){
     bool buttonPressed = false;
 
     renderLobbyMenu(pGame);
@@ -410,13 +410,12 @@ void handleLobbyMenu(Game* pGame, SDL_Event event, bool* pLeft, bool* pRight, in
     while (SDL_PollEvent(&event)) {
         handleButton(pGame->pCreateLobbyButton, &buttonPressed);
         if (buttonPressed) {
-			setConnection(pGame->pNetworkData, NULL);
             pGame->state = LOBBY;
+            *pCreateLobbyPressed = true;
             buttonPressed = false;
         }
         handleButton(pGame->pJoinLobbyButton, &buttonPressed);
         if (buttonPressed) {
-			setConnection(pGame->pNetworkData, "127.0.0.1");
             pGame->state = LOBBY;
             buttonPressed = false;
         }
@@ -449,14 +448,19 @@ void renderLobbyMenu(Game* pGame){
     renderText(pGame->pReturnButtonText, pGame->pRenderer);
 }
 
-void handleLobby(Game* pGame, SDL_Event event, bool* pJoined, int* pIndex) {
+void handleLobby(Game* pGame, SDL_Event event, bool* pJoined, int* pIndex, bool* pCreateLobbyPressed) {
     bool buttonPressed = false;
     bool isHost = pGame->pNetworkData->isHost;
     char nrOfClients[2];
 
     renderMenu(pGame->pRenderer, pGame->pMenuTexture, pGame->windowWidth, pGame->windowHeight);
 
-    runNetcode(pGame->pNetworkData, pGame->pGameplayData, pGame->pClientCommands);
+    if (*pJoined) {
+        runNetcode(pGame->pNetworkData, pGame->pGameplayData, pGame->pClientCommands);
+    }
+    if (*pCreateLobbyPressed) {
+        setConnection(pGame->pNetworkData, NULL);
+    }
 
     if (isHost) { // SERVER
         renderButton(pGame->pStartButton, pGame->pRenderer, pGame->pButtonTexture);
@@ -479,7 +483,7 @@ void handleLobby(Game* pGame, SDL_Event event, bool* pJoined, int* pIndex) {
         while (SDL_PollEvent(&event)) {
             switch (event.type) {
                 case SDL_KEYDOWN:
-                    if ((event.key.keysym.sym) == (SDLK_RETURN)) { // kolla sen om det är rätt adress jämför med networkdata.server
+                    if ((event.key.keysym.sym) == (SDLK_RETURN) ) {
                         setConnection(pGame->pNetworkData, pGame->inputIP);
                         *pJoined = true;
                     }
@@ -493,6 +497,17 @@ void handleLobby(Game* pGame, SDL_Event event, bool* pJoined, int* pIndex) {
                     }
                 break;
             }
+            /* handleButton(pGame->pMainMenuButton, &buttonPressed);
+            if (buttonPressed) {
+                pGame->state = MAIN_MENU;
+                buttonPressed = false;
+                (*pJoined) = false;
+                fillZero(pGame);
+                (*pIndex) = 0;
+            }
+            if (event.type == SDL_QUIT) {
+                pGame->state = QUIT;
+            } */
         }
         if ((*pIndex) > 0) {
             pGame->pInputIPText = createText(pGame->pRenderer, pGame->pMenuFont, pGame->inputIP, 255, 255, 255, pGame->windowWidth, pGame->windowHeight, 70, 50);
@@ -501,6 +516,8 @@ void handleLobby(Game* pGame, SDL_Event event, bool* pJoined, int* pIndex) {
         if (*pJoined) {
             renderMenu(pGame->pRenderer, pGame->pMenuTexture, pGame->windowWidth, pGame->windowHeight);
             renderText(pGame->pWaitingText, pGame->pRenderer);
+            // renderButton(pGame->pMainMenuButton, pGame->pRenderer, pGame->pButtonTexture);
+            // renderText(pGame->pMainMenuButtonText, pGame->pRenderer);
         } else {
             renderText(pGame->pEnterIPText, pGame->pRenderer);
         }
@@ -509,6 +526,13 @@ void handleLobby(Game* pGame, SDL_Event event, bool* pJoined, int* pIndex) {
         }
     }
 }
+
+/* void fillZero(Game* pGame) {
+    for (int i = 0; i < strlen(pGame->inputIP); i++)
+    {
+        pGame->inputIP[i] = '\0';
+    }
+} */
 
 void handleOngoing(Game* pGame, SDL_Event event, bool* pIsRunning, bool* pLeft, bool *pRight, int *pTime, bool* pMute){
     while (SDL_PollEvent(&event)){
