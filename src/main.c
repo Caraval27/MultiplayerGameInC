@@ -459,10 +459,10 @@ void handleLobby(Game* pGame, SDL_Event event, bool* pJoined, int* pIndex) {
     runNetcode(pGame->pNetworkData, pGame->pGameplayData, pGame->pClientCommands);
 
     if (isHost) { // SERVER
-        renderButton(pGame->pStartButton, pGame->pRenderer, pGame->pButtonTexture); //knapp
+        renderButton(pGame->pStartButton, pGame->pRenderer, pGame->pButtonTexture);
         renderText(pGame->pStartButtonText, pGame->pRenderer);
         while (SDL_PollEvent(&event)) {
-            handleButton(pGame->pStartButton, &buttonPressed); //if button pressed
+            handleButton(pGame->pStartButton, &buttonPressed);
             if (buttonPressed) {
                 pGame->state = ONGOING;
                 buttonPressed = false;
