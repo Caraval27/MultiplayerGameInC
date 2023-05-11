@@ -765,6 +765,7 @@ void renderGameOver(Game* pGame){
 }
 
 void resetGame(Game* pGame, bool* pLeft, bool* pRight, int* pTime){
+    char avatar[6][25] = {"../assets/player1.png", "../assets/player2.png", "../assets/player3.png", "../assets/player4.png", "../assets/player5.png", "../assets/player6.png"};
     int subtractXPos = -100;
     int increaseXPos = 0;
 
@@ -773,7 +774,7 @@ void resetGame(Game* pGame, bool* pLeft, bool* pRight, int* pTime){
     resetPlayers(pGame->pPlayers, &pGame->nrOfPlayers, &pGame->nrOfPlayersLeft);
 
 	for (int i = 0; i < MAX_PLAYERS; i++) {
-		initPlayer(pGame->pPlayers, &pGame->nrOfPlayers, &pGame->nrOfPlayersLeft, pGame->windowWidth, pGame->pStartPlatform->yPos, pGame->pPlayerTextures, pGame->pWindow, pGame->pRenderer, &subtractXPos, &increaseXPos);
+		initPlayer(pGame->pPlayers, &pGame->nrOfPlayers, &pGame->nrOfPlayersLeft, pGame->windowWidth, pGame->pStartPlatform->yPos, pGame->pPlayerTextures, pGame->pWindow, pGame->pRenderer, &subtractXPos, &increaseXPos, avatar[i]);
 	}
 }
 
