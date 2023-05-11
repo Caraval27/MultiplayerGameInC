@@ -1,7 +1,7 @@
 #pragma once
 
 #define Y_NR_OF_PLATFORMS 2
-#define PLATFORM_PICTURE "../assets/iceBlock.png"
+#define PLATFORM_PICTURE "../assets/steelPipe.png"
 #define START_PLATFORM_PICTURE "../assets/iceBlock.png"
 #define PLATFORM_WIDTH 100
 #define PLATFORM_HEIGHT 20
