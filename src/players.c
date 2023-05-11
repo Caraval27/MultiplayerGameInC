@@ -32,9 +32,9 @@ Player* createPlayer(float xPos, float yPos, float width, float height, float xV
 }*/
 
 
-void initPlayer(Player** pPlayers, int* pNrOfPlayers, int* pNrOfPlayersLeft, int windowWidth, float startPlatformYPos, SDL_Texture** pPlayerTextures, SDL_Window* pWindow, SDL_Renderer* pRenderer, int* pSubtractXPos, int* pIncreaseXPos){
+void initPlayer(Player** pPlayers, int* pNrOfPlayers, int* pNrOfPlayersLeft, int windowWidth, float startPlatformYPos, SDL_Texture** pPlayerTextures, SDL_Window* pWindow, SDL_Renderer* pRenderer, int* pSubtractXPos, int* pIncreaseXPos, char avatar[]){
         if (*pNrOfPlayers != MAX_PLAYERS) {
-            pPlayerTextures[*pNrOfPlayers] = createPicture(pWindow, pRenderer, CHARACTER_PICTURE); //g?r en str?ng av detta ist
+            pPlayerTextures[*pNrOfPlayers] = createPicture(pWindow, pRenderer, avatar);
             if (*pNrOfPlayers % 2 == 1) {
                 pPlayers[*pNrOfPlayers] = createPlayer((windowWidth / 2) + (*pSubtractXPos), startPlatformYPos - CHARACTER_HEIGHT, CHARACTER_WIDTH, CHARACTER_HEIGHT, MOVE_SPEED, JUMP_SPEED); //?ndra starterpositions
                 *pSubtractXPos -= 100;
