@@ -1,8 +1,8 @@
 #pragma once
 
-#include "../include/menu.h"
 #include "../include/text.h"
 #include "../include/platforms.h"
+#include "../include/menu.h"
 
 #define MAX_PLAYERS 6
 #define CHARACTER_PICTURE "../assets/musse.png"

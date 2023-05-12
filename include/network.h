@@ -2,6 +2,7 @@
 
 #include "../include/libraries.h"
 #include "../include/players.h"
+#include "../include/menu.h"
 
 #define PORT_SERVER 3016
 #define PORT_CLIENT 0
