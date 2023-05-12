@@ -5,18 +5,6 @@
 #define BUTTON_WIDTH 220
 #define BUTTON_HEIGHT 40
 
-typedef enum {
-    MAIN_MENU,
-	LOBBY_MENU,
-    LOBBY,
-	SETTINGS_MENU,
-	ENTER_INPUT,
-	ONGOING,
-	GAME_MENU,
-	GAME_OVER,
-	QUIT
-} State;
-
 typedef struct {
 	float xPos, yPos;
 	float width, height;

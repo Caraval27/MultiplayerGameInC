@@ -5,6 +5,18 @@
 #define BACKGROUND_HEIGHT 1536
 #define BACKGROUND_SPEED 1
 
+typedef enum {
+    MAIN_MENU,
+	LOBBY_MENU,
+    LOBBY,
+	SETTINGS_MENU,
+	ENTER_INPUT,
+	ONGOING,
+	GAME_MENU,
+	GAME_OVER,
+	QUIT
+} State;
+
 typedef struct{
     float upperSrcYPos, upperSrcHeight;
     float lowerSrcYPos, lowerSrcHeight;
