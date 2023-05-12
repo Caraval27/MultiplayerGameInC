@@ -1,13 +1,6 @@
 #pragma once
 
-#include "../include/libraries.h"
-#include "../include/world.h"
-#include "../include/files.h"
-#include "../include/players.h"
-#include "../include/platforms.h"
-#include "../include/menu.h"
-#include "../include/text.h"
-#include "../include/network.h"
+#include "../include/game.h"
 
 int initiateGame(Game* pGame);
 void initiateLanguage(FILE *fp, Game *pGame);
