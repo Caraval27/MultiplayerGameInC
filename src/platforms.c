@@ -7,6 +7,7 @@ Platform *createPlatform(float xPos, float yPos, float width, float height) {
 	pPlatform->yPos = yPos;
 	pPlatform->width = width;
 	pPlatform->height = height;
+    pPlatform->created = true;
 
 	return pPlatform;
 }
@@ -42,12 +43,11 @@ void renderPlatform(Platform* pPlatform, SDL_Renderer* pRenderer, SDL_Texture* p
     SDL_RenderCopy(pRenderer, pTexture, NULL, &rect);
 }
 
-void handlePlatforms(Platform** pPlatforms, SDL_Renderer* pRenderer, SDL_Texture* pTexture, int windowWidth, int windowHeight) {
+void handlePlatforms(Platform** pPlatforms, SDL_Renderer* pRenderer, SDL_Texture* pTexture, int windowWidth, int windowHeight, bool isHost) {
     int i = 0, j = 0, width = 0, height = 0, x = 0, y = 0;
-
     if (SDL_GetTicks64() % 1000 < 17) {
-
-		cleanupPlatforms(pPlatforms, windowHeight);
+        cleanupPlatforms(pPlatforms, windowHeight);
+    if(isHost){
 
         i = 0;
 
@@ -68,11 +68,13 @@ void handlePlatforms(Platform** pPlatforms, SDL_Renderer* pRenderer, SDL_Texture
             }
         }
     }
+    }
 
     i = 0;
     while (pPlatforms[i]) {
         renderPlatform(pPlatforms[i], pRenderer, pTexture);
-        scrollPlatform(pPlatforms[i]);
+        if(isHost)
+            scrollPlatform(pPlatforms[i]);
         i++;
     }
 }

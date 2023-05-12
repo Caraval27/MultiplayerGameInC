@@ -552,6 +552,13 @@ void handleOngoing(Game* pGame, SDL_Event event, bool* pIsRunning, bool* pLeft, 
             temp.players[i] = *pGame->pPlayers[i];
         }
 
+        for(int i = 0; i < 30; i++){
+            if(pGame->pPlatforms[i]){
+                temp.platforms[i] = *pGame->pPlatforms[i];
+                temp.platforms[i].created = true;
+            }
+            else temp.platforms[i].created = false;
+        }
 		temp.nrOfPlayers = pGame->nrOfPlayers;
 		temp.nrOfPlayersLeft = pGame->nrOfPlayersLeft;
 
@@ -600,6 +607,19 @@ void handleOngoing(Game* pGame, SDL_Event event, bool* pIsRunning, bool* pLeft, 
 		}
 		pGame->nrOfPlayers = pGame->pGameplayData->nrOfPlayers;
 		pGame->nrOfPlayersLeft = pGame->pGameplayData->nrOfPlayersLeft;
+
+        for(int i = 0; i < 30; i++){
+            if(pGame->pGameplayData->platforms[i].created){
+                //printf("Platform[%d]\n", i);
+                if(pGame->pPlatforms[i] == 0){
+                    pGame->pPlatforms[i] = createPlatform(pGame->pGameplayData->platforms[i].xPos,
+                    pGame->pGameplayData->platforms[i].yPos, pGame->pGameplayData->platforms[i].width,
+                    pGame->pGameplayData->platforms[i].height);
+                }else{
+                    *pGame->pPlatforms[i] = pGame->pGameplayData->platforms[i];
+                }
+            }
+        }
         /*for(int i = 0; i < pGame->nrOfPlayers; i++){
             *pGame->pPlayers[i] = pGame->pGameplayData->players[i];
         }
@@ -628,7 +648,7 @@ void handleOngoing(Game* pGame, SDL_Event event, bool* pIsRunning, bool* pLeft, 
     handleBackground(pGame->pBackground, pGame->pRenderer, pGame->pBackgroundTexture, pGame->windowWidth, pGame->windowHeight); //denna m�ste ligga f�re allt med player
 
 	// KEEP THIS COMMENTED FOR NOW
-    // handlePlatforms(pGame->pPlatforms, pGame->pRenderer, pGame->pPlatformTexture, pGame->windowWidth, pGame->windowHeight);
+    handlePlatforms(pGame->pPlatforms, pGame->pRenderer, pGame->pPlatformTexture, pGame->windowWidth, pGame->windowHeight, isHost);
 
     handleStartPlatform(pGame->pStartPlatform, pGame->pPlatforms[0], pGame->pRenderer, pGame->pStartPlatformTexture, pGame->windowHeight, pTime);
     handlePlayers(pGame->pPlayers, pGame->nrOfPlayers, &pGame->nrOfPlayersLeft, pLeft, pRight, pMute, pGame->windowWidth, pGame->windowHeight, pGame->pStartPlatform, pGame->pJumpSound, pGame->pWinSound, &pGame->state, pGame->pRenderer, pGame->pPlayerTextures, pGame->flip, pGame->pPlatforms, pGame->pYouAreDeadText, &pGame->pNetworkData->isHost);

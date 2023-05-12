@@ -10,12 +10,13 @@
 typedef struct {
 	float xPos, yPos;
     float width, height;
+    bool created;
 } Platform;
 
 Platform *createPlatform(float xPos, float yPos, float width, float height);
 void scrollPlatform(Platform* pPlatform);
 void renderPlatform(Platform* pPlatform, SDL_Renderer* pRenderer, SDL_Texture* pTexture);
-void handlePlatforms(Platform** pPlatforms, SDL_Renderer* pRenderer, SDL_Texture* pTexture, int windowWidth, int windowHeight);
+void handlePlatforms(Platform** pPlatforms, SDL_Renderer* pRenderer, SDL_Texture* pTexture, int windowWidth, int windowHeight, bool isHost);
 void handleStartPlatform(Platform* pStartPlatform, Platform* pFirstPlatform, SDL_Renderer* pRenderer, SDL_Texture* pTexture, int windowHeight, int* pTime);
 void resetPlatforms(Platform** pPlatforms);
 void resetStartPlatform(Platform* pStartPlatform, int windowHeight, int* pTime);
