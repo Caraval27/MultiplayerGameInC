@@ -48,7 +48,7 @@ typedef struct {
 	State gameState;
 	int nrOfPlayers, nrOfPlayersLeft;
     bool start;
-	Platform platforms[30];
+	// Platform platforms[30];
 } GameplayData;
 
 // Prepare the application to communicate over a network.
