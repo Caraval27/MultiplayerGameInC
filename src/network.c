@@ -26,8 +26,10 @@ int initializeNetcode(NetworkData *pNetworkData) {
 
 void setConnection(NetworkData *pNetworkData, char *host) {
 	if (host == NULL) {
+		printf("connection set as server\n");
 		pNetworkData->isHost = true;
 	} else {
+		printf("connection set as client\n");
 		pNetworkData->isHost = false;
 		resolveNewHost(pNetworkData, host);
 	}
@@ -66,7 +68,7 @@ void runNetcode(NetworkData *pNetworkData, GameplayData *pGameplayData, ClientCo
 				}
 			}
 		}
-		// printf("----------\n");
+		printf("--\n");
 	}
 }
 
