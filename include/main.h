@@ -10,10 +10,11 @@
 #include "../include/network.h"
 
 typedef struct {
+    GameDisplay gameDisplay;
+    //SDL_Window *pWindow;
+    //int windowWidth, windowHeight;
+    //SDL_Renderer *pRenderer;
     State state;
-    SDL_Window *pWindow;
-    int windowWidth, windowHeight;
-    SDL_Renderer *pRenderer;
     SDL_Texture *pMenuTexture, *pBackgroundTexture, *pButtonTexture, *pButtonExitTexture, *pPlatformTexture, *pStartPlatformTexture;
     TTF_Font *pMenuFont;
     Background* pBackground;
@@ -28,7 +29,6 @@ typedef struct {
     Player* pPlayers[MAX_PLAYERS];
     SDL_Texture* pPlayerTextures[MAX_PLAYERS];
     int nrOfPlayers, nrOfPlayersLeft;
-    SDL_RendererFlip flip;
     Platform *pPlatforms[100], *pStartPlatform;
 
     char inputIP[INPUT_IP_LEN];
@@ -49,15 +49,15 @@ int handleError(Game* pGame, void* pMember, const char* (*GetError)(void));
 void runGame(Game* pGame);
 
 void handleMainMenu(Game* pGame, SDL_Event event, bool* pMute);
-void renderMainMenu(Game* pGame);
+void renderMainMenu(Game* pGame, GameDisplay* pGameDisplay);
 void handleSettingsMenu(Game* pGame, SDL_Event event, int* pNum, bool *pShowLang);
-void renderSettingsMenu(Game *pGame);
+void renderSettingsMenu(Game *pGame, GameDisplay* pGameDisplay);
 void handleLanguageMenu(Game* pGame, SDL_Event event, bool* pShowLang);
-void renderLanguageMenu(Game* pGame);
+void renderLanguageMenu(Game* pGame, GameDisplay* pGameDisplay);
 void readKeybindString(Game *pGame, int input);
 void handleEnterInput(Game* pGame, SDL_Event event, int* pNum);
 void handleLobbyMenu(Game* pGame, SDL_Event event, bool* pLeft, bool* pRight, int* pTime, int* pIndex, bool* pJoined);
-void renderLobbyMenu(Game* pGame);
+void renderLobbyMenu(Game* pGame, GameDisplay* pGameDisplay);
 void handleLobby(Game* pGame, SDL_Event event, int* pIndex, bool* pJoined);
 void fillZero(Game* pGame, int max);
 void handleOngoing(Game* pGame, SDL_Event event, bool* pIsRunning, bool *pLeft, bool *pRight, int* pTime, bool* pMute);
@@ -65,7 +65,7 @@ void handleOngoingInput(Game* pGame, SDL_Event* event, bool* pIsRunning, bool* p
 void handleGameMenu(Game* pGame, SDL_Event event, bool* pMute);
 void renderGameMenu(Game* pGame);
 void handleGameOver(Game* pGame, SDL_Event event);
-void renderGameOver(Game* pGame);
+void renderGameOver(Game* pGame, GameDisplay* pGameDisplay);
 
 void resetGame(Game* pGame, bool* pLeft, bool* pRight, int* pTime);
 

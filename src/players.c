@@ -32,15 +32,15 @@ Player* createPlayer(float xPos, float yPos, float width, float height, float xV
 }*/
 
 
-void initPlayer(Player** pPlayers, int* pNrOfPlayers, int* pNrOfPlayersLeft, int windowWidth, float startPlatformYPos, SDL_Texture** pPlayerTextures, SDL_Window* pWindow, SDL_Renderer* pRenderer, int* pSubtractXPos, int* pIncreaseXPos, char avatar[]){
+void initPlayer(Player** pPlayers, int* pNrOfPlayers, int* pNrOfPlayersLeft, GameDisplay* pGameDisplay, float startPlatformYPos, SDL_Texture** pPlayerTextures, int* pSubtractXPos, int* pIncreaseXPos, char avatar[]){
         if (*pNrOfPlayers != MAX_PLAYERS) {
-            pPlayerTextures[*pNrOfPlayers] = createPicture(pWindow, pRenderer, avatar);
+            pPlayerTextures[*pNrOfPlayers] = createPicture(pGameDisplay, avatar);
             if (*pNrOfPlayers % 2 == 1) {
-                pPlayers[*pNrOfPlayers] = createPlayer((windowWidth / 2) + (*pSubtractXPos), startPlatformYPos - CHARACTER_HEIGHT, CHARACTER_WIDTH, CHARACTER_HEIGHT, MOVE_SPEED, JUMP_SPEED); //?ndra starterpositions
+                pPlayers[*pNrOfPlayers] = createPlayer((pGameDisplay->windowWidth / 2) + (*pSubtractXPos), startPlatformYPos - CHARACTER_HEIGHT, CHARACTER_WIDTH, CHARACTER_HEIGHT, MOVE_SPEED, JUMP_SPEED); //?ndra starterpositions
                 *pSubtractXPos -= 100;
             }
             else {
-                pPlayers[*pNrOfPlayers] = createPlayer((windowWidth / 2) + (*pIncreaseXPos), startPlatformYPos - CHARACTER_HEIGHT, CHARACTER_WIDTH, CHARACTER_HEIGHT, MOVE_SPEED, JUMP_SPEED); //?ndra starterpositions
+                pPlayers[*pNrOfPlayers] = createPlayer((pGameDisplay->windowWidth / 2) + (*pIncreaseXPos), startPlatformYPos - CHARACTER_HEIGHT, CHARACTER_WIDTH, CHARACTER_HEIGHT, MOVE_SPEED, JUMP_SPEED); //?ndra starterpositions
                 *pIncreaseXPos += 100;
             }
 

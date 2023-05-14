@@ -5,6 +5,12 @@
 #define BACKGROUND_HEIGHT 1536
 #define BACKGROUND_SPEED 1
 
+typedef struct {
+    SDL_Window* pWindow;
+    SDL_Renderer* pRenderer;
+    int windowWidth, windowHeight;
+} GameDisplay;
+
 typedef enum {
     MAIN_MENU,
 	LOBBY_MENU,
@@ -25,9 +31,9 @@ typedef struct{
 } Background;
 
 Background* createBackground(int windowHeight);
-SDL_Texture* createPicture(SDL_Window* pWindow, SDL_Renderer* pRenderer, char picture[]);
+SDL_Texture* createPicture(GameDisplay* pGameDisplay, char picture[]);
 void destroyTexture(SDL_Texture* pTexture);
-void handleBackground(Background* pBackground, SDL_Renderer* pRenderer, SDL_Texture* pTexture, int windowWidth, int windowHeight);
+void handleBackground(Background* pBackground, GameDisplay* pGameDisplay, SDL_Texture* pTexture);
 void renderBackground(Background* pBackground, SDL_Renderer* pRenderer, SDL_Texture* pTexture, int windowWidth);
 void destroyBackground(Background* pBackground);
 void destroyMusic(Mix_Music* pMainSound);

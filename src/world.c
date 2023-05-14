@@ -1,19 +1,19 @@
 #include "../include/main.h"
 
-SDL_Texture* createPicture(SDL_Window* pWindow, SDL_Renderer* pRenderer, char picture[]){
+SDL_Texture* createPicture(GameDisplay* pGameDisplay, char picture[]){
     SDL_Surface *pSurface = IMG_Load(picture);
     if (!pSurface) {
         printf("Error: %s\n", SDL_GetError());
-        SDL_DestroyRenderer(pRenderer);
-        SDL_DestroyWindow(pWindow);
+        SDL_DestroyRenderer(pGameDisplay->pRenderer);
+        SDL_DestroyWindow(pGameDisplay->pWindow);
         SDL_Quit();
         exit(1);
     }
-    SDL_Texture *pTexture = SDL_CreateTextureFromSurface(pRenderer, pSurface);
+    SDL_Texture *pTexture = SDL_CreateTextureFromSurface(pGameDisplay->pRenderer, pSurface);
     if (!pTexture) {
         printf("Error: %s\n", SDL_GetError());
-        SDL_DestroyRenderer(pRenderer);
-        SDL_DestroyWindow(pWindow);
+        SDL_DestroyRenderer(pGameDisplay->pRenderer);
+        SDL_DestroyWindow(pGameDisplay->pWindow);
         SDL_Quit();
         exit(1);
     }
@@ -43,7 +43,7 @@ Background* createBackground(int windowHeight){
     return pBackground;
 }
 
-void handleBackground(Background* pBackground, SDL_Renderer* pRenderer, SDL_Texture* pTexture, int windowWidth, int windowHeight){
+void handleBackground(Background* pBackground, GameDisplay* pGameDisplay, SDL_Texture* pTexture){
 
     if (pBackground->lowerSrcYPos < 0) {
         pBackground->upperSrcYPos -= BACKGROUND_SPEED;
@@ -60,15 +60,15 @@ void handleBackground(Background* pBackground, SDL_Renderer* pRenderer, SDL_Text
     if (pBackground->lowerSrcHeight < 0) {
         pBackground->upperSrcYPos = BACKGROUND_HEIGHT;
         pBackground->upperSrcHeight = 0;
-        pBackground->lowerSrcYPos = BACKGROUND_HEIGHT - windowHeight;
-        pBackground->lowerSrcHeight = windowHeight;
+        pBackground->lowerSrcYPos = BACKGROUND_HEIGHT - pGameDisplay->windowHeight;
+        pBackground->lowerSrcHeight = pGameDisplay->windowHeight;
         pBackground->upperDstYPos = 0;
         pBackground->upperDstHeight = 0;
         pBackground->lowerDstYPos = 0;
-        pBackground->lowerDstHeight = windowHeight;
+        pBackground->lowerDstHeight = pGameDisplay->windowHeight;
     }
 
-    renderBackground(pBackground, pRenderer, pTexture, windowWidth);
+    renderBackground(pBackground, pGameDisplay->pRenderer, pTexture, pGameDisplay->windowWidth);
 }
 
 void renderBackground(Background* pBackground, SDL_Renderer* pRenderer, SDL_Texture* pTexture, int windowWidth){

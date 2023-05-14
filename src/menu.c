@@ -1,9 +1,9 @@
 #include "../include/main.h"
 
-void renderMenu(SDL_Renderer* pRenderer, SDL_Texture* pTexture, int windowWidth, int windowHeight){
-    SDL_Rect rect = {0, 0, windowWidth, windowHeight};
+void renderMenu(GameDisplay* pGameDisplay, SDL_Texture* pTexture){
+    SDL_Rect rect = {0, 0, pGameDisplay->windowWidth, pGameDisplay->windowHeight};
 
-    SDL_RenderCopy(pRenderer, pTexture, NULL, &rect);
+    SDL_RenderCopy(pGameDisplay->pRenderer, pTexture, NULL, &rect);
 }
 
 Button* createButton(float xPos, float yPos, float width, float height){

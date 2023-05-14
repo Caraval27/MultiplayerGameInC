@@ -12,7 +12,7 @@ typedef struct {
     float mouseState;
 } Button;
 
-void renderMenu(SDL_Renderer* pRenderer, SDL_Texture* pTexture, int windowWidth, int windowHeight);
+void renderMenu(GameDisplay* pGameDisplay, SDL_Texture* pTexture);
 Button* createButton(float xPos, float yPos, float width, float height);
 void getMousePos(Button* pButton);
 void handleButton(Button* pButton, bool* pPressed);

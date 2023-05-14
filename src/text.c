@@ -1,6 +1,6 @@
 #include "../include/main.h"
 
-Text* createText(SDL_Renderer* pRenderer, TTF_Font* pFont, char* pString, int red, int green, int blue, int windowWidth, int windowHeight, int xOffset, int yOffset) {
+Text* createText(GameDisplay* pGameDisplay, TTF_Font* pFont, char* pString, int red, int green, int blue, int xOffset, int yOffset) {
     Text* pText = malloc(sizeof(Text));
 
     SDL_Color color = {red, green, blue};
@@ -9,15 +9,15 @@ Text* createText(SDL_Renderer* pRenderer, TTF_Font* pFont, char* pString, int re
         printf("Error: %s\n",SDL_GetError());
         exit(1);
     }
-    pText->pTexture = SDL_CreateTextureFromSurface(pRenderer, pSurface);
+    pText->pTexture = SDL_CreateTextureFromSurface(pGameDisplay->pRenderer, pSurface);
     if (!pText->pTexture) {
         printf("Error: %s\n",SDL_GetError());
         exit(1);
     }
     SDL_FreeSurface(pSurface);
     SDL_QueryTexture(pText->pTexture, NULL, NULL, &pText->rect.w, &pText->rect.h);
-    pText->rect.x = (windowWidth - pText->rect.w) / 2 + xOffset;
-    pText->rect.y = (windowHeight - pText->rect.h) / 2 + yOffset;
+    pText->rect.x = (pGameDisplay->windowWidth - pText->rect.w) / 2 + xOffset;
+    pText->rect.y = (pGameDisplay->windowHeight - pText->rect.h) / 2 + yOffset;
 
     return pText;
 }
