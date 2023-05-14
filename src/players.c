@@ -13,6 +13,7 @@ Player* createPlayer(float xPos, float yPos, float width, float height, float xV
     pPlayer->yVelocity = yVelocity;
     pPlayer->moveLeft = false;
     pPlayer->moveRight = false;
+    pPlayer->flip = false;
 
     return pPlayer;
 }
@@ -142,7 +143,7 @@ void renderPlayer(Player* pPlayer, SDL_Renderer* pRenderer, SDL_Texture* pTextur
     }
 }
 
-void handlePlayers(Player** pPlayers, int pNrOfPlayers, int *nrOfPlayersLeft, bool *pLeft, bool *pRight, bool* pMute, int windowWidth, int windowHeight, Platform* pStartPlatform, Mix_Chunk *pJumpSound, Mix_Chunk* pWinSound, State* pState, SDL_Renderer* pRenderer, SDL_Texture** pPlayerTextures, Platform** pPlatforms, Text* pGameOverText, bool* isHost){
+void handlePlayers(Player** pPlayers, int pNrOfPlayers, int *nrOfPlayersLeft, bool* pMute, int windowWidth, int windowHeight, Platform* pStartPlatform, Mix_Chunk *pJumpSound, Mix_Chunk* pWinSound, State* pState, SDL_Renderer* pRenderer, SDL_Texture** pPlayerTextures, Platform** pPlatforms, Text* pGameOverText, bool* isHost){
     for (int i = 0; i < pNrOfPlayers; i++) {
         if (*isHost) {
             movePlayer(pPlayers[i], pPlayers[i]->moveLeft, pPlayers[i]->moveRight, windowWidth);

@@ -157,9 +157,9 @@ int handleError(Game* pGame, void* pMember, const char* (*GetError)(void)) {
     else return 1;
 }
 
-void runGame(Game* pGame){
+void runGame(Game* pGame) {
     SDL_Event event;
-    bool isRunning = true, left = false, right = false, mute = false, joined = false;
+    bool isRunning = true, mute = false, joined = false;
     int time = 0, inputIPIndex = 0;
 
     Mix_VolumeMusic(75);
@@ -173,11 +173,11 @@ void runGame(Game* pGame){
                 break;
             case ENTER_INPUT: handleEnterInput(&pGame->gameDisplay, &pGame->language, &pGame->buttons, event, &pGame->state);
                 break;
-            case LOBBY_MENU: handleLobbyMenu(pGame, event, &left, &right, &time, &inputIPIndex, &joined);
+            case LOBBY_MENU: handleLobbyMenu(pGame, event, &time, &inputIPIndex, &joined);
                 break;
             case LOBBY: handleLobby(pGame, event, &inputIPIndex, &joined);
                 break;
-            case ONGOING: handleOngoing(pGame, event, &isRunning, &left, &right, &time, &mute);
+            case ONGOING: handleOngoing(pGame, event, &isRunning, &time, &mute);
                 break;
             case GAME_MENU: handleGameMenu(&pGame->gameDisplay, &pGame->buttons, event, &pGame->state, &mute);
                 break;
@@ -246,7 +246,7 @@ void renderMainMenu(GameDisplay* pGameDisplay, Buttons* pButtons) { //kan flytta
     renderText(pButtons->pQuitButtonText, pGameDisplay->pRenderer);
 }
 
-void handleSettingsMenu(GameDisplay* pGameDisplay, Language* pLanguage, Buttons* pButtons, DisplayText* pDisplayText, SDL_Event event, State* pState) {
+void handleSettingsMenu(GameDisplay* pGameDisplay, Language* pLanguage, Buttons* pButtons, DisplayText* pDisplayText, SDL_Event event, State* pState) { // kan flyttas
     bool buttonPressed = false;
 
     renderSettingsMenu(pGameDisplay, pButtons);
@@ -317,7 +317,7 @@ void renderSettingsMenu(GameDisplay* pGameDisplay, Buttons* pButtons) { //kan fl
     renderText(pButtons->pReturnButtonText, pGameDisplay->pRenderer);
 }
 
-void handleLanguageMenu(GameDisplay* pGameDisplay, Language* pLanguage, Buttons* pButtons, DisplayText* pDisplayText, SDL_Event event) {
+void handleLanguageMenu(GameDisplay* pGameDisplay, Language* pLanguage, Buttons* pButtons, DisplayText* pDisplayText, SDL_Event event) { // kan flyttas
     bool buttonPressed = false;
     char chosenLang[LANG_LENGTH];
     FILE *fp;
@@ -379,7 +379,7 @@ void readKeybindString(Language* pLanguage, int index, GameDisplay* pGameDisplay
     }
 }
 
-void handleEnterInput(GameDisplay* pGameDisplay, Language* pLanguage, Buttons* pButtons, SDL_Event event, State* pState) {
+void handleEnterInput(GameDisplay* pGameDisplay, Language* pLanguage, Buttons* pButtons, SDL_Event event, State* pState) { // kan flyttas
     FILE *fp;
 
     renderSettingsMenu(pGameDisplay, pButtons);
@@ -401,7 +401,7 @@ void handleEnterInput(GameDisplay* pGameDisplay, Language* pLanguage, Buttons* p
     }
 }
 
-void handleLobbyMenu(Game* pGame, SDL_Event event, bool* pLeft, bool* pRight, int* pTime, int* pIndex, bool* pJoined) {
+void handleLobbyMenu(Game* pGame, SDL_Event event, int* pTime, int* pIndex, bool* pJoined) {
     bool buttonPressed = false;
 
     renderLobbyMenu(&pGame->gameDisplay, &pGame->buttons);
@@ -458,7 +458,7 @@ void handleLobbyMenu(Game* pGame, SDL_Event event, bool* pLeft, bool* pRight, in
         }
     }
     if (pGame->state == LOBBY) {
-        resetGame(pGame, pLeft, pRight, pTime);
+        resetGame(pGame, pTime);
     }
 }
 
@@ -532,9 +532,9 @@ void fillZero(char inputIP[], int max) { // kan flyttas
     }
 }
 
-void handleOngoing(Game* pGame, SDL_Event event, bool* pIsRunning, bool* pLeft, bool *pRight, int *pTime, bool* pMute) {
+void handleOngoing(Game* pGame, SDL_Event event, bool* pIsRunning, int *pTime, bool* pMute) {
     while (SDL_PollEvent(&event)) {
-        handleOngoingInput(pGame, &event, pIsRunning, pLeft, pRight, pMute);
+        handleOngoingInput(pGame, &event, pIsRunning, pMute);
     }
 
 	////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -650,12 +650,12 @@ void handleOngoing(Game* pGame, SDL_Event event, bool* pIsRunning, bool* pLeft, 
     //handlePlatforms(pGame->pPlatforms, pGame->pRenderer, pGame->pPlatformTexture, pGame->windowWidth, pGame->windowHeight, isHost);
 
     handleStartPlatform(pGame->pStartPlatform, pGame->pPlatforms[0], pGame->gameDisplay.pRenderer, pGame->gameDisplay.pStartPlatformTexture, pGame->gameDisplay.windowHeight, pTime);
-    handlePlayers(pGame->pPlayers, pGame->nrOfPlayers, &pGame->nrOfPlayersLeft, pLeft, pRight, pMute, pGame->gameDisplay.windowWidth, pGame->gameDisplay.windowHeight, pGame->pStartPlatform, pGame->pJumpSound, pGame->pWinSound, &pGame->state, pGame->gameDisplay.pRenderer, pGame->pPlayerTextures, pGame->pPlatforms, pGame->displayText.pYouAreDeadText, &pGame->pNetworkData->isHost);
+    handlePlayers(pGame->pPlayers, pGame->nrOfPlayers, &pGame->nrOfPlayersLeft, pMute, pGame->gameDisplay.windowWidth, pGame->gameDisplay.windowHeight, pGame->pStartPlatform, pGame->pJumpSound, pGame->pWinSound, &pGame->state, pGame->gameDisplay.pRenderer, pGame->pPlayerTextures, pGame->pPlatforms, pGame->displayText.pYouAreDeadText, &pGame->pNetworkData->isHost);
 
     SDL_Delay(3);
 }
 
-void handleOngoingInput(Game* pGame, SDL_Event* event, bool* pIsRunning, bool* pLeft, bool* pRight, bool* pMute) {
+void handleOngoingInput(Game* pGame, SDL_Event* event, bool* pIsRunning, bool* pMute) {
 	// Det visade sig att de events vi använder för att läsa input var lite mer komplicerat än vad jag
 	// först trodde, så jag var tvungen att modifiera pClientCommands[0] direkt via dess pointer istället.
 	if (!pGame->pNetworkData->isHost) {
@@ -808,7 +808,7 @@ void renderGameOver(GameDisplay* pGameDisplay, Buttons* pButtons, Text* pWhoWonT
     renderText(pWhoWonText, pGameDisplay->pRenderer);
 }
 
-void resetGame(Game* pGame, bool* pLeft, bool* pRight, int* pTime) {
+void resetGame(Game* pGame, int* pTime) {
     char avatar[6][25] = {"../assets/player1.png", "../assets/player2.png", "../assets/player3.png", "../assets/player4.png", "../assets/player5.png", "../assets/player6.png"};
     int subtractXPos = -100;
     int increaseXPos = 0;
@@ -822,8 +822,7 @@ void resetGame(Game* pGame, bool* pLeft, bool* pRight, int* pTime) {
 	}
 }
 
-void quitGame(Game* pGame){
-    int i;
+void quitGame(Game* pGame) {
 
     destroyPlayers(pGame->pPlayers);
     destroyPlatform(pGame->pStartPlatform);

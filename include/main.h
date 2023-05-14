@@ -46,17 +46,17 @@ void handleLanguageMenu(GameDisplay* pGameDisplay, Language* pLanguage, Buttons*
 void renderLanguageMenu(GameDisplay* pGameDisplay, Buttons* pButtons);
 void readKeybindString(Language* pLanguage, int index, GameDisplay* pGameDisplay, Buttons* pButtons);
 void handleEnterInput(GameDisplay* pGameDisplay, Language* pLanguage, Buttons* pButtons, SDL_Event event, State* pState);
-void handleLobbyMenu(Game* pGame, SDL_Event event, bool* pLeft, bool* pRight, int* pTime, int* pIndex, bool* pJoined);
+void handleLobbyMenu(Game* pGame, SDL_Event event, int* pTime, int* pIndex, bool* pJoined);
 void renderLobbyMenu(GameDisplay* pGameDisplay, Buttons* pButtons);
 void handleLobby(Game* pGame, SDL_Event event, int* pIndex, bool* pJoined);
 void fillZero(char inputIP[], int max);
-void handleOngoing(Game* pGame, SDL_Event event, bool* pIsRunning, bool *pLeft, bool *pRight, int* pTime, bool* pMute);
-void handleOngoingInput(Game* pGame, SDL_Event* event, bool* pIsRunning, bool* pLeft, bool* pRight, bool* pMute);
+void handleOngoing(Game* pGame, SDL_Event event, bool* pIsRunning, int* pTime, bool* pMute);
+void handleOngoingInput(Game* pGame, SDL_Event* event, bool* pIsRunning, bool* pMute);
 void handleGameMenu(GameDisplay* pGameDisplay, Buttons* pButtons, SDL_Event event, State* pState, bool* pMute);
 void renderGameMenu(GameDisplay* pGameDisplay, Buttons* pButtons);
 void handleGameOver(Game* pGame, GameDisplay* pGameDisplay, Language* pLanguage, Buttons* pButton, DisplayText* pDisplayText, SDL_Event event, State* pState);
 void renderGameOver(GameDisplay* pGameDisplay, Buttons* pButtons, Text* pWhoWonText);
 
-void resetGame(Game* pGame, bool* pLeft, bool* pRight, int* pTime);
+void resetGame(Game* pGame, int* pTime);
 
 void quitGame(Game* pGame);
