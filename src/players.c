@@ -134,15 +134,15 @@ void handleWin(int nrOfPlayersLeft, State* pState, Mix_Chunk* pWinSound, bool* p
     }
 }
 
-void renderPlayer(Player* pPlayer, SDL_Renderer* pRenderer, SDL_Texture* pTexture, SDL_RendererFlip flip){
+void renderPlayer(Player* pPlayer, SDL_Renderer* pRenderer, SDL_Texture* pTexture){
     if (pPlayer->alive) {
         SDL_Rect rect = {pPlayer->xPos, pPlayer->yPos, pPlayer->width, pPlayer->height};
 
-        SDL_RenderCopyEx(pRenderer, pTexture, NULL, &rect, 0.0, NULL, flip);
+        SDL_RenderCopyEx(pRenderer, pTexture, NULL, &rect, 0.0, NULL, pPlayer->flip);
     }
 }
 
-void handlePlayers(Player** pPlayers, int pNrOfPlayers, int *nrOfPlayersLeft, bool *pLeft, bool *pRight, bool* pMute, int windowWidth, int windowHeight, Platform* pStartPlatform, Mix_Chunk *pJumpSound, Mix_Chunk* pWinSound, State* pState, SDL_Renderer* pRenderer, SDL_Texture** pPlayerTextures, SDL_RendererFlip flip, Platform** pPlatforms, Text* pGameOverText, bool* isHost){
+void handlePlayers(Player** pPlayers, int pNrOfPlayers, int *nrOfPlayersLeft, bool *pLeft, bool *pRight, bool* pMute, int windowWidth, int windowHeight, Platform* pStartPlatform, Mix_Chunk *pJumpSound, Mix_Chunk* pWinSound, State* pState, SDL_Renderer* pRenderer, SDL_Texture** pPlayerTextures, Platform** pPlatforms, Text* pGameOverText, bool* isHost){
     for (int i = 0; i < pNrOfPlayers; i++) {
         if (*isHost) {
             movePlayer(pPlayers[i], pPlayers[i]->moveLeft, pPlayers[i]->moveRight, windowWidth);
@@ -150,7 +150,7 @@ void handlePlayers(Player** pPlayers, int pNrOfPlayers, int *nrOfPlayersLeft, bo
             playerCollidePlatform(pPlayers[i], pPlatforms, pJumpSound, pMute);
             checkIfPlayerDead(pPlayers[i], windowHeight, pState, nrOfPlayersLeft);
         }
-        renderPlayer(pPlayers[i], pRenderer, pPlayerTextures[i], flip);
+        renderPlayer(pPlayers[i], pRenderer, pPlayerTextures[i]);
     }
 
 	// KEEP THIS COMMENTED FOR NOW

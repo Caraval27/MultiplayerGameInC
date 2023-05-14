@@ -101,7 +101,7 @@ int initiateGame(Game* pGame){
     pGame->pMainMenuButton = createButton((pGame->windowWidth - BUTTON_WIDTH) / 2, (pGame->windowHeight - BUTTON_HEIGHT) / 2 + 100, BUTTON_WIDTH, BUTTON_HEIGHT);
 
     pGame->pStartPlatform = createPlatform(0, pGame->windowHeight - 100, pGame->windowWidth, 100);
-    pGame->flip = SDL_FLIP_NONE;
+    //pGame->pPlayers[0]->flip = SDL_FLIP_NONE;
 
     pGame->pMainSound = Mix_LoadMUS("../assets/MainThemeSoundtrack.mp3");
     if (!handleError(pGame, pGame->pMainSound, Mix_GetError)) return 0;
@@ -598,6 +598,7 @@ void handleOngoing(Game* pGame, SDL_Event event, bool* pIsRunning, bool* pLeft, 
                     break;
 				}
 			}
+            tempP->flip = tempCC.flip;
 			pGame->pClientCommands[i] = (ClientCommand){0};
 		}
 	} else {
@@ -650,7 +651,7 @@ void handleOngoing(Game* pGame, SDL_Event event, bool* pIsRunning, bool* pLeft, 
     //handlePlatforms(pGame->pPlatforms, pGame->pRenderer, pGame->pPlatformTexture, pGame->windowWidth, pGame->windowHeight, isHost);
 
     handleStartPlatform(pGame->pStartPlatform, pGame->pPlatforms[0], pGame->pRenderer, pGame->pStartPlatformTexture, pGame->windowHeight, pTime);
-    handlePlayers(pGame->pPlayers, pGame->nrOfPlayers, &pGame->nrOfPlayersLeft, pLeft, pRight, pMute, pGame->windowWidth, pGame->windowHeight, pGame->pStartPlatform, pGame->pJumpSound, pGame->pWinSound, &pGame->state, pGame->pRenderer, pGame->pPlayerTextures, pGame->flip, pGame->pPlatforms, pGame->pYouAreDeadText, &pGame->pNetworkData->isHost);
+    handlePlayers(pGame->pPlayers, pGame->nrOfPlayers, &pGame->nrOfPlayersLeft, pLeft, pRight, pMute, pGame->windowWidth, pGame->windowHeight, pGame->pStartPlatform, pGame->pJumpSound, pGame->pWinSound, &pGame->state, pGame->pRenderer, pGame->pPlayerTextures, pGame->pPlatforms, pGame->pYouAreDeadText, &pGame->pNetworkData->isHost);
 
     SDL_Delay(3);
 }
@@ -677,6 +678,7 @@ void handleOngoingInput(Game* pGame, SDL_Event* event, bool* pIsRunning, bool* p
 					pGame->pPlayers[0]->flip = SDL_FLIP_NONE;
 				} else {
 					pGame->pClientCommands[0].direction = 1;
+                    pGame->pClientCommands[0].flip = SDL_FLIP_NONE;
 				}
             }
             else if ((event->key.keysym.sym) == pGame->keybinds[1]) {
@@ -685,6 +687,7 @@ void handleOngoingInput(Game* pGame, SDL_Event* event, bool* pIsRunning, bool* p
 					pGame->pPlayers[0]->flip = SDL_FLIP_HORIZONTAL;
 				} else {
 					pGame->pClientCommands[0].direction = -1;
+                    pGame->pClientCommands[0].flip = SDL_FLIP_HORIZONTAL;
 				}
             }
             else if ((event->key.keysym.sym) == pGame->keybinds[2] && !(*pMute)) {

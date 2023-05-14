@@ -24,6 +24,7 @@ typedef struct {
 	IPaddress ip;
 	CommandType commandType;
 	int direction;
+    SDL_RendererFlip flip;
 } ClientCommand;
 
 typedef struct {
