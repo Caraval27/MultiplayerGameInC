@@ -13,7 +13,8 @@ typedef struct {
 } DisplayText;
 
 typedef struct {
-    bool chosenLanguage;
+    bool chosenLanguage, showLang;
+    int num;
     int keybinds[NR_OF_KEYBINDS];
     char language[NR_OF_WORDS][50];
 } Language;

@@ -159,8 +159,8 @@ int handleError(Game* pGame, void* pMember, const char* (*GetError)(void)) {
 
 void runGame(Game* pGame){
     SDL_Event event;
-    bool isRunning = true, left = false, right = false, mute = false, showLang = false, joined = false, createLobbyPressed = false;
-    int num, time = 0, inputIPIndex = 0;
+    bool isRunning = true, left = false, right = false, mute = false, joined = false;
+    int time = 0, inputIPIndex = 0;
 
     Mix_VolumeMusic(75);
     Mix_PlayMusic(pGame->pMainSound, -1);
@@ -169,9 +169,9 @@ void runGame(Game* pGame){
         switch (pGame->state) {
             case MAIN_MENU: handleMainMenu(&pGame->gameDisplay, &pGame->language, &pGame->buttons, event, &pGame->state, &mute);
                 break;
-            case SETTINGS_MENU: handleSettingsMenu(&pGame->gameDisplay, &pGame->language, &pGame->buttons, &pGame->displayText, event, &pGame->state, &num, &showLang);
+            case SETTINGS_MENU: handleSettingsMenu(&pGame->gameDisplay, &pGame->language, &pGame->buttons, &pGame->displayText, event, &pGame->state);
                 break;
-            case ENTER_INPUT: handleEnterInput(&pGame->gameDisplay, &pGame->language, &pGame->buttons, event, &pGame->state, &num);
+            case ENTER_INPUT: handleEnterInput(&pGame->gameDisplay, &pGame->language, &pGame->buttons, event, &pGame->state);
                 break;
             case LOBBY_MENU: handleLobbyMenu(pGame, event, &left, &right, &time, &inputIPIndex, &joined);
                 break;
@@ -246,37 +246,37 @@ void renderMainMenu(GameDisplay* pGameDisplay, Buttons* pButtons) { //kan flytta
     renderText(pButtons->pQuitButtonText, pGameDisplay->pRenderer);
 }
 
-void handleSettingsMenu(GameDisplay* pGameDisplay, Language* pLanguage, Buttons* pButtons, DisplayText* pDisplayText, SDL_Event event, State* pState, int* pNum, bool *pShowLang) {
+void handleSettingsMenu(GameDisplay* pGameDisplay, Language* pLanguage, Buttons* pButtons, DisplayText* pDisplayText, SDL_Event event, State* pState) {
     bool buttonPressed = false;
 
     renderSettingsMenu(pGameDisplay, pButtons);
-    if (*pShowLang){
+    if (pLanguage->showLang){
         renderLanguageMenu(pGameDisplay, pButtons);
     }
 
     while (SDL_PollEvent(&event)){
         handleButton(pButtons->pLanguageButton, &buttonPressed);
         if (buttonPressed) {
-            (*pShowLang) = true;
+            (pLanguage->showLang) = true;
             buttonPressed = false;
         }
         handleButton(pButtons->pMoveRightButton, &buttonPressed);
         if (buttonPressed) {
-            *pNum = 0;
+            pLanguage->num = 0;
             readKeybindString(pLanguage, 1, pGameDisplay, pButtons);
             *pState = ENTER_INPUT;
             buttonPressed = false;
         }
         handleButton(pButtons->pMoveLeftButton, &buttonPressed);
         if (buttonPressed) {
-            *pNum = 1;
+            pLanguage->num = 1;
             readKeybindString(pLanguage, 2, pGameDisplay, pButtons);
             *pState = ENTER_INPUT;
             buttonPressed = false;
         }
         handleButton(pButtons->pMuteButton, &buttonPressed);
         if (buttonPressed) {
-            *pNum = 2;
+            pLanguage->num = 2;
             readKeybindString(pLanguage, 3, pGameDisplay, pButtons);
             *pState = ENTER_INPUT;
             buttonPressed = false;
@@ -284,12 +284,12 @@ void handleSettingsMenu(GameDisplay* pGameDisplay, Language* pLanguage, Buttons*
         handleButton(pButtons->pReturnButton, &buttonPressed);
         if (buttonPressed){
             *pState = MAIN_MENU;
-            *pShowLang = false;
+            pLanguage->showLang = false;
             buttonPressed = false;
         }
 
-        if ((*pShowLang)){
-            handleLanguageMenu(pGameDisplay, pLanguage, pButtons, pDisplayText, event, pShowLang);
+        if ((pLanguage->showLang)){
+            handleLanguageMenu(pGameDisplay, pLanguage, pButtons, pDisplayText, event);
         }
 
         if (event.type == SDL_QUIT) {
@@ -317,25 +317,25 @@ void renderSettingsMenu(GameDisplay* pGameDisplay, Buttons* pButtons) { //kan fl
     renderText(pButtons->pReturnButtonText, pGameDisplay->pRenderer);
 }
 
-void handleLanguageMenu(GameDisplay* pGameDisplay, Language* pLanguage, Buttons* pButtons, DisplayText* pDisplayText, SDL_Event event, bool* pShowLang) {
+void handleLanguageMenu(GameDisplay* pGameDisplay, Language* pLanguage, Buttons* pButtons, DisplayText* pDisplayText, SDL_Event event) {
     bool buttonPressed = false;
     char chosenLang[LANG_LENGTH];
     FILE *fp;
 
     handleButton(pButtons->pEnglishButton, &buttonPressed);
-    if (buttonPressed){
+    if (buttonPressed) {
         strcpy(chosenLang, "english.txt");
-        *pShowLang = false;
+        pLanguage->showLang = false;
         buttonPressed = false;
     }
     handleButton(pButtons->pSwedishButton, &buttonPressed);
-    if (buttonPressed){
+    if (buttonPressed) {
         strcpy(chosenLang, "svenska.txt");
-        *pShowLang = false;
+        pLanguage->showLang = false;
         buttonPressed = false;
     }
 
-    if (!(*pShowLang)){
+    if (!(pLanguage->showLang)) {
         changeLanguageInFile(fp, chosenLang);
         /*if (strcmp(chosenLang, "svenska.txt")) {
             pLanguage->chosenLanguage = true;
@@ -379,7 +379,7 @@ void readKeybindString(Language* pLanguage, int index, GameDisplay* pGameDisplay
     }
 }
 
-void handleEnterInput(GameDisplay* pGameDisplay, Language* pLanguage, Buttons* pButtons, SDL_Event event, State* pState, int* pNum) {
+void handleEnterInput(GameDisplay* pGameDisplay, Language* pLanguage, Buttons* pButtons, SDL_Event event, State* pState) {
     FILE *fp;
 
     renderSettingsMenu(pGameDisplay, pButtons);
@@ -391,7 +391,7 @@ void handleEnterInput(GameDisplay* pGameDisplay, Language* pLanguage, Buttons* p
                     *pState = SETTINGS_MENU;
                 }
                 else {
-                    pLanguage->keybinds[*pNum] = (event.key.keysym.sym);
+                    pLanguage->keybinds[pLanguage->num] = (event.key.keysym.sym);
                     saveToFile(fp, pLanguage->keybinds);
                     *pState = SETTINGS_MENU;
                 }

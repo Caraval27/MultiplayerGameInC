@@ -40,12 +40,12 @@ void runGame(Game* pGame);
 
 void handleMainMenu(GameDisplay* pGameDisplay, Language* pLanguage, Buttons* pButtons, SDL_Event event, State* pState, bool* pMute);
 void renderMainMenu(GameDisplay* pGameDisplay, Buttons* pButtons);
-void handleSettingsMenu(GameDisplay* pGameDisplay, Language* pLanguage, Buttons* pButtons, DisplayText* pDisplayText, SDL_Event event, State* pState, int* pNum, bool *pShowLang);
+void handleSettingsMenu(GameDisplay* pGameDisplay, Language* pLanguage, Buttons* pButtons, DisplayText* pDisplayText, SDL_Event event, State* pState);
 void renderSettingsMenu(GameDisplay* pGameDisplay, Buttons* pButtons);
-void handleLanguageMenu(GameDisplay* pGameDisplay, Language* pLanguage, Buttons* pButtons, DisplayText* pDisplayText, SDL_Event event, bool* pShowLang);
+void handleLanguageMenu(GameDisplay* pGameDisplay, Language* pLanguage, Buttons* pButtons, DisplayText* pDisplayText, SDL_Event event);
 void renderLanguageMenu(GameDisplay* pGameDisplay, Buttons* pButtons);
 void readKeybindString(Language* pLanguage, int index, GameDisplay* pGameDisplay, Buttons* pButtons);
-void handleEnterInput(GameDisplay* pGameDisplay, Language* pLanguage, Buttons* pButtons, SDL_Event event, State* pState, int* pNum);
+void handleEnterInput(GameDisplay* pGameDisplay, Language* pLanguage, Buttons* pButtons, SDL_Event event, State* pState);
 void handleLobbyMenu(Game* pGame, SDL_Event event, bool* pLeft, bool* pRight, int* pTime, int* pIndex, bool* pJoined);
 void renderLobbyMenu(GameDisplay* pGameDisplay, Buttons* pButtons);
 void handleLobby(Game* pGame, SDL_Event event, int* pIndex, bool* pJoined);
