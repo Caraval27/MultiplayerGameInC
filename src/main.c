@@ -70,8 +70,8 @@ int initiateGame(Game* pGame){
     if (!handleError(pGame, pGame->pBackgroundTexture, SDL_GetError)) {
         return 0;
     }
-    pGame->pButtonTexture = createPicture(&pGame->gameDisplay, BUTTON_PICTURE);
-    if (!handleError(pGame, pGame->pButtonTexture, SDL_GetError)) {
+    pGame->buttons.pButtonTexture = createPicture(&pGame->gameDisplay, BUTTON_PICTURE);
+    if (!handleError(pGame, pGame->buttons.pButtonTexture, SDL_GetError)) {
         return 0;
     }
     pGame->pPlatformTexture = createPicture(&pGame->gameDisplay, PLATFORM_PICTURE);
@@ -85,20 +85,20 @@ int initiateGame(Game* pGame){
 
     pGame->pBackground = createBackground(pGame->gameDisplay.windowHeight);
 
-    pGame->pStartButton = createButton((pGame->gameDisplay.windowWidth - BUTTON_WIDTH) / 2, (pGame->gameDisplay.windowHeight - BUTTON_HEIGHT) / 2, BUTTON_WIDTH, BUTTON_HEIGHT);
-    pGame->pSettingsButton = createButton((pGame->gameDisplay.windowWidth - BUTTON_WIDTH) / 2, (pGame->gameDisplay.windowHeight - BUTTON_HEIGHT) / 2 + 50, BUTTON_WIDTH, BUTTON_HEIGHT);
-    pGame->pQuitButton = createButton((pGame->gameDisplay.windowWidth - BUTTON_WIDTH) / 2, (pGame->gameDisplay.windowHeight - BUTTON_HEIGHT) / 2 + 100, BUTTON_WIDTH, BUTTON_HEIGHT);
-    pGame->pCreateLobbyButton = createButton((pGame->gameDisplay.windowWidth - BUTTON_WIDTH) / 2, (pGame->gameDisplay.windowHeight - BUTTON_HEIGHT) / 2 + 0, BUTTON_WIDTH, BUTTON_HEIGHT);
-    pGame->pJoinLobbyButton = createButton((pGame->gameDisplay.windowWidth - BUTTON_WIDTH) / 2, (pGame->gameDisplay.windowHeight - BUTTON_HEIGHT) / 2 + 50, BUTTON_WIDTH, BUTTON_HEIGHT);
-    pGame->pLanguageButton = createButton((pGame->gameDisplay.windowWidth - BUTTON_WIDTH) / 2, (pGame->gameDisplay.windowHeight - BUTTON_HEIGHT) / 2 - 100, BUTTON_WIDTH, BUTTON_HEIGHT);
-    pGame->pMoveRightButton = createButton(pGame->gameDisplay.windowWidth / 2, (pGame->gameDisplay.windowHeight - BUTTON_HEIGHT) / 2 + 50, BUTTON_WIDTH, BUTTON_HEIGHT);
-    pGame->pMoveLeftButton = createButton(pGame->gameDisplay.windowWidth / 2, (pGame->gameDisplay.windowHeight - BUTTON_HEIGHT) / 2 + 100, BUTTON_WIDTH, BUTTON_HEIGHT);
-    pGame->pMuteButton = createButton(pGame->gameDisplay.windowWidth / 2, (pGame->gameDisplay.windowHeight - BUTTON_HEIGHT) / 2 + 150, BUTTON_WIDTH, BUTTON_HEIGHT);
-    pGame->pReturnButton = createButton((pGame->gameDisplay.windowWidth - BUTTON_WIDTH) / 2, (pGame->gameDisplay.windowHeight - BUTTON_HEIGHT) / 2 + 200, BUTTON_WIDTH, BUTTON_HEIGHT);
-    pGame->pEnglishButton = createButton((pGame->gameDisplay.windowWidth - BUTTON_WIDTH) / 2, (pGame->gameDisplay.windowHeight - BUTTON_HEIGHT) / 2 - 50, BUTTON_WIDTH, BUTTON_HEIGHT);
-    pGame->pSwedishButton = createButton((pGame->gameDisplay.windowWidth - BUTTON_WIDTH) / 2, (pGame->gameDisplay.windowHeight - BUTTON_HEIGHT) / 2, BUTTON_WIDTH, BUTTON_HEIGHT);
-    pGame->pResumeButton = createButton((pGame->gameDisplay.windowWidth - BUTTON_WIDTH) / 2, (pGame->gameDisplay.windowHeight - BUTTON_HEIGHT) / 2 + 50, BUTTON_WIDTH, BUTTON_HEIGHT);
-    pGame->pMainMenuButton = createButton((pGame->gameDisplay.windowWidth - BUTTON_WIDTH) / 2, (pGame->gameDisplay.windowHeight - BUTTON_HEIGHT) / 2 + 100, BUTTON_WIDTH, BUTTON_HEIGHT);
+    pGame->buttons.pStartButton = createButton((pGame->gameDisplay.windowWidth - BUTTON_WIDTH) / 2, (pGame->gameDisplay.windowHeight - BUTTON_HEIGHT) / 2, BUTTON_WIDTH, BUTTON_HEIGHT);
+    pGame->buttons.pSettingsButton = createButton((pGame->gameDisplay.windowWidth - BUTTON_WIDTH) / 2, (pGame->gameDisplay.windowHeight - BUTTON_HEIGHT) / 2 + 50, BUTTON_WIDTH, BUTTON_HEIGHT);
+    pGame->buttons.pQuitButton = createButton((pGame->gameDisplay.windowWidth - BUTTON_WIDTH) / 2, (pGame->gameDisplay.windowHeight - BUTTON_HEIGHT) / 2 + 100, BUTTON_WIDTH, BUTTON_HEIGHT);
+    pGame->buttons.pCreateLobbyButton = createButton((pGame->gameDisplay.windowWidth - BUTTON_WIDTH) / 2, (pGame->gameDisplay.windowHeight - BUTTON_HEIGHT) / 2 + 0, BUTTON_WIDTH, BUTTON_HEIGHT);
+    pGame->buttons.pJoinLobbyButton = createButton((pGame->gameDisplay.windowWidth - BUTTON_WIDTH) / 2, (pGame->gameDisplay.windowHeight - BUTTON_HEIGHT) / 2 + 50, BUTTON_WIDTH, BUTTON_HEIGHT);
+    pGame->buttons.pLanguageButton = createButton((pGame->gameDisplay.windowWidth - BUTTON_WIDTH) / 2, (pGame->gameDisplay.windowHeight - BUTTON_HEIGHT) / 2 - 100, BUTTON_WIDTH, BUTTON_HEIGHT);
+    pGame->buttons.pMoveRightButton = createButton(pGame->gameDisplay.windowWidth / 2, (pGame->gameDisplay.windowHeight - BUTTON_HEIGHT) / 2 + 50, BUTTON_WIDTH, BUTTON_HEIGHT);
+    pGame->buttons.pMoveLeftButton = createButton(pGame->gameDisplay.windowWidth / 2, (pGame->gameDisplay.windowHeight - BUTTON_HEIGHT) / 2 + 100, BUTTON_WIDTH, BUTTON_HEIGHT);
+    pGame->buttons.pMuteButton = createButton(pGame->gameDisplay.windowWidth / 2, (pGame->gameDisplay.windowHeight - BUTTON_HEIGHT) / 2 + 150, BUTTON_WIDTH, BUTTON_HEIGHT);
+    pGame->buttons.pReturnButton = createButton((pGame->gameDisplay.windowWidth - BUTTON_WIDTH) / 2, (pGame->gameDisplay.windowHeight - BUTTON_HEIGHT) / 2 + 200, BUTTON_WIDTH, BUTTON_HEIGHT);
+    pGame->buttons.pEnglishButton = createButton((pGame->gameDisplay.windowWidth - BUTTON_WIDTH) / 2, (pGame->gameDisplay.windowHeight - BUTTON_HEIGHT) / 2 - 50, BUTTON_WIDTH, BUTTON_HEIGHT);
+    pGame->buttons.pSwedishButton = createButton((pGame->gameDisplay.windowWidth - BUTTON_WIDTH) / 2, (pGame->gameDisplay.windowHeight - BUTTON_HEIGHT) / 2, BUTTON_WIDTH, BUTTON_HEIGHT);
+    pGame->buttons.pResumeButton = createButton((pGame->gameDisplay.windowWidth - BUTTON_WIDTH) / 2, (pGame->gameDisplay.windowHeight - BUTTON_HEIGHT) / 2 + 50, BUTTON_WIDTH, BUTTON_HEIGHT);
+    pGame->buttons.pMainMenuButton = createButton((pGame->gameDisplay.windowWidth - BUTTON_WIDTH) / 2, (pGame->gameDisplay.windowHeight - BUTTON_HEIGHT) / 2 + 100, BUTTON_WIDTH, BUTTON_HEIGHT);
 
     pGame->pStartPlatform = createPlatform(0, pGame->gameDisplay.windowHeight - 100, pGame->gameDisplay.windowWidth, 100);
 
@@ -113,37 +113,37 @@ int initiateGame(Game* pGame){
     readFromFileKey(fp, pGame->keybinds);
     //saveToFile(fp, pGame->keybinds);
     //pGame->chosenLanguage = true;
-    initiateLanguage(fp, pGame);
+    initiateLanguage(fp, pGame, &pGame->buttons);
 
     pGame->state = MAIN_MENU;
 
     return 1;
 }
 
-void initiateLanguage(FILE *fp, Game *pGame){
+void initiateLanguage(FILE* fp, Game* pGame, Buttons* pButtons) {
     #if __APPLE__
 		readFromFileLangMAC(pGame->chosenLanguage, pGame->language);
     #else
         readFromFileLang(fp, pGame->language);
 	#endif
 
-    readKeybindString(pGame, 0);
+    readKeybindString(pGame, 0, &pGame->gameDisplay, &pGame->buttons);
 
-    pGame->pStartButtonText = createText(&pGame->gameDisplay, pGame->pMenuFont, pGame->language[0], 255, 255, 255, 0, 0);
-    pGame->pSettingsButtonText = createText(&pGame->gameDisplay, pGame->pMenuFont, pGame->language[1], 255, 255, 255, 0, 50);
-    pGame->pQuitButtonText = createText(&pGame->gameDisplay, pGame->pMenuFont, pGame->language[2], 255, 255, 255, 0, 100);
-    pGame->pResumeButtonText = createText(&pGame->gameDisplay, pGame->pMenuFont, pGame->language[3], 255, 255, 255, 0, 50);
-    pGame->pMainMenuButtonText = createText(&pGame->gameDisplay, pGame->pMenuFont, pGame->language[4], 255, 255, 255, 0, 100);
-    pGame->pLanguageButtonText = createText(&pGame->gameDisplay, pGame->pMenuFont, pGame->language[5], 255, 255, 255, 0, -100);
-    pGame->pReturnButtonText = createText(&pGame->gameDisplay, pGame->pMenuFont, pGame->language[6], 255, 255, 255, 0, 200);
-    pGame->pMoveRightButton1Text = createText(&pGame->gameDisplay, pGame->pMenuFont, pGame->language[7], 255, 255, 255, -80, 50);
-    pGame->pMoveLeftButton1Text = createText(&pGame->gameDisplay, pGame->pMenuFont, pGame->language[8], 255, 255, 255, -80, 100);
+    pButtons->pStartButtonText = createText(&pGame->gameDisplay, pGame->pMenuFont, pGame->language[0], 255, 255, 255, 0, 0);
+    pButtons->pSettingsButtonText = createText(&pGame->gameDisplay, pGame->pMenuFont, pGame->language[1], 255, 255, 255, 0, 50);
+    pButtons->pQuitButtonText = createText(&pGame->gameDisplay, pGame->pMenuFont, pGame->language[2], 255, 255, 255, 0, 100);
+    pButtons->pResumeButtonText = createText(&pGame->gameDisplay, pGame->pMenuFont, pGame->language[3], 255, 255, 255, 0, 50);
+    pButtons->pMainMenuButtonText = createText(&pGame->gameDisplay, pGame->pMenuFont, pGame->language[4], 255, 255, 255, 0, 100);
+    pButtons->pLanguageButtonText = createText(&pGame->gameDisplay, pGame->pMenuFont, pGame->language[5], 255, 255, 255, 0, -100);
+    pButtons->pReturnButtonText = createText(&pGame->gameDisplay, pGame->pMenuFont, pGame->language[6], 255, 255, 255, 0, 200);
+    pButtons->pMoveRightButton1Text = createText(&pGame->gameDisplay, pGame->pMenuFont, pGame->language[7], 255, 255, 255, -80, 50);
+    pButtons->pMoveLeftButton1Text = createText(&pGame->gameDisplay, pGame->pMenuFont, pGame->language[8], 255, 255, 255, -80, 100);
     pGame->pYouAreDeadText = createText(&pGame->gameDisplay, pGame->pMenuFont, pGame->language[9], 255, 255, 255, 0, -200);
-    pGame->pEnglishButtonText = createText(&pGame->gameDisplay, pGame->pMenuFont, "English", 255, 255, 255, 0, -50);
-    pGame->pSwedishButtonText = createText(&pGame->gameDisplay, pGame->pMenuFont, "Svenska", 255, 255, 255, 0, 0);
-    pGame->pCreateLobbyButtonText = createText(&pGame->gameDisplay, pGame->pMenuFont, pGame->language[10], 255, 255, 255, 0, 0);
-    pGame->pJoinLobbyButtonText = createText(&pGame->gameDisplay, pGame->pMenuFont, pGame->language[11], 255, 255, 255, 0, 50);
-    pGame->pMuteButton1Text = createText(&pGame->gameDisplay, pGame->pMenuFont, pGame->language[13], 255, 255, 255, -80, 150);
+    pButtons->pEnglishButtonText = createText(&pGame->gameDisplay, pGame->pMenuFont, "English", 255, 255, 255, 0, -50);
+    pButtons->pSwedishButtonText = createText(&pGame->gameDisplay, pGame->pMenuFont, "Svenska", 255, 255, 255, 0, 0);
+    pButtons->pCreateLobbyButtonText = createText(&pGame->gameDisplay, pGame->pMenuFont, pGame->language[10], 255, 255, 255, 0, 0);
+    pButtons->pJoinLobbyButtonText = createText(&pGame->gameDisplay, pGame->pMenuFont, pGame->language[11], 255, 255, 255, 0, 50);
+    pButtons->pMuteButton1Text = createText(&pGame->gameDisplay, pGame->pMenuFont, pGame->language[13], 255, 255, 255, -80, 150);
     pGame->pWaitingText = createText(&pGame->gameDisplay, pGame->pMenuFont, pGame->language[16], 255, 255, 255, 0, 50);
     pGame->pEnterIPText = createText(&pGame->gameDisplay, pGame->pMenuFont, pGame->language[17], 255, 255, 255, -130, 50);
 }
@@ -179,7 +179,7 @@ void runGame(Game* pGame){
                 break;
             case ONGOING: handleOngoing(pGame, event, &isRunning, &left, &right, &time, &mute);
                 break;
-            case GAME_MENU: handleGameMenu(pGame, event, &mute);
+            case GAME_MENU: handleGameMenu(&pGame->gameDisplay, &pGame->buttons, event, &pGame->state, &mute);
                 break;
             case GAME_OVER: handleGameOver(pGame, event);
                 break;
@@ -198,20 +198,20 @@ void handleMainMenu(Game* pGame, SDL_Event event, bool* pMute){
 
     if (!(*pMute)) Mix_ResumeMusic();
 
-    renderMainMenu(pGame, &pGame->gameDisplay);
+    renderMainMenu(&pGame->gameDisplay, &pGame->buttons, pGame->pMenuTexture);
 
     while (SDL_PollEvent(&event)) {
-        handleButton(pGame->pStartButton, &buttonPressed);
+        handleButton(pGame->buttons.pStartButton, &buttonPressed);
         if (buttonPressed) {
             pGame->state = LOBBY_MENU;
             buttonPressed = false;
         }
-        handleButton(pGame->pSettingsButton, &buttonPressed);
+        handleButton(pGame->buttons.pSettingsButton, &buttonPressed);
         if (buttonPressed) {
             pGame->state = SETTINGS_MENU;
             buttonPressed = false;
         }
-        handleButton(pGame->pQuitButton, &buttonPressed);
+        handleButton(pGame->buttons.pQuitButton, &buttonPressed);
         if (buttonPressed) {
             pGame->state = QUIT;
             buttonPressed = false;
@@ -234,54 +234,54 @@ void handleMainMenu(Game* pGame, SDL_Event event, bool* pMute){
     }
 }
 
-void renderMainMenu(Game* pGame, GameDisplay* pGameDisplay){ //skapa struct för alla kanppar och deras texter
-    renderMenu(pGameDisplay, pGame->pMenuTexture);
+void renderMainMenu(GameDisplay* pGameDisplay, Buttons* pButtons, SDL_Texture* pMenuTexture) { //kan flyttas
+    renderMenu(pGameDisplay, pMenuTexture);
 
-    renderButton(pGame->pStartButton, pGameDisplay->pRenderer, pGame->pButtonTexture);
-    renderButton(pGame->pSettingsButton, pGameDisplay->pRenderer, pGame->pButtonTexture);
-    renderButton(pGame->pQuitButton, pGameDisplay->pRenderer, pGame->pButtonTexture);
+    renderButton(pButtons->pStartButton, pGameDisplay->pRenderer, pButtons->pButtonTexture);
+    renderButton(pButtons->pSettingsButton, pGameDisplay->pRenderer, pButtons->pButtonTexture);
+    renderButton(pButtons->pQuitButton, pGameDisplay->pRenderer, pButtons->pButtonTexture);
 
-    renderText(pGame->pStartButtonText, pGameDisplay->pRenderer);
-    renderText(pGame->pSettingsButtonText, pGameDisplay->pRenderer);
-    renderText(pGame->pQuitButtonText, pGameDisplay->pRenderer);
+    renderText(pButtons->pStartButtonText, pGameDisplay->pRenderer);
+    renderText(pButtons->pSettingsButtonText, pGameDisplay->pRenderer);
+    renderText(pButtons->pQuitButtonText, pGameDisplay->pRenderer);
 }
 
 void handleSettingsMenu(Game* pGame, SDL_Event event, int* pNum, bool *pShowLang){
     bool buttonPressed = false;
 
-    renderSettingsMenu(pGame, &pGame->gameDisplay);
+    renderSettingsMenu(&pGame->gameDisplay, &pGame->buttons, pGame->pMenuTexture);
     if (*pShowLang){
-        renderLanguageMenu(pGame, &pGame->gameDisplay);
+        renderLanguageMenu(&pGame->gameDisplay, &pGame->buttons);
     }
 
     while (SDL_PollEvent(&event)){
-        handleButton(pGame->pLanguageButton, &buttonPressed);
+        handleButton(pGame->buttons.pLanguageButton, &buttonPressed);
         if (buttonPressed) {
             (*pShowLang) = true;
             buttonPressed = false;
         }
-        handleButton(pGame->pMoveRightButton, &buttonPressed);
+        handleButton(pGame->buttons.pMoveRightButton, &buttonPressed);
         if (buttonPressed) {
             *pNum = 0;
-            readKeybindString(pGame, 1);
+            readKeybindString(pGame, 1, &pGame->gameDisplay, &pGame->buttons);
             pGame->state = ENTER_INPUT;
             buttonPressed = false;
         }
-        handleButton(pGame->pMoveLeftButton, &buttonPressed);
+        handleButton(pGame->buttons.pMoveLeftButton, &buttonPressed);
         if (buttonPressed) {
             *pNum = 1;
-            readKeybindString(pGame, 2);
+            readKeybindString(pGame, 2, &pGame->gameDisplay, &pGame->buttons);
             pGame->state = ENTER_INPUT;
             buttonPressed = false;
         }
-        handleButton(pGame->pMuteButton, &buttonPressed);
+        handleButton(pGame->buttons.pMuteButton, &buttonPressed);
         if (buttonPressed) {
             *pNum = 2;
-            readKeybindString(pGame, 3);
+            readKeybindString(pGame, 3, &pGame->gameDisplay, &pGame->buttons);
             pGame->state = ENTER_INPUT;
             buttonPressed = false;
         }
-        handleButton(pGame->pReturnButton, &buttonPressed);
+        handleButton(pGame->buttons.pReturnButton, &buttonPressed);
         if (buttonPressed){
             pGame->state = MAIN_MENU;
             *pShowLang = false;
@@ -298,23 +298,23 @@ void handleSettingsMenu(Game* pGame, SDL_Event event, int* pNum, bool *pShowLang
     }
 }
 
-void renderSettingsMenu(Game* pGame, GameDisplay* pGameDisplay){
-    renderMenu(pGameDisplay, pGame->pMenuTexture);
+void renderSettingsMenu(GameDisplay* pGameDisplay, Buttons* pButtons, SDL_Texture* pMenuTexture) { //kan flyttas
+    renderMenu(pGameDisplay, pMenuTexture);
 
-    renderButton(pGame->pLanguageButton, pGameDisplay->pRenderer, pGame->pButtonTexture);
-    renderButton(pGame->pMoveLeftButton, pGameDisplay->pRenderer, pGame->pButtonTexture);
-    renderButton(pGame->pMoveRightButton, pGameDisplay->pRenderer, pGame->pButtonTexture);
-    renderButton(pGame->pReturnButton, pGameDisplay->pRenderer, pGame->pButtonTexture);
-    renderButton(pGame->pMuteButton, pGameDisplay->pRenderer, pGame->pButtonTexture);
+    renderButton(pButtons->pLanguageButton, pGameDisplay->pRenderer, pButtons->pButtonTexture);
+    renderButton(pButtons->pMoveLeftButton, pGameDisplay->pRenderer, pButtons->pButtonTexture);
+    renderButton(pButtons->pMoveRightButton, pGameDisplay->pRenderer, pButtons->pButtonTexture);
+    renderButton(pButtons->pReturnButton, pGameDisplay->pRenderer, pButtons->pButtonTexture);
+    renderButton(pButtons->pMuteButton, pGameDisplay->pRenderer, pButtons->pButtonTexture);
 
-    renderText(pGame->pLanguageButtonText, pGameDisplay->pRenderer);
-    renderText(pGame->pMoveLeftButton1Text, pGameDisplay->pRenderer);
-    renderText(pGame->pMoveLeftButton2Text, pGameDisplay->pRenderer);
-    renderText(pGame->pMoveRightButton1Text, pGameDisplay->pRenderer);
-    renderText(pGame->pMoveRightButton2Text, pGameDisplay->pRenderer);
-    renderText(pGame->pMuteButton1Text, pGameDisplay->pRenderer);
-    renderText(pGame->pMuteButton2Text, pGameDisplay->pRenderer);
-    renderText(pGame->pReturnButtonText, pGameDisplay->pRenderer);
+    renderText(pButtons->pLanguageButtonText, pGameDisplay->pRenderer);
+    renderText(pButtons->pMoveLeftButton1Text, pGameDisplay->pRenderer);
+    renderText(pButtons->pMoveLeftButton2Text, pGameDisplay->pRenderer);
+    renderText(pButtons->pMoveRightButton1Text, pGameDisplay->pRenderer);
+    renderText(pButtons->pMoveRightButton2Text, pGameDisplay->pRenderer);
+    renderText(pButtons->pMuteButton1Text, pGameDisplay->pRenderer);
+    renderText(pButtons->pMuteButton2Text, pGameDisplay->pRenderer);
+    renderText(pButtons->pReturnButtonText, pGameDisplay->pRenderer);
 }
 
 void handleLanguageMenu(Game* pGame, SDL_Event event, bool* pShowLang){
@@ -322,13 +322,13 @@ void handleLanguageMenu(Game* pGame, SDL_Event event, bool* pShowLang){
     char chosenLang[LANG_LENGTH];
     FILE *fp;
 
-    handleButton(pGame->pEnglishButton, &buttonPressed);
+    handleButton(pGame->buttons.pEnglishButton, &buttonPressed);
     if (buttonPressed){
         strcpy(chosenLang, "english.txt");
         *pShowLang = false;
         buttonPressed = false;
     }
-    handleButton(pGame->pSwedishButton, &buttonPressed);
+    handleButton(pGame->buttons.pSwedishButton, &buttonPressed);
     if (buttonPressed){
         strcpy(chosenLang, "svenska.txt");
         *pShowLang = false;
@@ -343,19 +343,19 @@ void handleLanguageMenu(Game* pGame, SDL_Event event, bool* pShowLang){
         else {
             pGame->chosenLanguage = false;
         }*/
-        initiateLanguage(fp, pGame);
+        initiateLanguage(fp, pGame, &pGame->buttons);
     }
 }
 
-void renderLanguageMenu(Game* pGame, GameDisplay* pGameDisplay) {
-    renderButton(pGame->pEnglishButton, pGameDisplay->pRenderer, pGame->pButtonTexture);
-    renderButton(pGame->pSwedishButton, pGameDisplay->pRenderer, pGame->pButtonTexture);
+void renderLanguageMenu(GameDisplay* pGameDisplay, Buttons* pButtons) { //kan flyttas
+    renderButton(pButtons->pEnglishButton, pGameDisplay->pRenderer, pButtons->pButtonTexture);
+    renderButton(pButtons->pSwedishButton, pGameDisplay->pRenderer, pButtons->pButtonTexture);
 
-    renderText(pGame->pEnglishButtonText, pGameDisplay->pRenderer);
-    renderText(pGame->pSwedishButtonText, pGameDisplay->pRenderer);
+    renderText(pButtons->pEnglishButtonText, pGameDisplay->pRenderer);
+    renderText(pButtons->pSwedishButtonText, pGameDisplay->pRenderer);
 }
 
-void readKeybindString(Game *pGame, int index) {
+void readKeybindString(Game *pGame, int index, GameDisplay* pGameDisplay, Buttons* pButtons) {
     SDL_Keycode moveRight = pGame->keybinds[0], moveLeft = pGame->keybinds[1], mute = pGame->keybinds[2];
     char keybindsText[3][30];
 
@@ -364,25 +364,25 @@ void readKeybindString(Game *pGame, int index) {
         strcpy(keybindsText[1], (SDL_GetKeyName(moveLeft)));
         strcpy(keybindsText[2], (SDL_GetKeyName(mute)));
 
-        pGame->pMoveRightButton2Text = createText(&pGame->gameDisplay, pGame->pMenuFont, keybindsText[0], 255, 255, 255, BUTTON_WIDTH / 2, 50);
-        pGame->pMoveLeftButton2Text = createText(&pGame->gameDisplay, pGame->pMenuFont, keybindsText[1], 255, 255, 255, BUTTON_WIDTH / 2, 100);
-        pGame->pMuteButton2Text = createText(&pGame->gameDisplay, pGame->pMenuFont, keybindsText[2], 255, 255, 255, BUTTON_WIDTH / 2, 150);
+        pButtons->pMoveRightButton2Text = createText(pGameDisplay, pGame->pMenuFont, keybindsText[0], 255, 255, 255, BUTTON_WIDTH / 2, 50);
+        pButtons->pMoveLeftButton2Text = createText(pGameDisplay, pGame->pMenuFont, keybindsText[1], 255, 255, 255, BUTTON_WIDTH / 2, 100);
+        pButtons->pMuteButton2Text = createText(pGameDisplay, pGame->pMenuFont, keybindsText[2], 255, 255, 255, BUTTON_WIDTH / 2, 150);
     }
     else if (index == 1) {
-        pGame->pMoveRightButton2Text = createText(&pGame->gameDisplay, pGame->pMenuFont, pGame->language[12], 255, 255, 255, BUTTON_WIDTH / 2, 50);
+        pButtons->pMoveRightButton2Text = createText(pGameDisplay, pGame->pMenuFont, pGame->language[12], 255, 255, 255, BUTTON_WIDTH / 2, 50);
     }
     else if (index == 2) {
-        pGame->pMoveLeftButton2Text = createText(&pGame->gameDisplay, pGame->pMenuFont, pGame->language[12], 255, 255, 255, BUTTON_WIDTH / 2, 100);
+        pButtons->pMoveLeftButton2Text = createText(pGameDisplay, pGame->pMenuFont, pGame->language[12], 255, 255, 255, BUTTON_WIDTH / 2, 100);
     }
     else if (index == 3) {
-        pGame->pMuteButton2Text = createText(&pGame->gameDisplay, pGame->pMenuFont, pGame->language[12], 255, 255, 255, BUTTON_WIDTH / 2, 150);
+        pButtons->pMuteButton2Text = createText(pGameDisplay, pGame->pMenuFont, pGame->language[12], 255, 255, 255, BUTTON_WIDTH / 2, 150);
     }
 }
 
 void handleEnterInput(Game* pGame, SDL_Event event, int* pNum) {
     FILE *fp;
 
-    renderSettingsMenu(pGame, &pGame->gameDisplay);
+    renderSettingsMenu(&pGame->gameDisplay, &pGame->buttons, pGame->pMenuTexture);
 
     while (SDL_PollEvent(&event)) {
         switch (event.type){
@@ -395,7 +395,7 @@ void handleEnterInput(Game* pGame, SDL_Event event, int* pNum) {
                     saveToFile(fp, pGame->keybinds);
                     pGame->state = SETTINGS_MENU;
                 }
-                readKeybindString(pGame, 0);
+                readKeybindString(pGame, 0, &pGame->gameDisplay, &pGame->buttons);
                 break;
         }
     }
@@ -404,7 +404,7 @@ void handleEnterInput(Game* pGame, SDL_Event event, int* pNum) {
 void handleLobbyMenu(Game* pGame, SDL_Event event, bool* pLeft, bool* pRight, int* pTime, int* pIndex, bool* pJoined) {
     bool buttonPressed = false;
 
-    renderLobbyMenu(pGame, &pGame->gameDisplay);
+    renderLobbyMenu(&pGame->gameDisplay, &pGame->buttons, pGame->pMenuTexture);
 
     if (*pJoined) {
         renderMenu(&pGame->gameDisplay, pGame->pMenuTexture);
@@ -436,18 +436,18 @@ void handleLobbyMenu(Game* pGame, SDL_Event event, bool* pLeft, bool* pRight, in
         }
     } else {
         while (SDL_PollEvent(&event)) {
-            handleButton(pGame->pCreateLobbyButton, &buttonPressed);
+            handleButton(pGame->buttons.pCreateLobbyButton, &buttonPressed);
             if (buttonPressed) {
                 setConnection(pGame->pNetworkData, NULL);
                 pGame->state = LOBBY;
                 buttonPressed = false;
             }
-            handleButton(pGame->pJoinLobbyButton, &buttonPressed);
+            handleButton(pGame->buttons.pJoinLobbyButton, &buttonPressed);
             if (buttonPressed) {
                 *pJoined = true;
                 buttonPressed = false;
             }
-            handleButton(pGame->pReturnButton, &buttonPressed);
+            handleButton(pGame->buttons.pReturnButton, &buttonPressed);
             if (buttonPressed){
                 pGame->state = MAIN_MENU;
                 buttonPressed = false;
@@ -462,16 +462,16 @@ void handleLobbyMenu(Game* pGame, SDL_Event event, bool* pLeft, bool* pRight, in
     }
 }
 
-void renderLobbyMenu(Game* pGame, GameDisplay* pGameDisplay){
-    renderMenu(pGameDisplay, pGame->pMenuTexture);
+void renderLobbyMenu(GameDisplay* pGameDisplay, Buttons* pButtons, SDL_Texture* pMenuTexture) { //kan flyttas
+    renderMenu(pGameDisplay, pMenuTexture);
 
-    renderButton(pGame->pCreateLobbyButton, pGameDisplay->pRenderer, pGame->pButtonTexture);
-    renderButton(pGame->pJoinLobbyButton, pGameDisplay->pRenderer, pGame->pButtonTexture);
-    renderButton(pGame->pReturnButton, pGameDisplay->pRenderer, pGame->pButtonTexture);
+    renderButton(pButtons->pCreateLobbyButton, pGameDisplay->pRenderer, pButtons->pButtonTexture);
+    renderButton(pButtons->pJoinLobbyButton, pGameDisplay->pRenderer, pButtons->pButtonTexture);
+    renderButton(pButtons->pReturnButton, pGameDisplay->pRenderer, pButtons->pButtonTexture);
 
-    renderText(pGame->pCreateLobbyButtonText, pGameDisplay->pRenderer);
-    renderText(pGame->pJoinLobbyButtonText, pGameDisplay->pRenderer);
-    renderText(pGame->pReturnButtonText, pGameDisplay->pRenderer);
+    renderText(pButtons->pCreateLobbyButtonText, pGameDisplay->pRenderer);
+    renderText(pButtons->pJoinLobbyButtonText, pGameDisplay->pRenderer);
+    renderText(pButtons->pReturnButtonText, pGameDisplay->pRenderer);
 }
 
 void handleLobby(Game* pGame, SDL_Event event, int* pIndex, bool* pJoined) {
@@ -484,14 +484,14 @@ void handleLobby(Game* pGame, SDL_Event event, int* pIndex, bool* pJoined) {
     runNetcode(pGame->pNetworkData, pGame->pGameplayData, pGame->pClientCommands);
 
     if (isHost) { // SERVER
-        renderButton(pGame->pStartButton, pGame->gameDisplay.pRenderer, pGame->pButtonTexture);
-        renderText(pGame->pStartButtonText, pGame->gameDisplay.pRenderer);
+        renderButton(pGame->buttons.pStartButton, pGame->gameDisplay.pRenderer, pGame->buttons.pButtonTexture);
+        renderText(pGame->buttons.pStartButtonText, pGame->gameDisplay.pRenderer);
 
         sprintf(nrOfClients, "%d", pGame->pNetworkData->nClients);
         pGame->pNrClientsText = createText(&pGame->gameDisplay, pGame->pMenuFont, nrOfClients, 255, 255, 255, 0, 70);
         renderText(pGame->pNrClientsText, pGame->gameDisplay.pRenderer);
         while (SDL_PollEvent(&event)) {
-            handleButton(pGame->pStartButton, &buttonPressed);
+            handleButton(pGame->buttons.pStartButton, &buttonPressed);
             if (buttonPressed) {
                 pGame->state = ONGOING;
                 buttonPressed = false;
@@ -504,10 +504,10 @@ void handleLobby(Game* pGame, SDL_Event event, int* pIndex, bool* pJoined) {
     } else { // CLIENT
         renderMenu(&pGame->gameDisplay, pGame->pMenuTexture);
         renderText(pGame->pWaitingText, pGame->gameDisplay.pRenderer);
-        renderButton(pGame->pMainMenuButton, pGame->gameDisplay.pRenderer, pGame->pButtonTexture);
-        renderText(pGame->pMainMenuButtonText, pGame->gameDisplay.pRenderer);
+        renderButton(pGame->buttons.pMainMenuButton, pGame->gameDisplay.pRenderer, pGame->buttons.pButtonTexture);
+        renderText(pGame->buttons.pMainMenuButtonText, pGame->gameDisplay.pRenderer);
         while (SDL_PollEvent(&event)) {
-            handleButton(pGame->pMainMenuButton, &buttonPressed);
+            handleButton(pGame->buttons.pMainMenuButton, &buttonPressed);
             if (buttonPressed) {
                 pGame->state = MAIN_MENU;
                 buttonPressed = false;
@@ -731,38 +731,38 @@ void handleOngoingInput(Game* pGame, SDL_Event* event, bool* pIsRunning, bool* p
     }
 }
 
-void handleGameMenu(Game* pGame, SDL_Event event, bool* pMute){
+void handleGameMenu(GameDisplay* pGameDisplay, Buttons* pButtons, SDL_Event event, State* pState, bool* pMute) { //kan flyttas
     bool buttonPressed = false;
 
     Mix_PauseMusic();
 
-    renderGameMenu(pGame);
+    renderGameMenu(pGameDisplay, pButtons);
 
     while (SDL_PollEvent(&event)) {
-        handleButton(pGame->pResumeButton, &buttonPressed);
+        handleButton(pButtons->pResumeButton, &buttonPressed);
         if (buttonPressed) {
-            pGame->state = ONGOING;
+            *pState = ONGOING;
             buttonPressed = false;
             if (!(*pMute)) Mix_ResumeMusic();
         }
-        handleButton(pGame->pMainMenuButton, &buttonPressed);
+        handleButton(pButtons->pMainMenuButton, &buttonPressed);
         if (buttonPressed) {
-            pGame->state = MAIN_MENU;
+            *pState = MAIN_MENU;
             buttonPressed = false;
         }
 
         if (event.type == SDL_QUIT) {
-            pGame->state = QUIT;
+            *pState = QUIT;
         }
     }
 }
 
-void renderGameMenu(Game* pGame) {
-    renderButton(pGame->pResumeButton, pGame->gameDisplay.pRenderer, pGame->pButtonTexture);
-    renderButton(pGame->pMainMenuButton, pGame->gameDisplay.pRenderer, pGame->pButtonTexture);
+void renderGameMenu(GameDisplay* pGameDisplay, Buttons* pButtons) { // kan flyttas
+    renderButton(pButtons->pResumeButton, pGameDisplay->pRenderer, pButtons->pButtonTexture);
+    renderButton(pButtons->pMainMenuButton, pGameDisplay->pRenderer, pButtons->pButtonTexture);
 
-    renderText(pGame->pMainMenuButtonText, pGame->gameDisplay.pRenderer);
-    renderText(pGame->pResumeButtonText, pGame->gameDisplay.pRenderer);
+    renderText(pButtons->pMainMenuButtonText, pGameDisplay->pRenderer);
+    renderText(pButtons->pResumeButtonText, pGameDisplay->pRenderer);
 }
 
 void handleGameOver(Game* pGame, SDL_Event event) {
@@ -784,10 +784,10 @@ void handleGameOver(Game* pGame, SDL_Event event) {
         whoWonTextCreated = true;
     }
 
-    renderGameOver(pGame, &pGame->gameDisplay);
+    renderGameOver(&pGame->gameDisplay, &pGame->buttons, pGame->pWhoWonText);
 
     while (SDL_PollEvent(&event)) {
-        handleButton(pGame->pMainMenuButton, &buttonPressed);
+        handleButton(pGame->buttons.pMainMenuButton, &buttonPressed);
         if (buttonPressed) {
             destroyText(pGame->pWhoWonText);
             whoWonTextCreated = false;
@@ -801,11 +801,11 @@ void handleGameOver(Game* pGame, SDL_Event event) {
     }
 }
 
-void renderGameOver(Game* pGame, GameDisplay* pGameDisplay){
-    renderButton(pGame->pMainMenuButton, pGameDisplay->pRenderer, pGame->pButtonTexture);
+void renderGameOver(GameDisplay* pGameDisplay, Buttons* pButtons, Text* pWhoWonText) { //kan flyttas
+    renderButton(pButtons->pMainMenuButton, pGameDisplay->pRenderer, pButtons->pButtonTexture);
 
-    renderText(pGame->pMainMenuButtonText, pGameDisplay->pRenderer);
-    renderText(pGame->pWhoWonText, pGameDisplay->pRenderer);
+    renderText(pButtons->pMainMenuButtonText, pGameDisplay->pRenderer);
+    renderText(pWhoWonText, pGameDisplay->pRenderer);
 }
 
 void resetGame(Game* pGame, bool* pLeft, bool* pRight, int* pTime){
@@ -835,37 +835,37 @@ void quitGame(Game* pGame){
     destroyMusic(pGame->pMainSound);
 
     destroyText(pGame->pYouAreDeadText);
-    destroyText(pGame->pMainMenuButtonText);
-    destroyText(pGame->pResumeButtonText);
-    destroyText(pGame->pJoinLobbyButtonText);
-    destroyText(pGame->pCreateLobbyButtonText);
-    destroyText(pGame->pSwedishButtonText);
-    destroyText(pGame->pEnglishButtonText);
-    destroyText(pGame->pReturnButtonText);
-    destroyText(pGame->pMuteButton2Text);
-    destroyText(pGame->pMuteButton1Text);
-    destroyText(pGame->pMoveLeftButton2Text);
-    destroyText(pGame->pMoveLeftButton1Text);
-    destroyText(pGame->pMoveRightButton2Text);
-    destroyText(pGame->pMoveRightButton1Text);
-    destroyText(pGame->pLanguageButtonText);
-    destroyText(pGame->pQuitButtonText);
-    destroyText(pGame->pSettingsButtonText);
-    destroyText(pGame->pStartButtonText);
+    destroyText(pGame->buttons.pMainMenuButtonText);
+    destroyText(pGame->buttons.pResumeButtonText);
+    destroyText(pGame->buttons.pJoinLobbyButtonText);
+    destroyText(pGame->buttons.pCreateLobbyButtonText);
+    destroyText(pGame->buttons.pSwedishButtonText);
+    destroyText(pGame->buttons.pEnglishButtonText);
+    destroyText(pGame->buttons.pReturnButtonText);
+    destroyText(pGame->buttons.pMuteButton2Text);
+    destroyText(pGame->buttons.pMuteButton1Text);
+    destroyText(pGame->buttons.pMoveLeftButton2Text);
+    destroyText(pGame->buttons.pMoveLeftButton1Text);
+    destroyText(pGame->buttons.pMoveRightButton2Text);
+    destroyText(pGame->buttons.pMoveRightButton1Text);
+    destroyText(pGame->buttons.pLanguageButtonText);
+    destroyText(pGame->buttons.pQuitButtonText);
+    destroyText(pGame->buttons.pSettingsButtonText);
+    destroyText(pGame->buttons.pStartButtonText);
 
-    destroyButton(pGame->pMainMenuButton);
-    destroyButton(pGame->pResumeButton);
-    destroyButton(pGame->pJoinLobbyButton);
-    destroyButton(pGame->pCreateLobbyButton);
-    destroyButton(pGame->pSwedishButton);
-    destroyButton(pGame->pEnglishButton);
-    destroyButton(pGame->pReturnButton);
-    destroyButton(pGame->pMoveLeftButton);
-    destroyButton(pGame->pMoveRightButton);
-    destroyButton(pGame->pLanguageButton);
-    destroyButton(pGame->pQuitButton);
-    destroyButton(pGame->pSettingsButton);
-    destroyButton(pGame->pStartButton);
+    destroyButton(pGame->buttons.pMainMenuButton);
+    destroyButton(pGame->buttons.pResumeButton);
+    destroyButton(pGame->buttons.pJoinLobbyButton);
+    destroyButton(pGame->buttons.pCreateLobbyButton);
+    destroyButton(pGame->buttons.pSwedishButton);
+    destroyButton(pGame->buttons.pEnglishButton);
+    destroyButton(pGame->buttons.pReturnButton);
+    destroyButton(pGame->buttons.pMoveLeftButton);
+    destroyButton(pGame->buttons.pMoveRightButton);
+    destroyButton(pGame->buttons.pLanguageButton);
+    destroyButton(pGame->buttons.pQuitButton);
+    destroyButton(pGame->buttons.pSettingsButton);
+    destroyButton(pGame->buttons.pStartButton);
 
     destroyPlayerTextures(pGame->pPlayerTextures);
     destroyTexture(pGame->pStartPlatformTexture);

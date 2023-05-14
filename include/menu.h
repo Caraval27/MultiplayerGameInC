@@ -1,5 +1,7 @@
 #pragma once
 
+#include "../include/text.h"
+
 #define MAIN_MENU_PICTURE "../assets/mainMenuBackground.png"
 #define BUTTON_PICTURE "../assets/button.png"
 #define BUTTON_WIDTH 220
@@ -11,6 +13,15 @@ typedef struct {
 	int mouseYDelta, mouseXDelta;
     float mouseState;
 } Button;
+
+typedef struct {
+    Button *pStartButton,  *pSettingsButton, *pQuitButton, *pLanguageButton, *pMoveLeftButton, *pMoveRightButton, *pReturnButton, *pEnglishButton, *pSwedishButton, *pResumeButton,
+    *pMainMenuButton, *pCreateLobbyButton, *pJoinLobbyButton, *pMuteButton;
+    Text *pStartButtonText, *pSettingsButtonText, *pQuitButtonText, *pLanguageButtonText,  *pMoveLeftButton1Text, *pMoveRightButton1Text, *pReturnButtonText, *pEnglishButtonText,
+    *pSwedishButtonText, *pResumeButtonText, *pMainMenuButtonText, *pMoveLeftButton2Text, *pMoveRightButton2Text, *pCreateLobbyButtonText, *pJoinLobbyButtonText,
+    *pMuteButton1Text, *pMuteButton2Text;
+    SDL_Texture *pButtonTexture, *pButtonExitTexture;
+} Buttons;
 
 void renderMenu(GameDisplay* pGameDisplay, SDL_Texture* pTexture);
 Button* createButton(float xPos, float yPos, float width, float height);

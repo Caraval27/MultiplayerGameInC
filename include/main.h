@@ -11,21 +11,16 @@
 
 typedef struct {
     GameDisplay gameDisplay;
-    //SDL_Window *pWindow;
-    //int windowWidth, windowHeight;
-    //SDL_Renderer *pRenderer;
     State state;
-    SDL_Texture *pMenuTexture, *pBackgroundTexture, *pButtonTexture, *pButtonExitTexture, *pPlatformTexture, *pStartPlatformTexture;
+    SDL_Texture *pMenuTexture, *pBackgroundTexture, *pPlatformTexture, *pStartPlatformTexture;
     TTF_Font *pMenuFont;
     Background* pBackground;
-    Button *pStartButton,  *pSettingsButton, *pQuitButton, *pLanguageButton, *pMoveLeftButton, *pMoveRightButton, *pReturnButton, *pEnglishButton, *pSwedishButton, *pResumeButton,
-    *pMainMenuButton, *pCreateLobbyButton, *pJoinLobbyButton, *pMuteButton;
+    Buttons buttons;
 
     bool chosenLanguage;
 
-    Text *pStartButtonText, *pSettingsButtonText, *pQuitButtonText, *pLanguageButtonText,  *pMoveLeftButton1Text, *pMoveRightButton1Text, *pReturnButtonText, *pEnglishButtonText,
-    *pSwedishButtonText, *pResumeButtonText, *pMainMenuButtonText, *pMoveLeftButton2Text, *pMoveRightButton2Text,*pYouAreDeadText, *pCreateLobbyButtonText, *pJoinLobbyButtonText,
-    *pMuteButton1Text, *pMuteButton2Text, *pWhoWonText, *pWaitingText, *pInputIPText, *pEnterIPText, *pNrClientsText;
+    Text *pYouAreDeadText, *pWhoWonText, *pWaitingText, *pInputIPText, *pEnterIPText, *pNrClientsText;
+
     Player* pPlayers[MAX_PLAYERS];
     SDL_Texture* pPlayerTextures[MAX_PLAYERS];
     int nrOfPlayers, nrOfPlayersLeft;
@@ -43,29 +38,29 @@ typedef struct {
 } Game;
 
 int initiateGame(Game* pGame);
-void initiateLanguage(FILE *fp, Game *pGame);
+void initiateLanguage(FILE* fp, Game* pGame, Buttons* pButtons);
 int handleError(Game* pGame, void* pMember, const char* (*GetError)(void));
 
 void runGame(Game* pGame);
 
 void handleMainMenu(Game* pGame, SDL_Event event, bool* pMute);
-void renderMainMenu(Game* pGame, GameDisplay* pGameDisplay);
+void renderMainMenu(GameDisplay* pGameDisplay, Buttons* pButtons, SDL_Texture* pMenutexture);
 void handleSettingsMenu(Game* pGame, SDL_Event event, int* pNum, bool *pShowLang);
-void renderSettingsMenu(Game *pGame, GameDisplay* pGameDisplay);
+void renderSettingsMenu(GameDisplay* pGameDisplay, Buttons* pButtons, SDL_Texture* pMenutexture);
 void handleLanguageMenu(Game* pGame, SDL_Event event, bool* pShowLang);
-void renderLanguageMenu(Game* pGame, GameDisplay* pGameDisplay);
-void readKeybindString(Game *pGame, int input);
+void renderLanguageMenu(GameDisplay* pGameDisplay, Buttons* pButtons);
+void readKeybindString(Game *pGame, int input, GameDisplay* pGameDisplay, Buttons* pButtons);
 void handleEnterInput(Game* pGame, SDL_Event event, int* pNum);
 void handleLobbyMenu(Game* pGame, SDL_Event event, bool* pLeft, bool* pRight, int* pTime, int* pIndex, bool* pJoined);
-void renderLobbyMenu(Game* pGame, GameDisplay* pGameDisplay);
+void renderLobbyMenu(GameDisplay* pGameDisplay, Buttons* pButtons, SDL_Texture* pMenutexture);
 void handleLobby(Game* pGame, SDL_Event event, int* pIndex, bool* pJoined);
 void fillZero(Game* pGame, int max);
 void handleOngoing(Game* pGame, SDL_Event event, bool* pIsRunning, bool *pLeft, bool *pRight, int* pTime, bool* pMute);
 void handleOngoingInput(Game* pGame, SDL_Event* event, bool* pIsRunning, bool* pLeft, bool* pRight, bool* pMute);
-void handleGameMenu(Game* pGame, SDL_Event event, bool* pMute);
-void renderGameMenu(Game* pGame);
+void handleGameMenu(GameDisplay* pGameDisplay, Buttons* pButtons, SDL_Event event, State* pState, bool* pMute);
+void renderGameMenu(GameDisplay* pGameDisplay, Buttons* pButtons);
 void handleGameOver(Game* pGame, SDL_Event event);
-void renderGameOver(Game* pGame, GameDisplay* pGameDisplay);
+void renderGameOver(GameDisplay* pGameDisplay, Buttons* pButtons, Text* pWhoWonText);
 
 void resetGame(Game* pGame, bool* pLeft, bool* pRight, int* pTime);
 
