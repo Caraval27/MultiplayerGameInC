@@ -8,6 +8,8 @@
 typedef struct {
     SDL_Window* pWindow;
     SDL_Renderer* pRenderer;
+    SDL_Texture *pMenuTexture, *pBackgroundTexture, *pPlatformTexture, *pStartPlatformTexture;
+    TTF_Font *pMenuFont;
     int windowWidth, windowHeight;
 } GameDisplay;
 
