@@ -47,7 +47,6 @@ typedef struct {
 	Player players[MAX_PLAYERS];
 	State gameState;
 	int nrOfPlayers, nrOfPlayersLeft;
-    bool start;
 	// Platform platforms[30];
 } GameplayData;
 

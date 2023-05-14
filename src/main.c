@@ -174,9 +174,9 @@ void runGame(Game* pGame){
                 break;
             case ENTER_INPUT: handleEnterInput(pGame, event, &num);
                 break;
-            case LOBBY_MENU: handleLobbyMenu(pGame, event, &left, &right, &time, &createLobbyPressed);
+            case LOBBY_MENU: handleLobbyMenu(pGame, event, &left, &right, &time, &inputIPIndex, &joined);
                 break;
-            case LOBBY: handleLobby(pGame, event, &joined, &inputIPIndex, &createLobbyPressed);
+            case LOBBY: handleLobby(pGame, event, &inputIPIndex, &joined);
                 break;
             case ONGOING: handleOngoing(pGame, event, &isRunning, &left, &right, &time, &mute);
                 break;
@@ -402,39 +402,66 @@ void handleEnterInput(Game* pGame, SDL_Event event, int* pNum){
     }
 }
 
-void handleLobbyMenu(Game* pGame, SDL_Event event, bool* pLeft, bool* pRight, int* pTime, bool* pCreateLobbyPressed){
+void handleLobbyMenu(Game* pGame, SDL_Event event, bool* pLeft, bool* pRight, int* pTime, int* pIndex, bool* pJoined){
     bool buttonPressed = false;
 
     renderLobbyMenu(pGame);
 
-    while (SDL_PollEvent(&event)) {
-        handleButton(pGame->pCreateLobbyButton, &buttonPressed);
-        if (buttonPressed) {
-            pGame->state = LOBBY;
-            *pCreateLobbyPressed = true;
-            buttonPressed = false;
+    if (*pJoined) {
+        renderMenu(pGame->pRenderer, pGame->pMenuTexture, pGame->windowWidth, pGame->windowHeight);
+        renderText(pGame->pEnterIPText, pGame->pRenderer);
+        while (SDL_PollEvent(&event)) {
+            switch (event.type) {
+                case SDL_KEYDOWN:
+                    if ((event.key.keysym.sym) == (SDLK_RETURN) ) {
+                        setConnection(pGame->pNetworkData, pGame->inputIP);
+                        pGame->state = LOBBY;
+                    }
+                    else if ((event.key.keysym.sym) == (SDLK_BACKSPACE) && (*pIndex) > 0) {
+                        (*pIndex)--;
+                        pGame->inputIP[*pIndex] = '\0';
+                    }
+                    else if ((*pIndex) < INPUT_IP_LEN) {
+                        pGame->inputIP[*pIndex] = (event.key.keysym.sym);
+                        (*pIndex)++;
+                    }
+                break;
+            }
+            if (event.type == SDL_QUIT) {
+                pGame->state = QUIT;
+            }
         }
-        handleButton(pGame->pJoinLobbyButton, &buttonPressed);
-        if (buttonPressed) {
-            pGame->state = LOBBY;
-            buttonPressed = false;
+        if ((*pIndex) > 0) {
+            pGame->pInputIPText = createText(pGame->pRenderer, pGame->pMenuFont, pGame->inputIP, 255, 255, 255, pGame->windowWidth, pGame->windowHeight, 70, 50);
+            renderText(pGame->pInputIPText, pGame->pRenderer);
         }
-        handleButton(pGame->pReturnButton, &buttonPressed);
-        if (buttonPressed){
-            pGame->state = MAIN_MENU;
-            buttonPressed = false;
-        }
-
-        if (pGame->state == LOBBY) {
-            resetGame(pGame, pLeft, pRight, pTime);
-        }
-
-        if (event.type == SDL_QUIT) {
-            pGame->state = QUIT;
+    } else {
+        while (SDL_PollEvent(&event)) {
+            handleButton(pGame->pCreateLobbyButton, &buttonPressed);
+            if (buttonPressed) {
+                setConnection(pGame->pNetworkData, NULL);
+                pGame->state = LOBBY;
+                buttonPressed = false;
+            }
+            handleButton(pGame->pJoinLobbyButton, &buttonPressed);
+            if (buttonPressed) {
+                *pJoined = true;
+                buttonPressed = false;
+            }
+            handleButton(pGame->pReturnButton, &buttonPressed);
+            if (buttonPressed){
+                pGame->state = MAIN_MENU;
+                buttonPressed = false;
+            }
+            if (event.type == SDL_QUIT) {
+                pGame->state = QUIT;
+            }
         }
     }
+    if (pGame->state == LOBBY) {
+        resetGame(pGame, pLeft, pRight, pTime);
+    }
 }
-//test
 
 void renderLobbyMenu(Game* pGame){
     renderMenu(pGame->pRenderer, pGame->pMenuTexture, pGame->windowWidth, pGame->windowHeight);
@@ -448,80 +475,52 @@ void renderLobbyMenu(Game* pGame){
     renderText(pGame->pReturnButtonText, pGame->pRenderer);
 }
 
-void handleLobby(Game* pGame, SDL_Event event, bool* pJoined, int* pIndex, bool* pCreateLobbyPressed) {
+void handleLobby(Game* pGame, SDL_Event event, int* pIndex, bool* pJoined) {
     bool buttonPressed = false;
     bool isHost = pGame->pNetworkData->isHost;
     char nrOfClients[2];
 
     renderMenu(pGame->pRenderer, pGame->pMenuTexture, pGame->windowWidth, pGame->windowHeight);
 
-    if (*pJoined) {
-        runNetcode(pGame->pNetworkData, pGame->pGameplayData, pGame->pClientCommands);
-    }
-    if (*pCreateLobbyPressed) {
-        setConnection(pGame->pNetworkData, NULL);
-    }
+    runNetcode(pGame->pNetworkData, pGame->pGameplayData, pGame->pClientCommands);
 
     if (isHost) { // SERVER
         renderButton(pGame->pStartButton, pGame->pRenderer, pGame->pButtonTexture);
         renderText(pGame->pStartButtonText, pGame->pRenderer);
+
+        sprintf(nrOfClients, "%d", pGame->pNetworkData->nClients);
+        pGame->pNrClientsText = createText(pGame->pRenderer, pGame->pMenuFont, nrOfClients, 255, 255, 255, pGame->windowWidth, pGame->windowHeight, 0, 70);
+        renderText(pGame->pNrClientsText, pGame->pRenderer);
         while (SDL_PollEvent(&event)) {
             handleButton(pGame->pStartButton, &buttonPressed);
             if (buttonPressed) {
                 pGame->state = ONGOING;
                 buttonPressed = false;
-                pGame->pGameplayData->start = true;
+                pGame->pGameplayData->gameState = ONGOING;
             }
             if (event.type == SDL_QUIT) {
                 pGame->state = QUIT;
             }
         }
-        sprintf(nrOfClients, "%d", pGame->pNetworkData->nClients);
-        pGame->pNrClientsText = createText(pGame->pRenderer, pGame->pMenuFont, nrOfClients, 255, 255, 255, pGame->windowWidth, pGame->windowHeight, 0, 70);
-        renderText(pGame->pNrClientsText, pGame->pRenderer);
     } else { // CLIENT
+        renderMenu(pGame->pRenderer, pGame->pMenuTexture, pGame->windowWidth, pGame->windowHeight);
+        renderText(pGame->pWaitingText, pGame->pRenderer);
+        renderButton(pGame->pMainMenuButton, pGame->pRenderer, pGame->pButtonTexture);
+        renderText(pGame->pMainMenuButtonText, pGame->pRenderer);
         while (SDL_PollEvent(&event)) {
-            switch (event.type) {
-                case SDL_KEYDOWN:
-                    if ((event.key.keysym.sym) == (SDLK_RETURN) ) {
-                        setConnection(pGame->pNetworkData, pGame->inputIP);
-                        *pJoined = true;
-                    }
-                    else if ((event.key.keysym.sym) == (SDLK_BACKSPACE) && (*pIndex) > 0) {
-                        (*pIndex)--;
-                        pGame->inputIP[*pIndex] = '\0';
-                    }
-                    else if ((*pIndex) < INPUT_IP_LEN) {
-                        pGame->inputIP[*pIndex] = (event.key.keysym.sym);
-                        (*pIndex)++;
-                    }
-                break;
-            }
             handleButton(pGame->pMainMenuButton, &buttonPressed);
             if (buttonPressed) {
                 pGame->state = MAIN_MENU;
                 buttonPressed = false;
                 (*pJoined) = false;
-                fillZero(pGame, INPUT_IP_LEN);
-                (*pIndex) = 0;
+                //fillZero(pGame, INPUT_IP_LEN);
+                //(*pIndex) = 0;
             }
             if (event.type == SDL_QUIT) {
                 pGame->state = QUIT;
             }
         }
-        if ((*pIndex) > 0) {
-            pGame->pInputIPText = createText(pGame->pRenderer, pGame->pMenuFont, pGame->inputIP, 255, 255, 255, pGame->windowWidth, pGame->windowHeight, 70, 50);
-            renderText(pGame->pInputIPText, pGame->pRenderer);
-        }
-        if (*pJoined) {
-            renderMenu(pGame->pRenderer, pGame->pMenuTexture, pGame->windowWidth, pGame->windowHeight);
-            renderText(pGame->pWaitingText, pGame->pRenderer);
-            renderButton(pGame->pMainMenuButton, pGame->pRenderer, pGame->pButtonTexture);
-            renderText(pGame->pMainMenuButtonText, pGame->pRenderer);
-        } else {
-            renderText(pGame->pEnterIPText, pGame->pRenderer);
-        }
-        if (pGame->pGameplayData->start) {
+        if (pGame->pGameplayData->gameState == ONGOING) {
             pGame->state = ONGOING;
         }
     }
