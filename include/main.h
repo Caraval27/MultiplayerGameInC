@@ -16,9 +16,7 @@ typedef struct {
     TTF_Font *pMenuFont;
     Background* pBackground;
     Buttons buttons;
-
     bool chosenLanguage;
-
     Text *pYouAreDeadText, *pWhoWonText, *pWaitingText, *pInputIPText, *pEnterIPText, *pNrClientsText;
 
     Player* pPlayers[MAX_PLAYERS];
@@ -54,7 +52,7 @@ void handleEnterInput(Game* pGame, SDL_Event event, int* pNum);
 void handleLobbyMenu(Game* pGame, SDL_Event event, bool* pLeft, bool* pRight, int* pTime, int* pIndex, bool* pJoined);
 void renderLobbyMenu(GameDisplay* pGameDisplay, Buttons* pButtons, SDL_Texture* pMenutexture);
 void handleLobby(Game* pGame, SDL_Event event, int* pIndex, bool* pJoined);
-void fillZero(Game* pGame, int max);
+void fillZero(char inputIP[], int max);
 void handleOngoing(Game* pGame, SDL_Event event, bool* pIsRunning, bool *pLeft, bool *pRight, int* pTime, bool* pMute);
 void handleOngoingInput(Game* pGame, SDL_Event* event, bool* pIsRunning, bool* pLeft, bool* pRight, bool* pMute);
 void handleGameMenu(GameDisplay* pGameDisplay, Buttons* pButtons, SDL_Event event, State* pState, bool* pMute);

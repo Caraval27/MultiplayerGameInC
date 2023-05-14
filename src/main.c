@@ -148,7 +148,7 @@ void initiateLanguage(FILE* fp, Game* pGame, Buttons* pButtons) {
     pGame->pEnterIPText = createText(&pGame->gameDisplay, pGame->pMenuFont, pGame->language[17], 255, 255, 255, -130, 50);
 }
 
-int handleError(Game* pGame, void* pMember, const char* (*GetError)(void)){
+int handleError(Game* pGame, void* pMember, const char* (*GetError)(void)) {
     if (!pMember) {
         printf("Error: %s\n", (*GetError)());
         quitGame(pGame);
@@ -525,15 +525,15 @@ void handleLobby(Game* pGame, SDL_Event event, int* pIndex, bool* pJoined) {
     }
 }
 
-void fillZero(Game* pGame, int max) {
+void fillZero(char inputIP[], int max) { // kan flyttas
     for (int i = 0; i < max; i++)
     {
-        pGame->inputIP[i] = '\0';
+        inputIP[i] = '\0';
     }
 }
 
-void handleOngoing(Game* pGame, SDL_Event event, bool* pIsRunning, bool* pLeft, bool *pRight, int *pTime, bool* pMute){
-    while (SDL_PollEvent(&event)){
+void handleOngoing(Game* pGame, SDL_Event event, bool* pIsRunning, bool* pLeft, bool *pRight, int *pTime, bool* pMute) {
+    while (SDL_PollEvent(&event)) {
         handleOngoingInput(pGame, &event, pIsRunning, pLeft, pRight, pMute);
     }
 
