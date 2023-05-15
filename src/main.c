@@ -112,7 +112,7 @@ int initiateGame(Game* pGame){
     pGame->pWinSound = Mix_LoadWAV("../assets/tempWinSound.wav");
     if (!handleError(pGame, pGame->pWinSound, Mix_GetError)) return 0;
 
-    FILE *fp;
+    FILE *fp = NULL;
     readFromFileKey(fp, pGame->language.keybinds);
     //saveToFile(fp, pGame->keybinds);
     //pGame->chosenLanguage = true;
@@ -323,7 +323,7 @@ void renderSettingsMenu(GameDisplay* pGameDisplay, Buttons* pButtons) { //kan fl
 void handleLanguageMenu(GameDisplay* pGameDisplay, Language* pLanguage, Buttons* pButtons, DisplayText* pDisplayText, SDL_Event event) { // kan flyttas
     bool buttonPressed = false;
     char chosenLang[LANG_LENGTH];
-    FILE *fp;
+    FILE *fp = NULL;
 
     handleButton(pButtons->pEnglishButton, &buttonPressed);
     if (buttonPressed) {
@@ -383,7 +383,7 @@ void readKeybindString(Language* pLanguage, int index, GameDisplay* pGameDisplay
 }
 
 void handleEnterInput(GameDisplay* pGameDisplay, Language* pLanguage, Buttons* pButtons, SDL_Event event, State* pState) { // kan flyttas
-    FILE *fp;
+    FILE *fp = NULL;
 
     renderSettingsMenu(pGameDisplay, pButtons);
 

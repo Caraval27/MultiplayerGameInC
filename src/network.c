@@ -6,13 +6,13 @@ int initializeNetcode(NetworkData *pNetworkData) {
 		return 0;
 	}
 
-	if (pNetworkData->pSocketServer == SDLNet_UDP_Open(PORT_SERVER)) {
+	if ((pNetworkData->pSocketServer = SDLNet_UDP_Open(PORT_SERVER))) {
 		printf("server socket opened\n");
 	} else {
 		printf("failed to open server socket: %s\n", SDLNet_GetError());
 	}
 
-	if (pNetworkData->pSocketClient == SDLNet_UDP_Open(PORT_CLIENT)) {
+	if ((pNetworkData->pSocketClient = SDLNet_UDP_Open(PORT_CLIENT))) {
 		printf("client socket opened\n");
 	} else {
 		printf("failed to open client socket: %s\n", SDLNet_GetError());
@@ -58,7 +58,8 @@ void runNetcode(NetworkData *pNetworkData, GameplayData *pGameplayData, ClientCo
 			// CLIENT
 			sendClientCommand(pNetworkData, &pClientCommands[0]);
 			if (pNetworkData->hasJoined) {
-				int test = listenForHostBroadcast(pNetworkData, pGameplayData);
+				// int test = listenForHostBroadcast(pNetworkData, pGameplayData);
+				listenForHostBroadcast(pNetworkData, pGameplayData);
 				// if (test == 0) printf("ran a tick without inc broadcast\n");
 				// else if (test > 0) printf("ran a tick WITH inc broadcast\n");
 			} else {

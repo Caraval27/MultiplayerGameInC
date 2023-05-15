@@ -2,7 +2,7 @@
 
 // These functions will use a .txt file to either read or write the keybinds from the user
 
-void saveToFile(FILE *fp, int keybinds[]){
+void saveToFile(FILE *fp, int keybinds[NR_OF_KEYBINDS]){
     fp = fopen("../assets/textfiles/keybinds.txt", "w");
     for (int i = 0; i < NR_OF_KEYBINDS; i++){
         fprintf(fp, "%d\n", keybinds[i]);
@@ -10,7 +10,7 @@ void saveToFile(FILE *fp, int keybinds[]){
     fclose(fp);
 }
 
-void readFromFileKey(FILE *fp, int keybinds[]){
+void readFromFileKey(FILE *fp, int keybinds[NR_OF_KEYBINDS]){
     fp = fopen("../assets/textfiles/keybinds.txt", "r");
     if (fp != NULL){
         for (int i = 0; i < NR_OF_KEYBINDS; i++){
