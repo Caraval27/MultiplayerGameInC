@@ -22,6 +22,12 @@ typedef struct {
 	SDL_RendererFlip flip;
 } Player;
 
+typedef struct {
+    Player *pPlayers[MAX_PLAYERS];
+    SDL_Texture *pPlayerTextures[MAX_PLAYERS];
+    int nrOfPlayers, nrOfPlayersLeft;
+} PlayersData;
+
 Player* createPlayer(float xPos, float yPos, float width, float height, float xVelocity, float yVelocity);
 void initPlayer(Player** pPlayers, int* pNrOfPlayers, int* pNrOfPlayersLeft, GameDisplay* pGameDisplay, float startPlatformYPos, SDL_Texture** pPlayerTextures, int* pSubtractXPos, int* pIncreaseXPos, char avatar[]);
 void movePlayer(Player* pPlayer, bool left, bool right, int windowWidth);

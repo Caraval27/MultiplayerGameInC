@@ -44,11 +44,12 @@ int initiateGame(Game* pGame){
     pGame->pLobbyConnect = malloc(sizeof(LobbyConnect));
 	pGame->pNetworkData = malloc(sizeof(NetworkData));
 	pGame->pGameplayData = malloc(sizeof(GameplayData));
+    pGame->pPlayersData = malloc(sizeof(PlayersData));
     *pGame->pLobbyConnect = (LobbyConnect){0};
 	*pGame->pNetworkData = (NetworkData){0};
 	*pGame->pGameplayData = (GameplayData){0};
 	*pGame->pClientCommands = (ClientCommand){0};
-	pGame->pNetworkData->pPlayers = pGame->pPlayers;
+	pGame->pNetworkData->pPlayers = pGame->pPlayersData->pPlayers;
 	initializeNetcode(pGame->pNetworkData);
 
     pGame->gameDisplay.pWindow = SDL_CreateWindow("Mental breakdown", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, pGame->gameDisplay.windowWidth, pGame->gameDisplay.windowHeight, 0);
@@ -179,11 +180,11 @@ void runGame(Game* pGame) {
                 break;
             case LOBBY: handleLobby(&pGame->gameDisplay, pGame->pNetworkData, pGame->pGameplayData, pGame->pClientCommands, &pGame->buttons, &pGame->displayText, event, &pGame->state, pGame->pLobbyConnect);
                 break;
-            case ONGOING: handleOngoing(pGame, event, &isRunning, &time, &mute);
+            case ONGOING: handleOngoing(pGame, pGame->pPlayersData, pGame->pNetworkData, pGame->pGameplayData, pGame->pClientCommands, &pGame->language, event, &pGame->state, &isRunning, &time, &mute);
                 break;
             case GAME_MENU: handleGameMenu(&pGame->gameDisplay, &pGame->buttons, event, &pGame->state, &mute);
                 break;
-            case GAME_OVER: handleGameOver(pGame, &pGame->gameDisplay, &pGame->language, &pGame->buttons, &pGame->displayText, event, &pGame->state);
+            case GAME_OVER: handleGameOver(pGame->pPlayersData, &pGame->gameDisplay, &pGame->language, &pGame->buttons, &pGame->displayText, event, &pGame->state);
                 break;
             case QUIT: isRunning = false;
                 break;
@@ -460,7 +461,7 @@ void handleLobbyMenu(Game* pGame, GameDisplay* pGameDisplay, NetworkData* pNetwo
         }
     }
     if (*pState == LOBBY) {
-        resetGame(pGame, pTime);
+        resetGame(pGame, pGame->pPlayersData, pTime);
     }
 }
 
@@ -534,22 +535,22 @@ void fillZero(char inputIP[], int max) { // kan flyttas
     }
 }
 
-void handleOngoing(Game* pGame, SDL_Event event, bool* pIsRunning, int *pTime, bool* pMute) {
+void handleOngoing(Game* pGame, PlayersData* pPlayersData, NetworkData* pNetworkData, GameplayData* pGameplayData, ClientCommand* pClientCommands, Language* pLanguage, SDL_Event event, State* pState, bool* pIsRunning, int *pTime, bool* pMute) { // vi kanske har kvar den i main.c?
     while (SDL_PollEvent(&event)) {
-        handleOngoingInput(pGame, &event, pIsRunning, pMute);
+        handleOngoingInput(pPlayersData, pNetworkData, pClientCommands, pLanguage, &event, pState, pIsRunning, pMute);
     }
 
 	////////////////////////////////////////////////////////////////////////////////////////////////////
 	////////////////////////////////////////////////////////////////////////////////////////////////////
 	////////////////////////////////////////////////////////////////////////////////////////////////////
 
-	bool isHost = pGame->pNetworkData->isHost;
+	bool isHost = pNetworkData->isHost;
 
 	if (isHost) {
 		GameplayData temp;
 
         for(int i = 0; i < 6; i++){
-            temp.players[i] = *pGame->pPlayers[i];
+            temp.players[i] = *pPlayersData->pPlayers[i];
         }
 
         // for(int i = 0; i < 30; i++){
@@ -559,27 +560,27 @@ void handleOngoing(Game* pGame, SDL_Event event, bool* pIsRunning, int *pTime, b
         //     }
         //     else temp.platforms[i].created = false;
         // }
-		temp.nrOfPlayers = pGame->nrOfPlayers;
-		temp.nrOfPlayersLeft = pGame->nrOfPlayersLeft;
+		temp.nrOfPlayers = pPlayersData->nrOfPlayers;
+		temp.nrOfPlayersLeft = pPlayersData->nrOfPlayersLeft;
 
-        temp.gameState = pGame->state;
+        temp.gameState = *pState;
 		// SERVER: HÄR SKA PUNKT (1) UTFÖRAS
 		// Det är bara att lägga in datan direkt i "temp".
 
-		*pGame->pGameplayData = temp;
+		*pGameplayData = temp;
 	}
 
-	runNetcode(pGame->pNetworkData, pGame->pGameplayData, pGame->pClientCommands);
+	runNetcode(pNetworkData, pGameplayData, pClientCommands);
 
 	if (isHost) {
 		// SERVER (4)
-		for (int i = 0; pGame->pClientCommands[i].ip.host && i < COMMAND_BUFFER; i++) {
+		for (int i = 0; pClientCommands[i].ip.host && i < COMMAND_BUFFER; i++) {
 			// printf("looking at command at index %d\n", i);
 			// printf("looking for host %d\n", pGame->pClientCommands[i].ip.host);
 			// printf("looking for port %d\n", pGame->pClientCommands[i].ip.port);
 			int iPlayer = 1;
-			while ((pGame->pClientCommands[i].ip.host != pGame->pPlayers[iPlayer]->ip.host
-					|| pGame->pClientCommands[i].ip.port != pGame->pPlayers[iPlayer]->ip.port)
+			while ((pClientCommands[i].ip.host != pPlayersData->pPlayers[iPlayer]->ip.host
+					|| pClientCommands[i].ip.port != pPlayersData->pPlayers[iPlayer]->ip.port)
 					&& iPlayer < COMMAND_BUFFER) {
 				// printf("comparing to index %d...\n", iPlayer);
 				// printf("comparing to host %d\n", pGame->pPlayers[iPlayer]->ip.host);
@@ -587,8 +588,8 @@ void handleOngoing(Game* pGame, SDL_Event event, bool* pIsRunning, int *pTime, b
 				iPlayer++;
 			}
 			// printf("found player object associated with client command at index %d\n", iPlayer);
-			ClientCommand tempCC = pGame->pClientCommands[i];
-			Player *tempP = pGame->pPlayers[iPlayer];
+			ClientCommand tempCC = pClientCommands[i];
+			Player *tempP = pPlayersData->pPlayers[iPlayer];
 			switch (tempCC.commandType) {
 				case MOVEMENT: {
 					// printf("movement direction: %d\n", tempCC.direction);
@@ -600,14 +601,14 @@ void handleOngoing(Game* pGame, SDL_Event event, bool* pIsRunning, int *pTime, b
 				}
 			}
             tempP->flip = tempCC.flip;
-			pGame->pClientCommands[i] = (ClientCommand){0};
+			pClientCommands[i] = (ClientCommand){0};
 		}
 	} else {
 		for (int i = 0; i < 6; i++) {
-			*pGame->pPlayers[i] = pGame->pGameplayData->players[i];
+			*pPlayersData->pPlayers[i] = pGameplayData->players[i];
 		}
-		pGame->nrOfPlayers = pGame->pGameplayData->nrOfPlayers;
-		pGame->nrOfPlayersLeft = pGame->pGameplayData->nrOfPlayersLeft;
+		pPlayersData->nrOfPlayers = pGameplayData->nrOfPlayers;
+		pPlayersData->nrOfPlayersLeft = pGameplayData->nrOfPlayersLeft;
 
         // for(int i = 0; i < 30; i++){
         //     if(pGame->pGameplayData->platforms[i].created){
@@ -652,50 +653,50 @@ void handleOngoing(Game* pGame, SDL_Event event, bool* pIsRunning, int *pTime, b
     //handlePlatforms(pGame->pPlatforms, pGame->pRenderer, pGame->pPlatformTexture, pGame->windowWidth, pGame->windowHeight, isHost);
 
     handleStartPlatform(pGame->pStartPlatform, pGame->pPlatforms[0], pGame->gameDisplay.pRenderer, pGame->gameDisplay.pStartPlatformTexture, pGame->gameDisplay.windowHeight, pTime);
-    handlePlayers(pGame->pPlayers, pGame->nrOfPlayers, &pGame->nrOfPlayersLeft, pMute, pGame->gameDisplay.windowWidth, pGame->gameDisplay.windowHeight, pGame->pStartPlatform, pGame->pJumpSound, pGame->pWinSound, &pGame->state, pGame->gameDisplay.pRenderer, pGame->pPlayerTextures, pGame->pPlatforms, pGame->displayText.pYouAreDeadText, &pGame->pNetworkData->isHost);
+    handlePlayers(pPlayersData->pPlayers, pPlayersData->nrOfPlayers, &pPlayersData->nrOfPlayersLeft, pMute, pGame->gameDisplay.windowWidth, pGame->gameDisplay.windowHeight, pGame->pStartPlatform, pGame->pJumpSound, pGame->pWinSound, &pGame->state, pGame->gameDisplay.pRenderer, pPlayersData->pPlayerTextures, pGame->pPlatforms, pGame->displayText.pYouAreDeadText, &pGame->pNetworkData->isHost);
 
     SDL_Delay(3);
 }
 
-void handleOngoingInput(Game* pGame, SDL_Event* event, bool* pIsRunning, bool* pMute) {
+void handleOngoingInput(PlayersData* pPlayersData, NetworkData* pNetworkData, ClientCommand* pClientCommands, Language* pLanguage, SDL_Event* event, State* pState, bool* pIsRunning, bool* pMute) { // kan flyttas
 	// Det visade sig att de events vi använder för att läsa input var lite mer komplicerat än vad jag
 	// först trodde, så jag var tvungen att modifiera pClientCommands[0] direkt via dess pointer istället.
-	if (!pGame->pNetworkData->isHost) {
-        pGame->pClientCommands[0].commandType = MOVEMENT;
+	if (!pNetworkData->isHost) {
+        pClientCommands[0].commandType = MOVEMENT;
     }
 
     switch (event->type){
         case SDL_QUIT:
             *pIsRunning = false;
-            pGame->pClientCommands[0].commandType = LEAVE;
+            pClientCommands[0].commandType = LEAVE;
             break;
         case SDL_KEYDOWN:
             if ((event->key.keysym.sym) == (SDLK_ESCAPE)){
-                pGame->state = GAME_MENU;
+                *pState = GAME_MENU;
             }
-            else if ((event->key.keysym.sym) == pGame->language.keybinds[0]) {
-                if (pGame->pNetworkData->isHost) {
-					pGame->pPlayers[0]->moveRight = true;
-					pGame->pPlayers[0]->flip = SDL_FLIP_NONE;
+            else if ((event->key.keysym.sym) == pLanguage->keybinds[0]) {
+                if (pNetworkData->isHost) {
+					pPlayersData->pPlayers[0]->moveRight = true;
+					pPlayersData->pPlayers[0]->flip = SDL_FLIP_NONE;
 				} else {
-					pGame->pClientCommands[0].direction = 1;
-                    pGame->pClientCommands[0].flip = SDL_FLIP_NONE;
+					pClientCommands[0].direction = 1;
+                    pClientCommands[0].flip = SDL_FLIP_NONE;
 				}
             }
-            else if ((event->key.keysym.sym) == pGame->language.keybinds[1]) {
-                if (pGame->pNetworkData->isHost) {
-					pGame->pPlayers[0]->moveLeft = true;
-					pGame->pPlayers[0]->flip = SDL_FLIP_HORIZONTAL;
+            else if ((event->key.keysym.sym) == pLanguage->keybinds[1]) {
+                if (pNetworkData->isHost) {
+					pPlayersData->pPlayers[0]->moveLeft = true;
+					pPlayersData->pPlayers[0]->flip = SDL_FLIP_HORIZONTAL;
 				} else {
-					pGame->pClientCommands[0].direction = -1;
-                    pGame->pClientCommands[0].flip = SDL_FLIP_HORIZONTAL;
+					pClientCommands[0].direction = -1;
+                    pClientCommands[0].flip = SDL_FLIP_HORIZONTAL;
 				}
             }
-            else if ((event->key.keysym.sym) == pGame->language.keybinds[2] && !(*pMute)) {
+            else if ((event->key.keysym.sym) == pLanguage->keybinds[2] && !(*pMute)) {
                 *pMute = true;
                 Mix_PauseMusic();
             }
-            else if ((event->key.keysym.sym) == pGame->language.keybinds[2] && (*pMute)) {
+            else if ((event->key.keysym.sym) == pLanguage->keybinds[2] && (*pMute)) {
                 *pMute = false;
                 Mix_ResumeMusic();
             }
@@ -709,18 +710,18 @@ void handleOngoingInput(Game* pGame, SDL_Event* event, bool* pIsRunning, bool* p
             // }
             break;
         case SDL_KEYUP:
-            if ((event->key.keysym.sym) == pGame->language.keybinds[0]) {
-                if (pGame->pNetworkData->isHost) {
-					pGame->pPlayers[0]->moveRight = false;
+            if ((event->key.keysym.sym) == pLanguage->keybinds[0]) {
+                if (pNetworkData->isHost) {
+					pPlayersData->pPlayers[0]->moveRight = false;
 				} else {
-					pGame->pClientCommands[0].direction = 0;
+					pClientCommands[0].direction = 0;
 				}
             }
-            else if ((event->key.keysym.sym) == pGame->language.keybinds[1]) {
-                if (pGame->pNetworkData->isHost) {
-					pGame->pPlayers[0]->moveLeft = false;
+            else if ((event->key.keysym.sym) == pLanguage->keybinds[1]) {
+                if (pNetworkData->isHost) {
+					pPlayersData->pPlayers[0]->moveLeft = false;
 				} else {
-					pGame->pClientCommands[0].direction = 0;
+					pClientCommands[0].direction = 0;
 				}
             }
             // switch(event->key.keysym.sym){
@@ -767,7 +768,7 @@ void renderGameMenu(GameDisplay* pGameDisplay, Buttons* pButtons) { // kan flytt
     renderText(pButtons->pResumeButtonText, pGameDisplay->pRenderer);
 }
 
-void handleGameOver(Game* pGame, GameDisplay* pGameDisplay, Language* pLanguage, Buttons* pButton, DisplayText* pDisplayText, SDL_Event event, State* pState) {
+void handleGameOver(PlayersData* pPlayersData, GameDisplay* pGameDisplay, Language* pLanguage, Buttons* pButton, DisplayText* pDisplayText, SDL_Event event, State* pState) { // klar att flyttas
     int i;
     static bool whoWonTextCreated = false;
     char whoWonString[50];
@@ -775,8 +776,8 @@ void handleGameOver(Game* pGame, GameDisplay* pGameDisplay, Language* pLanguage,
 
     Mix_PauseMusic();
 
-    for(i = 0; i < pGame->nrOfPlayers; i++) {
-        if (pGame->pPlayers[i]->alive) {
+    for(i = 0; i < pPlayersData->nrOfPlayers; i++) {
+        if (pPlayersData->pPlayers[i]->alive) {
             break;
         }
     }
@@ -810,23 +811,23 @@ void renderGameOver(GameDisplay* pGameDisplay, Buttons* pButtons, Text* pWhoWonT
     renderText(pWhoWonText, pGameDisplay->pRenderer);
 }
 
-void resetGame(Game* pGame, int* pTime) {
+void resetGame(Game* pGame, PlayersData* pPlayersData, int* pTime) {
     char avatar[6][25] = {"../assets/player1.png", "../assets/player2.png", "../assets/player3.png", "../assets/player4.png", "../assets/player5.png", "../assets/player6.png"};
     int subtractXPos = -100;
     int increaseXPos = 0;
 
     resetPlatforms(pGame->pPlatforms);
     resetStartPlatform(pGame->pStartPlatform, pGame->gameDisplay.windowHeight, pTime);
-    resetPlayers(pGame->pPlayers, &pGame->nrOfPlayers, &pGame->nrOfPlayersLeft);
+    resetPlayers(pPlayersData->pPlayers, &pPlayersData->nrOfPlayers, &pPlayersData->nrOfPlayersLeft);
 
 	for (int i = 0; i < MAX_PLAYERS; i++) {
-		initPlayer(pGame->pPlayers, &pGame->nrOfPlayers, &pGame->nrOfPlayersLeft, &pGame->gameDisplay, pGame->pStartPlatform->yPos, pGame->pPlayerTextures, &subtractXPos, &increaseXPos, avatar[i]);
+		initPlayer(pPlayersData->pPlayers, &pPlayersData->nrOfPlayers, &pPlayersData->nrOfPlayersLeft, &pGame->gameDisplay, pGame->pStartPlatform->yPos, pPlayersData->pPlayerTextures, &subtractXPos, &increaseXPos, avatar[i]);
 	}
 }
 
 void quitGame(Game* pGame) {
 
-    destroyPlayers(pGame->pPlayers);
+    destroyPlayers(pGame->pPlayersData->pPlayers);
     destroyPlatform(pGame->pStartPlatform);
     destroyPlatforms(pGame->pPlatforms);
     destroyBackground(pGame->pBackground);
@@ -868,7 +869,7 @@ void quitGame(Game* pGame) {
     destroyButton(pGame->buttons.pSettingsButton);
     destroyButton(pGame->buttons.pStartButton);
 
-    destroyPlayerTextures(pGame->pPlayerTextures);
+    destroyPlayerTextures(pGame->pPlayersData->pPlayerTextures);
     destroyTexture(pGame->gameDisplay.pStartPlatformTexture);
     destroyTexture(pGame->gameDisplay.pPlatformTexture);
     destroyTexture(pGame->gameDisplay.pBackgroundTexture);

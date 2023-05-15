@@ -16,9 +16,12 @@ typedef struct {
     Buttons buttons;
     DisplayText displayText;
 
-    Player* pPlayers[MAX_PLAYERS];
+    /* Player* pPlayers[MAX_PLAYERS];
     SDL_Texture* pPlayerTextures[MAX_PLAYERS];
-    int nrOfPlayers, nrOfPlayersLeft;
+    int nrOfPlayers, nrOfPlayersLeft; */
+
+    PlayersData *pPlayersData;
+
     Platform *pPlatforms[100], *pStartPlatform;
 
     Language language;
@@ -50,13 +53,13 @@ void handleLobbyMenu(Game* pGame, GameDisplay* pGameDisplay, NetworkData* pNetwo
 void renderLobbyMenu(GameDisplay* pGameDisplay, Buttons* pButtons);
 void handleLobby(GameDisplay* pGameDisplay, NetworkData* pNetworkData, GameplayData* pGameplayData, ClientCommand* pClientCommands, Buttons* pButtons, DisplayText* pDisplayText, SDL_Event event, State* pState, LobbyConnect* pLobbyConnect);
 void fillZero(char inputIP[], int max);
-void handleOngoing(Game* pGame, SDL_Event event, bool* pIsRunning, int* pTime, bool* pMute);
-void handleOngoingInput(Game* pGame, SDL_Event* event, bool* pIsRunning, bool* pMute);
+void handleOngoing(Game* pGame, PlayersData* pPlayersData, NetworkData* pNetworkData, GameplayData* pGameplayData, ClientCommand* pClientCommands, Language* pLanguage, SDL_Event event, State* pState, bool* pIsRunning, int *pTime, bool* pMute);
+void handleOngoingInput(PlayersData* pPlayersData, NetworkData* pNetworkData, ClientCommand* pClientCommands, Language* pLanguage, SDL_Event* event, State* pState, bool* pIsRunning, bool* pMute);
 void handleGameMenu(GameDisplay* pGameDisplay, Buttons* pButtons, SDL_Event event, State* pState, bool* pMute);
 void renderGameMenu(GameDisplay* pGameDisplay, Buttons* pButtons);
-void handleGameOver(Game* pGame, GameDisplay* pGameDisplay, Language* pLanguage, Buttons* pButton, DisplayText* pDisplayText, SDL_Event event, State* pState);
+void handleGameOver(PlayersData* pPlayersData, GameDisplay* pGameDisplay, Language* pLanguage, Buttons* pButton, DisplayText* pDisplayText, SDL_Event event, State* pState);
 void renderGameOver(GameDisplay* pGameDisplay, Buttons* pButtons, Text* pWhoWonText);
 
-void resetGame(Game* pGame, int* pTime);
+void resetGame(Game* pGame, PlayersData *pPlayersData, int* pTime);
 
 void quitGame(Game* pGame);
