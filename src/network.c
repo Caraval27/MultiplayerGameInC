@@ -6,13 +6,13 @@ int initializeNetcode(NetworkData *pNetworkData) {
 		return 0;
 	}
 
-	if (pNetworkData->pSocketServer = SDLNet_UDP_Open(PORT_SERVER)) {
+	if (pNetworkData->pSocketServer == SDLNet_UDP_Open(PORT_SERVER)) {
 		printf("server socket opened\n");
 	} else {
 		printf("failed to open server socket: %s\n", SDLNet_GetError());
 	}
 
-	if (pNetworkData->pSocketClient = SDLNet_UDP_Open(PORT_CLIENT)) {
+	if (pNetworkData->pSocketClient == SDLNet_UDP_Open(PORT_CLIENT)) {
 		printf("client socket opened\n");
 	} else {
 		printf("failed to open client socket: %s\n", SDLNet_GetError());
