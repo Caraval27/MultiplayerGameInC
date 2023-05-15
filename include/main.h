@@ -23,10 +23,10 @@ typedef struct {
 
     Language language;
 
-    char inputIP[INPUT_IP_LEN];
     Mix_Chunk *pJumpSound, *pWinSound;
     Mix_Music *pMainSound;
 
+    LobbyConnect *pLobbyConnect;
 	NetworkData *pNetworkData;
 	GameplayData *pGameplayData;
 	ClientCommand pClientCommands[COMMAND_BUFFER];
@@ -46,9 +46,9 @@ void handleLanguageMenu(GameDisplay* pGameDisplay, Language* pLanguage, Buttons*
 void renderLanguageMenu(GameDisplay* pGameDisplay, Buttons* pButtons);
 void readKeybindString(Language* pLanguage, int index, GameDisplay* pGameDisplay, Buttons* pButtons);
 void handleEnterInput(GameDisplay* pGameDisplay, Language* pLanguage, Buttons* pButtons, SDL_Event event, State* pState);
-void handleLobbyMenu(Game* pGame, SDL_Event event, int* pTime, int* pIndex, bool* pJoined);
+void handleLobbyMenu(Game* pGame, GameDisplay* pGameDisplay, NetworkData* pNetworkData, Buttons* pButtons, DisplayText* pDisplayText, SDL_Event event, State* pState, LobbyConnect* pLobbyConnect, int* pTime);
 void renderLobbyMenu(GameDisplay* pGameDisplay, Buttons* pButtons);
-void handleLobby(Game* pGame, SDL_Event event, int* pIndex, bool* pJoined);
+void handleLobby(GameDisplay* pGameDisplay, NetworkData* pNetworkData, GameplayData* pGameplayData, ClientCommand* pClientCommands, Buttons* pButtons, DisplayText* pDisplayText, SDL_Event event, State* pState, LobbyConnect* pLobbyConnect);
 void fillZero(char inputIP[], int max);
 void handleOngoing(Game* pGame, SDL_Event event, bool* pIsRunning, int* pTime, bool* pMute);
 void handleOngoingInput(Game* pGame, SDL_Event* event, bool* pIsRunning, bool* pMute);

@@ -41,8 +41,10 @@ int initiateGame(Game* pGame){
     pGame->gameDisplay.windowWidth = displayMode.w;
     pGame->gameDisplay.windowHeight = displayMode.h;
 
+    pGame->pLobbyConnect = malloc(sizeof(LobbyConnect));
 	pGame->pNetworkData = malloc(sizeof(NetworkData));
 	pGame->pGameplayData = malloc(sizeof(GameplayData));
+    *pGame->pLobbyConnect = (LobbyConnect){0};
 	*pGame->pNetworkData = (NetworkData){0};
 	*pGame->pGameplayData = (GameplayData){0};
 	*pGame->pClientCommands = (ClientCommand){0};
@@ -159,8 +161,8 @@ int handleError(Game* pGame, void* pMember, const char* (*GetError)(void)) {
 
 void runGame(Game* pGame) {
     SDL_Event event;
-    bool isRunning = true, mute = false, joined = false;
-    int time = 0, inputIPIndex = 0;
+    bool isRunning = true, mute = false;
+    int time = 0;
 
     Mix_VolumeMusic(75);
     Mix_PlayMusic(pGame->pMainSound, -1);
@@ -173,9 +175,9 @@ void runGame(Game* pGame) {
                 break;
             case ENTER_INPUT: handleEnterInput(&pGame->gameDisplay, &pGame->language, &pGame->buttons, event, &pGame->state);
                 break;
-            case LOBBY_MENU: handleLobbyMenu(pGame, event, &time, &inputIPIndex, &joined);
+            case LOBBY_MENU: handleLobbyMenu(pGame, &pGame->gameDisplay, pGame->pNetworkData, &pGame->buttons, &pGame->displayText, event, &pGame->state, pGame->pLobbyConnect, &time);
                 break;
-            case LOBBY: handleLobby(pGame, event, &inputIPIndex, &joined);
+            case LOBBY: handleLobby(&pGame->gameDisplay, pGame->pNetworkData, pGame->pGameplayData, pGame->pClientCommands, &pGame->buttons, &pGame->displayText, event, &pGame->state, pGame->pLobbyConnect);
                 break;
             case ONGOING: handleOngoing(pGame, event, &isRunning, &time, &mute);
                 break;
@@ -401,63 +403,63 @@ void handleEnterInput(GameDisplay* pGameDisplay, Language* pLanguage, Buttons* p
     }
 }
 
-void handleLobbyMenu(Game* pGame, SDL_Event event, int* pTime, int* pIndex, bool* pJoined) {
+void handleLobbyMenu(Game* pGame, GameDisplay* pGameDisplay, NetworkData* pNetworkData, Buttons* pButtons, DisplayText* pDisplayText, SDL_Event event, State* pState, LobbyConnect* pLobbyConnect, int* pTime) {
     bool buttonPressed = false;
 
-    renderLobbyMenu(&pGame->gameDisplay, &pGame->buttons);
+    renderLobbyMenu(pGameDisplay, pButtons);
 
-    if (*pJoined) {
-        renderMenu(&pGame->gameDisplay, pGame->gameDisplay.pMenuTexture);
-        renderText(pGame->displayText.pEnterIPText, pGame->gameDisplay.pRenderer);
+    if (pLobbyConnect->joined) {
+        renderMenu(pGameDisplay, pGameDisplay->pMenuTexture);
+        renderText(pDisplayText->pEnterIPText, pGameDisplay->pRenderer);
         while (SDL_PollEvent(&event)) {
             switch (event.type) {
                 case SDL_KEYDOWN:
                     if ((event.key.keysym.sym) == (SDLK_RETURN) ) {
-                        setConnection(pGame->pNetworkData, pGame->inputIP);
-                        pGame->state = LOBBY;
+                        setConnection(pNetworkData, pLobbyConnect->inputIP);
+                        *pState = LOBBY;
                     }
-                    else if ((event.key.keysym.sym) == (SDLK_BACKSPACE) && (*pIndex) > 0) {
-                        (*pIndex)--;
-                        pGame->inputIP[*pIndex] = '\0';
+                    else if ((event.key.keysym.sym) == (SDLK_BACKSPACE) && (pLobbyConnect->inputIPIndex) > 0) {
+                        (pLobbyConnect->inputIPIndex)--;
+                        pLobbyConnect->inputIP[pLobbyConnect->inputIPIndex] = '\0';
                     }
-                    else if ((*pIndex) < INPUT_IP_LEN) {
-                        pGame->inputIP[*pIndex] = (event.key.keysym.sym);
-                        (*pIndex)++;
+                    else if ((pLobbyConnect->inputIPIndex) < INPUT_IP_LEN) {
+                        pLobbyConnect->inputIP[pLobbyConnect->inputIPIndex] = (event.key.keysym.sym);
+                        (pLobbyConnect->inputIPIndex)++;
                     }
                 break;
             }
             if (event.type == SDL_QUIT) {
-                pGame->state = QUIT;
+                *pState = QUIT;
             }
         }
-        if ((*pIndex) > 0) {
-            pGame->displayText.pInputIPText = createText(&pGame->gameDisplay, pGame->gameDisplay.pMenuFont, pGame->inputIP, 255, 255, 255, 70, 50);
-            renderText(pGame->displayText.pInputIPText, pGame->gameDisplay.pRenderer);
+        if ((pLobbyConnect->inputIPIndex) > 0) {
+            pDisplayText->pInputIPText = createText(pGameDisplay, pGameDisplay->pMenuFont, pLobbyConnect->inputIP, 255, 255, 255, 70, 50);
+            renderText(pDisplayText->pInputIPText, pGameDisplay->pRenderer);
         }
     } else {
         while (SDL_PollEvent(&event)) {
-            handleButton(pGame->buttons.pCreateLobbyButton, &buttonPressed);
+            handleButton(pButtons->pCreateLobbyButton, &buttonPressed);
             if (buttonPressed) {
-                setConnection(pGame->pNetworkData, NULL);
-                pGame->state = LOBBY;
+                setConnection(pNetworkData, NULL);
+                *pState = LOBBY;
                 buttonPressed = false;
             }
-            handleButton(pGame->buttons.pJoinLobbyButton, &buttonPressed);
+            handleButton(pButtons->pJoinLobbyButton, &buttonPressed);
             if (buttonPressed) {
-                *pJoined = true;
+                pLobbyConnect->joined = true;
                 buttonPressed = false;
             }
-            handleButton(pGame->buttons.pReturnButton, &buttonPressed);
+            handleButton(pButtons->pReturnButton, &buttonPressed);
             if (buttonPressed){
-                pGame->state = MAIN_MENU;
+                *pState = MAIN_MENU;
                 buttonPressed = false;
             }
             if (event.type == SDL_QUIT) {
-                pGame->state = QUIT;
+                *pState = QUIT;
             }
         }
     }
-    if (pGame->state == LOBBY) {
+    if (*pState == LOBBY) {
         resetGame(pGame, pTime);
     }
 }
@@ -474,53 +476,53 @@ void renderLobbyMenu(GameDisplay* pGameDisplay, Buttons* pButtons) { //kan flytt
     renderText(pButtons->pReturnButtonText, pGameDisplay->pRenderer);
 }
 
-void handleLobby(Game* pGame, SDL_Event event, int* pIndex, bool* pJoined) {
+void handleLobby(GameDisplay* pGameDisplay, NetworkData* pNetworkData, GameplayData* pGameplayData, ClientCommand* pClientCommands, Buttons* pButtons, DisplayText* pDisplayText, SDL_Event event, State* pState, LobbyConnect* pLobbyConnect) { //kan flyttas
     bool buttonPressed = false;
-    bool isHost = pGame->pNetworkData->isHost;
+    bool isHost = pNetworkData->isHost;
     char nrOfClients[2];
 
-    renderMenu(&pGame->gameDisplay, pGame->gameDisplay.pMenuTexture);
+    renderMenu(pGameDisplay, pGameDisplay->pMenuTexture);
 
-    runNetcode(pGame->pNetworkData, pGame->pGameplayData, pGame->pClientCommands);
+    runNetcode(pNetworkData, pGameplayData, pClientCommands);
 
     if (isHost) { // SERVER
-        renderButton(pGame->buttons.pStartButton, pGame->gameDisplay.pRenderer, pGame->buttons.pButtonTexture);
-        renderText(pGame->buttons.pStartButtonText, pGame->gameDisplay.pRenderer);
+        renderButton(pButtons->pStartButton, pGameDisplay->pRenderer, pButtons->pButtonTexture);
+        renderText(pButtons->pStartButtonText, pGameDisplay->pRenderer);
 
-        sprintf(nrOfClients, "%d", pGame->pNetworkData->nClients);
-        pGame->displayText.pNrClientsText = createText(&pGame->gameDisplay, pGame->gameDisplay.pMenuFont, nrOfClients, 255, 255, 255, 0, 70);
-        renderText(pGame->displayText.pNrClientsText, pGame->gameDisplay.pRenderer);
+        sprintf(nrOfClients, "%d", pNetworkData->nClients);
+        pDisplayText->pNrClientsText = createText(pGameDisplay, pGameDisplay->pMenuFont, nrOfClients, 255, 255, 255, 0, 70);
+        renderText(pDisplayText->pNrClientsText, pGameDisplay->pRenderer);
         while (SDL_PollEvent(&event)) {
-            handleButton(pGame->buttons.pStartButton, &buttonPressed);
+            handleButton(pButtons->pStartButton, &buttonPressed);
             if (buttonPressed) {
-                pGame->state = ONGOING;
+                *pState = ONGOING;
                 buttonPressed = false;
-                pGame->pGameplayData->gameState = ONGOING;
+                pGameplayData->gameState = ONGOING;
             }
             if (event.type == SDL_QUIT) {
-                pGame->state = QUIT;
+                *pState = QUIT;
             }
         }
     } else { // CLIENT
-        renderMenu(&pGame->gameDisplay, pGame->gameDisplay.pMenuTexture);
-        renderText(pGame->displayText.pWaitingText, pGame->gameDisplay.pRenderer);
-        renderButton(pGame->buttons.pMainMenuButton, pGame->gameDisplay.pRenderer, pGame->buttons.pButtonTexture);
-        renderText(pGame->buttons.pMainMenuButtonText, pGame->gameDisplay.pRenderer);
+        renderMenu(pGameDisplay, pGameDisplay->pMenuTexture);
+        renderText(pDisplayText->pWaitingText, pGameDisplay->pRenderer);
+        renderButton(pButtons->pMainMenuButton, pGameDisplay->pRenderer, pButtons->pButtonTexture);
+        renderText(pButtons->pMainMenuButtonText, pGameDisplay->pRenderer);
         while (SDL_PollEvent(&event)) {
-            handleButton(pGame->buttons.pMainMenuButton, &buttonPressed);
+            handleButton(pButtons->pMainMenuButton, &buttonPressed);
             if (buttonPressed) {
-                pGame->state = MAIN_MENU;
+                *pState = MAIN_MENU;
                 buttonPressed = false;
-                (*pJoined) = false;
+                pLobbyConnect->joined = false;
                 //fillZero(pGame, INPUT_IP_LEN);
                 //(*pIndex) = 0;
             }
             if (event.type == SDL_QUIT) {
-                pGame->state = QUIT;
+                *pState = QUIT;
             }
         }
-        if (pGame->pGameplayData->gameState == ONGOING) {
-            pGame->state = ONGOING;
+        if (pGameplayData->gameState == ONGOING) {
+            *pState = ONGOING;
         }
     }
 }
@@ -784,10 +786,10 @@ void handleGameOver(Game* pGame, GameDisplay* pGameDisplay, Language* pLanguage,
         whoWonTextCreated = true;
     }
 
-    renderGameOver(pGameDisplay, &pGame->buttons, pDisplayText->pWhoWonText);
+    renderGameOver(pGameDisplay, pButton, pDisplayText->pWhoWonText);
 
     while (SDL_PollEvent(&event)) {
-        handleButton(pGame->buttons.pMainMenuButton, &buttonPressed);
+        handleButton(pButton->pMainMenuButton, &buttonPressed);
         if (buttonPressed) {
             destroyText(pDisplayText->pWhoWonText);
             whoWonTextCreated = false;

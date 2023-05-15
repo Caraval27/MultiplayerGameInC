@@ -33,6 +33,12 @@ typedef struct {
 } Client;
 
 typedef struct {
+    int inputIPIndex;
+    bool joined;
+    char inputIP[INPUT_IP_LEN];
+} LobbyConnect;
+
+typedef struct {
 	UDPsocket pSocketServer;
 	UDPsocket pSocketClient;
 	UDPpacket *pPacket;
