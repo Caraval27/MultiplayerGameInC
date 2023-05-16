@@ -93,11 +93,6 @@ void playerCollidePlatform(Player* pPlayer, Platform** pPlatforms, Mix_Chunk* pJ
     }
 }
 
-/*void playerCollidePlayer(Player* pPlayer1, Player* pPlayer2)
-{
-
-}*/
-
 int playerIsDead(Player* pPlayer, int windowHeight){
     if (pPlayer->alive && pPlayer->yPos + pPlayer->height >= windowHeight) {
         return 1;
@@ -153,7 +148,7 @@ void resetPlayers(Player** pPlayers, int* pNrOfPlayers, int* pNrOfPlayersLeft){
 }
 
 void destroyPlayers(Player** pPlayers) {
-    for (int i = 0; i < MAX_PLAYERS; i++) { //�ndra h�r till nr of players
+    for (int i = 0; i < MAX_PLAYERS; i++) {
         if (pPlayers[i]) {
             free(pPlayers[i]);
         }
@@ -161,7 +156,7 @@ void destroyPlayers(Player** pPlayers) {
 }
 
 void destroyPlayerTextures(SDL_Texture** pPlayerTextures) {
-    for (int i = 0; i < MAX_PLAYERS; i++) { //�ndra till nrofplayers
+    for (int i = 0; i < MAX_PLAYERS; i++) {
         if(pPlayerTextures[i]) {
             destroyTexture(pPlayerTextures[i]);
         }

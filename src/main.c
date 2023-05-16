@@ -32,14 +32,8 @@ int initiateGame(Game* pGame){
 		return 0;
 	}
 
-    SDL_DisplayMode displayMode;
-    if (SDL_GetDesktopDisplayMode(0, &displayMode)){
-        printf("Error: %s\n", SDL_GetError());
-        quitGame(pGame);
-        return 0;
-    }
-    pGame->gameDisplay.windowWidth = displayMode.w;
-    pGame->gameDisplay.windowHeight = displayMode.h;
+    pGame->gameDisplay.windowWidth = 1440;
+    pGame->gameDisplay.windowHeight = 900;
 
     pGame->pLobbyConnect = malloc(sizeof(LobbyConnect));
 	pGame->pNetworkData = malloc(sizeof(NetworkData));
