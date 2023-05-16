@@ -29,54 +29,15 @@ int initiateGame(Game* pGame) {
 	*pGame->pGameplayData = (GameplayData){0};
 	*pGame->pClientCommands = (ClientCommand){0};
 	pGame->pNetworkData->pPlayers = pGame->pPlayersData->pPlayers;
-	initializeNetcode(pGame->pNetworkData);
 
-    pGame->gameDisplay.pWindow = SDL_CreateWindow("Mental breakdown", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, pGame->gameDisplay.windowWidth, pGame->gameDisplay.windowHeight, 0);
-    if (!handleError(pGame, pGame->gameDisplay.pWindow, SDL_GetError)) return 0;
-
-	Uint32 flags = SDL_RENDERER_ACCELERATED|SDL_RENDERER_PRESENTVSYNC;
-	#if __APPLE__ || __LINUX__
-		flags = (flags & !SDL_RENDERER_ACCELERATED) | SDL_RENDERER_SOFTWARE;
-	#endif
-    pGame->gameDisplay.pRenderer = SDL_CreateRenderer(pGame->gameDisplay.pWindow, -1, flags);
-    if (!handleError(pGame, pGame->gameDisplay.pRenderer, SDL_GetError)) return 0;
-
-    pGame->gameDisplay.pMenuFont = TTF_OpenFont("../assets/Ticketing.ttf", 25);
-    if (!handleError(pGame, pGame->gameDisplay.pMenuFont, TTF_GetError)) return 0;
-
-    pGame->gameDisplay.pMenuTexture = createPicture(&pGame->gameDisplay, MAIN_MENU_PICTURE);
-    if (!handleError(pGame, pGame->gameDisplay.pMenuTexture, SDL_GetError)) {
-        return 0;
-    }
-    pGame->gameDisplay.pBackgroundTexture = createPicture(&pGame->gameDisplay, BACKGROUND_PICTURE);
-    if (!handleError(pGame, pGame->gameDisplay.pBackgroundTexture, SDL_GetError)) {
-        return 0;
-    }
-    pGame->buttons.pButtonTexture = createPicture(&pGame->gameDisplay, BUTTON_PICTURE);
-    if (!handleError(pGame, pGame->buttons.pButtonTexture, SDL_GetError)) {
-        return 0;
-    }
-    pGame->gameDisplay.pPlatformTexture = createPicture(&pGame->gameDisplay, PLATFORM_PICTURE);
-    if (!handleError(pGame, pGame->gameDisplay.pPlatformTexture, SDL_GetError)) {
-        return 0;
-    }
-    pGame->gameDisplay.pStartPlatformTexture = createPicture(&pGame->gameDisplay, START_PLATFORM_PICTURE);
-    if (!handleError(pGame, pGame->gameDisplay.pStartPlatformTexture, SDL_GetError)) {
-        return 0;
-    }
-
-    pGame->pBackground = createBackground(pGame->gameDisplay.windowHeight);
-
+    initializeNetcode(pGame->pNetworkData);
+    if (!initiateDisplay(pGame, &pGame->gameDisplay)) return 0;
+    if (!initiateTexture(pGame, &pGame->gameDisplay, &pGame->buttons)) return 0;
+    if (!initiateMusic(pGame, &pGame->music)) return 0;
     initiateButtons(&pGame->buttons, &pGame->gameDisplay);
 
+    pGame->pBackground = createBackground(pGame->gameDisplay.windowHeight);
     pGame->pStartPlatform = createPlatform(0, pGame->gameDisplay.windowHeight - 100, pGame->gameDisplay.windowWidth, 100);
-
-    pGame->music.pMainSound = Mix_LoadMUS("../assets/MainThemeSoundtrack.mp3");
-    if (!handleError(pGame, pGame->music.pMainSound, Mix_GetError)) return 0;
-    pGame->music.pJumpSound = Mix_LoadWAV("../assets/JumpEffect.wav");
-    if (!handleError(pGame, pGame->music.pJumpSound, Mix_GetError)) return 0;
-    pGame->music.pWinSound = Mix_LoadWAV("../assets/tempWinSound.wav");
-    if (!handleError(pGame, pGame->music.pWinSound, Mix_GetError)) return 0;
 
     FILE *fp = NULL;
     readFromFileKey(fp, pGame->language.keybinds);
@@ -87,15 +48,6 @@ int initiateGame(Game* pGame) {
     pGame->state = MAIN_MENU;
 
     return 1;
-}
-
-int handleError(Game* pGame, void* pMember, const char* (*GetError)(void)) {
-    if (!pMember) {
-        printf("Error: %s\n", (*GetError)());
-        quitGame(pGame);
-        return 0;
-    }
-    else return 1;
 }
 
 void runGame(Game* pGame) {

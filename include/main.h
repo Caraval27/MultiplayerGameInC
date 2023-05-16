@@ -31,7 +31,6 @@ typedef struct {
 } Game;
 
 int initiateGame(Game* pGame);
-int handleError(Game* pGame, void* pMember, const char* (*GetError)(void));
 
 void runGame(Game* pGame);
 

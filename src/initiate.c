@@ -20,6 +20,66 @@ int initiateSDLLibraries(void) {
     return 1;
 }
 
+int initiateDisplay(Game* pGame, GameDisplay* pGameDisplay) {
+    pGameDisplay->pWindow = SDL_CreateWindow("Mental breakdown", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, pGameDisplay->windowWidth, pGameDisplay->windowHeight, 0);
+    if (!handleError(pGame, pGameDisplay->pWindow, SDL_GetError)) return 0;
+
+	Uint32 flags = SDL_RENDERER_ACCELERATED|SDL_RENDERER_PRESENTVSYNC;
+	#if __APPLE__ || __LINUX__
+		flags = (flags & !SDL_RENDERER_ACCELERATED) | SDL_RENDERER_SOFTWARE;
+	#endif
+    pGameDisplay->pRenderer = SDL_CreateRenderer(pGameDisplay->pWindow, -1, flags);
+    if (!handleError(pGame, pGame->gameDisplay.pRenderer, SDL_GetError)) return 0;
+
+    pGameDisplay->pMenuFont = TTF_OpenFont("../assets/Ticketing.ttf", 25);
+    if (!handleError(pGame, pGameDisplay->pMenuFont, TTF_GetError)) return 0;
+
+    return 1;
+}
+
+int initiateTexture(Game* pGame, GameDisplay* pGameDisplay, Buttons* pButtons) {
+    pGameDisplay->pMenuTexture = createPicture(pGameDisplay, MAIN_MENU_PICTURE);
+    if (!handleError(pGame, pGameDisplay->pMenuTexture, SDL_GetError)) {
+        return 0;
+    }
+    pGameDisplay->pBackgroundTexture = createPicture(pGameDisplay, BACKGROUND_PICTURE);
+    if (!handleError(pGame, pGameDisplay->pBackgroundTexture, SDL_GetError)) {
+        return 0;
+    }
+    pButtons->pButtonTexture = createPicture(pGameDisplay, BUTTON_PICTURE);
+    if (!handleError(pGame, pButtons->pButtonTexture, SDL_GetError)) {
+        return 0;
+    }
+    pGameDisplay->pPlatformTexture = createPicture(pGameDisplay, PLATFORM_PICTURE);
+    if (!handleError(pGame, pGameDisplay->pPlatformTexture, SDL_GetError)) {
+        return 0;
+    }
+    pGameDisplay->pStartPlatformTexture = createPicture(pGameDisplay, START_PLATFORM_PICTURE);
+    if (!handleError(pGame, pGameDisplay->pStartPlatformTexture, SDL_GetError)) {
+        return 0;
+    }
+    return 1;
+}
+
+int initiateMusic(Game* pGame, Music* pMusic) {
+    pMusic->pMainSound = Mix_LoadMUS("../assets/MainThemeSoundtrack.mp3");
+    if (!handleError(pGame, pMusic->pMainSound, Mix_GetError)) return 0;
+    pMusic->pJumpSound = Mix_LoadWAV("../assets/JumpEffect.wav");
+    if (!handleError(pGame, pMusic->pJumpSound, Mix_GetError)) return 0;
+    pMusic->pWinSound = Mix_LoadWAV("../assets/tempWinSound.wav");
+    if (!handleError(pGame, pMusic->pWinSound, Mix_GetError)) return 0;
+    return 1;
+}
+
+int handleError(Game* pGame, void* pMember, const char* (*GetError)(void)) {
+    if (!pMember) {
+        printf("Error: %s\n", (*GetError)());
+        quitGame(pGame);
+        return 0;
+    }
+    else return 1;
+}
+
 void initiateButtons(Buttons* pButtons, GameDisplay* pGameDisplay) {
     pButtons->pStartButton = createButton((pGameDisplay->windowWidth - BUTTON_WIDTH) / 2, (pGameDisplay->windowHeight - BUTTON_HEIGHT) / 2, BUTTON_WIDTH, BUTTON_HEIGHT);
     pButtons->pSettingsButton = createButton((pGameDisplay->windowWidth - BUTTON_WIDTH) / 2, (pGameDisplay->windowHeight - BUTTON_HEIGHT) / 2 + 50, BUTTON_WIDTH, BUTTON_HEIGHT);
@@ -37,7 +97,7 @@ void initiateButtons(Buttons* pButtons, GameDisplay* pGameDisplay) {
     pButtons->pMainMenuButton = createButton((pGameDisplay->windowWidth - BUTTON_WIDTH) / 2, (pGameDisplay->windowHeight - BUTTON_HEIGHT) / 2 + 100, BUTTON_WIDTH, BUTTON_HEIGHT);
 }
 
-void initiateLanguage(FILE* fp, Language* pLanguage, GameDisplay* pGameDisplay, Buttons* pButtons, DisplayText* pDisplayText) { // kan flyttas
+void initiateLanguage(FILE* fp, Language* pLanguage, GameDisplay* pGameDisplay, Buttons* pButtons, DisplayText* pDisplayText) {
     #if __APPLE__
 		readFromFileLangMAC(pLanguage->chosenLanguage, pLanguage->language);
     #else
