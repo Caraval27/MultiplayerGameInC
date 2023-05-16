@@ -30,7 +30,10 @@
 		"bitset": "c",
 		"menu.h": "c",
 		"text.h": "c",
-		"network.h": "c"
+		"network.h": "c",
+        "initiate.h": "c",
+        "run.h": "c",
+        "quit.h": "c"
 	},
 	"C_Cpp.default.configurationProvider": "ms-vscode.makefile-tools",
 	"files.encoding": "iso885910",

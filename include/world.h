@@ -25,12 +25,17 @@ typedef enum {
 	QUIT
 } State;
 
-typedef struct{
+typedef struct {
     float upperSrcYPos, upperSrcHeight;
     float lowerSrcYPos, lowerSrcHeight;
     float upperDstYPos, upperDstHeight;
     float lowerDstYPos, lowerDstHeight;
 } Background;
+
+typedef struct {
+    Mix_Chunk *pJumpSound, *pWinSound;
+    Mix_Music *pMainSound;
+} Music;
 
 Background* createBackground(int windowHeight);
 SDL_Texture* createPicture(GameDisplay* pGameDisplay, char picture[]);
