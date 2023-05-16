@@ -412,6 +412,8 @@ void handleLobbyMenu(Game* pGame, GameDisplay* pGameDisplay, NetworkData* pNetwo
     if (pLobbyConnect->joined) {
         renderMenu(pGameDisplay, pGameDisplay->pMenuTexture);
         renderText(pDisplayText->pEnterIPText, pGameDisplay->pRenderer);
+        renderButton(pButtons->pReturnButton, pGameDisplay->pRenderer, pButtons->pButtonTexture);
+        renderText(pButtons->pReturnButtonText, pGameDisplay->pRenderer);
         while (SDL_PollEvent(&event)) {
             switch (event.type) {
                 case SDL_KEYDOWN:
@@ -428,6 +430,13 @@ void handleLobbyMenu(Game* pGame, GameDisplay* pGameDisplay, NetworkData* pNetwo
                         (pLobbyConnect->inputIPIndex)++;
                     }
                 break;
+            }
+            handleButton(pButtons->pReturnButton, &buttonPressed);
+            if (buttonPressed) {
+                buttonPressed = false;
+                pLobbyConnect->joined = false;
+                //fillZero(pGame, INPUT_IP_LEN);
+                //(*pIndex) = 0;
             }
             if (event.type == SDL_QUIT) {
                 *pState = QUIT;
