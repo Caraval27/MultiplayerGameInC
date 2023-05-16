@@ -141,14 +141,9 @@ void quitGame(Game* pGame) {
     destroyPlatforms(pGame->pPlatforms);
     destroyBackground(pGame->pBackground);
 
-    destroyChunk(pGame->music.pWinSound);
-    destroyChunk(pGame->music.pJumpSound);
-    destroyMusic(pGame->music.pMainSound);
-
+    quitMusic(&pGame->music);
     quitText(&pGame->buttons, &pGame->displayText);
-
     quitButton(&pGame->buttons);
-
     quitTexture(&pGame->gameDisplay, pGame->pPlayersData);
 
     if (pGame->gameDisplay.pRenderer) {

@@ -1,5 +1,11 @@
 #include "../include/main.h"
 
+void quitMusic(Music* pMusic) {
+    destroyChunk(pMusic->pWinSound);
+    destroyChunk(pMusic->pJumpSound);
+    destroyMusic(pMusic->pMainSound);
+}
+
 void quitText(Buttons* pButtons, DisplayText* pDisplayText) {
     destroyText(pDisplayText->pYouAreDeadText);
     destroyText(pButtons->pMainMenuButtonText);
