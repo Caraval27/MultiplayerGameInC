@@ -660,6 +660,8 @@ void handleOngoing(Game* pGame, PlayersData* pPlayersData, NetworkData* pNetwork
 
 	// KEEP THIS COMMENTED FOR NOW
     //handlePlatforms(pGame->pPlatforms, pGame->pRenderer, pGame->pPlatformTexture, pGame->windowWidth, pGame->windowHeight, isHost);
+    //pGame->pPlatforms[0] = createPlatform(100, 100, PLATFORM_WIDTH, PLATFORM_HEIGHT);
+    //renderPlatform(pGame->pPlatforms[0], pGame->gameDisplay.pRenderer, pGame->gameDisplay.pPlatformTexture);
 
     handleStartPlatform(pGame->pStartPlatform, pGame->pPlatforms[0], pGame->gameDisplay.pRenderer, pGame->gameDisplay.pStartPlatformTexture, pGame->gameDisplay.windowHeight, pTime);
     handlePlayers(pPlayersData->pPlayers, pPlayersData->nrOfPlayers, &pPlayersData->nrOfPlayersLeft, pMute, pGame->gameDisplay.windowWidth, pGame->gameDisplay.windowHeight, pGame->pStartPlatform, pGame->pJumpSound, pGame->pWinSound, &pGame->state, pGame->gameDisplay.pRenderer, pPlayersData->pPlayerTextures, pGame->pPlatforms, pGame->displayText.pYouAreDeadText, &pGame->pNetworkData->isHost);
