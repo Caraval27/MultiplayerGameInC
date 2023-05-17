@@ -437,12 +437,6 @@ void handleOngoing(GameDisplay* pGameDisplay, PlayersData* pPlayersData, Network
         //         }
         //     }
         // }
-        /*for(int i = 0; i < pGame->nrOfPlayers; i++){
-            *pGame->pPlayers[i] = pGame->pGameplayData->players[i];
-        }
-        if(pGame->pGameplayData->gameState == GAME_OVER){
-            pGame->state = GAME_OVER;
-        }*/
 		// KLIENT: HÄR SKA PUNKT (B) UTFÖRAS
 		// Datan är tillgänglig via pGame->GameplayData.
 
@@ -517,14 +511,6 @@ void handleOngoingInput(PlayersData* pPlayersData, NetworkData* pNetworkData, Cl
                 *pMute = false;
                 Mix_ResumeMusic();
             }
-            // switch (event->key.keysym.sym){
-            //     case SDLK_ESCAPE: *pState = GAME_MENU;
-            //         break;
-            //     case SDLK_RIGHT: *pRight = true;
-            //         break;
-            //     case SDLK_LEFT: *pLeft = true;
-            //         break;
-            // }
             break;
         case SDL_KEYUP:
             if ((event->key.keysym.sym) == pLanguage->keybinds[0]) {
@@ -541,12 +527,6 @@ void handleOngoingInput(PlayersData* pPlayersData, NetworkData* pNetworkData, Cl
 					pClientCommands[0].direction = 0;
 				}
             }
-            // switch(event->key.keysym.sym){
-            //     case SDLK_LEFT: *pLeft = false;
-            //         break;m
-            //     case SDLK_RIGHT: *pRight = false;
-            //         break;
-            // }
             break;
     }
 }
