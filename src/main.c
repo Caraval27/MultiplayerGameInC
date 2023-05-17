@@ -1,4 +1,7 @@
 #include "../include/main.h"
+#include "../include/initiate.h"
+#include "../include/run.h"
+#include "../include/quit.h"
 
 int main(int argv, char** args){
     Game game = {0};

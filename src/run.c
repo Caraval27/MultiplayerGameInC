@@ -1,4 +1,6 @@
 #include "../include/main.h"
+#include "../include/run.h"
+#include "../include/initiate.h"
 
 void handleMainMenu(GameDisplay* pGameDisplay, Language* pLanguage, Buttons* pButtons, SDL_Event event, State* pState, bool* pMute) {
     bool buttonPressed = false;

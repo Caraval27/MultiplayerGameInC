@@ -1,4 +1,6 @@
 #include "../include/main.h"
+#include "../include/initiate.h"
+#include "../include/run.h"
 
 int initiateSDLLibraries(void) {
     if (SDL_Init(SDL_INIT_EVERYTHING)){
@@ -21,7 +23,7 @@ int initiateSDLLibraries(void) {
 }
 
 int initiateDisplay(Game* pGame, GameDisplay* pGameDisplay) {
-    pGameDisplay->pWindow = SDL_CreateWindow("Mental breakdown", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, pGameDisplay->windowWidth, pGameDisplay->windowHeight, 0);
+    pGameDisplay->pWindow = SDL_CreateWindow("Asylum Escape", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, pGameDisplay->windowWidth, pGameDisplay->windowHeight, 0);
     if (!handleError(pGame, pGameDisplay->pWindow, SDL_GetError)) return 0;
 
 	Uint32 flags = SDL_RENDERER_ACCELERATED|SDL_RENDERER_PRESENTVSYNC;
