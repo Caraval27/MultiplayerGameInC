@@ -173,18 +173,18 @@ void readKeybindString(Language* pLanguage, int index, GameDisplay* pGameDisplay
         strcpy(keybindsText[1], (SDL_GetKeyName(moveLeft)));
         strcpy(keybindsText[2], (SDL_GetKeyName(mute)));
 
-        pButtons->pMoveRightButton2Text = createText(pGameDisplay, pGameDisplay->pMenuFont, keybindsText[0], 255, 255, 255, BUTTON_WIDTH / 2, 50);
-        pButtons->pMoveLeftButton2Text = createText(pGameDisplay, pGameDisplay->pMenuFont, keybindsText[1], 255, 255, 255, BUTTON_WIDTH / 2, 100);
-        pButtons->pMuteButton2Text = createText(pGameDisplay, pGameDisplay->pMenuFont, keybindsText[2], 255, 255, 255, BUTTON_WIDTH / 2, 150);
+        pButtons->pMoveRightButton2Text = createText(pGameDisplay, pGameDisplay->pMenuFont, keybindsText[0], 0, 0, 0, BUTTON_WIDTH / 2, 50);
+        pButtons->pMoveLeftButton2Text = createText(pGameDisplay, pGameDisplay->pMenuFont, keybindsText[1], 0, 0, 0, BUTTON_WIDTH / 2, 100);
+        pButtons->pMuteButton2Text = createText(pGameDisplay, pGameDisplay->pMenuFont, keybindsText[2], 0, 0, 0, BUTTON_WIDTH / 2, 150);
     }
     else if (index == 1) {
-        pButtons->pMoveRightButton2Text = createText(pGameDisplay, pGameDisplay->pMenuFont, pLanguage->language[12], 255, 255, 255, BUTTON_WIDTH / 2, 50);
+        pButtons->pMoveRightButton2Text = createText(pGameDisplay, pGameDisplay->pMenuFont, pLanguage->language[12], 0, 0, 0, BUTTON_WIDTH / 2, 50);
     }
     else if (index == 2) {
-        pButtons->pMoveLeftButton2Text = createText(pGameDisplay, pGameDisplay->pMenuFont, pLanguage->language[12], 255, 255, 255, BUTTON_WIDTH / 2, 100);
+        pButtons->pMoveLeftButton2Text = createText(pGameDisplay, pGameDisplay->pMenuFont, pLanguage->language[12], 0, 0, 0, BUTTON_WIDTH / 2, 100);
     }
     else if (index == 3) {
-        pButtons->pMuteButton2Text = createText(pGameDisplay, pGameDisplay->pMenuFont, pLanguage->language[12], 255, 255, 255, BUTTON_WIDTH / 2, 150);
+        pButtons->pMuteButton2Text = createText(pGameDisplay, pGameDisplay->pMenuFont, pLanguage->language[12], 0, 0, 0, BUTTON_WIDTH / 2, 150);
     }
 }
 
@@ -249,7 +249,7 @@ void handleLobbyMenu(GameDisplay* pGameDisplay, PlayersData* pPlayersData, Netwo
             }
         }
         if ((pLobbyConnect->inputIPIndex) > 0) {
-            pDisplayText->pInputIPText = createText(pGameDisplay, pGameDisplay->pMenuFont, pLobbyConnect->inputIP, 255, 255, 255, 70, 50);
+            pDisplayText->pInputIPText = createText(pGameDisplay, pGameDisplay->pMenuFont, pLobbyConnect->inputIP, 0, 0, 0, 70, 50);
             renderText(pDisplayText->pInputIPText, pGameDisplay->pRenderer);
         }
     } else {
@@ -306,7 +306,7 @@ void handleLobby(GameDisplay* pGameDisplay, NetworkData* pNetworkData, GameplayD
         renderText(pButtons->pStartButtonText, pGameDisplay->pRenderer);
 
         sprintf(nrOfClients, "%d", pNetworkData->nClients);
-        pDisplayText->pNrClientsText = createText(pGameDisplay, pGameDisplay->pMenuFont, nrOfClients, 255, 255, 255, 0, 70);
+        pDisplayText->pNrClientsText = createText(pGameDisplay, pGameDisplay->pMenuFont, nrOfClients, 0, 0, 0, 0, 70);
         renderText(pDisplayText->pNrClientsText, pGameDisplay->pRenderer);
         while (SDL_PollEvent(&event)) {
             handleButton(pButtons->pStartButton, &buttonPressed);
@@ -580,7 +580,7 @@ void handleGameOver(PlayersData* pPlayersData, GameDisplay* pGameDisplay, Langua
     }
     if(!whoWonTextCreated) {
         sprintf(whoWonString, "%s %d %s", pLanguage->language[14], i + 1, pLanguage->language[15]);
-        pDisplayText->pWhoWonText = createText(pGameDisplay, pGameDisplay->pMenuFont, whoWonString, 255, 255, 255, 0, -300);
+        pDisplayText->pWhoWonText = createText(pGameDisplay, pGameDisplay->pMenuFont, whoWonString, 0, 0, 0, 0, -300);
         whoWonTextCreated = true;
     }
 
