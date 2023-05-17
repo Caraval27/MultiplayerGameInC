@@ -2,7 +2,7 @@
 
 #include "../include/text.h"
 
-#define MAIN_MENU_PICTURE "../assets/mainMenuBackground.png"
+#define MAIN_MENU_PICTURE "../assets/AsylumBreakoutMenu.png"
 #define BUTTON_PICTURE "../assets/button.png"
 #define BUTTON_WIDTH 220
 #define BUTTON_HEIGHT 40
