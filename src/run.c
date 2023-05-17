@@ -319,6 +319,11 @@ void handleLobby(GameDisplay* pGameDisplay, NetworkData* pNetworkData, GameplayD
                 *pState = QUIT;
             }
         }
+
+		for (int i = 0; i < 6; i++) {
+			// evaluate command ...
+			pClientCommands[i] = (ClientCommand){0};
+		}
     } else { // CLIENT
         renderMenu(pGameDisplay, pGameDisplay->pMenuTexture);
         renderText(pDisplayText->pWaitingText, pGameDisplay->pRenderer);
