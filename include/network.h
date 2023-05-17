@@ -42,12 +42,15 @@ typedef struct {
 	UDPsocket pSocketServer;
 	UDPsocket pSocketClient;
 	UDPpacket *pPacket;
+	UDPpacket *pPacketTemp;
 	bool isHost;
 	int hasJoined;
 	Client clients[CLIENT_LIMIT];
 	int nClients;
 	IPaddress server;
 	Player **pPlayers;
+	Uint64 lastTicks;
+	Uint64 relativeTicks;
 } NetworkData;
 
 typedef struct {
