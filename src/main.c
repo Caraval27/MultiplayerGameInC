@@ -33,7 +33,17 @@ int initiateGame(Game* pGame) {
 	*pGame->pClientCommands = (ClientCommand){0};
 	pGame->pNetworkData->pPlayers = pGame->pPlayersData->pPlayers;
 
-    initializeNetcode(pGame->pNetworkData);
+    if (!initializeNetcode(pGame->pNetworkData)) {
+		printf("netcode initialization failed\n");
+		return 0;
+	}
+
+	printf("gameplaydata size: %d\n", sizeof(GameplayData));
+	if (sizeof(GameplayData) > PACKET_SIZE) {
+		printf("gameplaydata size exceeds packet size\n");
+		return 0;
+	}
+
     if (!initiateDisplay(pGame, &pGame->gameDisplay)) return 0;
     if (!initiateTexture(pGame, &pGame->gameDisplay, &pGame->buttons)) return 0;
     if (!initiateMusic(pGame, &pGame->music)) return 0;
