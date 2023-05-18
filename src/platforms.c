@@ -52,7 +52,7 @@ void handlePlatforms(Platform** pPlatforms, SDL_Renderer* pRenderer, SDL_Texture
 
     if(isHost){
         for(int i = 0; i < NR_OF_PLATFORMS; i++){
-            if(pPlatforms[i]->yPos + PLATFORM_HEIGHT > windowHeight){
+            if(pPlatforms[i]->yPos - PLATFORM_HEIGHT > windowHeight){
                 pPlatforms[i]->yPos = 0 - PLATFORM_HEIGHT;
             }else{
                 scrollPlatform(pPlatforms[i]);
