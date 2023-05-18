@@ -71,7 +71,7 @@ void runGame(Game* pGame) {
                 break;
             case LOBBY_MENU: handleLobbyMenu(&pGame->gameDisplay, pGame->pPlayersData, pGame->pNetworkData, &pGame->buttons, &pGame->displayText, event, &pGame->state, pGame->pLobbyConnect, pGame->pPlatforms, pGame->pStartPlatform, &time);
                 break;
-            case LOBBY: handleLobby(&pGame->gameDisplay, pGame->pNetworkData, pGame->pGameplayData, pGame->pClientCommands, &pGame->buttons, &pGame->displayText, event, &pGame->state, pGame->pLobbyConnect);
+            case LOBBY: handleLobby(&pGame->gameDisplay, pGame->pNetworkData, pGame->pGameplayData, pGame->pClientCommands, &pGame->buttons, &pGame->displayText, event, &pGame->state, pGame->pLobbyConnect, pGame->pPlatforms);
                 break;
             case ONGOING: handleOngoing(&pGame->gameDisplay, pGame->pPlayersData, pGame->pNetworkData, pGame->pGameplayData, pGame->pClientCommands, &pGame->displayText, &pGame->language, &pGame->music, event, &pGame->state, pGame->pBackground, pGame->pPlatforms, pGame->pStartPlatform, &isRunning, &time, &mute);
                 break;

@@ -45,31 +45,22 @@ void renderPlatform(Platform* pPlatform, SDL_Renderer* pRenderer, SDL_Texture* p
 
 void handlePlatforms(Platform** pPlatforms, SDL_Renderer* pRenderer, SDL_Texture* pTexture, int windowWidth, int windowHeight, bool isHost) {
     int i = 0, j = 0, width = 0, height = 0, x = 0, y = 0;
-    if (SDL_GetTicks64() % 1000 < 17) {
-        cleanupPlatforms(pPlatforms, windowHeight);
+
+    for(int i = 0; i < NR_OF_PLATFORMS; i++){
+        renderPlatform(pPlatforms[i], pRenderer, pTexture);
+    }
+
     if(isHost){
-
-        i = 0;
-
-        while (pPlatforms[i] != NULL) i++;
-        width = PLATFORM_WIDTH;
-        height = PLATFORM_HEIGHT;
-        y = 0 - height;
-        for (j = 0; j < Y_NR_OF_PLATFORMS; j++)
-        {
-            x = (rand() % (windowWidth - width - (width / 4) * 2)) + width / 4;
-            if (i > 0 && x + PLATFORM_WIDTH >= pPlatforms[i-1]->xPos && x <= pPlatforms[i-1]->xPos + PLATFORM_WIDTH){
-                j--;
-            }
-            else{
-                pPlatforms[i] = createPlatform(x, y, width, height);
-
-                if(j != Y_NR_OF_PLATFORMS - 1) i++;
+        for(int i = 0; i < NR_OF_PLATFORMS; i++){
+            if(pPlatforms[i]->yPos + PLATFORM_HEIGHT > windowHeight){
+                pPlatforms[i]->yPos = 0 - PLATFORM_HEIGHT;
+            }else{
+                scrollPlatform(pPlatforms[i]);
             }
         }
     }
-    }
 
+    /*
     i = 0;
     while (pPlatforms[i]) {
         renderPlatform(pPlatforms[i], pRenderer, pTexture);
@@ -77,13 +68,14 @@ void handlePlatforms(Platform** pPlatforms, SDL_Renderer* pRenderer, SDL_Texture
             scrollPlatform(pPlatforms[i]);
         i++;
     }
+    */
 }
 
 void handleStartPlatform(Platform* pStartPlatform, Platform* pFirstPlatform, SDL_Renderer* pRenderer, SDL_Texture* pTexture, int windowHeight, int* pTime){
     (*pTime)++;
 
     if (pStartPlatform->yPos < windowHeight) {
-        if (pFirstPlatform && pFirstPlatform->yPos == pStartPlatform->yPos - pFirstPlatform->height) {
+        if (pFirstPlatform && pFirstPlatform->yPos >= pStartPlatform->yPos - pFirstPlatform->height) {
             pStartPlatform->yPos += PLATFORM_SPEED;
         }
         renderPlatform(pStartPlatform, pRenderer, pTexture);
@@ -91,7 +83,7 @@ void handleStartPlatform(Platform* pStartPlatform, Platform* pFirstPlatform, SDL
 }
 
 void resetPlatforms(Platform** pPlatforms){
-    for(int i = 0; pPlatforms[i] != 0; i++){
+    for(int i = 0; i < NR_OF_PLATFORMS; i++){
         pPlatforms[i] = 0;
     }
 }
@@ -112,5 +104,17 @@ void destroyPlatforms(Platform** pPlatforms){
 
     for (i = 0; pPlatforms[i] != 0; i++) {
         destroyPlatform(pPlatforms[i]);
+    }
+}
+
+void initPlatforms(Platform **pPlatforms, GameDisplay* pGameDisplay) {
+    int i = 0, j = 0, width = 0, height = 0, x = 0, y = 0;
+    width = PLATFORM_WIDTH;
+    height = PLATFORM_HEIGHT;
+    y = 0 - height;
+    for (i = 0; i < NR_OF_PLATFORMS; i++) {
+        x = (rand() % (pGameDisplay->windowWidth - width - (width / 4) * 2)) + width / 4;
+        pPlatforms[i] = createPlatform(x, y, width, height);
+        y += height - 150;
     }
 }

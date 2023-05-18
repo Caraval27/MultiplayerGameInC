@@ -5,7 +5,7 @@
 			"name": "game",
 			"type": "cppdbg",
 			"request": "launch",
-			"program": "${workspaceFolder}\\build\\game.exe",
+			"program": "${workspaceFolder}\\build\\game",
 			"cwd": "${workspaceFolder}\\build",
 		}
 	]

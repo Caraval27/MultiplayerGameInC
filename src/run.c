@@ -292,7 +292,7 @@ void renderLobbyMenu(GameDisplay* pGameDisplay, Buttons* pButtons) {
     renderText(pButtons->pReturnButtonText, pGameDisplay->pRenderer);
 }
 
-void handleLobby(GameDisplay* pGameDisplay, NetworkData* pNetworkData, GameplayData* pGameplayData, ClientCommand* pClientCommands, Buttons* pButtons, DisplayText* pDisplayText, SDL_Event event, State* pState, LobbyConnect* pLobbyConnect) {
+void handleLobby(GameDisplay* pGameDisplay, NetworkData* pNetworkData, GameplayData* pGameplayData, ClientCommand* pClientCommands, Buttons* pButtons, DisplayText* pDisplayText, SDL_Event event, State* pState, LobbyConnect* pLobbyConnect, Platform** pPlatforms) {
     bool buttonPressed = false;
     bool isHost = pNetworkData->isHost;
     char nrOfClients[2];
@@ -314,6 +314,7 @@ void handleLobby(GameDisplay* pGameDisplay, NetworkData* pNetworkData, GameplayD
                 *pState = ONGOING;
                 buttonPressed = false;
                 pGameplayData->gameState = ONGOING;
+                initPlatforms(pPlatforms, pGameDisplay);
             }
             if (event.type == SDL_QUIT) {
                 *pState = QUIT;
@@ -343,6 +344,9 @@ void handleLobby(GameDisplay* pGameDisplay, NetworkData* pNetworkData, GameplayD
             }
         }
         if (pGameplayData->gameState == ONGOING) {
+            for(int i = 0; i < NR_OF_PLATFORMS; i++){
+                pPlatforms[i] = createPlatform(0, 0, PLATFORM_WIDTH, PLATFORM_HEIGHT);
+            }
             *pState = ONGOING;
         }
     }
@@ -373,13 +377,10 @@ void handleOngoing(GameDisplay* pGameDisplay, PlayersData* pPlayersData, Network
             temp.players[i] = *pPlayersData->pPlayers[i];
         }
 
-        // for(int i = 0; i < 30; i++){
-        //     if(pGame->pPlatforms[i]){
-        //         temp.platforms[i] = *pGame->pPlatforms[i];
-        //         temp.platforms[i].created = true;
-        //     }
-        //     else temp.platforms[i].created = false;
-        // }
+        for(int i = 0; i < NR_OF_PLATFORMS; i++){
+            temp.platformXPos[i] = (short)pPlatforms[i]->xPos;
+            temp.platformYPos[i] = (short)pPlatforms[i]->yPos;
+        }
 		temp.nrOfPlayers = pPlayersData->nrOfPlayers;
 		temp.nrOfPlayersLeft = pPlayersData->nrOfPlayersLeft;
 
@@ -430,6 +431,10 @@ void handleOngoing(GameDisplay* pGameDisplay, PlayersData* pPlayersData, Network
 		pPlayersData->nrOfPlayers = pGameplayData->nrOfPlayers;
 		pPlayersData->nrOfPlayersLeft = pGameplayData->nrOfPlayersLeft;
 
+        for(int i = 0; i < NR_OF_PLATFORMS; i++){
+            pPlatforms[i]->xPos = pGameplayData->platformXPos[i];
+            pPlatforms[i]->yPos = pGameplayData->platformYPos[i];
+        }
         // for(int i = 0; i < 30; i++){
         //     if(pGame->pGameplayData->platforms[i].created){
         //         //printf("Platform[%d]\n", i);
@@ -464,9 +469,9 @@ void handleOngoing(GameDisplay* pGameDisplay, PlayersData* pPlayersData, Network
     handleBackground(pBackground, pGameDisplay, pGameDisplay->pBackgroundTexture); //denna m�ste ligga f�re allt med player
 
 	// KEEP THIS COMMENTED FOR NOW
-    //handlePlatforms(pGame->pPlatforms, pGame->pRenderer, pGame->pPlatformTexture, pGame->windowWidth, pGame->windowHeight, isHost);
+    handlePlatforms(pPlatforms, pGameDisplay->pRenderer, pGameDisplay->pPlatformTexture, pGameDisplay->windowWidth, pGameDisplay->windowHeight, isHost);
     //pGame->pPlatforms[0] = createPlatform(100, 100, PLATFORM_WIDTH, PLATFORM_HEIGHT);
-    //renderPlatform(pGame->pPlatforms[0], pGame->gameDisplay.pRenderer, pGame->gameDisplay.pPlatformTexture);
+    //renderPlatform(pGame->pPlatforms[0], pGame->gameDisplax   y.pRenderer, pGame->gameDisplay.pPlatformTexture);
 
     handleStartPlatform(pStartPlatform, pPlatforms[0], pGameDisplay->pRenderer, pGameDisplay->pStartPlatformTexture, pGameDisplay->windowHeight, pTime);
     handlePlayers(pPlayersData->pPlayers, pPlayersData->nrOfPlayers, &pPlayersData->nrOfPlayersLeft, pMute, pGameDisplay->windowWidth, pGameDisplay->windowHeight, pStartPlatform, pMusic->pJumpSound, pMusic->pWinSound, pState, pGameDisplay->pRenderer, pPlayersData->pPlayerTextures, pPlatforms, pDisplayText->pYouAreDeadText, &pNetworkData->isHost);

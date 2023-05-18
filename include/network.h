@@ -57,7 +57,8 @@ typedef struct {
 	Player players[MAX_PLAYERS];
 	State gameState;
 	int nrOfPlayers, nrOfPlayersLeft;
-	// Platform platforms[30];
+	short platformXPos[NR_OF_PLATFORMS];
+	short platformYPos[NR_OF_PLATFORMS];
 } GameplayData;
 
 // Prepare the application to communicate over a network.

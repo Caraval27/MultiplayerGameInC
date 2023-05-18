@@ -6,6 +6,7 @@
 #define PLATFORM_WIDTH 100
 #define PLATFORM_HEIGHT 20
 #define PLATFORM_SPEED 2
+#define NR_OF_PLATFORMS 30
 
 typedef struct {
 	float xPos, yPos;
@@ -23,3 +24,4 @@ void resetStartPlatform(Platform* pStartPlatform, int windowHeight, int* pTime);
 void destroyPlatform(Platform* pPlatform);
 void destroyPlatforms(Platform** pPlatforms);
 void cleanupPlatforms(Platform **pPlatforms, int windowHeight);
+void initPlatforms(Platform **pPlatforms, GameDisplay* pGameDisplay);
