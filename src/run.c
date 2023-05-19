@@ -304,6 +304,8 @@ void handleLobby(GameDisplay* pGameDisplay, NetworkData* pNetworkData, GameplayD
     if (isHost) { // SERVER
         renderButton(pButtons->pStartButton, pGameDisplay->pRenderer, pButtons->pButtonTexture);
         renderText(pButtons->pStartButtonText, pGameDisplay->pRenderer);
+        renderButton(pButtons->pReturnButton, pGameDisplay->pRenderer, pButtons->pButtonTexture);
+        renderText(pButtons->pReturnButtonText, pGameDisplay->pRenderer);
 
         sprintf(nrOfClients, "%d", pNetworkData->nClients);
         pDisplayText->pNrClientsText = createText(pGameDisplay, pGameDisplay->pMenuFont, nrOfClients, 0, 0, 0, 0, 70);
@@ -315,6 +317,11 @@ void handleLobby(GameDisplay* pGameDisplay, NetworkData* pNetworkData, GameplayD
                 buttonPressed = false;
                 pGameplayData->gameState = ONGOING;
                 initPlatforms(pPlatforms, pGameDisplay);
+            }
+            handleButton(pButtons->pReturnButton, &buttonPressed);
+            if (buttonPressed) {
+                *pState = LOBBY_MENU;
+                buttonPressed = false;
             }
             if (event.type == SDL_QUIT) {
                 *pState = QUIT;
