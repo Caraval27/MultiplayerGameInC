@@ -145,10 +145,14 @@ int checkExistingClient(NetworkData *pNetworkData) {
 }
 
 void retrieveClientCommand(NetworkData *pNetworkData, ClientCommand *pClientCommands, int indexClient) {
+	int packets = 0;
 	Uint32 packetHost = pNetworkData->pPacket->address.host;
 	Uint16 packetPort = pNetworkData->pPacket->address.port;
 	int iCommands = 0;
-	while (pClientCommands[iCommands].ip.host && iCommands < COMMAND_BUFFER) {
+	while (pClientCommands[iCommands].ip.host
+			&& iCommands < COMMAND_BUFFER
+			&& packets < COMMAND_BUFFER * 2) {
+		packets++;
 		if (packetHost == pClientCommands[iCommands].ip.host
 			&& packetPort == pClientCommands[iCommands].ip.port) {
 			break;
