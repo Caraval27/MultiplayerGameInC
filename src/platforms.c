@@ -53,7 +53,7 @@ void handlePlatforms(Platform** pPlatforms, SDL_Renderer* pRenderer, SDL_Texture
     if(isHost){
         for(int i = 0; i < NR_OF_PLATFORMS; i++){
             if(pPlatforms[i]->yPos - PLATFORM_HEIGHT > windowHeight){
-                pPlatforms[i]->yPos = 0 - PLATFORM_HEIGHT;
+                pPlatforms[i]->yPos = 0 - (PLATFORM_HEIGHT + i*PLATFORM_SPACING);
             }else{
                 scrollPlatform(pPlatforms[i]);
             }
@@ -94,15 +94,13 @@ void resetStartPlatform(Platform* pStartPlatform, int windowHeight, int* pTime){
 }
 
 void destroyPlatform(Platform* pPlatform){
-    if (pPlatform) {
+    if (pPlatform){
         free(pPlatform);
     }
 }
 
 void destroyPlatforms(Platform** pPlatforms){
-    int i;
-
-    for (i = 0; pPlatforms[i] != 0; i++) {
+    for (int i = 0; i < NR_OF_PLATFORMS; i++){
         destroyPlatform(pPlatforms[i]);
     }
 }
@@ -115,6 +113,6 @@ void initPlatforms(Platform **pPlatforms, GameDisplay* pGameDisplay) {
     for (i = 0; i < NR_OF_PLATFORMS; i++) {
         x = (rand() % (pGameDisplay->windowWidth - width - (width / 4) * 2)) + width / 4;
         pPlatforms[i] = createPlatform(x, y, width, height);
-        y += height - 150;
+        y += height - PLATFORM_SPACING;
     }
 }

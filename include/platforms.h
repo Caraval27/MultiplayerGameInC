@@ -7,6 +7,7 @@
 #define PLATFORM_HEIGHT 20
 #define PLATFORM_SPEED 2
 #define NR_OF_PLATFORMS 30
+#define PLATFORM_SPACING 100
 
 typedef struct {
 	float xPos, yPos;
