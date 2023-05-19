@@ -12,6 +12,18 @@ Platform *createPlatform(float xPos, float yPos, float width, float height) {
 	return pPlatform;
 }
 
+void initPlatforms(Platform **pPlatforms, GameDisplay* pGameDisplay) {
+    int i = 0, j = 0, width = 0, height = 0, x = 0, y = 0;
+    width = PLATFORM_WIDTH;
+    height = PLATFORM_HEIGHT;
+    y = 0 - height;
+    for (i = 0; i < NR_OF_PLATFORMS; i++) {
+        x = (rand() % (pGameDisplay->windowWidth - width - (width / 4) * 2)) + width / 4;
+        pPlatforms[i] = createPlatform(x, y, width, height);
+        y += height - PLATFORM_SPACING;
+    }
+}
+
 void scrollPlatform(Platform* pPlatform) {
 	pPlatform->yPos += PLATFORM_SPEED;
 }
@@ -102,17 +114,5 @@ void destroyPlatform(Platform* pPlatform){
 void destroyPlatforms(Platform** pPlatforms){
     for (int i = 0; i < NR_OF_PLATFORMS; i++){
         destroyPlatform(pPlatforms[i]);
-    }
-}
-
-void initPlatforms(Platform **pPlatforms, GameDisplay* pGameDisplay) {
-    int i = 0, j = 0, width = 0, height = 0, x = 0, y = 0;
-    width = PLATFORM_WIDTH;
-    height = PLATFORM_HEIGHT;
-    y = 0 - height;
-    for (i = 0; i < NR_OF_PLATFORMS; i++) {
-        x = (rand() % (pGameDisplay->windowWidth - width - (width / 4) * 2)) + width / 4;
-        pPlatforms[i] = createPlatform(x, y, width, height);
-        y += height - PLATFORM_SPACING;
     }
 }
