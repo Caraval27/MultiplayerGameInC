@@ -16,6 +16,7 @@ typedef struct {
 } Platform;
 
 Platform *createPlatform(float xPos, float yPos, float width, float height);
+void initPlatforms(Platform **pPlatforms, GameDisplay* pGameDisplay);
 void scrollPlatform(Platform* pPlatform);
 void renderPlatform(Platform* pPlatform, SDL_Renderer* pRenderer, SDL_Texture* pTexture);
 void handlePlatforms(Platform** pPlatforms, SDL_Renderer* pRenderer, SDL_Texture* pTexture, int windowWidth, int windowHeight, bool isHost);
@@ -25,4 +26,3 @@ void resetStartPlatform(Platform* pStartPlatform, int windowHeight, int* pTime);
 void destroyPlatform(Platform* pPlatform);
 void destroyPlatforms(Platform** pPlatforms);
 void cleanupPlatforms(Platform **pPlatforms, int windowHeight);
-void initPlatforms(Platform **pPlatforms, GameDisplay* pGameDisplay);

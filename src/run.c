@@ -435,13 +435,16 @@ void handleOngoing(GameDisplay* pGameDisplay, PlayersData* pPlayersData, Network
 		for (int i = 0; i < 6; i++) {
 			*pPlayersData->pPlayers[i] = pGameplayData->players[i];
 		}
-		pPlayersData->nrOfPlayers = pGameplayData->nrOfPlayers;
-		pPlayersData->nrOfPlayersLeft = pGameplayData->nrOfPlayersLeft;
 
         for(int i = 0; i < NR_OF_PLATFORMS; i++){
             pPlatforms[i]->xPos = pGameplayData->platformXPos[i];
             pPlatforms[i]->yPos = pGameplayData->platformYPos[i];
         }
+		pPlayersData->nrOfPlayers = pGameplayData->nrOfPlayers;
+		pPlayersData->nrOfPlayersLeft = pGameplayData->nrOfPlayersLeft;
+
+        *pState = pGameplayData->gameState;
+
         // for(int i = 0; i < 30; i++){
         //     if(pGame->pGameplayData->platforms[i].created){
         //         //printf("Platform[%d]\n", i);
