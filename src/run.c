@@ -231,10 +231,10 @@ void handleLobbyMenu(GameDisplay* pGameDisplay, PlayersData* pPlayersData, Netwo
                         (pLobbyConnect->inputIPIndex)--;
                         pLobbyConnect->inputIP[pLobbyConnect->inputIPIndex] = '\0';
                     }
-                    else if ((pLobbyConnect->inputIPIndex) < INPUT_IP_LEN) {
+                    else if ((pLobbyConnect->inputIPIndex) < INPUT_IP_LEN-1) {
                         pLobbyConnect->inputIP[pLobbyConnect->inputIPIndex] = (event.key.keysym.sym);
                         (pLobbyConnect->inputIPIndex)++;
-                        pLobbyConnect->inputIP[pLobbyConnect->inputIPIndex+1] = '\0';
+                        pLobbyConnect->inputIP[pLobbyConnect->inputIPIndex] = '\0';
                     }
                 break;
             }
