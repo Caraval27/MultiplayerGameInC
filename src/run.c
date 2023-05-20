@@ -600,7 +600,8 @@ void handleGameOver(PlayersData* pPlayersData, GameDisplay* pGameDisplay, Langua
         }
     }
     if(!whoWonTextCreated) {
-        sprintf(whoWonString, "%s %d %s", pLanguage->language[14], i + 1, pLanguage->language[15]);
+        if(i >= pPlayersData->nrOfPlayers) sprintf(whoWonString, "%s", pLanguage->language[18]);
+        else sprintf(whoWonString, "%s %d %s", pLanguage->language[14], i + 1, pLanguage->language[15]);
         pDisplayText->pWhoWonText = createText(pGameDisplay, pGameDisplay->pMenuFont, whoWonString, 0, 0, 0, 0, -300);
         whoWonTextCreated = true;
     }

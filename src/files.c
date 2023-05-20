@@ -75,6 +75,8 @@ void readFromFileLangMAC( bool chosenLanguage, char language[NR_OF_WORDS][50]){
         strcpy(language[15], "won");
         strcpy(language[16], "Waiting for more players...");
         strcpy(language[17], "Enter server IP:");
+        strcpy(language[18], "No one won");
+
     } else{
         strcpy(language[0], "Starta spelet");
         strcpy(language[1], "Installningar");
@@ -94,6 +96,7 @@ void readFromFileLangMAC( bool chosenLanguage, char language[NR_OF_WORDS][50]){
         strcpy(language[15], "vann");
         strcpy(language[16], "Vantar pa flera spelare...");
         strcpy(language[17], "Ange serverns IP:");
+        strcpy(language[18], "Ingen vann");
     }
 }
 

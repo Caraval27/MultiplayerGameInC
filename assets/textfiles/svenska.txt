@@ -16,3 +16,4 @@ Spelare
 vann
 Väntar på fler spelare...
 Ange serverns IP:
+Ingen vann

@@ -16,3 +16,4 @@ Player
 won
 Waiting for more players...
 Enter server IP:
+No one won

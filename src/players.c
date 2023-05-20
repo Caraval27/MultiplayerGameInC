@@ -139,7 +139,7 @@ void handlePlayers(Player** pPlayers, int pNrOfPlayers, int *nrOfPlayersLeft, bo
     // if (!pPlayers[0]->alive) {
     //     renderText(pGameOverText, pRenderer);
     // }
-    // handleWin(*nrOfPlayersLeft, pState, pWinSound, pMute);
+    handleWin(*nrOfPlayersLeft, pState, pWinSound, pMute);
 }
 
 void resetPlayers(Player** pPlayers, int* pNrOfPlayers, int* pNrOfPlayersLeft){

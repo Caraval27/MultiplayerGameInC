@@ -1,6 +1,6 @@
 #pragma once
 
-#define NR_OF_WORDS 18
+#define NR_OF_WORDS 19
 #define LANG_LENGTH 20
 #define NR_OF_KEYBINDS 3
 
