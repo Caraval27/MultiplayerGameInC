@@ -152,7 +152,11 @@ void handleLanguageMenu(GameDisplay* pGameDisplay, Language* pLanguage, Buttons*
         else {
             pLanguage->chosenLanguage = false;
         }*/
-        initiateLanguage(fp, pLanguage, pGameDisplay, pButtons, pDisplayText);
+        #if __APPLE__
+		    readFromFileLangMAC(chosenLangMAC, pLanguage);
+        #else
+            initiateLanguage(fp, pLanguage, pGameDisplay, pButtons, pDisplayText);
+	    #endif
     }
 }
 
