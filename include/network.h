@@ -116,3 +116,5 @@ void sendClientCommand(NetworkData *pNetworkData, ClientCommand *pClientCommand)
 // Get any incoming packets from the server and store their gameplay data.
 // \return The number of broadcasts received upon a singular call.
 int listenForHostBroadcast(NetworkData *pNetworkData, GameplayData *pGameplayData);
+
+int checkClientTimeout(NetworkData *pNetworkData, int index);
