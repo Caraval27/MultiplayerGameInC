@@ -136,14 +136,14 @@ void handleLanguageMenu(GameDisplay* pGameDisplay, Language* pLanguage, Buttons*
     if (buttonPressed) {
         strcpy(chosenLang, "english.txt");
         pLanguage->showLang = false;
-        chosenLangMAC = true;
+        pLanguage->chosenLanguage = true;
         buttonPressed = false;
     }
     handleButton(pButtons->pSwedishButton, &buttonPressed);
     if (buttonPressed) {
         strcpy(chosenLang, "svenska.txt");
         pLanguage->showLang = false;
-        chosenLangMAC = false;
+        pLanguage->chosenLanguage = false;
         buttonPressed = false;
     }
 
@@ -155,11 +155,7 @@ void handleLanguageMenu(GameDisplay* pGameDisplay, Language* pLanguage, Buttons*
         else {
             pLanguage->chosenLanguage = false;
         }*/
-        #if __APPLE__
-		    readFromFileLangMAC(chosenLangMAC, pLanguage);
-        #else
-            initiateLanguage(fp, pLanguage, pGameDisplay, pButtons, pDisplayText);
-	    #endif
+        initiateLanguage(fp, pLanguage, pGameDisplay, pButtons, pDisplayText);
     }
 }
 
