@@ -449,31 +449,15 @@ void handleOngoing(GameDisplay* pGameDisplay, PlayersData* pPlayersData, Network
 
         *pState = pGameplayData->gameState;
 
-        // for(int i = 0; i < 30; i++){
-        //     if(pGame->pGameplayData->platforms[i].created){
-        //         //printf("Platform[%d]\n", i);
-        //         if(pGame->pPlatforms[i] == 0){
-        //             pGame->pPlatforms[i] = createPlatform(pGame->pGameplayData->platforms[i].xPos,
-        //             pGame->pGameplayData->platforms[i].yPos, pGame->pGameplayData->platforms[i].width,
-        //             pGame->pGameplayData->platforms[i].height);
-        //         }else{
-        //             *pGame->pPlatforms[i] = pGame->pGameplayData->platforms[i];
-        //         }
-        //     }
-        // }
 		// KLIENT: HÄR SKA PUNKT (B) UTFÖRAS
 		// Datan är tillgänglig via pGame->GameplayData.
 
-        /*
-        Läggs in när matning av GameplayData (Punkt 1) är klar !!!
+        //Läggs in när matning av GameplayData (Punkt 1) är klar !!!
 
-        *pGame->pPlayers = pGame->pGameplayData->players;
-        pGame->nrOfPlayers = pGame->pGameplayData->nrOfPlayers;
-        pGame->nrOfPlayersLeft = pGame->pGameplayData->nrOfPlayersLeft;
-        pGame->windowWidth = pGame->pGameplayData->players->width;
-        pGame->windowHeight = pGame->pGameplayData->players->height;
-        */
-
+        pPlayersData->nrOfPlayers = pGameplayData->nrOfPlayers;
+        pPlayersData->nrOfPlayersLeft = pGameplayData->nrOfPlayersLeft;
+        //pGame->windowWidth = pGame->pGameplayData->players->width;
+        //pGame->windowHeight = pGame->pGameplayData->players->height;
 	}
 
 	////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -484,10 +468,7 @@ void handleOngoing(GameDisplay* pGameDisplay, PlayersData* pPlayersData, Network
 
 	// KEEP THIS COMMENTED FOR NOW
     handlePlatforms(pPlatforms, pGameDisplay->pRenderer, pGameDisplay->pPlatformTexture, pGameDisplay->windowWidth, pGameDisplay->windowHeight, isHost);
-    //pGame->pPlatforms[0] = createPlatform(100, 100, PLATFORM_WIDTH, PLATFORM_HEIGHT);
-    //renderPlatform(pGame->pPlatforms[0], pGame->gameDisplax   y.pRenderer, pGame->gameDisplay.pPlatformTexture);
-
-    //handleStartPlatform(pStartPlatform, pPlatforms[0], pGameDisplay->pRenderer, pGameDisplay->pStartPlatformTexture, pGameDisplay->windowHeight, pTime);
+    handleStartPlatform(pStartPlatform, pPlatforms[0], pGameDisplay->pRenderer, pGameDisplay->pStartPlatformTexture, pGameDisplay->windowHeight, pTime);
     handlePlayers(pPlayersData->pPlayers, pPlayersData->nrOfPlayers, &pPlayersData->nrOfPlayersLeft, pMute, pGameDisplay->windowWidth, pGameDisplay->windowHeight, pStartPlatform, pMusic->pJumpSound, pMusic->pWinSound, pState, pGameDisplay->pRenderer, pPlayersData->pPlayerTextures, pPlatforms, pDisplayText->pYouAreDeadText, &pNetworkData->isHost);
 
     SDL_Delay(3);
