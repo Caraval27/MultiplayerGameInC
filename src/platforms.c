@@ -20,12 +20,18 @@ void initPlatforms(Platform **pPlatforms, GameDisplay* pGameDisplay) {
     for (i = 0; i < NR_OF_PLATFORMS; i++) {
         x = (rand() % (pGameDisplay->windowWidth - width - (width / 4) * 2)) + width / 4;
         pPlatforms[i] = createPlatform(x, y, width, height);
-        y -= height + PLATFORM_SPACING;
+        y -= PLATFORM_SPACING;
     }
 }
 
 void scrollPlatform(Platform* pPlatform) {
-	pPlatform->yPos += PLATFORM_SPEED;
+    static int time = 0;
+    static float platform_speed = 1;
+    time++;
+    pPlatform->yPos += platform_speed;
+    if(time % 20000 == 0 && platform_speed < 5){
+        platform_speed+= 0.1;
+    }
 }
 
 void cleanupPlatforms(Platform **pPlatforms, int windowHeight) {
