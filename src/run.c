@@ -129,18 +129,21 @@ void renderSettingsMenu(GameDisplay* pGameDisplay, Buttons* pButtons) {
 void handleLanguageMenu(GameDisplay* pGameDisplay, Language* pLanguage, Buttons* pButtons, DisplayText* pDisplayText, SDL_Event event) {
     bool buttonPressed = false;
     char chosenLang[LANG_LENGTH];
+    bool chosenLangMAC;
     FILE *fp = NULL;
 
     handleButton(pButtons->pEnglishButton, &buttonPressed);
     if (buttonPressed) {
         strcpy(chosenLang, "english.txt");
         pLanguage->showLang = false;
+        chosenLangMAC = true;
         buttonPressed = false;
     }
     handleButton(pButtons->pSwedishButton, &buttonPressed);
     if (buttonPressed) {
         strcpy(chosenLang, "svenska.txt");
         pLanguage->showLang = false;
+        chosenLangMAC = false;
         buttonPressed = false;
     }
 
