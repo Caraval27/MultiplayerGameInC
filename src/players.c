@@ -45,11 +45,11 @@ void movePlayer(Player* pPlayer, bool left, bool right, int windowWidth){
             pPlayer->xPos += (pPlayer->xVelocity) / 60;
         }
 
-        if (pPlayer->xPos < 0) {
-            pPlayer->xPos = 0;
-        }
-        else if (pPlayer->xPos > windowWidth - pPlayer->width) {
+        if (pPlayer->xPos < 0 - pPlayer->width/2) {
             pPlayer->xPos = windowWidth - pPlayer->width;
+        }
+        else if (pPlayer->xPos > windowWidth - pPlayer->width/2) {
+            pPlayer->xPos = 0;
         }
     }
 }
