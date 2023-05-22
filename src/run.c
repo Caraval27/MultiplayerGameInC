@@ -129,18 +129,21 @@ void renderSettingsMenu(GameDisplay* pGameDisplay, Buttons* pButtons) {
 void handleLanguageMenu(GameDisplay* pGameDisplay, Language* pLanguage, Buttons* pButtons, DisplayText* pDisplayText, SDL_Event event) {
     bool buttonPressed = false;
     char chosenLang[LANG_LENGTH];
+    bool chosenLangMAC;
     FILE *fp = NULL;
 
     handleButton(pButtons->pEnglishButton, &buttonPressed);
     if (buttonPressed) {
         strcpy(chosenLang, "english.txt");
         pLanguage->showLang = false;
+        pLanguage->chosenLanguage = true;
         buttonPressed = false;
     }
     handleButton(pButtons->pSwedishButton, &buttonPressed);
     if (buttonPressed) {
         strcpy(chosenLang, "svenska.txt");
         pLanguage->showLang = false;
+        pLanguage->chosenLanguage = false;
         buttonPressed = false;
     }
 
@@ -393,8 +396,8 @@ void handleOngoing(GameDisplay* pGameDisplay, PlayersData* pPlayersData, Network
 		temp.nrOfPlayersLeft = pPlayersData->nrOfPlayersLeft;
 
         temp.gameState = *pState;
-		// SERVER: HÄR SKA PUNKT (1) UTFÖRAS
-		// Det är bara att lägga in datan direkt i "temp".
+		// SERVER: H?R SKA PUNKT (1) UTF?RAS
+		// Det ?r bara att l?gga in datan direkt i "temp".
 
 		*pGameplayData = temp;
 	}
@@ -446,44 +449,25 @@ void handleOngoing(GameDisplay* pGameDisplay, PlayersData* pPlayersData, Network
 
         *pState = pGameplayData->gameState;
 
-        // for(int i = 0; i < 30; i++){
-        //     if(pGame->pGameplayData->platforms[i].created){
-        //         //printf("Platform[%d]\n", i);
-        //         if(pGame->pPlatforms[i] == 0){
-        //             pGame->pPlatforms[i] = createPlatform(pGame->pGameplayData->platforms[i].xPos,
-        //             pGame->pGameplayData->platforms[i].yPos, pGame->pGameplayData->platforms[i].width,
-        //             pGame->pGameplayData->platforms[i].height);
-        //         }else{
-        //             *pGame->pPlatforms[i] = pGame->pGameplayData->platforms[i];
-        //         }
-        //     }
-        // }
-		// KLIENT: HÄR SKA PUNKT (B) UTFÖRAS
-		// Datan är tillgänglig via pGame->GameplayData.
+		// KLIENT: H?R SKA PUNKT (B) UTF?RAS
+		// Datan ?r tillg?nglig via pGame->GameplayData.
 
-        /*
-        Läggs in när matning av GameplayData (Punkt 1) är klar !!!
+        //L?ggs in n?r matning av GameplayData (Punkt 1) ?r klar !!!
 
-        *pGame->pPlayers = pGame->pGameplayData->players;
-        pGame->nrOfPlayers = pGame->pGameplayData->nrOfPlayers;
-        pGame->nrOfPlayersLeft = pGame->pGameplayData->nrOfPlayersLeft;
-        pGame->windowWidth = pGame->pGameplayData->players->width;
-        pGame->windowHeight = pGame->pGameplayData->players->height;
-        */
-
+        pPlayersData->nrOfPlayers = pGameplayData->nrOfPlayers;
+        pPlayersData->nrOfPlayersLeft = pGameplayData->nrOfPlayersLeft;
+        //pGame->windowWidth = pGame->pGameplayData->players->width;
+        //pGame->windowHeight = pGame->pGameplayData->players->height;
 	}
 
 	////////////////////////////////////////////////////////////////////////////////////////////////////
 	////////////////////////////////////////////////////////////////////////////////////////////////////
 	////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    handleBackground(pBackground, pGameDisplay, pGameDisplay->pBackgroundTexture); //denna mï¿½ste ligga fï¿½re allt med player
+    handleBackground(pBackground, pGameDisplay, pGameDisplay->pBackgroundTexture); //denna m?ste ligga f?re allt med player
 
 	// KEEP THIS COMMENTED FOR NOW
     handlePlatforms(pPlatforms, pGameDisplay->pRenderer, pGameDisplay->pPlatformTexture, pGameDisplay->windowWidth, pGameDisplay->windowHeight, isHost);
-    //pGame->pPlatforms[0] = createPlatform(100, 100, PLATFORM_WIDTH, PLATFORM_HEIGHT);
-    //renderPlatform(pGame->pPlatforms[0], pGame->gameDisplax   y.pRenderer, pGame->gameDisplay.pPlatformTexture);
-
     handleStartPlatform(pStartPlatform, pPlatforms[0], pGameDisplay->pRenderer, pGameDisplay->pStartPlatformTexture, pGameDisplay->windowHeight, pTime);
     handlePlayers(pPlayersData->pPlayers, pPlayersData->nrOfPlayers, &pPlayersData->nrOfPlayersLeft, pMute, pGameDisplay->windowWidth, pGameDisplay->windowHeight, pStartPlatform, pMusic->pJumpSound, pMusic->pWinSound, pState, pGameDisplay->pRenderer, pPlayersData->pPlayerTextures, pPlatforms, pDisplayText->pYouAreDeadText, &pNetworkData->isHost);
 
@@ -491,8 +475,8 @@ void handleOngoing(GameDisplay* pGameDisplay, PlayersData* pPlayersData, Network
 }
 
 void handleOngoingInput(PlayersData* pPlayersData, NetworkData* pNetworkData, ClientCommand* pClientCommands, Language* pLanguage, SDL_Event* event, State* pState, bool* pIsRunning, bool* pMute) {
-	// Det visade sig att de events vi använder för att läsa input var lite mer komplicerat än vad jag
-	// först trodde, så jag var tvungen att modifiera pClientCommands[0] direkt via dess pointer istället.
+	// Det visade sig att de events vi anv?nder f?r att l?sa input var lite mer komplicerat ?n vad jag
+	// f?rst trodde, s? jag var tvungen att modifiera pClientCommands[0] direkt via dess pointer ist?llet.
 	if (!pNetworkData->isHost) {
         pClientCommands[0].commandType = MOVEMENT;
     }

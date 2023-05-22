@@ -26,7 +26,7 @@ void initPlatforms(Platform **pPlatforms, GameDisplay* pGameDisplay) {
 
 void scrollPlatform(Platform* pPlatform) {
     static int time = 0;
-    static float platform_speed = 1;
+    static float platform_speed = 2;
     time++;
     pPlatform->yPos += platform_speed;
     if(time % 20000 == 0 && platform_speed < 5){
@@ -72,7 +72,9 @@ void handlePlatforms(Platform** pPlatforms, SDL_Renderer* pRenderer, SDL_Texture
         for(int i = 0; i < NR_OF_PLATFORMS; i++){
             if(pPlatforms[i]->yPos - PLATFORM_HEIGHT > windowHeight){
                 y = (0 - (PLATFORM_HEIGHT + i*PLATFORM_SPACING));
+                x = (rand() % (windowWidth - PLATFORM_WIDTH - (PLATFORM_WIDTH / 4) * 2)) + PLATFORM_WIDTH / 4;
                 pPlatforms[i]->yPos = y;
+                pPlatforms[i]->xPos = x;
             }else{
                 scrollPlatform(pPlatforms[i]);
             }
