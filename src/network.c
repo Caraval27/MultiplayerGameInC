@@ -179,7 +179,7 @@ void addClient(NetworkData *pNetworkData) {
 	pNetworkData->clients[nClients].lastSeen = SDL_GetTicks64();
 
 	int nPlayers = 1;
-	while (pNetworkData->pPlayers[nPlayers]->ip.host) nPlayers++;
+	while (pNetworkData->pPlayers[nPlayers]->ip.host && nPlayers < MAX_PLAYERS) nPlayers++;
 	pNetworkData->pPlayers[nPlayers]->ip = pNetworkData->clients[nClients].ip;
 
 	pNetworkData->nClients++;
