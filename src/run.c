@@ -332,7 +332,7 @@ void handleLobby(GameDisplay* pGameDisplay, NetworkData* pNetworkData, GameplayD
             }
         }
 
-		for (int i = 0; i < 6; i++) {
+		for (int i = 0; i < MAX_PLAYERS; i++) {
 			// evaluate command ...
 			pClientCommands[i] = (ClientCommand){0};
 		}
@@ -384,7 +384,7 @@ void handleOngoing(GameDisplay* pGameDisplay, PlayersData* pPlayersData, Network
 	if (isHost) {
 		GameplayData temp;
 
-        for(int i = 0; i < 6; i++){
+        for(int i = 0; i < MAX_PLAYERS; i++){
             temp.players[i] = *pPlayersData->pPlayers[i];
         }
 
@@ -436,7 +436,7 @@ void handleOngoing(GameDisplay* pGameDisplay, PlayersData* pPlayersData, Network
 			pClientCommands[i] = (ClientCommand){0};
 		}
 	} else {
-		for (int i = 0; i < 6; i++) {
+		for (int i = 0; i < MAX_PLAYERS; i++) {
 			*pPlayersData->pPlayers[i] = pGameplayData->players[i];
 		}
 
@@ -468,7 +468,7 @@ void handleOngoing(GameDisplay* pGameDisplay, PlayersData* pPlayersData, Network
 
 	// KEEP THIS COMMENTED FOR NOW
     handlePlatforms(pPlatforms, pGameDisplay->pRenderer, pGameDisplay->pPlatformTexture, pGameDisplay->windowWidth, pGameDisplay->windowHeight, isHost);
-    handleStartPlatform(pStartPlatform, pPlatforms[0], pGameDisplay->pRenderer, pGameDisplay->pStartPlatformTexture, pGameDisplay->windowHeight, pTime);
+   // handleStartPlatform(pStartPlatform, pPlatforms[0], pGameDisplay->pRenderer, pGameDisplay->pStartPlatformTexture, pGameDisplay->windowHeight, pTime);
     handlePlayers(pPlayersData->pPlayers, pPlayersData->nrOfPlayers, &pPlayersData->nrOfPlayersLeft, pMute, pGameDisplay->windowWidth, pGameDisplay->windowHeight, pStartPlatform, pMusic->pJumpSound, pMusic->pWinSound, pState, pGameDisplay->pRenderer, pPlayersData->pPlayerTextures, pPlatforms, pDisplayText->pYouAreDeadText, &pNetworkData->isHost);
 
     SDL_Delay(3);
