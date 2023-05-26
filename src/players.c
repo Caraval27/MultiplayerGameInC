@@ -18,7 +18,6 @@ Player* createPlayer(float xPos, float yPos, float width, float height, float xV
     return pPlayer;
 }
 
-
 void initPlayer(Player** pPlayers, int* pNrOfPlayers, int* pNrOfPlayersLeft, GameDisplay* pGameDisplay, float startPlatformYPos, SDL_Texture** pPlayerTextures, int* pSubtractXPos, int* pIncreaseXPos, char avatar[]){
         if (*pNrOfPlayers != MAX_PLAYERS) {
             pPlayerTextures[*pNrOfPlayers] = createPicture(pGameDisplay, avatar);

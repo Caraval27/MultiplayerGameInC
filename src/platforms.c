@@ -79,16 +79,6 @@ void handlePlatforms(Platform** pPlatforms, SDL_Renderer* pRenderer, SDL_Texture
             }
         }
     }
-
-    /*
-    i = 0;
-    while (pPlatforms[i]) {
-        renderPlatform(pPlatforms[i], pRenderer, pTexture);
-        if(isHost)
-            scrollPlatform(pPlatforms[i]);
-        i++;
-    }
-    */
 }
 
 void handleStartPlatform(Platform* pStartPlatform, Platform* pFirstPlatform, SDL_Renderer* pRenderer, SDL_Texture* pTexture, int windowHeight, int* pTime){

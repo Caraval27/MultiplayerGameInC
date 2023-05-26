@@ -198,18 +198,6 @@ void sendClientCommand(NetworkData *pNetworkData, ClientCommand *pClientCommand)
 	}
 }
 
-// int listenForHostBroadcast(NetworkData *pNetworkData, GameplayData *pGameplayData) {
-// 	int nBroadcasts = 0;
-// 	if (SDLNet_UDP_Recv(pNetworkData->pSocketClient, pNetworkData->pPacket)) {
-// 		if (pNetworkData->pPacket->address.host != pNetworkData->server.host
-// 			|| pNetworkData->pPacket->address.port != pNetworkData->server.port) return nBroadcasts; // continue;
-// 		memcpy(pGameplayData, pNetworkData->pPacket->data, sizeof(GameplayData));
-// 		nBroadcasts++;
-// 		printf("broadcast received\n");
-// 	}
-// 	return nBroadcasts;
-// }
-
 int listenForHostBroadcast(NetworkData *pNetworkData, GameplayData *pGameplayData) {
 	int nBroadcasts = 0;
 	int nPackets = 0;

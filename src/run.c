@@ -451,13 +451,6 @@ void handleOngoing(GameDisplay* pGameDisplay, PlayersData* pPlayersData, Network
 
 		// KLIENT: H?R SKA PUNKT (B) UTF?RAS
 		// Datan ?r tillg?nglig via pGame->GameplayData.
-
-        //L?ggs in n?r matning av GameplayData (Punkt 1) ?r klar !!!
-
-        pPlayersData->nrOfPlayers = pGameplayData->nrOfPlayers;
-        pPlayersData->nrOfPlayersLeft = pGameplayData->nrOfPlayersLeft;
-        //pGame->windowWidth = pGame->pGameplayData->players->width;
-        //pGame->windowHeight = pGame->pGameplayData->players->height;
 	}
 
 	////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -465,8 +458,6 @@ void handleOngoing(GameDisplay* pGameDisplay, PlayersData* pPlayersData, Network
 	////////////////////////////////////////////////////////////////////////////////////////////////////
 
     handleBackground(pBackground, pGameDisplay, pGameDisplay->pBackgroundTexture); //denna m?ste ligga f?re allt med player
-
-	// KEEP THIS COMMENTED FOR NOW
     handlePlatforms(pPlatforms, pGameDisplay->pRenderer, pGameDisplay->pPlatformTexture, pGameDisplay->windowWidth, pGameDisplay->windowHeight, isHost);
     handleStartPlatform(pStartPlatform, pPlatforms[0], pGameDisplay->pRenderer, pGameDisplay->pStartPlatformTexture, pGameDisplay->windowHeight, pTime);
     handlePlayers(pPlayersData->pPlayers, pPlayersData->nrOfPlayers, &pPlayersData->nrOfPlayersLeft, pMute, pGameDisplay->windowWidth, pGameDisplay->windowHeight, pStartPlatform, pSound->pJumpSound, pSound->pWinSound, pState, pGameDisplay->pRenderer, pPlayersData->pPlayerTextures, pPlatforms, pDisplayText->pYouAreDeadText, &pNetworkData->isHost);

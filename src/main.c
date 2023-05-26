@@ -54,8 +54,6 @@ int initiateGame(Game* pGame) {
 
     FILE *fp = NULL;
     readFromFileKey(fp, pGame->language.keybinds);
-    //saveToFile(fp, pGame->keybinds);
-    //pGame->chosenLanguage = true;
     initiateLanguage(fp, &pGame->language, &pGame->gameDisplay, &pGame->buttons, &pGame->displayText);
 
     pGame->state = MAIN_MENU;
