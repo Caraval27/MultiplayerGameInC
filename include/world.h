@@ -35,7 +35,7 @@ typedef struct {
 typedef struct {
     Mix_Chunk *pJumpSound, *pWinSound;
     Mix_Music *pMainSound;
-} Music;
+} Audio;
 
 Background* createBackground(int windowHeight);
 SDL_Texture* createPicture(GameDisplay* pGameDisplay, char picture[]);
@@ -43,5 +43,5 @@ void destroyTexture(SDL_Texture* pTexture);
 void handleBackground(Background* pBackground, GameDisplay* pGameDisplay, SDL_Texture* pTexture);
 void renderBackground(Background* pBackground, SDL_Renderer* pRenderer, SDL_Texture* pTexture, int windowWidth);
 void destroyBackground(Background* pBackground);
-void destroyMusic(Mix_Music* pMainSound);
-void destroyChunk(Mix_Chunk* pMusicChunk);
+void destroyMusic(Mix_Music* pMusic);
+void destroyChunk(Mix_Chunk* pChunk);

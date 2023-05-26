@@ -33,7 +33,7 @@ int initiateDisplay(Game* pGame, GameDisplay* pGameDisplay) {
     pGameDisplay->pRenderer = SDL_CreateRenderer(pGameDisplay->pWindow, -1, flags);
     if (!handleError(pGame, pGame->gameDisplay.pRenderer, SDL_GetError)) return 0;
 
-    pGameDisplay->pMenuFont = TTF_OpenFont("../assets/Ticketing.ttf", 25);
+    pGameDisplay->pMenuFont = TTF_OpenFont("../assets/font.ttf", 25);
     if (!handleError(pGame, pGameDisplay->pMenuFont, TTF_GetError)) return 0;
 
     return 1;
@@ -63,13 +63,22 @@ int initiateTexture(Game* pGame, GameDisplay* pGameDisplay, Buttons* pButtons) {
     return 1;
 }
 
-int initiateMusic(Game* pGame, Music* pMusic) {
-    pMusic->pMainSound = Mix_LoadMUS("../assets/MainThemeSoundtrack.mp3");
-    if (!handleError(pGame, pMusic->pMainSound, Mix_GetError)) return 0;
-    pMusic->pJumpSound = Mix_LoadWAV("../assets/JumpEffect.wav");
-    if (!handleError(pGame, pMusic->pJumpSound, Mix_GetError)) return 0;
-    pMusic->pWinSound = Mix_LoadWAV("../assets/tempWinSound.wav");
-    if (!handleError(pGame, pMusic->pWinSound, Mix_GetError)) return 0;
+int initiateAudio(Game* pGame, Audio* pAudio) {
+    pAudio->pMainSound = Mix_LoadMUS("../assets/mainSound.mp3");
+    if (!handleError(pGame, pAudio->pMainSound, Mix_GetError)) {
+        return 0;
+    }
+    Mix_VolumeMusic(75);
+    pAudio->pJumpSound = Mix_LoadWAV("../assets/jumpSound.mp3");
+    if (!handleError(pGame, pAudio->pJumpSound, Mix_GetError)) {
+        return 0;
+    }
+    Mix_VolumeChunk(pAudio->pJumpSound, 20);
+    pAudio->pWinSound = Mix_LoadWAV("../assets/winSound.wav");
+    if (!handleError(pGame, pAudio->pWinSound, Mix_GetError)) {
+        return 0;
+    }
+
     return 1;
 }
 

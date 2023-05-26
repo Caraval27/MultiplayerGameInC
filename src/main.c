@@ -46,7 +46,7 @@ int initiateGame(Game* pGame) {
 
     if (!initiateDisplay(pGame, &pGame->gameDisplay)) return 0;
     if (!initiateTexture(pGame, &pGame->gameDisplay, &pGame->buttons)) return 0;
-    if (!initiateMusic(pGame, &pGame->music)) return 0;
+    if (!initiateAudio(pGame, &pGame->audio)) return 0;
     initiateButtons(&pGame->buttons, &pGame->gameDisplay);
 
     pGame->pBackground = createBackground(pGame->gameDisplay.windowHeight);
@@ -68,8 +68,7 @@ void runGame(Game* pGame) {
     bool isRunning = true, mute = false;
     int time = 0;
 
-    Mix_VolumeMusic(75);
-    Mix_PlayMusic(pGame->music.pMainSound, -1);
+    Mix_PlayMusic(pGame->audio.pMainSound, -1);
 
     while (isRunning){
         switch (pGame->state) {
@@ -83,7 +82,7 @@ void runGame(Game* pGame) {
                 break;
             case LOBBY: handleLobby(&pGame->gameDisplay, pGame->pNetworkData, pGame->pGameplayData, pGame->pClientCommands, &pGame->buttons, &pGame->displayText, event, &pGame->state, pGame->pLobbyConnect, pGame->pPlatforms);
                 break;
-            case ONGOING: handleOngoing(&pGame->gameDisplay, pGame->pPlayersData, pGame->pNetworkData, pGame->pGameplayData, pGame->pClientCommands, &pGame->displayText, &pGame->language, &pGame->music, event, &pGame->state, pGame->pBackground, pGame->pPlatforms, pGame->pStartPlatform, &isRunning, &time, &mute);
+            case ONGOING: handleOngoing(&pGame->gameDisplay, pGame->pPlayersData, pGame->pNetworkData, pGame->pGameplayData, pGame->pClientCommands, &pGame->displayText, &pGame->language, &pGame->audio, event, &pGame->state, pGame->pBackground, pGame->pPlatforms, pGame->pStartPlatform, &isRunning, &time, &mute);
                 break;
             case GAME_MENU: handleGameMenu(&pGame->gameDisplay, &pGame->buttons, event, &pGame->state, &mute);
                 break;
@@ -106,7 +105,7 @@ void quitGame(Game* pGame) {
     destroyPlatforms(pGame->pPlatforms);
     destroyBackground(pGame->pBackground);
 
-    quitMusic(&pGame->music);
+    quitAudio(&pGame->audio);
     quitText(&pGame->buttons, &pGame->displayText);
     quitButton(&pGame->buttons);
     quitTexture(&pGame->gameDisplay, pGame->pPlayersData);

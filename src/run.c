@@ -370,7 +370,7 @@ void fillZero(char inputIP[], int max) {
     }
 }
 
-void handleOngoing(GameDisplay* pGameDisplay, PlayersData* pPlayersData, NetworkData* pNetworkData, GameplayData* pGameplayData, ClientCommand* pClientCommands, DisplayText* pDisplayText, Language* pLanguage, Music* pMusic, SDL_Event event, State* pState, Background* pBackground, Platform** pPlatforms, Platform* pStartPlatform, bool* pIsRunning, int *pTime, bool* pMute) {
+void handleOngoing(GameDisplay* pGameDisplay, PlayersData* pPlayersData, NetworkData* pNetworkData, GameplayData* pGameplayData, ClientCommand* pClientCommands, DisplayText* pDisplayText, Language* pLanguage, Audio* pAudio, SDL_Event event, State* pState, Background* pBackground, Platform** pPlatforms, Platform* pStartPlatform, bool* pIsRunning, int *pTime, bool* pMute) {
     while (SDL_PollEvent(&event)) {
         handleOngoingInput(pPlayersData, pNetworkData, pClientCommands, pLanguage, &event, pState, pIsRunning, pMute);
     }
@@ -469,7 +469,7 @@ void handleOngoing(GameDisplay* pGameDisplay, PlayersData* pPlayersData, Network
 	// KEEP THIS COMMENTED FOR NOW
     handlePlatforms(pPlatforms, pGameDisplay->pRenderer, pGameDisplay->pPlatformTexture, pGameDisplay->windowWidth, pGameDisplay->windowHeight, isHost);
    // handleStartPlatform(pStartPlatform, pPlatforms[0], pGameDisplay->pRenderer, pGameDisplay->pStartPlatformTexture, pGameDisplay->windowHeight, pTime);
-    handlePlayers(pPlayersData->pPlayers, pPlayersData->nrOfPlayers, &pPlayersData->nrOfPlayersLeft, pMute, pGameDisplay->windowWidth, pGameDisplay->windowHeight, pStartPlatform, pMusic->pJumpSound, pMusic->pWinSound, pState, pGameDisplay->pRenderer, pPlayersData->pPlayerTextures, pPlatforms, pDisplayText->pYouAreDeadText, &pNetworkData->isHost);
+    handlePlayers(pPlayersData->pPlayers, pPlayersData->nrOfPlayers, &pPlayersData->nrOfPlayersLeft, pMute, pGameDisplay->windowWidth, pGameDisplay->windowHeight, pStartPlatform, pAudio->pJumpSound, pAudio->pWinSound, pState, pGameDisplay->pRenderer, pPlayersData->pPlayerTextures, pPlatforms, pDisplayText->pYouAreDeadText, &pNetworkData->isHost);
 
     SDL_Delay(3);
 }

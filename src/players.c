@@ -67,7 +67,6 @@ void jumpPlayer(Player* pPlayer, int startPlatformYPos, Mix_Chunk* pJumpSound, b
             pPlayer->yPos = startPlatformYPos - pPlayer->height;
             pPlayer->yVelocity = JUMP_SPEED;
             if (!(*pMute)) {
-                Mix_VolumeChunk(pJumpSound, 10);
                 Mix_PlayChannel(-1, pJumpSound, 0);
             }
         }

@@ -1,8 +1,8 @@
 #pragma once
 
 #define Y_NR_OF_PLATFORMS 2
-#define PLATFORM_PICTURE "../assets/steelPipe.png"
-#define START_PLATFORM_PICTURE "../assets/startingPipes.png"
+#define PLATFORM_PICTURE "../assets/platform.png"
+#define START_PLATFORM_PICTURE "../assets/startingPlatform.png"
 #define PLATFORM_WIDTH 100
 #define PLATFORM_HEIGHT 20
 #define PLATFORM_SPEED 2
