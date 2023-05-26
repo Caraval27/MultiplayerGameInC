@@ -35,7 +35,7 @@ typedef struct {
 typedef struct {
     Mix_Chunk *pJumpSound, *pWinSound;
     Mix_Music *pMainSound;
-} Audio;
+} Sound;
 
 Background* createBackground(int windowHeight);
 SDL_Texture* createPicture(GameDisplay* pGameDisplay, char picture[]);

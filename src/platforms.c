@@ -7,7 +7,6 @@ Platform *createPlatform(float xPos, float yPos, float width, float height) {
 	pPlatform->yPos = yPos;
 	pPlatform->width = width;
 	pPlatform->height = height;
-    pPlatform->created = true;
 
 	return pPlatform;
 }

@@ -22,7 +22,7 @@ typedef struct {
 
     Language language;
 
-    Audio audio;
+    Sound sound;
 
     LobbyConnect *pLobbyConnect;
 	NetworkData *pNetworkData;

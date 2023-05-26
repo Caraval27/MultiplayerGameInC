@@ -63,19 +63,19 @@ int initiateTexture(Game* pGame, GameDisplay* pGameDisplay, Buttons* pButtons) {
     return 1;
 }
 
-int initiateAudio(Game* pGame, Audio* pAudio) {
-    pAudio->pMainSound = Mix_LoadMUS("../assets/mainSound.mp3");
-    if (!handleError(pGame, pAudio->pMainSound, Mix_GetError)) {
+int initiateSound(Game* pGame, Sound* pSound) {
+    pSound->pMainSound = Mix_LoadMUS("../assets/mainSound.mp3");
+    if (!handleError(pGame, pSound->pMainSound, Mix_GetError)) {
         return 0;
     }
     Mix_VolumeMusic(75);
-    pAudio->pJumpSound = Mix_LoadWAV("../assets/jumpSound.mp3");
-    if (!handleError(pGame, pAudio->pJumpSound, Mix_GetError)) {
+    pSound->pJumpSound = Mix_LoadWAV("../assets/jumpSound.mp3");
+    if (!handleError(pGame, pSound->pJumpSound, Mix_GetError)) {
         return 0;
     }
-    Mix_VolumeChunk(pAudio->pJumpSound, 20);
-    pAudio->pWinSound = Mix_LoadWAV("../assets/winSound.wav");
-    if (!handleError(pGame, pAudio->pWinSound, Mix_GetError)) {
+    Mix_VolumeChunk(pSound->pJumpSound, 15);
+    pSound->pWinSound = Mix_LoadWAV("../assets/winSound.wav");
+    if (!handleError(pGame, pSound->pWinSound, Mix_GetError)) {
         return 0;
     }
 
