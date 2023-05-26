@@ -12,7 +12,6 @@
 typedef struct {
 	float xPos, yPos;
     float width, height;
-    bool created;
 } Platform;
 
 Platform *createPlatform(float xPos, float yPos, float width, float height);
