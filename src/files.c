@@ -20,7 +20,7 @@ void readFromFileKey(FILE *fp, int keybinds[NR_OF_KEYBINDS]){
     } else{                 // Mostly occurs if the file was manually removed by the user, in which case the default keybinds will be sent instead
         keybinds[0] = 100;    // D key; move right
         keybinds[1] = 97;    // A key; move left
-        keybinds[2] = 44;   // Spacebar; jump
+        keybinds[2] = 109;   // M key; mute sound
     }
 }
 

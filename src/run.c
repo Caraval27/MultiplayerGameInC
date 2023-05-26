@@ -468,7 +468,7 @@ void handleOngoing(GameDisplay* pGameDisplay, PlayersData* pPlayersData, Network
 
 	// KEEP THIS COMMENTED FOR NOW
     handlePlatforms(pPlatforms, pGameDisplay->pRenderer, pGameDisplay->pPlatformTexture, pGameDisplay->windowWidth, pGameDisplay->windowHeight, isHost);
-   // handleStartPlatform(pStartPlatform, pPlatforms[0], pGameDisplay->pRenderer, pGameDisplay->pStartPlatformTexture, pGameDisplay->windowHeight, pTime);
+    handleStartPlatform(pStartPlatform, pPlatforms[0], pGameDisplay->pRenderer, pGameDisplay->pStartPlatformTexture, pGameDisplay->windowHeight, pTime);
     handlePlayers(pPlayersData->pPlayers, pPlayersData->nrOfPlayers, &pPlayersData->nrOfPlayersLeft, pMute, pGameDisplay->windowWidth, pGameDisplay->windowHeight, pStartPlatform, pMusic->pJumpSound, pMusic->pWinSound, pState, pGameDisplay->pRenderer, pPlayersData->pPlayerTextures, pPlatforms, pDisplayText->pYouAreDeadText, &pNetworkData->isHost);
 
     SDL_Delay(3);
