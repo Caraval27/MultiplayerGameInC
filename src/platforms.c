@@ -28,7 +28,7 @@ void scrollPlatform(Platform* pPlatform) {
     static float platform_speed = 2;
     time++;
     pPlatform->yPos += platform_speed;
-    if(time % 20000 == 0 && platform_speed < 5){
+    if(time % 20000 == 0 && platform_speed < 5) {
         platform_speed+= 0.1;
     }
 }
@@ -63,25 +63,25 @@ void renderPlatform(Platform* pPlatform, SDL_Renderer* pRenderer, SDL_Texture* p
 void handlePlatforms(Platform** pPlatforms, SDL_Renderer* pRenderer, SDL_Texture* pTexture, int windowWidth, int windowHeight, bool isHost) {
     int width = 0, height = 0, x = 0, y = 0;
 
-    for(int i = 0; i < NR_OF_PLATFORMS; i++){
+    for(int i = 0; i < NR_OF_PLATFORMS; i++) {
         renderPlatform(pPlatforms[i], pRenderer, pTexture);
     }
 
     if(isHost){
         for(int i = 0; i < NR_OF_PLATFORMS; i++){
-            if(pPlatforms[i]->yPos - PLATFORM_HEIGHT > windowHeight){
+            if (pPlatforms[i]->yPos - PLATFORM_HEIGHT > windowHeight) {
                 y = (0 - (PLATFORM_HEIGHT + i*PLATFORM_SPACING));
                 x = (rand() % (windowWidth - PLATFORM_WIDTH - (PLATFORM_WIDTH / 4) * 2)) + PLATFORM_WIDTH / 4;
                 pPlatforms[i]->yPos = y;
                 pPlatforms[i]->xPos = x;
-            }else{
+            } else {
                 scrollPlatform(pPlatforms[i]);
             }
         }
     }
 }
 
-void handleStartPlatform(Platform* pStartPlatform, Platform* pFirstPlatform, SDL_Renderer* pRenderer, SDL_Texture* pTexture, int windowHeight, int* pTime){
+void handleStartPlatform(Platform* pStartPlatform, Platform* pFirstPlatform, SDL_Renderer* pRenderer, SDL_Texture* pTexture, int windowHeight, int* pTime) {
     (*pTime)++;
 
     if (pStartPlatform->yPos < windowHeight) {
@@ -92,25 +92,25 @@ void handleStartPlatform(Platform* pStartPlatform, Platform* pFirstPlatform, SDL
     }
 }
 
-void resetPlatforms(Platform** pPlatforms){
-    for(int i = 0; i < NR_OF_PLATFORMS; i++){
+void resetPlatforms(Platform** pPlatforms) {
+    for(int i = 0; i < NR_OF_PLATFORMS; i++) {
         pPlatforms[i] = 0;
     }
 }
 
-void resetStartPlatform(Platform* pStartPlatform, int windowHeight, int* pTime){
+void resetStartPlatform(Platform* pStartPlatform, int windowHeight, int* pTime) {
     pStartPlatform->yPos = windowHeight - 100;
     *pTime = 0;
 }
 
-void destroyPlatform(Platform* pPlatform){
-    if (pPlatform){
+void destroyPlatform(Platform* pPlatform) {
+    if (pPlatform) {
         free(pPlatform);
     }
 }
 
-void destroyPlatforms(Platform** pPlatforms){
-    for (int i = 0; i < NR_OF_PLATFORMS; i++){
+void destroyPlatforms(Platform** pPlatforms) {
+    for (int i = 0; i < NR_OF_PLATFORMS; i++) {
         destroyPlatform(pPlatforms[i]);
     }
 }

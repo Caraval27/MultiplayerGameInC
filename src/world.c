@@ -1,6 +1,6 @@
 #include "../include/main.h"
 
-SDL_Texture* createPicture(GameDisplay* pGameDisplay, char picture[]){
+SDL_Texture* createPicture(GameDisplay* pGameDisplay, char picture[]) {
     SDL_Surface *pSurface = IMG_Load(picture);
     if (!pSurface) {
         printf("Error: %s\n", SDL_GetError());
@@ -28,7 +28,7 @@ void destroyTexture(SDL_Texture* pTexture) {
     }
 }
 
-Background* createBackground(int windowHeight){
+Background* createBackground(int windowHeight) {
     Background* pBackground = malloc(sizeof(Background));
 
     pBackground->upperSrcYPos = BACKGROUND_HEIGHT;
@@ -43,7 +43,7 @@ Background* createBackground(int windowHeight){
     return pBackground;
 }
 
-void handleBackground(Background* pBackground, GameDisplay* pGameDisplay, SDL_Texture* pTexture){
+void handleBackground(Background* pBackground, GameDisplay* pGameDisplay, SDL_Texture* pTexture) {
 
     if (pBackground->lowerSrcYPos < 0) {
         pBackground->upperSrcYPos -= BACKGROUND_SPEED;
@@ -52,8 +52,7 @@ void handleBackground(Background* pBackground, GameDisplay* pGameDisplay, SDL_Te
         pBackground->upperDstHeight += BACKGROUND_SPEED;
         pBackground->lowerDstYPos += BACKGROUND_SPEED;
         pBackground->lowerDstHeight -= BACKGROUND_SPEED;
-    }
-    else {
+    } else {
         pBackground->lowerSrcYPos -= BACKGROUND_SPEED;
     }
 
@@ -71,7 +70,7 @@ void handleBackground(Background* pBackground, GameDisplay* pGameDisplay, SDL_Te
     renderBackground(pBackground, pGameDisplay->pRenderer, pTexture, pGameDisplay->windowWidth);
 }
 
-void renderBackground(Background* pBackground, SDL_Renderer* pRenderer, SDL_Texture* pTexture, int windowWidth){
+void renderBackground(Background* pBackground, SDL_Renderer* pRenderer, SDL_Texture* pTexture, int windowWidth) {
     SDL_Rect upperSrcRect = {0, pBackground->upperSrcYPos, windowWidth, pBackground->upperSrcHeight};
     SDL_Rect lowerSrcRect = {0, pBackground->lowerSrcYPos, windowWidth, pBackground->lowerSrcHeight};
     SDL_Rect upperDstRect = {0, pBackground->upperDstYPos, windowWidth, pBackground->upperDstHeight};
@@ -81,19 +80,19 @@ void renderBackground(Background* pBackground, SDL_Renderer* pRenderer, SDL_Text
     SDL_RenderCopy(pRenderer, pTexture, &lowerSrcRect, &lowerDstRect);
 }
 
-void destroyBackground(Background* pBackground){
+void destroyBackground(Background* pBackground) {
     if (pBackground) {
         free(pBackground);
     }
 }
 
-void destroyMusic(Mix_Music* pMusic){
+void destroyMusic(Mix_Music* pMusic) {
     if (pMusic) {
         Mix_FreeMusic(pMusic);
     }
 }
 
-void destroyChunk(Mix_Chunk* pChunk){
+void destroyChunk(Mix_Chunk* pChunk) {
     if (pChunk) {
         Mix_FreeChunk(pChunk);
     }

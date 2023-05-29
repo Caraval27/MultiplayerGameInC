@@ -16,7 +16,6 @@ void handleEnterInput(GameDisplay* pGameDisplay, Language* pLanguage, Buttons* p
 void handleLobbyMenu(GameDisplay* pGameDisplay, PlayersData* pPlayersData, NetworkData* pNetworkData, Buttons* pButtons, DisplayText* pDisplayText, SDL_Event event, State* pState, LobbyConnect* pLobbyConnect, Platform** pPlatforms, Platform* pStartPlatform, int* pTime);
 void renderLobbyMenu(GameDisplay* pGameDisplay, Buttons* pButtons);
 void handleLobby(GameDisplay* pGameDisplay, NetworkData* pNetworkData, GameplayData* pGameplayData, ClientCommand* pClientCommands, Buttons* pButtons, DisplayText* pDisplayText, SDL_Event event, State* pState, LobbyConnect* pLobbyConnect, Platform** pPlatforms);
-void fillZero(char inputIP[], int max);
 
 void handleOngoing(GameDisplay* pGameDisplay, PlayersData* pPlayersData, NetworkData* pNetworkData, GameplayData* pGameplayData, ClientCommand* pClientCommands, DisplayText* pDisplayText, Language* pLanguage, Sound* p, SDL_Event event, State* pState, Background* pBackground, Platform** pPlatforms, Platform* pStartPlatform, bool* pIsRunning, int *pTime, bool* pMute);
 void handleOngoingInput(PlayersData* pPlayersData, NetworkData* pNetworkData, ClientCommand* pClientCommands, Language* pLanguage, SDL_Event* event, State* pState, bool* pIsRunning, bool* pMute);

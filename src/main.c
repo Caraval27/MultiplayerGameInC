@@ -3,10 +3,10 @@
 #include "../include/run.h"
 #include "../include/quit.h"
 
-int main(int argv, char** args){
+int main(int argv, char** args) {
     Game game = {0};
 
-    if (!initiateGame(&game)){
+    if (!initiateGame(&game)) {
         return 1;
     }
     runGame(&game);
@@ -68,7 +68,7 @@ void runGame(Game* pGame) {
 
     Mix_PlayMusic(pGame->sound.pMainSound, -1);
 
-    while (isRunning){
+    while (isRunning) {
         switch (pGame->state) {
             case MAIN_MENU: handleMainMenu(&pGame->gameDisplay, &pGame->language, &pGame->buttons, event, &pGame->state, &mute);
                 break;

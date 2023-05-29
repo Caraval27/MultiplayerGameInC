@@ -3,7 +3,7 @@
 #include "../include/run.h"
 
 int initiateSDLLibraries(void) {
-    if (SDL_Init(SDL_INIT_EVERYTHING)){
+    if (SDL_Init(SDL_INIT_EVERYTHING)) {
         printf("Error: %s\n", SDL_GetError());
         return 0;
     }
@@ -11,7 +11,7 @@ int initiateSDLLibraries(void) {
         printf("Error: %s\n", TTF_GetError());
         return 0;
     }
-    if (Mix_OpenAudio(44100, MIX_DEFAULT_FORMAT, 2, 2048) < 0){
+    if (Mix_OpenAudio(44100, MIX_DEFAULT_FORMAT, 2, 2048) < 0) {
         printf("Error: %s\n", Mix_GetError());
         return 0;
     }

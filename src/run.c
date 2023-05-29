@@ -59,11 +59,11 @@ void handleSettingsMenu(GameDisplay* pGameDisplay, Language* pLanguage, Buttons*
     bool buttonPressed = false;
 
     renderSettingsMenu(pGameDisplay, pButtons);
-    if (pLanguage->showLang){
+    if (pLanguage->showLang) {
         renderLanguageMenu(pGameDisplay, pButtons);
     }
 
-    while (SDL_PollEvent(&event)){
+    while (SDL_PollEvent(&event)) {
         handleButton(pButtons->pLanguageButton, &buttonPressed);
         if (buttonPressed) {
             (pLanguage->showLang) = true;
@@ -91,13 +91,13 @@ void handleSettingsMenu(GameDisplay* pGameDisplay, Language* pLanguage, Buttons*
             buttonPressed = false;
         }
         handleButton(pButtons->pReturnButton, &buttonPressed);
-        if (buttonPressed){
+        if (buttonPressed) {
             *pState = MAIN_MENU;
             pLanguage->showLang = false;
             buttonPressed = false;
         }
 
-        if ((pLanguage->showLang)){
+        if ((pLanguage->showLang)) {
             handleLanguageMenu(pGameDisplay, pLanguage, pButtons, pDisplayText, event);
         }
 
@@ -149,12 +149,6 @@ void handleLanguageMenu(GameDisplay* pGameDisplay, Language* pLanguage, Buttons*
 
     if (!(pLanguage->showLang)) {
         changeLanguageInFile(fp, chosenLang);
-        /*if (strcmp(chosenLang, "svenska.txt")) {
-            pLanguage->chosenLanguage = true;
-        }
-        else {
-            pLanguage->chosenLanguage = false;
-        }*/
         initiateLanguage(fp, pLanguage, pGameDisplay, pButtons, pDisplayText);
     }
 }
@@ -201,8 +195,7 @@ void handleEnterInput(GameDisplay* pGameDisplay, Language* pLanguage, Buttons* p
             case SDL_KEYDOWN:
                 if (event.key.keysym.sym == SDLK_ESCAPE) {
                     *pState = SETTINGS_MENU;
-                }
-                else {
+                } else {
                     pLanguage->keybinds[pLanguage->num] = (event.key.keysym.sym);
                     saveToFile(fp, pLanguage->keybinds);
                     *pState = SETTINGS_MENU;
@@ -270,7 +263,7 @@ void handleLobbyMenu(GameDisplay* pGameDisplay, PlayersData* pPlayersData, Netwo
                 buttonPressed = false;
             }
             handleButton(pButtons->pReturnButton, &buttonPressed);
-            if (buttonPressed){
+            if (buttonPressed) {
                 *pState = MAIN_MENU;
                 buttonPressed = false;
             }
@@ -347,26 +340,17 @@ void handleLobby(GameDisplay* pGameDisplay, NetworkData* pNetworkData, GameplayD
                 *pState = MAIN_MENU;
                 buttonPressed = false;
                 pLobbyConnect->joined = false;
-                //fillZero(pGame, INPUT_IP_LEN);
-                //(*pIndex) = 0;
             }
             if (event.type == SDL_QUIT) {
                 *pState = QUIT;
             }
         }
         if (pGameplayData->gameState == ONGOING) {
-            for(int i = 0; i < NR_OF_PLATFORMS; i++){
+            for(int i = 0; i < NR_OF_PLATFORMS; i++) {
                 pPlatforms[i] = createPlatform(0, 0, PLATFORM_WIDTH, PLATFORM_HEIGHT);
             }
             *pState = ONGOING;
         }
-    }
-}
-
-void fillZero(char inputIP[], int max) {
-    for (int i = 0; i < max; i++)
-    {
-        inputIP[i] = '\0';
     }
 }
 
@@ -384,20 +368,17 @@ void handleOngoing(GameDisplay* pGameDisplay, PlayersData* pPlayersData, Network
 	if (isHost) {
 		GameplayData temp;
 
-        for(int i = 0; i < MAX_PLAYERS; i++){
+        for(int i = 0; i < MAX_PLAYERS; i++) {
             temp.players[i] = *pPlayersData->pPlayers[i];
         }
 
-        for(int i = 0; i < NR_OF_PLATFORMS; i++){
+        for(int i = 0; i < NR_OF_PLATFORMS; i++) {
             temp.platformXPos[i] = (short)pPlatforms[i]->xPos;
             temp.platformYPos[i] = (short)pPlatforms[i]->yPos;
         }
 		temp.nrOfPlayers = pPlayersData->nrOfPlayers;
 		temp.nrOfPlayersLeft = pPlayersData->nrOfPlayersLeft;
-
         temp.gameState = *pState;
-		// SERVER: H?R SKA PUNKT (1) UTF?RAS
-		// Det ?r bara att l?gga in datan direkt i "temp".
 
 		*pGameplayData = temp;
 	}
@@ -440,7 +421,7 @@ void handleOngoing(GameDisplay* pGameDisplay, PlayersData* pPlayersData, Network
 			*pPlayersData->pPlayers[i] = pGameplayData->players[i];
 		}
 
-        for(int i = 0; i < NR_OF_PLATFORMS; i++){
+        for(int i = 0; i < NR_OF_PLATFORMS; i++) {
             pPlatforms[i]->xPos = pGameplayData->platformXPos[i];
             pPlatforms[i]->yPos = pGameplayData->platformYPos[i];
         }
@@ -448,16 +429,13 @@ void handleOngoing(GameDisplay* pGameDisplay, PlayersData* pPlayersData, Network
 		pPlayersData->nrOfPlayersLeft = pGameplayData->nrOfPlayersLeft;
 
         *pState = pGameplayData->gameState;
-
-		// KLIENT: H?R SKA PUNKT (B) UTF?RAS
-		// Datan ?r tillg?nglig via pGame->GameplayData.
 	}
 
 	////////////////////////////////////////////////////////////////////////////////////////////////////
 	////////////////////////////////////////////////////////////////////////////////////////////////////
 	////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    handleBackground(pBackground, pGameDisplay, pGameDisplay->pBackgroundTexture); //denna m?ste ligga f?re allt med player
+    handleBackground(pBackground, pGameDisplay, pGameDisplay->pBackgroundTexture);
     handlePlatforms(pPlatforms, pGameDisplay->pRenderer, pGameDisplay->pPlatformTexture, pGameDisplay->windowWidth, pGameDisplay->windowHeight, isHost);
     handleStartPlatform(pStartPlatform, pPlatforms[0], pGameDisplay->pRenderer, pGameDisplay->pStartPlatformTexture, pGameDisplay->windowHeight, pTime);
     handlePlayers(pPlayersData->pPlayers, pPlayersData->nrOfPlayers, &pPlayersData->nrOfPlayersLeft, pMute, pGameDisplay->windowWidth, pGameDisplay->windowHeight, pStartPlatform, pSound->pJumpSound, pSound->pWinSound, pState, pGameDisplay->pRenderer, pPlayersData->pPlayerTextures, pPlatforms, pDisplayText->pYouAreDeadText, &pNetworkData->isHost);
@@ -466,19 +444,17 @@ void handleOngoing(GameDisplay* pGameDisplay, PlayersData* pPlayersData, Network
 }
 
 void handleOngoingInput(PlayersData* pPlayersData, NetworkData* pNetworkData, ClientCommand* pClientCommands, Language* pLanguage, SDL_Event* event, State* pState, bool* pIsRunning, bool* pMute) {
-	// Det visade sig att de events vi anv?nder f?r att l?sa input var lite mer komplicerat ?n vad jag
-	// f?rst trodde, s? jag var tvungen att modifiera pClientCommands[0] direkt via dess pointer ist?llet.
 	if (!pNetworkData->isHost) {
         pClientCommands[0].commandType = MOVEMENT;
     }
 
-    switch (event->type){
+    switch (event->type) {
         case SDL_QUIT:
             *pIsRunning = false;
             pClientCommands[0].commandType = LEAVE;
             break;
         case SDL_KEYDOWN:
-            if ((event->key.keysym.sym) == (SDLK_ESCAPE)){
+            if ((event->key.keysym.sym) == (SDLK_ESCAPE)) {
                 *pState = GAME_MENU;
             }
             else if ((event->key.keysym.sym) == pLanguage->keybinds[0]) {
