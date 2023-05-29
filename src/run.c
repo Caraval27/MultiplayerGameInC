@@ -368,15 +368,15 @@ void handleOngoing(GameDisplay* pGameDisplay, PlayersData* pPlayersData, Network
 	if (isHost) {
 		GameplayData temp;
 
-        for(int i = 0; i < MAX_PLAYERS; i++) {
+        for (int i = 0; i < MAX_PLAYERS; i++) {
             temp.players[i] = *pPlayersData->pPlayers[i];
         }
 
-        for(int i = 0; i < NR_OF_PLATFORMS; i++) {
+        for (int i = 0; i < NR_OF_PLATFORMS; i++) {
             temp.platformXPos[i] = (short)pPlatforms[i]->xPos;
             temp.platformYPos[i] = (short)pPlatforms[i]->yPos;
         }
-		temp.nrOfPlayers = pPlayersData->nrOfPlayers;
+		temp.nrOfPlayers = (pNetworkData->nClients) + 1;
 		temp.nrOfPlayersLeft = pPlayersData->nrOfPlayersLeft;
         temp.gameState = *pState;
 
@@ -414,14 +414,16 @@ void handleOngoing(GameDisplay* pGameDisplay, PlayersData* pPlayersData, Network
 				}
 			}
             tempP->flip = tempCC.flip;
+            pPlayersData->nrOfPlayers = (pNetworkData->nClients) + 1;
 			pClientCommands[i] = (ClientCommand){0};
 		}
+        if (pNetworkData->nClients == 0) pPlayersData->nrOfPlayers = 1;
 	} else {
 		for (int i = 0; i < MAX_PLAYERS; i++) {
 			*pPlayersData->pPlayers[i] = pGameplayData->players[i];
 		}
 
-        for(int i = 0; i < NR_OF_PLATFORMS; i++) {
+        for (int i = 0; i < NR_OF_PLATFORMS; i++) {
             pPlatforms[i]->xPos = pGameplayData->platformXPos[i];
             pPlatforms[i]->yPos = pGameplayData->platformYPos[i];
         }
