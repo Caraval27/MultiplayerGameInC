@@ -35,7 +35,7 @@ void jumpPlayer(Player* pPlayer, int startPlatformYPos, Mix_Chunk* pJumpSound, b
 void playerCollidePlatform(Player* pPlayer, Platform** pPlatforms, Mix_Chunk* pJumpSound, bool* pMute);
 int playerIsDead(Player* pPlayer, int windowHeight);
 void checkIfPlayerDead(Player* pPlayer, int windowHeight, State* pState, int* nrOfPlayersLeft);
-void handleWin(int nrOfPlayersLeft, State* pState, Mix_Chunk* pWinSound, bool* pMute);
+void handleWin(int nrOfPlayersLeft, int nrOfPlayers, State* pState, Mix_Chunk* pWinSound, bool* pMute);
 void renderPlayer(Player* pPlayer, SDL_Renderer* pRenderer, SDL_Texture* pTexture);
 void handlePlayers(Player** pPlayers, int pNrOfPlayers, int *nrOfPlayersLeft, bool* pMute, int windowWidth, int windowHeight, Platform* pStartPlatform, Mix_Chunk *pJumpSound, Mix_Chunk* pWinSound, State* pState, SDL_Renderer* pRenderer, SDL_Texture** pPlayerTextures, Platform** pPlatforms, Text* pGameOverText, bool* isHost);
 void resetPlayers(Player** pPlayers, int* pNrOfPlayers, int* pNrOfPlayersLeft);

@@ -30,7 +30,7 @@ void initPlayer(Player** pPlayers, int* pNrOfPlayers, int* pNrOfPlayersLeft, Gam
             }
 
             (*pNrOfPlayers)++;
-            (*pNrOfPlayersLeft)++;
+            (*pNrOfPlayersLeft) = 0;
         }
 }
 
@@ -100,12 +100,12 @@ int playerIsDead(Player* pPlayer, int windowHeight) {
 void checkIfPlayerDead(Player* pPlayer, int windowHeight, State* pState, int* pNrOfPlayersLeft) {
     if (playerIsDead(pPlayer, windowHeight)) {
         pPlayer->alive = false;
-        (*pNrOfPlayersLeft)--;
+        (*pNrOfPlayersLeft)++;
     }
 }
 
-void handleWin(int nrOfPlayersLeft, State* pState, Mix_Chunk* pWinSound, bool* pMute) {
-    if (nrOfPlayersLeft <= 1) {
+void handleWin(int nrOfPlayersLeft, int nrOfPlayers, State* pState, Mix_Chunk* pWinSound, bool* pMute) {
+    if (nrOfPlayersLeft == nrOfPlayers - 1) {
         if (!(pMute)) {
             Mix_PlayChannel(-1, pWinSound, 0);
         }
@@ -132,11 +132,16 @@ void handlePlayers(Player** pPlayers, int pNrOfPlayers, int *nrOfPlayersLeft, bo
         renderPlayer(pPlayers[i], pRenderer, pPlayerTextures[i]);
     }
 
-	// KEEP THIS COMMENTED FOR NOW
-    // if (!pPlayers[0]->alive) {
-    //     renderText(pGameOverText, pRenderer);
-    // }
-    handleWin(*nrOfPlayersLeft, pState, pWinSound, pMute);
+    if (!pPlayers[0]->alive) {
+        renderText(pGameOverText, pRenderer);
+        *pState = GAME_OVER;
+    }
+    if (pNrOfPlayers == 1 && playerIsDead(pPlayers[0], windowWidth) == 1) {
+        handleWin(*nrOfPlayersLeft, pNrOfPlayers, pState, pWinSound, pMute);
+    }
+    if (pNrOfPlayers > 1) {
+        handleWin(*nrOfPlayersLeft, pNrOfPlayers, pState, pWinSound, pMute);
+    }
 }
 
 void resetPlayers(Player** pPlayers, int* pNrOfPlayers, int* pNrOfPlayersLeft) {

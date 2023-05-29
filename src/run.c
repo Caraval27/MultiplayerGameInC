@@ -377,6 +377,7 @@ void handleOngoing(GameDisplay* pGameDisplay, PlayersData* pPlayersData, Network
             temp.platformYPos[i] = (short)pPlatforms[i]->yPos;
         }
 		temp.nrOfPlayers = (pNetworkData->nClients) + 1;
+        temp.nrOfPlayers = pPlayersData->nrOfPlayers;
 		temp.nrOfPlayersLeft = pPlayersData->nrOfPlayersLeft;
         temp.gameState = *pState;
 
