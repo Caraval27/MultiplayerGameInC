@@ -238,8 +238,6 @@ void handleLobbyMenu(GameDisplay* pGameDisplay, PlayersData* pPlayersData, Netwo
             if (buttonPressed) {
                 buttonPressed = false;
                 pLobbyConnect->joined = false;
-                //fillZero(pGame, INPUT_IP_LEN);
-                //(*pIndex) = 0;
             }
             if (event.type == SDL_QUIT) {
                 *pState = QUIT;
