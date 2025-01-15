@@ -1,6 +1,6 @@
 # Asylum Escape - Multiplayer Game
 
-This is a multiplayer game developed as the final project for my first year of my Bachelor's in Computer Engineering. The game was written in C using the SDL library and showcases foundational game development concepts and teamwork.
+This is a multiplayer platform game developed as the final project for my first year of my Bachelor's in Computer Engineering. The game was written in C using the SDL library and showcases foundational game development concepts and teamwork.
 
 ## Features
 
